@@ -1,1547 +1,511 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>제주그래퍼 | AI·드론·3D 디지털 콘텐츠 전문 기업</title>
-    <meta name="description" content="제주 기반 AI, 드론, 3D, VR 전문 디지털 콘텐츠 제작 기업. 별밤사진관부터 AI 영상까지 혁신적인 서비스를 제공합니다.">
-    <meta name="keywords" content="제주 영상제작, AI 콘텐츠, 드론 촬영, 3D 모델링, VR 제작, 별밤사진관, 제주그래퍼">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://jejugrapher.netlify.app/">
-    <meta property="og:title" content="제주그래퍼 | AI·드론·3D 디지털 콘텐츠 전문 기업">
-    <meta property="og:description" content="제주 기반 AI, 드론, 3D, VR 전문 디지털 콘텐츠 제작 기업. 혁신적인 기술로 당신의 아이디어를 현실로 만듭니다.">
-    <meta property="og:image" content="https://jejugrapher.netlify.app/og-image.jpg">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JEJUGRAPHER — 차세대 융합형 AI 영상 제작 스튜디오</title>
+<meta name="description" content="인간의 창의성과 AI 워크플로우의 완벽한 결합. 100% AI 상업 영상, 16K VR 투어, 정밀 드론 분석. 제작 기간 90% 단축, 캐릭터 일관성 95% 보장. 제주 기반 글로벌 B2B 크리에이티브 에이전시.">
+<meta name="keywords" content="AI 영상 제작, 제주 드론 촬영, 360 VR 제작, AI 뮤직비디오, B2B 홍보영상, FPV 촬영, 멀티스펙트럴 분석">
+<meta property="og:title" content="JEJUGRAPHER — AI 영상 제작 스튜디오">
+<meta property="og:description" content="촬영 없이 완성하는 100% AI 프리미엄 상업 영상. 캐릭터 일관성 95% 보장.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"/>
+<style>
+:root{
+  --lav:#C4C7F2;--sky:#79C4F2;--teal:#386273;--rose:#D9ABA0;--red:#A64141;
+  --lav-light:#e8e9fa;--sky-light:#d4ecfb;--teal-light:#4a7a8e;--rose-light:#eeddd8;--red-dark:#8B3535;
+  --bg:#FCFDFF;--bg-alt:#F3F5FA;--bg-card:#fff;
+  --tx:#1c2e38;--tx2:#5a7585;--tx3:#8a9fac;
+  --bd:rgba(56,98,115,.1);--bd2:rgba(56,98,115,.18);
+  --r:16px;--rl:24px;
+  --ss:0 4px 16px rgba(56,98,115,.05);--sm:0 16px 48px rgba(56,98,115,.08);--sr:0 8px 28px rgba(166,65,65,.2);
+  --fh:'Outfit',sans-serif;--fb:'Pretendard Variable',Pretendard,-apple-system,sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto;font-size:16px}
+body{background:var(--bg);color:var(--tx);font-family:var(--fb);line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased;word-break:keep-all}
+body.no-scroll{overflow:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(var(--teal) .5px,transparent .5px);background-size:30px 30px;opacity:.03;pointer-events:none;z-index:9999}
+.ctr{max-width:1200px;margin:0 auto;padding:0 24px}
+.sp{padding:140px 0}
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://jejugrapher.netlify.app/">
-    <meta property="twitter:title" content="제주그래퍼 | AI·드론·3D 디지털 콘텐츠 전문 기업">
-    <meta property="twitter:description" content="제주 기반 AI, 드론, 3D, VR 전문 디지털 콘텐츠 제작 기업">
-    <meta property="twitter:image" content="https://jejugrapher.netlify.app/og-image.jpg">
+/* Typography */
+.sl{font-family:var(--fh);font-size:.82rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.sl::before{content:'';width:28px;height:3px;background:var(--red);border-radius:2px}
+.st{font-size:clamp(2rem,4.2vw,3.2rem);font-weight:800;color:var(--teal);line-height:1.22;margin-bottom:20px;letter-spacing:-.02em}
+.sd{font-size:1.08rem;color:var(--tx2);max-width:660px;line-height:1.75;font-weight:450}
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    
-    <!-- JSON-LD structured data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "제주그래퍼",
-        "alternateName": "Jejugrapher",
-        "url": "https://jejugrapher.netlify.app",
-        "logo": "https://jejugrapher.netlify.app/logo.png",
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": "+82-10-6778-9199",
-            "contactType": "customer service",
-            "areaServed": "KR",
-            "availableLanguage": "ko"
-        },
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "산천단동1길 15",
-            "addressLocality": "제주시",
-            "addressRegion": "제주특별자치도",
-            "addressCountry": "KR"
-        },
-        "founder": {
-            "@type": "Person",
-            "name": "전현석"
-        },
-        "foundingDate": "2017-09",
-        "description": "제주 기반 AI, 드론, 3D, VR 전문 디지털 콘텐츠 제작 기업"
-    }
-    </script>
+/* Reveal */
+.rv{opacity:0;transform:translateY(32px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.rv.vis{opacity:1;transform:translateY(0)}
 
-    <!-- Google Analytics (GA4) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-XXXXXXXXXX');
-    </script>
+/* ═══ NAV ═══ */
+header{position:fixed;top:0;left:0;right:0;z-index:9000;padding:18px 0;transition:.4s;border-bottom:1px solid transparent}
+header.scrolled{background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:10px 0;box-shadow:var(--ss);border-color:var(--bd)}
+.ni{display:flex;align-items:center;justify-content:space-between}
+.nl{font-family:var(--fh);font-weight:900;font-size:1.4rem;color:var(--teal);text-decoration:none;letter-spacing:.05em}
+.nl em{font-style:normal;color:var(--sky)}
+.nk{display:flex;gap:30px;align-items:center}
+.nk a{position:relative;font-weight:600;font-size:.92rem;color:var(--tx2);text-decoration:none;transition:.3s;cursor:pointer}
+.nk a:hover,.nk a.act{color:var(--teal)}
+.nk a.act::after{content:'';position:absolute;bottom:-5px;left:0;width:100%;height:2px;background:var(--teal);border-radius:2px}
+.nc{background:var(--red)!important;color:#fff!important;padding:10px 24px!important;border-radius:100px!important;font-weight:700!important;transition:.3s!important;box-shadow:var(--sr)}
+.nc:hover{background:var(--red-dark)!important;transform:translateY(-2px);box-shadow:0 12px 32px rgba(166,65,65,.35)}
+.nc.act::after{display:none!important}
+.nt{display:none;background:none;border:none;cursor:pointer;padding:4px;z-index:9001}
+.nt span{display:block;width:22px;height:2.5px;background:var(--teal);margin:5px 0;transition:.3s;border-radius:2px}
+.no{position:fixed;inset:0;background:rgba(56,98,115,.25);backdrop-filter:blur(4px);z-index:8999;opacity:0;pointer-events:none;transition:.3s}
+.no.open{opacity:1;pointer-events:all}
+@media(max-width:960px){
+.nt{display:block}
+.nk{position:fixed;top:0;right:-100%;width:280px;height:100vh;background:var(--bg-card);border-left:1px solid var(--bd);flex-direction:column;justify-content:center;gap:28px;padding:40px;transition:.4s cubic-bezier(.16,1,.3,1);box-shadow:-8px 0 30px rgba(0,0,0,.06)}
+.nk.open{right:0}
+.nk a{font-size:1.12rem;color:var(--teal)}
+.nt.active span:nth-child(1){transform:translateY(7.5px) rotate(45deg);background:var(--red)}
+.nt.active span:nth-child(2){opacity:0}
+.nt.active span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg);background:var(--red)}
+}
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+/* ═══ HERO ═══ */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:140px 0 80px;overflow:hidden;background:linear-gradient(160deg,#fff 0%,var(--lav-light) 45%,var(--sky-light) 100%)}
+.ho1{position:absolute;top:-8%;right:-4%;width:650px;height:650px;background:radial-gradient(circle,rgba(196,199,242,.35) 0%,transparent 65%);border-radius:50%;pointer-events:none}
+.ho2{position:absolute;bottom:-12%;left:-6%;width:550px;height:550px;background:radial-gradient(circle,rgba(121,196,242,.25) 0%,transparent 65%);border-radius:50%;pointer-events:none}
+.hc{position:relative;z-index:1;max-width:880px;text-align:center;margin:0 auto}
+.hb{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--bd);padding:8px 20px;border-radius:100px;font-family:var(--fh);font-size:.82rem;font-weight:800;color:var(--teal);letter-spacing:.1em;margin-bottom:22px;box-shadow:var(--ss)}
+.hb::before{content:'';width:8px;height:8px;background:var(--sky);border-radius:50%}
+.hero h1{font-size:clamp(2.5rem,6vw,4.6rem);font-weight:800;color:var(--teal);line-height:1.15;margin-bottom:22px;letter-spacing:-.03em}
+.hero h1 b{font-weight:800;color:var(--red);position:relative;display:inline-block;z-index:1}
+.hero h1 b::after{content:'';position:absolute;bottom:6px;left:-2%;width:104%;height:28%;background:rgba(217,171,160,.3);z-index:-1;border-radius:4px}
+.hp{font-size:1.12rem;color:var(--tx2);margin:0 auto 44px;max-width:700px;line-height:1.85}
+.hp strong{color:var(--teal);font-weight:700}
+.ha{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:60px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 36px;font-family:var(--fh);font-weight:700;font-size:1rem;border-radius:100px;cursor:pointer;text-decoration:none;transition:.3s;border:none}
+.b1{background:var(--red);color:#fff;box-shadow:var(--sr)}
+.b1:hover{background:var(--red-dark);transform:translateY(-3px);box-shadow:0 14px 36px rgba(166,65,65,.3)}
+.b2{background:#fff;color:var(--teal);border:1.5px solid var(--bd2);box-shadow:var(--ss)}
+.b2:hover{border-color:var(--sky);background:rgba(121,196,242,.04);transform:translateY(-3px);box-shadow:var(--sm)}
+.hs{display:flex;gap:56px;justify-content:center;padding-top:36px;border-top:1.5px solid var(--bd)}
+.hn{font-family:var(--fh);font-size:2.6rem;font-weight:900;color:var(--tx);line-height:1}
+.hn em{font-style:normal;color:var(--sky);font-size:1.4rem}
+.hl{font-size:.85rem;font-weight:600;color:var(--tx3);margin-top:6px}
+@keyframes fi{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.hb,.hero h1,.hp,.ha,.hs{animation:fi .8s cubic-bezier(.16,1,.3,1) both}
+.hero h1{animation-delay:.1s}.hp{animation-delay:.2s}.ha{animation-delay:.3s}.hs{animation-delay:.4s}
 
-        /* 상단 고정 네비게이션 */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(44, 62, 80, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 15px 0;
-            transition: all 0.3s ease;
-        }
+/* Partners marquee */
+.pm{padding:36px 0;background:var(--bg-card);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);overflow:hidden}
+.pm p{text-align:center;font-family:var(--fh);font-size:.78rem;font-weight:700;color:var(--teal);letter-spacing:.15em;margin-bottom:20px;opacity:.55}
+.mw{position:relative;width:100vw;margin-left:calc(-50vw + 50%);display:flex}
+.mw::before,.mw::after{content:'';position:absolute;top:0;width:12vw;height:100%;z-index:2;pointer-events:none}
+.mw::before{left:0;background:linear-gradient(to right,#fff,transparent)}
+.mw::after{right:0;background:linear-gradient(to left,#fff,transparent)}
+.mc{display:flex;gap:14px;animation:mr 40s linear infinite;width:max-content}
+.mc:hover{animation-play-state:paused}
+.cb{padding:11px 24px;background:var(--bg);border:1px solid var(--bd);border-radius:100px;font-weight:600;font-size:.85rem;color:var(--tx2);transition:.3s;cursor:default;white-space:nowrap}
+.cb:hover{border-color:var(--sky);color:var(--teal);background:#fff;box-shadow:var(--ss);transform:translateY(-1px)}
+@keyframes mr{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-        .navbar.scrolled {
-            background: rgba(44, 62, 80, 1);
-            padding: 10px 0;
-        }
+/* ═══ SERVICES BENTO ═══ */
+.svc{background:var(--bg-alt)}
+.bg{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:minmax(280px,auto);gap:20px;margin-top:44px}
+.bc{background:var(--bg-card);border:1px solid var(--bd);border-radius:var(--rl);padding:44px 36px;transition:.4s;position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--ss)}
+.bc::before{content:'';position:absolute;top:0;left:0;right:0;height:3.5px;transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.bc:hover{transform:translateY(-5px);box-shadow:var(--sm);border-color:rgba(121,196,242,.4)}
+.bc:hover::before{transform:scaleX(1)}
+.bc:nth-child(1)::before{background:var(--red)}.bc:nth-child(2)::before{background:var(--teal)}.bc:nth-child(3)::before{background:var(--sky)}.bc:nth-child(4)::before{background:var(--lav)}
+.bl{grid-column:span 7}.bs{grid-column:span 5}
+@media(max-width:960px){.bl,.bs{grid-column:span 12}}
+.si{width:58px;height:58px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:20px}
+.bc:nth-child(1) .si{background:rgba(166,65,65,.07);color:var(--red)}
+.bc:nth-child(2) .si{background:rgba(56,98,115,.07);color:var(--teal)}
+.bc:nth-child(3) .si{background:rgba(121,196,242,.12);color:var(--teal)}
+.bc:nth-child(4) .si{background:rgba(196,199,242,.2);color:var(--teal)}
+.bc h3{font-family:var(--fh);font-size:1.3rem;font-weight:800;margin-bottom:14px;color:var(--teal)}
+.bc>p{font-size:.95rem;color:var(--tx2);flex-grow:1;margin-bottom:20px;line-height:1.75}
+.tg{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto}
+.tg span{padding:5px 13px;background:var(--bg);border:1px solid var(--bd);border-radius:100px;font-family:var(--fh);font-size:.75rem;font-weight:600;color:var(--teal)}
 
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+/* ═══ PORTFOLIO ═══ */
+.pf{background:#fff;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:22px;margin-top:44px}
+.pc{background:var(--bg-card);border-radius:var(--rl);overflow:hidden;cursor:pointer;transition:.4s;display:flex;flex-direction:column;box-shadow:var(--ss);border:1px solid var(--bd)}
+.pc:hover{transform:translateY(-7px);box-shadow:var(--sm);border-color:var(--sky)}
+.pt{position:relative;padding-top:56.25%;background:var(--bg-alt);overflow:hidden}
+.pt img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.16,1,.3,1);opacity:.92}
+.pc:hover .pt img{transform:scale(1.04);opacity:1}
+.pb{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.82);width:60px;height:60px;background:var(--red);border:3px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;padding-left:3px;opacity:0;transition:.4s;box-shadow:var(--sr)}
+.pc:hover .pb{transform:translate(-50%,-50%) scale(1);opacity:1}
+.pi{padding:28px 26px;flex-grow:1;display:flex;flex-direction:column}
+.pi h4{font-family:var(--fh);font-size:1.15rem;font-weight:800;margin-bottom:10px;color:var(--tx)}
+.pi>p{font-size:.92rem;color:var(--tx2);margin-bottom:14px;flex-grow:1;line-height:1.7}
+.rb{background:rgba(217,171,160,.12);border-left:3px solid var(--rose);padding:10px 14px;margin-bottom:14px;border-radius:0 8px 8px 0}
+.rb p{margin:0;font-size:.82rem;font-weight:700;color:var(--teal);line-height:1.5}
+.pk{display:flex;gap:7px;flex-wrap:wrap}
+.pk span{padding:3px 10px;background:rgba(121,196,242,.1);border-radius:100px;font-family:var(--fh);font-size:.7rem;font-weight:700;color:var(--teal);text-transform:uppercase}
 
-        .nav-logo {
-            color: white;
-            font-size: 1.5em;
-            font-weight: bold;
-            text-decoration: none;
-        }
+/* ═══ PROCESS ═══ */
+.pr{background:var(--teal);color:#fff}
+.pr .sl{color:var(--sky)}.pr .sl::before{background:var(--sky)}
+.pr .st{color:#fff}
+.pr .sd{color:rgba(255,255,255,.6)}
+.prg{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:var(--rl);margin-top:48px;overflow:hidden}
+.ps{background:rgba(255,255,255,.04);padding:44px 32px;transition:.3s}
+.ps:hover{background:rgba(255,255,255,.1)}
+.sn{font-family:var(--fh);font-size:3.5rem;font-weight:900;color:rgba(121,196,242,.15);line-height:1;margin-bottom:20px;transition:.3s}
+.ps:hover .sn{color:rgba(121,196,242,.4)}
+.ps h4{font-family:var(--fh);font-size:1.05rem;font-weight:700;margin-bottom:10px;color:#fff}
+.ps p{color:rgba(255,255,255,.55);font-size:.9rem;line-height:1.7}
 
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-        }
+/* ═══ PRICING ═══ */
+.prc{background:var(--bg)}
+.prg2{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:22px;margin-top:44px}
+.pcd{background:var(--bg-card);border:1px solid var(--bd);border-radius:var(--rl);padding:44px 36px;display:flex;flex-direction:column;transition:.4s;position:relative;box-shadow:var(--ss)}
+.pcd.pro{border:2px solid var(--sky);transform:translateY(-8px);z-index:1;box-shadow:var(--sm);background:linear-gradient(170deg,rgba(121,196,242,.03),#fff)}
+.pcd.pro::before{content:'BEST';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--teal);color:#fff;font-family:var(--fh);font-size:.72rem;font-weight:800;padding:5px 18px;border-radius:100px;letter-spacing:.12em}
+.pcd:hover{transform:translateY(-5px);box-shadow:var(--sm);border-color:var(--sky)}
+.pcd.pro:hover{transform:translateY(-14px)}
+.pcd h4{font-family:var(--fh);font-size:1.25rem;font-weight:800;margin-bottom:8px;color:var(--teal)}
+.pcd .pr2{font-family:var(--fh);font-size:2.3rem;font-weight:900;margin-bottom:4px;color:var(--teal)}
+.pcd .pr2 span{font-size:.88rem;font-weight:400;color:var(--tx3)}
+.pn{font-size:.82rem;color:var(--tx3);padding-bottom:28px;border-bottom:1px solid var(--bd);margin-bottom:28px}
+.pfl{list-style:none;margin-bottom:32px;flex-grow:1}
+.pfl li{display:flex;gap:10px;margin-bottom:14px;font-size:.92rem;color:var(--tx);font-weight:500;line-height:1.5}
+.pfl li::before{content:'✔';color:var(--sky);font-weight:900;flex-shrink:0}
+.pcd.pro .pfl li::before{color:var(--red)}
 
-        .nav-menu a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
+/* Discount */
+.db{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:2px;margin-top:36px;background:var(--bd);border-radius:var(--r);overflow:hidden}
+.di{background:var(--bg-card);padding:18px;text-align:center}
+.di .dv{font-family:var(--fh);font-size:1.5rem;font-weight:800;color:var(--sky)}
+.di .dl{font-size:.76rem;color:var(--tx3);margin-top:3px}
 
-        .nav-menu a:hover {
-            color: #74b9ff;
-        }
+/* FAQ */
+.fw{max-width:780px;margin:72px auto 0;background:var(--bg-card);padding:44px;border-radius:var(--rl);box-shadow:var(--ss);border:1px solid var(--bd)}
+.ft{font-family:var(--fh);font-size:1.6rem;font-weight:800;text-align:center;margin-bottom:28px;color:var(--teal)}
+.fi{border-bottom:1px solid var(--bd)}
+.fi:last-child{border:none}
+.fq{width:100%;text-align:left;background:none;border:none;padding:20px 0;font-family:var(--fb);font-size:1rem;font-weight:700;color:var(--tx);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:14px;line-height:1.4}
+.fx{color:var(--lav);font-size:1.4rem;transition:.3s;font-weight:300;flex-shrink:0}
+.fi.active .fx{transform:rotate(45deg);color:var(--red)}
+.fa{max-height:0;overflow:hidden;transition:max-height .4s}
+.fa p{padding-bottom:20px;color:var(--tx2);line-height:1.8;font-size:.94rem}
 
-        .nav-cta {
-            background: #e74c3c;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
+/* ═══ ABOUT ═══ */
+.ab{background:var(--bg-alt);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.ag{display:grid;grid-template-columns:1fr 1.15fr;gap:52px;margin-top:48px;align-items:start}
+@media(max-width:960px){.ag{grid-template-columns:1fr;gap:40px}}
+.ac{background:var(--bg-card);border:1px solid var(--bd);border-radius:var(--rl);padding:44px;box-shadow:var(--ss)}
+.ac h3{font-size:2rem;font-weight:800;margin-bottom:6px;color:var(--teal)}
+.ac .ar{font-family:var(--fh);font-size:.85rem;color:var(--sky);font-weight:800;letter-spacing:.1em;margin-bottom:28px;display:block}
+.ac p{font-size:.96rem;color:var(--tx2);line-height:1.85;margin-bottom:18px}
+.ql{margin-top:28px;padding-top:22px;border-top:1px solid var(--bd)}
+.qi{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px dashed var(--bd);font-size:.92rem}
+.qi:last-child{border:none}
+.qi .ql2{font-weight:700;color:var(--tx)}
+.qi .qv{font-family:var(--fh);font-weight:700;color:var(--teal)}
+.ph{background:#fff;border-left:4px solid var(--sky);padding:28px 30px;border-radius:0 var(--rl) var(--rl) 0;margin-bottom:36px;box-shadow:var(--ss)}
+.ph p{font-style:italic;font-size:1.2rem;font-weight:700;line-height:1.6;color:var(--teal)}
+.ad h3{font-family:var(--fh);font-size:1.2rem;font-weight:800;margin-bottom:14px;color:var(--tx)}
+.ad p{font-size:.96rem;color:var(--tx2);line-height:1.85;margin-bottom:28px}
+.tgr{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tb{padding:8px 16px;background:#fff;border:1px solid var(--bd);border-radius:100px;font-family:var(--fh);font-weight:600;font-size:.82rem;color:var(--tx2);transition:.3s}
+.tb:hover{border-color:var(--sky);background:rgba(121,196,242,.06);color:var(--teal);transform:translateY(-1px)}
+.chl{margin-top:32px}
+.chl h4{font-family:var(--fh);font-size:.76rem;font-weight:700;color:var(--tx3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
+.chl a{display:flex;align-items:center;gap:8px;padding:5px 0;color:var(--tx2);text-decoration:none;font-size:.86rem;transition:.3s}
+.chl a:hover{color:var(--red)}
+.chl a::before{content:'▸';color:var(--sky);font-size:.65rem}
 
-        .nav-cta:hover {
-            background: #c0392b;
-            transform: translateY(-2px);
-        }
+/* ═══ CTA ═══ */
+.ct{padding:140px 0;background:#fff}
+.cx{background:var(--teal);border-radius:var(--rl);padding:72px 40px;text-align:center;position:relative;overflow:hidden;box-shadow:var(--sm);color:#fff}
+.cx::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(121,196,242,.12) 0%,transparent 55%);pointer-events:none}
+.cx .st{position:relative;z-index:1;color:#fff;margin:0 auto 14px}
+.cx>p{position:relative;z-index:1;margin:0 auto 44px;color:rgba(255,255,255,.75);font-size:1.06rem}
+.ca{position:relative;z-index:1;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
+.bcta{background:var(--red);color:#fff;border:none;box-shadow:var(--sr)}
+.bcta:hover{background:var(--red-dark);transform:translateY(-3px)}
+.bctao{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.bctao:hover{background:rgba(255,255,255,.16);transform:translateY(-3px)}
+.cr{position:relative;z-index:1;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.cc{padding:9px 22px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:100px;font-family:var(--fh);font-size:.84rem;color:rgba(255,255,255,.8);text-decoration:none;transition:.3s}
+.cc:hover{background:rgba(255,255,255,.16);color:#fff}
 
-        /* 모바일 메뉴 토글 */
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5em;
-            cursor: pointer;
-        }
+footer{padding:44px 0;background:var(--bg);text-align:center;border-top:1px solid var(--bd)}
+footer p{font-size:.82rem;color:var(--tx3);font-weight:500}
 
-        /* 헤더 */
-        .header {
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            color: white;
-            text-align: center;
-            padding: 150px 20px 80px;
-            position: relative;
-            overflow: hidden;
-        }
+/* FAB */
+.fab{position:fixed;bottom:28px;right:28px;background:var(--red);color:#fff;padding:14px 24px;border-radius:100px;font-family:var(--fh);font-weight:700;font-size:.88rem;text-decoration:none;box-shadow:var(--sr);z-index:8000;transition:.4s;opacity:0;pointer-events:none;transform:translateY(16px);border:2px solid #fff}
+.fab.show{opacity:1;pointer-events:all;transform:translateY(0)}
+.fab:hover{background:var(--red-dark);transform:translateY(-3px)}
 
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/><circle cx="20" cy="20" r="1" fill="white" opacity="0.1"/><circle cx="80" cy="30" r="1.5" fill="white" opacity="0.1"/></svg>');
-            animation: stars 20s linear infinite;
-        }
+/* Modal */
+.vm{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s}
+.vm.active{opacity:1;pointer-events:all}
+.vb{position:absolute;inset:0;background:rgba(56,98,115,.92);backdrop-filter:blur(10px)}
+.vc{position:absolute;top:22px;right:36px;background:none;border:none;color:#fff;font-size:2.8rem;font-weight:300;line-height:1;cursor:pointer;z-index:2;transition:.3s}
+.vc:hover{color:var(--rose);transform:rotate(90deg)}
+.vd{position:relative;width:90%;max-width:1100px;aspect-ratio:16/9;background:#111;border-radius:var(--r);overflow:hidden;z-index:1;transform:translateY(28px) scale(.96);transition:.5s cubic-bezier(.16,1,.3,1);box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.vm.active .vd{transform:translateY(0) scale(1)}
+.vd iframe{width:100%;height:100%;border:none}
 
-        @keyframes stars {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-100px); }
-        }
-        
-        .logo {
-            width: 150px;
-            height: 150px;
-            background: rgba(255,255,255,0.1);
-            border: 3px dashed rgba(255,255,255,0.5);
-            border-radius: 50%;
-            margin: 0 auto 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .header h1 {
-            font-size: 4em;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .header .subtitle {
-            font-size: 1.6em;
-            margin-bottom: 30px;
-            opacity: 0.9;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .cta-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 18px 35px;
-            background: #e74c3c;
-            color: white;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: bold;
-            font-size: 1.1em;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
-        }
-        
-        .btn:hover {
-            background: #c0392b;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(231, 76, 60, 0.4);
-        }
-        
-        .btn-outline {
-            background: transparent;
-            border: 2px solid white;
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
-        }
-        
-        .btn-outline:hover {
-            background: white;
-            color: #2c3e50;
-            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
-        }
-
-        /* WhatsApp/KakaoTalk 플로팅 버튼 */
-        .floating-contact {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .floating-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font-size: 1.5em;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-        }
-
-        .floating-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .kakao-btn {
-            background: #FEE500;
-            color: #3C1E1E;
-        }
-
-        .phone-btn {
-            background: #27ae60;
-            color: white;
-        }
-
-        /* 회사 정보 */
-        .company-info {
-            background: white;
-            padding: 80px 20px;
-            text-align: center;
-        }
-
-        .company-info h2 {
-            font-size: 2.5em;
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-
-        .company-info .subtitle {
-            font-size: 1.3em;
-            color: #666;
-            margin-bottom: 50px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-        
-        .info-item {
-            padding: 30px 25px;
-            background: #f8f9fa;
-            border-radius: 15px;
-            border: 1px solid #e9ecef;
-            transition: all 0.3s ease;
-        }
-
-        .info-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        
-        .info-item strong {
-            display: block;
-            color: #3498db;
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
-
-        /* 빠른 연락 섹션 */
-        .quick-contact {
-            background: linear-gradient(135deg, #74b9ff, #0984e3);
-            color: white;
-            padding: 60px 20px;
-            text-align: center;
-        }
-
-        .quick-contact h3 {
-            font-size: 2em;
-            margin-bottom: 30px;
-        }
-
-        .quick-contact-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .quick-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px 25px;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .quick-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
-        
-        /* 섹션 공통 */
-        .section {
-            padding: 100px 20px;
-        }
-        
-        .section:nth-child(even) {
-            background: #f8f9fa;
-        }
-        
-        .section-title {
-            text-align: center;
-            font-size: 3em;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(135deg, #3498db, #9b59b6);
-            border-radius: 2px;
-        }
-        
-        .section-subtitle {
-            text-align: center;
-            font-size: 1.3em;
-            color: #666;
-            margin-bottom: 60px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        /* 서비스 그리드 */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-        }
-        
-        .service-card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            text-align: center;
-            transition: all 0.3s ease;
-            border: 1px solid #e0e0e0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(135deg, #3498db, #9b59b6);
-        }
-        
-        .service-card:hover {
-            transform: translateY(-15px);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-        }
-        
-        .service-icon {
-            font-size: 4em;
-            margin-bottom: 25px;
-            display: block;
-        }
-        
-        .service-card h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-        }
-
-        .service-badge {
-            background: linear-gradient(135deg, #e74c3c, #f39c12);
-            color: white;
-            padding: 6px 15px;
-            border-radius: 15px;
-            font-size: 0.8em;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-        
-        .service-card p {
-            color: #666;
-            margin-bottom: 25px;
-            line-height: 1.7;
-        }
-        
-        .service-link {
-            color: #3498db;
-            text-decoration: none;
-            font-weight: bold;
-            display: inline-block;
-            padding: 10px 20px;
-            border: 2px solid #3498db;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-        }
-        
-        .service-link:hover {
-            background: #3498db;
-            color: white;
-            transform: translateY(-2px);
-        }
-        
-        /* 프로젝트 갤러리 */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-        }
-        
-        .project-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .project-card:hover {
-            transform: translateY(-15px);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-        }
-        
-        .project-image {
-            height: 250px;
-            background: linear-gradient(135deg, #74b9ff, #0984e3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.3em;
-            text-align: center;
-            position: relative;
-        }
-
-        .project-image::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="25" r="2" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1.5" fill="white" opacity="0.1"/></svg>');
-        }
-        
-        .project-content {
-            padding: 30px;
-        }
-        
-        .project-content h4 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 1.4em;
-        }
-        
-        .project-content p {
-            color: #666;
-            margin-bottom: 20px;
-            line-height: 1.7;
-        }
-
-        .project-link {
-            color: #3498db;
-            text-decoration: none;
-            font-weight: bold;
-            display: inline-block;
-            padding: 10px 20px;
-            border: 2px solid #3498db;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-        }
-
-        .project-link:hover {
-            background: #3498db;
-            color: white;
-            transform: translateY(-2px);
-        }
-        
-        /* 통계 */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            text-align: center;
-        }
-        
-        .stat-item {
-            padding: 40px 30px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-
-        .stat-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-        }
-        
-        .stat-number {
-            font-size: 4em;
-            font-weight: bold;
-            background: linear-gradient(135deg, #3498db, #9b59b6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: block;
-            margin-bottom: 15px;
-        }
-        
-        .stat-label {
-            color: #666;
-            margin-top: 10px;
-            font-size: 1.1em;
-            font-weight: 500;
-        }
-        
-        /* 유튜브 채널 */
-        .youtube-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-        }
-        
-        .youtube-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .youtube-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-        }
-        
-        .youtube-thumbnail {
-            height: 180px;
-            background: linear-gradient(135deg, #FF0000, #FF6B6B);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 3em;
-            position: relative;
-        }
-
-        .youtube-thumbnail::after {
-            content: '';
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 50px;
-            height: 35px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 5px;
-            border: 2px solid white;
-        }
-        
-        .youtube-info {
-            padding: 25px;
-        }
-        
-        .youtube-info h4 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-        
-        .youtube-info p {
-            color: #666;
-            font-size: 0.95em;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-        
-        .youtube-link {
-            background: #FF0000;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-        
-        .youtube-link:hover {
-            background: #CC0000;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255,0,0,0.3);
-        }
-        
-        /* 연락처 */
-        .contact {
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            color: white;
-            text-align: center;
-        }
-        
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 40px;
-            margin-top: 50px;
-        }
-        
-        .contact-item {
-            padding: 40px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .contact-item:hover {
-            background: rgba(255,255,255,0.15);
-            transform: translateY(-10px);
-        }
-        
-        .contact-icon {
-            font-size: 4em;
-            margin-bottom: 20px;
-            display: block;
-        }
-        
-        .contact-item h4 {
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-        
-        .contact-info {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #74b9ff;
-            margin-bottom: 10px;
-        }
-
-        /* 고객 후기 섹션 */
-        .testimonials {
-            background: #f8f9fa;
-            padding: 100px 20px;
-        }
-
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .testimonial-card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .testimonial-text {
-            font-style: italic;
-            margin-bottom: 20px;
-            font-size: 1.1em;
-            line-height: 1.6;
-        }
-
-        .testimonial-author {
-            color: #3498db;
-            font-weight: bold;
-        }
-
-        /* FAQ 섹션 */
-        .faq {
-            padding: 100px 20px;
-        }
-
-        .faq-item {
-            background: white;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .faq-question {
-            background: #3498db;
-            color: white;
-            padding: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .faq-question:hover {
-            background: #2980b9;
-        }
-
-        .faq-answer {
-            padding: 20px;
-            display: none;
-            line-height: 1.6;
-        }
-
-        .faq-answer.active {
-            display: block;
-        }
-        
-        /* 푸터 */
-        .footer {
-            background: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 60px 20px 40px;
-        }
-
-        .footer h3 {
-            font-size: 2em;
-            margin-bottom: 40px;
-        }
-        
-        .footer-links {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin: 40px 0;
-            text-align: left;
-        }
-        
-        .footer-section h4 {
-            color: #74b9ff;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-        }
-        
-        .footer-section a {
-            color: #bdc3c7;
-            text-decoration: none;
-            display: block;
-            margin-bottom: 10px;
-            transition: color 0.3s ease;
-        }
-        
-        .footer-section a:hover {
-            color: #74b9ff;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid #34495e;
-            padding-top: 30px;
-            margin-top: 40px;
-            opacity: 0.8;
-        }
-        
-        /* 반응형 */
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: block;
-            }
-
-            .nav-menu {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: #2c3e50;
-                flex-direction: column;
-                padding: 20px;
-                gap: 15px;
-            }
-
-            .nav-menu.active {
-                display: flex;
-            }
-
-            .header {
-                padding: 120px 20px 60px;
-            }
-
-            .header h1 {
-                font-size: 2.5em;
-            }
-            
-            .section-title {
-                font-size: 2.2em;
-            }
-            
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .services-grid,
-            .projects-grid,
-            .youtube-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .floating-contact {
-                bottom: 20px;
-                right: 20px;
-            }
-
-            .floating-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 1.2em;
-            }
-        }
-        
-        /* 스크롤 애니메이션 */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s ease;
-        }
-        
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* 로딩 애니메이션 */
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #2c3e50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-        }
-
-        .loading.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .loader {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top: 3px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+@media(max-width:768px){
+.hs{flex-direction:column;gap:20px;align-items:center}
+.pcd.pro{transform:none}.pcd.pro:hover{transform:translateY(-5px)}
+.vd{width:100%;border-radius:0}
+.vc{top:12px;right:16px;font-size:2.2rem}
+.fab{bottom:18px;right:18px;padding:11px 18px;font-size:.82rem}
+.bg,.pg,.prg2{grid-template-columns:1fr}
+.prg{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){.prg{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-    <!-- 로딩 화면 -->
-    <div class="loading" id="loading">
-        <div class="loader"></div>
-    </div>
+<div id="top"></div>
 
-    <!-- 상단 네비게이션 -->
-    <nav class="navbar" id="navbar">
-        <div class="nav-container">
-            <a href="#" class="nav-logo">제주그래퍼</a>
-            <ul class="nav-menu" id="nav-menu">
-                <li><a href="#home">홈</a></li>
-                <li><a href="#services">서비스</a></li>
-                <li><a href="#portfolio">포트폴리오</a></li>
-                <li><a href="#about">회사소개</a></li>
-                <li><a href="#contact">연락처</a></li>
-            </ul>
-            <a href="tel:010-6778-9199" class="nav-cta">무료 상담</a>
-            <button class="menu-toggle" id="menu-toggle">☰</button>
-        </div>
-    </nav>
+<header id="hdr">
+<div class="ni ctr">
+<a href="#top" class="nl sl-link">JEJU<em>GRAPHER</em></a>
+<div class="nk" id="nk">
+<a href="#services" class="sl-link ni2">서비스</a>
+<a href="#portfolio" class="sl-link ni2">포트폴리오</a>
+<a href="#process" class="sl-link ni2">파이프라인</a>
+<a href="#pricing" class="sl-link ni2">견적</a>
+<a href="#about" class="sl-link ni2">소개</a>
+<a href="#contact" class="nc sl-link">프로젝트 상담</a>
+</div>
+<button class="nt" id="nt" aria-label="메뉴"><span></span><span></span><span></span></button>
+</div>
+</header>
+<div class="no" id="no"></div>
 
-    <!-- 플로팅 연락처 버튼 -->
-    <div class="floating-contact">
-        <a href="tel:010-6778-9199" class="floating-btn phone-btn" title="전화 상담">📞</a>
-        <a href="mailto:whipia@naver.com" class="floating-btn kakao-btn" title="이메일 문의">✉️</a>
-    </div>
-    
-    <!-- 헤더 -->
-    <header class="header" id="home">
-        <div class="container">
-            <div class="logo">
-                로고 위치<br>
-                (150x150px)<br>
-                PNG 투명 배경
-            </div>
-            <h1>제주그래퍼</h1>
-            <p class="subtitle">디지털 혁신과 창의성이 만나는 곳</p>
-            <div class="cta-buttons">
-                <a href="tel:010-6778-9199" class="btn">📞 무료 상담 받기</a>
-                <a href="#portfolio" class="btn btn-outline">🎨 포트폴리오 보기</a>
-            </div>
-        </div>
-    </header>
+<section class="hero" id="hero">
+<div class="ho1"></div><div class="ho2"></div>
+<div class="ctr hc">
+<div class="hb rv">NEXT-GEN HYBRID CREATIVE AGENCY</div>
+<h1 class="rv" style="transition-delay:.1s">제작 기간 90% 단축,<br><b>한계를 넘는 비주얼리티</b></h1>
+<p class="hp rv" style="transition-delay:.2s">배우 섭외와 로케이션 촬영 없이, 자체 개발한 <strong>'캐릭터 앵커 시스템'</strong>으로 95% 이상의 시각적 일관성을 보장하는 100% AI 상업 영상을 납품합니다. 단일 영상으로 <strong>9개 언어</strong> 글로벌 수출 시장을 동시에 공략하세요.</p>
+<div class="ha rv" style="transition-delay:.3s">
+<a href="#contact" class="btn b1 sl-link">B2B 프로젝트 상담 →</a>
+<a href="#portfolio" class="btn b2 sl-link">► 포트폴리오 성과 보기</a>
+</div>
+<div class="hs rv" style="transition-delay:.4s">
+<div><div class="hn">16<em>+</em></div><div class="hl">년 미디어 기획·연출</div></div>
+<div><div class="hn">95<em>%</em></div><div class="hl">캐릭터 일관성 보장</div></div>
+<div><div class="hn">8<em>+</em></div><div class="hl">완료 상업 프로젝트</div></div>
+<div><div class="hn">1억<em>+</em></div><div class="hl">원 렌더링 인프라</div></div>
+</div>
+</div>
+</section>
 
-    <!-- 빠른 연락 섹션 -->
-    <section class="quick-contact">
-        <div class="container">
-            <h3>🚀 지금 바로 프로젝트를 시작하세요!</h3>
-            <div class="quick-contact-buttons">
-                <a href="tel:010-6778-9199" class="quick-btn">
-                    📞 전화 상담 (010-6778-9199)
-                </a>
-                <a href="mailto:whipia@naver.com" class="quick-btn">
-                    ✉️ 이메일 문의
-                </a>
-                <a href="#contact" class="quick-btn">
-                    📋 견적 문의
-                </a>
-            </div>
-        </div>
-    </section>
+<div class="pm">
+<div class="ctr"><p>TRUSTED BY GLOBAL PARTNERS</p></div>
+<div class="mw"><div class="mc">
+<div class="cb">라이온스클럽 코리아 (LAFAM)</div><div class="cb">이지태스크 (EasyTask)</div><div class="cb">CPSP 캐나다 방위산업</div><div class="cb">세계유산센터</div><div class="cb">제주콘텐츠진흥원</div><div class="cb">제주테크노파크</div><div class="cb">(주)수창 B2B 글로벌 수출</div><div class="cb">장인의집 캐릭터 브랜딩</div><div class="cb">서부종합사회복지관</div><div class="cb">ITC TRIZ 컨퍼런스</div><div class="cb">제주담다 홀로그램</div><div class="cb">메이리 의원</div><div class="cb">오름젓갈</div><div class="cb">고팡 마을</div>
+<div class="cb">라이온스클럽 코리아 (LAFAM)</div><div class="cb">이지태스크 (EasyTask)</div><div class="cb">CPSP 캐나다 방위산업</div><div class="cb">세계유산센터</div><div class="cb">제주콘텐츠진흥원</div><div class="cb">제주테크노파크</div><div class="cb">(주)수창 B2B 글로벌 수출</div><div class="cb">장인의집 캐릭터 브랜딩</div><div class="cb">서부종합사회복지관</div><div class="cb">ITC TRIZ 컨퍼런스</div><div class="cb">제주담다 홀로그램</div><div class="cb">메이리 의원</div><div class="cb">오름젓갈</div><div class="cb">고팡 마을</div>
+</div></div>
+</div>
 
-    <!-- 회사 정보 -->
-    <section class="company-info" id="about">
-        <div class="container">
-            <h2>제주 기반 디지털 콘텐츠 전문 기업</h2>
-            <p class="subtitle">2017년부터 혁신적인 기술로 고객의 꿈을 현실로 만들어온 신뢰할 수 있는 파트너</p>
-            <div class="info-grid">
-                <div class="info-item fade-in">
-                    <strong>설립</strong>
-                    2017년 9월
-                </div>
-                <div class="info-item fade-in">
-                    <strong>대표</strong>
-                    전현석 (건국대 석사)
-                </div>
-                <div class="info-item fade-in">
-                    <strong>전화</strong>
-                    010-6778-9199
-                </div>
-                <div class="info-item fade-in">
-                    <strong>이메일</strong>
-                    whipia@naver.com
-                </div>
-                <div class="info-item fade-in">
-                    <strong>주소</strong>
-                    제주시 산천단동1길 15
-                </div>
-                <div class="info-item fade-in">
-                    <strong>사업자번호</strong>
-                    512-11-63348
-                </div>
-            </div>
-        </div>
-    </section>
+<section class="svc sp" id="services">
+<div class="ctr">
+<div class="rv"><div class="sl">CORE EXPERTISE</div><h2 class="st">비즈니스를 위한 압도적 솔루션</h2><p class="sd">기획부터 최종 납품까지 — 실사 촬영 인프라와 AI를 결합하는 하이브리드 프로덕션으로, 글로벌 에이전시에도 없는 차별화된 결과물을 제공합니다.</p></div>
+<div class="bg">
+<div class="bc bl rv"><div class="si">🎬</div><h3>AI 브랜드 필름 & 글로벌 배포</h3><p>100% AI로 렌더링하는 엔터프라이즈 홍보영상. 독자 AIRAvid 방법론으로 캐릭터 일관성 95%를 보장하며, 최대 9개국 언어 립싱크를 구현합니다. 실사 촬영 대비 제작비 70% 절감.</p><div class="tg"><span>Midjourney V7</span><span>Google Veo 3.1</span><span>Kling AI</span><span>Runway Gen-4</span><span>다국어 립싱크</span></div></div>
+<div class="bc bs rv"><div class="si">🚁</div><h3>시네마틱 드론 & FPV · 정밀 분석</h3><p>5.1K ProRes 시네마틱 드론부터 다이나믹 FPV까지 전문. M3M 멀티스펙트럴 센서 기반 정밀 농업·환경 데이터 분석 비행을 지원합니다.</p><div class="tg"><span>Mavic 3 Cine</span><span>Avata 2 FPV</span><span>M3M 멀티스펙트럴</span></div></div>
+<div class="bc bs rv"><div class="si">🌐</div><h3>16K 360° VR & 디지털 트윈</h3><p>문화유산 디지털 아카이빙, 관광지 가상투어. 3D 가우시안 스플래팅과 16K 파노라마로 브라우저에서 실시간 렌더링되는 몰입형 콘텐츠를 제작합니다.</p><div class="tg"><span>Insta360 X5</span><span>DJI Osmo 360</span><span>3D Vista</span><span>TouchDesigner</span></div></div>
+<div class="bc bl rv"><div class="si">🎓</div><h3>AI 실무 워크숍 & 컨설팅</h3><p>사내 조직의 AI 콘텐츠 자생력을 극대화하는 맞춤 교육. 300시간+ 1:1 컨설팅 노하우로 각 부서별 즉시 적용 가능한 프롬프트 가이드(30건+)를 전수합니다.</p><div class="tg"><span>기관 출강 50회+</span><span>1:1 컨설팅 300시간+</span><span>프롬프트 가이드 30건+</span></div></div>
+</div>
+</div>
+</section>
 
-    <!-- 주요 통계 -->
-    <section class="section">
-        <div class="container">
-            <h2 class="section-title">Our Numbers</h2>
-            <p class="section-subtitle">숫자로 증명하는 제주그래퍼의 전문성과 신뢰성</p>
-            <div class="stats-grid">
-                <div class="stat-item fade-in">
-                    <span class="stat-number">8</span>
-                    <p class="stat-label">년의 전문 경험</p>
-                </div>
-                <div class="stat-item fade-in">
-                    <span class="stat-number">100+</span>
-                    <p class="stat-label">완료 프로젝트</p>
-                </div>
-                <div class="stat-item fade-in">
-                    <span class="stat-number">7</span>
-                    <p class="stat-label">운영 유튜브 채널</p>
-                </div>
-                <div class="stat-item fade-in">
-                    <span class="stat-number">15+</span>
-                    <p class="stat-label">전문 장비 보유</p>
-                </div>
-                <div class="stat-item fade-in">
-                    <span class="stat-number">500+</span>
-                    <p class="stat-label">만족한 고객</p>
-                </div>
-                <div class="stat-item fade-in">
-                    <span class="stat-number">24H</span>
-                    <p class="stat-label">빠른 응답 서비스</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<section class="pf sp" id="portfolio">
+<div class="ctr">
+<div class="rv"><div class="sl">PROVEN ROI</div><h2 class="st">데이터로 증명하는 비즈니스 성과</h2><p class="sd">클릭하시면 팝업 화면으로 영상을 즉시 감상하실 수 있습니다.</p></div>
+<div class="pg">
+<div class="pc rv" data-video="jhK_eqwDmBI"><div class="pt"><img src="https://img.youtube.com/vi/jhK_eqwDmBI/maxresdefault.jpg" alt="Snow Tonight" loading="lazy"><div class="pb">▶</div></div><div class="pi"><h4>Snow Tonight — YUNA</h4><p>버추얼 아이돌 YUNA의 상업급 AI 뮤직비디오. 복잡한 모션·조명 변화 속에서도 인물 디자인을 완벽 고정.</p><div class="rb"><p>🎯 캐릭터 앵커 시스템 적용 — 영상 전 구간 95% 이상 비주얼 일관성 달성</p></div><div class="pk"><span>캐릭터 앵커</span><span>AI MV</span></div></div></div>
+<div class="pc rv" data-video="4V_pfyzVWt4"><div class="pt"><img src="https://img.youtube.com/vi/4V_pfyzVWt4/maxresdefault.jpg" alt="아리랑 2026" loading="lazy"><div class="pb">▶</div></div><div class="pi"><h4>아리랑 2026</h4><p>이날치 스타일 퓨전국악 AI 뮤직비디오. 전통 미학과 AI 기술의 혁신적 결합으로 한국 전통을 현대적으로 재해석.</p><div class="rb"><p>🎨 전통 문화 요소의 AI 비주얼라이제이션 — 글로벌 문화 콘텐츠 레퍼런스</p></div><div class="pk"><span>퓨전국악</span><span>비주얼 아트</span></div></div></div>
+<div class="pc rv" data-video="ihgfKZY7Hfs"><div class="pt"><img src="https://img.youtube.com/vi/ihgfKZY7Hfs/maxresdefault.jpg" alt="가을에 놓다" loading="lazy"><div class="pb">▶</div></div><div class="pi"><h4>가을에 놓다 (Let Go in Autumn)</h4><p>제주 가을 풍경 AI 뮤직비디오. AI 캐릭터의 감성적 내러티브를 결합하여 글로벌 배포.</p><div class="rb"><p>🌍 9개 언어 다국어 립싱크 동시 렌더링 — 단일 기획으로 글로벌 수출 시장 최적화</p></div><div class="pk"><span>9개 언어</span><span>글로벌 배포</span></div></div></div>
+<div class="pc rv" data-video="F_aT5NU5aQE"><div class="pt"><img src="https://img.youtube.com/vi/F_aT5NU5aQE/maxresdefault.jpg" alt="별가루 꿈" loading="lazy"><div class="pb">▶</div></div><div class="pi"><h4>별가루 꿈 — STARLIGHT</h4><p>AIRAkids 아동 뮤직비디오. STARLIGHT 4인조(루나/노바/스텔라/코스모) 캐릭터 IP 개발, 6개 언어 배포.</p><div class="rb"><p>👶 키즈 IP 개발 + 6개 언어 글로벌 동시 배포 — B2C 콘텐츠 확장 모델</p></div><div class="pk"><span>키즈 IP</span><span>6개 언어</span></div></div></div>
+<div class="pc rv" data-video="AI7w-trKFQQ"><div class="pt"><img src="https://img.youtube.com/vi/AI7w-trKFQQ/maxresdefault.jpg" alt="혼자 온 제주" loading="lazy"><div class="pb">▶</div></div><div class="pi"><h4>혼자 온 제주</h4><p>Lo-fi Indie Pop 힐링 여행 AI 뮤직비디오. 제주 여행의 따뜻한 감성을 AI 영상으로 구현한 관광 콘텐츠 레퍼런스.</p><div class="pk"><span>Lo-fi 힐링</span><span>관광 콘텐츠</span></div></div></div>
+<div class="pc rv" data-video="kGZKAucwMLg"><div class="pt"><img src="https://img.youtube.com/vi/kGZKAucwMLg/maxresdefault.jpg" alt="Queen of the Island" loading="lazy"><div class="pb">▶</div></div><div class="pi"><h4>Queen of the Island</h4><p>K-Hiphop / Future Bass. 제주를 배경으로 한 파워풀한 AI 뮤직비디오. 다이나믹 비주얼과 비트의 완벽한 조화.</p><div class="pk"><span>K-Hiphop</span><span>Future Bass</span></div></div></div>
+</div>
+</div>
+</section>
 
-    <!-- 핵심 서비스 -->
-    <section class="section" id="services">
-        <div class="container">
-            <h2 class="section-title">핵심 서비스</h2>
-            <p class="section-subtitle">최첨단 기술과 창의성으로 고객의 비전을 현실로 만들어드립니다</p>
-            
-            <div class="services-grid">
-                <div class="service-card fade-in">
-                    <span class="service-icon">🌟</span>
-                    <h3>별밤사진관</h3>
-                    <div class="service-badge">시그니처 서비스</div>
-                    <p>제주 청정 밤하늘을 배경으로 라이트페인팅 기법을 활용한 인생사진 촬영. 관광객과 제주도민 모두에게 특별한 추억을 선사합니다.</p>
-                    <a href="https://www.youtube.com/@starrynight2167" class="service-link">채널 보기 →</a>
-                </div>
+<section class="pr sp" id="process">
+<div class="ctr">
+<div class="rv"><div class="sl">AIRAvid PIPELINE</div><h2 class="st">무작위성(Randomness)의 완전한 제어</h2><p class="sd">"Zero Random Element" — 계산된 프롬프트 엔지니어링으로 씬 전체를 통제합니다. 92회 수정에도 흔들림 없는 파이프라인.</p></div>
+<div class="prg">
+<div class="ps rv"><div class="sn">01</div><h4>전략 & 스크립트</h4><p>타겟 분석, 타임라인 구성, AI 입력 전용 기술 지시서 설계</p></div>
+<div class="ps rv"><div class="sn">02</div><h4>DNA 앵커 세팅</h4><p>캐릭터·오브젝트 고유 참조값 구축, 시각적 일관성 95% 확보</p></div>
+<div class="ps rv"><div class="sn">03</div><h4>스틸컷 렌더링</h4><p>화각·조명·구도까지 수학적으로 명세한 프롬프트로 키프레임 추출</p></div>
+<div class="ps rv"><div class="sn">04</div><h4>비디오 생성</h4><p>Veo 3.1 / Kling AI / Runway에 이미지 주입, 자연스러운 모션 생성</p></div>
+<div class="ps rv"><div class="sn">05</div><h4>마스터링 & 납품</h4><p>오리지널 BGM, 컬러 그레이딩, 다국어 립싱크 매핑, 자막 삽입</p></div>
+</div>
+</div>
+</section>
 
-                <div class="service-card fade-in">
-                    <span class="service-icon">🎨</span>
-                    <h3>3D 모델링</h3>
-                    <p>포토그래메트리와 가우시안 스플래팅 최신 기술로 현실을 완벽하게 디지털화. 문화유산 보존부터 게임 에셋까지.</p>
-                    <a href="https://sketchfab.com/Hyun-seok.Jun" class="service-link">갤러리 보기 →</a>
-                </div>
+<section class="prc sp" id="pricing">
+<div class="ctr">
+<div class="rv"><div class="sl">B2B INVESTMENT</div><h2 class="st">투명한 가격, 극대화된 ROI</h2><p class="sd">실사 촬영 대비 제작비 70% 절감. 선금 50% / 잔금 50% · 1차 수정 + 2차 제작 포함. (VAT 별도)</p></div>
+<div class="prg2">
+<div class="pcd rv"><h4>SNS 캠페인 숏폼</h4><div class="pr2">₩330,000 <span>/ 30초</span></div><div class="pn">릴스, 쇼츠 등 숏폼 최적화</div><ul class="pfl"><li>AI 이미지 + 모션 비디오 생성</li><li>시나리오 구성 + 상업용 BGM</li><li>1차 수정 포함</li></ul><a href="#contact" class="btn b2 sl-link" style="width:100%;justify-content:center;margin-top:auto">상담 신청</a></div>
+<div class="pcd pro rv"><h4>프리미엄 브랜드 필름</h4><div class="pr2">₩1,980,000~ <span>/ 3분</span></div><div class="pn">규모에 따라 ~₩3,960,000 · VAT 별도</div><ul class="pfl"><li><strong style="color:var(--red)">AIRAvid 캐릭터 일관성 95% 보장</strong></li><li>상세 시나리오 + 스토리보드 기획</li><li>다국어 나레이션 & 립싱크(최대 9개 언어)</li><li>오리지널 AI 테마곡 작곡 (Suno AI)</li><li>1차 수정 + 2차 디테일 재제작</li></ul><a href="#contact" class="btn b1 sl-link" style="width:100%;justify-content:center;margin-top:auto">프로젝트 상담 →</a></div>
+<div class="pcd rv"><h4>워크숍 & 출강</h4><div class="pr2">맞춤 견적 <span>/ 협의</span></div><div class="pn">사내 AI 콘텐츠 자생력 강화</div><ul class="pfl"><li>AI 영상 제작 실무 교육</li><li>맞춤형 프롬프트 가이드 제공</li><li>임원 1:1 프라이빗 코칭</li><li>관공서/기업 출강 50회+ 검증</li></ul><a href="#contact" class="btn b2 sl-link" style="width:100%;justify-content:center;margin-top:auto">교육/출강 문의</a></div>
+</div>
+<div class="db rv">
+<div class="di"><div class="dv">30%</div><div class="dl">교육기관 / NGO</div></div>
+<div class="di"><div class="dv">15%</div><div class="dl">제주 지역 사업자</div></div>
+<div class="di"><div class="dv">15%</div><div class="dl">재의뢰 고객</div></div>
+<div class="di"><div class="dv">20%</div><div class="dl">대량 주문</div></div>
+</div>
+<div class="fw rv">
+<h3 class="ft">자주 묻는 질문</h3>
+<div class="fi"><button class="fq">AI 영상의 저작권과 상업적 이용은 안전한가요? <span class="fx">+</span></button><div class="fa"><p>네. 글로벌 최고급 기업용 유료 AI 라이선스(Midjourney Pro, Adobe Firefly 등)만 사용합니다. 납품물은 유튜브, TV 광고, 전광판 등 어디든 영구적으로 활용 가능합니다.</p></div></div>
+<div class="fi"><button class="fq">실제 제품 사진이나 로고를 영상에 넣을 수 있나요? <span class="fx">+</span></button><div class="fa"><p>물론입니다. 실제 팩샷이나 로고를 후반 작업으로 합성하거나, AI 엔진이 직접 참조하여 렌더링하는 하이브리드 제작이 가능합니다.</p></div></div>
+<div class="fi"><button class="fq">수정은 몇 번까지 가능한가요? <span class="fx">+</span></button><div class="fa"><p>스토리보드 단계에서 철저한 사전 컨펌을 거칩니다. 기본 1차 수정 + 2차 제작이 포함되어 있으며, 영상화 이후에는 자막/BGM/템포 등 편집 범위에서 수정됩니다.</p></div></div>
+<div class="fi"><button class="fq">선금과 잔금 구조는? <span class="fx">+</span></button><div class="fa"><p>50/50 기본 구조. 500만원 이상 대규모 프로젝트는 30/30/20/20 4단계 분할도 가능합니다.</p></div></div>
+</div>
+</div>
+</section>
 
-                <div class="service-card fade-in">
-                    <span class="service-icon">🚁</span>
-                    <h3>드론 촬영</h3>
-                    <p>DJI Mavic 3 Cine 시네마틱 촬영부터 멀티스펙트럴 분광 분석까지. 농업, 환경, 건설 분야 전문 서비스.</p>
-                    <a href="https://www.youtube.com/@jeju-fpv" class="service-link">FPV 보기 →</a>
-                </div>
+<section class="ab sp" id="about">
+<div class="ctr">
+<div class="rv"><div class="sl">STUDIO DIRECTOR & INFRASTRUCTURE</div><h2 class="st">인간의 통찰력과 압도적 인프라</h2></div>
+<div class="ag">
+<div class="ac rv">
+<h3>전현석</h3><span class="ar">CEO & Creative Director — JEJUGRAPHER</span>
+<p>2017년 설립한 제주 기반 테크-아티잔 스튜디오의 대표. 16년간 상업 카메라·조명 연출 노하우에 최신 생성형 AI 기술을 융합하여 독자적 AIRAvid 방법론을 개발했습니다.</p>
+<p>건국대학교 응용생물과학 석사 출신. 과학적 데이터 설계 능력과 아티스트의 감각적 직관을 결합, AI의 무작위 현상을 체계적으로 제어하는 파이프라인을 구축했습니다. 2022년 제주 로컬크리에이터 선정.</p>
+<div class="ql">
+<div class="qi"><span class="ql2">영상 기획·연출</span><span class="qv">16년+</span></div>
+<div class="qi"><span class="ql2">360° VR 기술</span><span class="qv">13년</span></div>
+<div class="qi"><span class="ql2">AI 통합 워크플로우</span><span class="qv">4년</span></div>
+<div class="qi"><span class="ql2">기업/기관 워크숍</span><span class="qv">50회+</span></div>
+<div class="qi"><span class="ql2">1:1 컨설팅</span><span class="qv">300시간+</span></div>
+<div class="qi"><span class="ql2">학력</span><span class="qv">건국대 석사</span></div>
+</div>
+</div>
+<div class="ad rv">
+<div class="ph"><p>"AI는 기획자의 철저한 계산 아래에서만 작동하는, 상상력을 렌더링하는 가장 진보된 도구다."</p></div>
+<h3>1억원+ 글로벌 렌더링 인프라</h3>
+<p>글로벌 최고 수준의 촬영 하드웨어와 최상위 AI 구독 인프라(월 70만원)를 상시 가동합니다.</p>
+<div class="tgr">
+<span class="tb">Mac Studio M4 64GB</span><span class="tb">Ryzen 5950X ×2</span><span class="tb">60TB+ NAS</span><span class="tb">Sony A1 8K</span><span class="tb">Sony ZV-E1</span><span class="tb">DJI Mavic 3 Cine</span><span class="tb">DJI Avata 2</span><span class="tb">DJI M3M</span><span class="tb">Insta360 X5</span><span class="tb">DJI Pocket 3</span><span class="tb">Midjourney V7</span><span class="tb">Google Veo 3.1</span><span class="tb">Kling AI</span><span class="tb">Runway Gen-4</span><span class="tb">Suno AI v5</span><span class="tb">Adobe Suite</span><span class="tb">Topaz AI</span><span class="tb">3D Vista</span>
+</div>
+<div class="chl">
+<h4>YOUTUBE CHANNELS (9개)</h4>
+<a href="https://youtube.com/@jejugrapher" target="_blank" rel="noopener">JEJUGRAPHER — 포트폴리오</a>
+<a href="https://youtube.com/@High-ResChronicles-ku4dx" target="_blank" rel="noopener">AIRAvid — AI 뮤직비디오</a>
+<a href="https://youtube.com/@airamedia_kids" target="_blank" rel="noopener">AIRAkids — 아동 콘텐츠</a>
+<a href="https://youtube.com/@aira_sleep" target="_blank" rel="noopener">AIRAsleep — 수면 유도</a>
+<a href="https://youtube.com/@jeju-fpv" target="_blank" rel="noopener">Jeju FPV — 드론</a>
+<a href="https://youtube.com/@360VRjeju" target="_blank" rel="noopener">360 VR Jeju</a>
+<a href="https://youtube.com/@AIraShortsMEDIA" target="_blank" rel="noopener">AIra Shorts — 숏폼</a>
+<a href="https://youtube.com/@TheWhipia" target="_blank" rel="noopener">현's TV</a>
+<a href="https://youtube.com/@starrynight2167" target="_blank" rel="noopener">별밤사진관</a>
+</div>
+</div>
+</div>
+</div>
+</section>
 
-                <div class="service-card fade-in">
-                    <span class="service-icon">🌐</span>
-                    <h3>360° VR 콘텐츠</h3>
-                    <p>자체 제작 16K 초고해상도 시스템으로 구현하는 차원이 다른 몰입형 가상현실 경험.</p>
-                    <a href="https://www.youtube.com/@360VRjeju" class="service-link">VR 보기 →</a>
-                </div>
+<section class="ct" id="contact">
+<div class="ctr">
+<div class="cx rv">
+<h2 class="st">프로젝트를 시작할 준비가 되셨나요?</h2>
+<p>막연한 아이디어나 경쟁사 레퍼런스 링크만 전달해 주셔도,<br>최적의 비주얼 솔루션을 역으로 제안해 드립니다.</p>
+<div class="ca">
+<a href="mailto:whipia@naver.com?subject=[제주그래퍼]%20프로젝트%20제작의뢰&body=안녕하세요.%0D%0A아래 내용을 채워주시면 24시간 이내 회신해 드리겠습니다.%0D%0A%0D%0A1. 기업명(소속): %0D%0A2. 담당자 연락처: %0D%0A3. 제작 희망 내용: %0D%0A4. 예산 및 납기일:" class="btn bcta">✉ 메일로 프로젝트 의뢰하기</a>
+<a href="tel:010-6778-9199" class="btn bctao">📞 010-6778-9199</a>
+</div>
+<div class="cr">
+<a href="mailto:whipia@naver.com" class="cc">whipia@naver.com</a>
+<a href="https://instagram.com/jejugrapher" target="_blank" rel="noopener" class="cc">@jejugrapher</a>
+</div>
+</div>
+<p style="text-align:center;margin-top:18px;font-size:.78rem;color:var(--tx3)">제주시 산천단동1길 15, 1동 3층 303호 · 사업자등록번호 512-11-63348</p>
+</div>
+</section>
 
-                <div class="service-card fade-in">
-                    <span class="service-icon">🤖</span>
-                    <h3>AI 콘텐츠 제작</h3>
-                    <p>Midjourney, Sora, Kling 등 최신 AI 도구를 활용한 혁신적 이미지, 영상, 음악 제작 서비스.</p>
-                    <a href="https://www.youtube.com/@High-ResChronicles-ku4dx" class="service-link">AI 영상 보기 →</a>
-                </div>
+<footer><div class="ctr"><p>© 2026 JEJUGRAPHER — 차세대 융합형 AI 영상 제작 스튜디오 · 제주</p></div></footer>
 
-                <div class="service-card fade-in">
-                    <span class="service-icon">💻</span>
-                    <h3>웹 VR 경험</h3>
-                    <p>3D Vista를 활용한 인터랙티브 웹 기반 가상투어 제작. 부동산, 관광, 교육 분야 특화.</p>
-                    <a href="https://cloud.3dvista.com//hosting/1552401/9/index.htm" class="service-link">투어 체험 →</a>
-                </div>
-            </div>
-        </div>
-    </section>
+<a href="#contact" class="fab sl-link" id="fab">💬 프로젝트 상담</a>
 
-    <!-- 주요 프로젝트 -->
-    <section class="section" id="portfolio">
-        <div class="container">
-            <h2 class="section-title">주요 프로젝트</h2>
-            <p class="section-subtitle">실제 완료된 프로젝트들로 검증된 제주그래퍼의 기술력</p>
-            
-            <div class="projects-grid">
-                <div class="project-card fade-in">
-                    <div class="project-image">
-                        🏔️ 제주 자연유산<br>디지털화 프로젝트
-                    </div>
-                    <div class="project-content">
-                        <h4>세계유산센터 협력 프로젝트</h4>
-                        <p><strong>클라이언트:</strong> 세계유산센터</p>
-                        <p>한라산, 만장굴, 김녕굴 등 제주의 소중한 자연유산을 3D 디지털 보존. 후손들에게 전할 귀중한 문화유산 아카이브 구축.</p>
-                        <a href="https://sketchfab.com/Hyun-seok.Jun" class="project-link">3D 모델 보기 →</a>
-                    </div>
-                </div>
+<div class="vm" id="vm">
+<div class="vb"></div>
+<button class="vc" id="vmc">&times;</button>
+<div class="vd"><div id="vct"></div></div>
+</div>
 
-                <div class="project-card fade-in">
-                    <div class="project-image">
-                        🌿 거문오름<br>생태 분석 프로젝트
-                    </div>
-                    <div class="project-content">
-                        <h4>멀티스펙트럴 드론 생태 분석</h4>
-                        <p><strong>핵심 기술:</strong> DJI Mavic 3 Multispectral</p>
-                        <p>삼나무 수목분포 정밀 측정 및 NDVI, NDRE 지수를 활용한 과학적 환경 데이터 분석 보고서 제작.</p>
-                        <a href="https://drive.google.com/file/d/1e3pzWLDVsfM2n0FN6Il1pPL8IWRkKvtX/view" class="project-link">분석 보고서 →</a>
-                    </div>
-                </div>
+<script>
+(function(){
+'use strict';
+var hdr=document.getElementById('hdr'),fab=document.getElementById('fab');
+window.addEventListener('scroll',function(){
+hdr.classList.toggle('scrolled',window.scrollY>50);
+fab.classList.toggle('show',window.scrollY>600);
+});
 
-                <div class="project-card fade-in">
-                    <div class="project-image">
-                        🏘️ 오조리 마을<br>디지털 투어
-                    </div>
-                    <div class="project-content">
-                        <h4>마을 전체 디지털화 프로젝트</h4>
-                        <p><strong>기술:</strong> 3D Vista + Spatial.io</p>
-                        <p>전통 마을의 현재 모습과 옛 사진을 결합한 인터랙티브 웹 투어 및 가상 전시관 구현.</p>
-                        <a href="https://cloud.3dvista.com//hosting/1552401/9/index.htm" class="project-link">투어 체험 →</a>
-                    </div>
-                </div>
+var nt=document.getElementById('nt'),nk=document.getElementById('nk'),no=document.getElementById('no');
+function tm(){var o=nk.classList.toggle('open');no.classList.toggle('open');nt.classList.toggle('active');document.body.classList.toggle('no-scroll',o)}
+nt.addEventListener('click',tm);
+no.addEventListener('click',tm);
 
-                <div class="project-card fade-in">
-                    <div class="project-image">
-                        🎬 제주 오감도<br>16K 몰입형 콘텐츠
-                    </div>
-                    <div class="project-content">
-                        <h4>AI 기반 초고해상도 영상</h4>
-                        <p><strong>상영 예정:</strong> 노형수퍼마켓</p>
-                        <p>16K 초고해상도와 AI 영상 강화 기술이 결합된 혁신적인 제주 홍보 콘텐츠. 몰입형 디스플레이 최적화.</p>
-                        <span style="color: #e74c3c; font-weight: bold;">★ 2024년 대표 프로젝트</span>
-                    </div>
-                </div>
+document.querySelectorAll('a.sl-link').forEach(function(a){
+a.addEventListener('click',function(e){
+var t=this.getAttribute('href');
+if(!t||t.charAt(0)!=='#')return;
+e.preventDefault();
+if(nk.classList.contains('open'))tm();
+if(t==='#top'||t==='#'){window.scrollTo({top:0,behavior:'smooth'});return}
+var s=document.querySelector(t);
+if(!s)return;
+s.querySelectorAll('.rv').forEach(function(el){el.classList.add('vis');el.style.transitionDelay='0s';el.style.transitionDuration='.35s'});
+var off=90,pos=s.getBoundingClientRect().top+window.pageYOffset-off;
+window.scrollTo({top:pos,behavior:'smooth'});
+});
+});
 
-                <div class="project-card fade-in">
-                    <div class="project-image">
-                        🛒 360도 마트<br>디스플레이 구현
-                    </div>
-                    <div class="project-content">
-                        <h4>상업 공간 VR 혁신 사례</h4>
-                        <p><strong>성과:</strong> 고객 체류시간 30% 증가</p>
-                        <p>실제 마트에 360도 디스플레이를 설치하여 새로운 쇼핑 경험 구현. 상업적 VR 활용의 성공 모델.</p>
-                        <a href="https://youtu.be/A3n1rbk6Fis" class="project-link">시연 영상 →</a>
-                    </div>
-                </div>
+var vm=document.getElementById('vm'),vmc=document.getElementById('vmc'),vct=document.getElementById('vct');
+document.querySelectorAll('.pc').forEach(function(c){
+c.addEventListener('click',function(){
+var id=this.getAttribute('data-video');
+if(!id)return;
+vct.innerHTML='<iframe src="https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0&modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;height:100%;border:none"></iframe>';
+vm.classList.add('active');
+document.body.classList.add('no-scroll');
+});
+});
+function cm(){vm.classList.remove('active');document.body.classList.remove('no-scroll');setTimeout(function(){vct.innerHTML=''},400)}
+vmc.addEventListener('click',cm);
+vm.addEventListener('click',function(e){if(e.target===vm||e.target.classList.contains('vb'))cm()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&vm.classList.contains('active'))cm()});
 
-                <div class="project-card fade-in">
-                    <div class="project-image">
-                        🏫 제주영어교육도시<br>항공 촬영
-                    </div>
-                    <div class="project-content">
-                        <h4>대규모 도시 전경 프로젝트</h4>
-                        <p><strong>규모:</strong> 전체 교육도시 360도 촬영</p>
-                        <p>드론을 활용한 대규모 도시 전경 360도 촬영 및 인터랙티브 웹 서비스 구현.</p>
-                        <a href="https://cloud.3dvista.com//hosting/1552401/13/index.htm" class="project-link">전경 보기 →</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+var obs=new IntersectionObserver(function(entries,o){
+entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('vis');setTimeout(function(){en.target.style.transitionDelay='0s'},800);o.unobserve(en.target)}});
+},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(function(el){obs.observe(el)});
 
-    <!-- 유튜브 채널 포트폴리오 -->
-    <section class="section">
-        <div class="container">
-            <h2 class="section-title">YouTube 포트폴리오</h2>
-            <p class="section-subtitle">7개 전문 채널에서 제주그래퍼의 실시간 작업물과 기술력을 확인하세요</p>
-            
-            <div class="youtube-grid">
-                <div class="youtube-card fade-in">
-                    <div class="youtube-thumbnail">📹</div>
-                    <div class="youtube-info">
-                        <h4>jejugrapher (메인 채널)</h4>
-                        <p>AI, 드론, 360카메라를 활용한 다양한 기술 실험과 혁신적인 시도들을 담은 종합 기술 채널</p>
-                        <a href="https://www.youtube.com/@jejugrapher" class="youtube-link">채널 방문</a>
-                    </div>
-                </div>
+document.querySelectorAll('.fq').forEach(function(b){
+b.addEventListener('click',function(){
+var it=b.parentElement,ac=it.classList.contains('active');
+document.querySelectorAll('.fi').forEach(function(el){el.classList.remove('active');el.querySelector('.fa').style.maxHeight=null});
+if(!ac){it.classList.add('active');var ans=it.querySelector('.fa');ans.style.maxHeight=ans.scrollHeight+'px'}
+});
+});
 
-                <div class="youtube-card fade-in">
-                    <div class="youtube-thumbnail">🎬</div>
-                    <div class="youtube-info">
-                        <h4>AI Visionary</h4>
-                        <p>Midjourney, Sora, Kling 등 최신 AI 도구를 활용한 창의적 영상 제작 전문 채널</p>
-                        <a href="https://www.youtube.com/@High-ResChronicles-ku4dx" class="youtube-link">채널 방문</a>
-                    </div>
-                </div>
-
-                <div class="youtube-card fade-in">
-                    <div class="youtube-thumbnail">🌐</div>
-                    <div class="youtube-info">
-                        <h4>360VRjeju</h4>
-                        <p>제주의 아름다운 자연을 16K 초고해상도 360도 VR로 담아낸 몰입형 콘텐츠 전문</p>
-                        <a href="https://www.youtube.com/@360VRjeju" class="youtube-link">채널 방문</a>
-                    </div>
-                </div>
-
-                <div class="youtube-card fade-in">
-                    <div class="youtube-thumbnail">🎭</div>
-                    <div class="youtube-info">
-                        <h4>AIRA-ShortsMEDIA</h4>
-                        <p>AI 인플루언서를 활용한 숏폼 콘텐츠로 새로운 미디어 트렌드를 선도하는 채널</p>
-                        <a href="https://www.youtube.com/@AIraShortsMEDIA" class="youtube-link">채널 방문</a>
-                    </div>
-                </div>
-
-                <div class="youtube-card fade-in">
-                    <div class="youtube-thumbnail">⭐</div>
-                    <div class="youtube-info">
-                        <h4>별밤사진관</h4>
-                        <p>제주 밤하늘을 배경으로 한 라이트페인팅 체험과 야간 촬영 노하우를 공유하는 시그니처 채널</p>
-                        <a href="https://www.youtube.com/@starrynight2167" class="youtube-link">채널 방문</a>
-                    </div>
-                </div>
-
-                <div class="youtube-card fade-in">
-                    <div class="youtube-thumbnail">🚁</div>
-                    <div class="youtube-info">
-                        <h4>jeju-fpv</h4>
-                        <p>FPV 드론을 활용한 역동적인 촬영 기법과 AI 화질 개선 기술 테스트를 공개하는 채널</p>
-                        <a href="https://www.youtube.com/@jeju-fpv" class="youtube-link">채널 방문</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ 섹션 -->
-    <section class="faq">
-        <div class="container">
-            <h2 class="section-title">자주 묻는 질문</h2>
-            <p class="section-subtitle">고객들이 가장 궁금해하는 질문들을 모았습니다</p>
-            
-            <div class="faq-item fade-in">
-                <div class="faq-question" onclick="toggleFAQ(this)">
-                    Q. 프로젝트 비용은 어떻게 책정되나요?
-                </div>
-                <div class="faq-answer">
-                    프로젝트 규모, 사용 기술, 작업 기간에 따라 맞춤 견적을 제공합니다. 무료 상담을 통해 정확한 견적을 받아보세요. 일반적으로 별밤사진관은 10만원부터, 드론 촬영은 50만원부터 시작됩니다.
-                </div>
-            </div>
-
-            <div class="faq-item fade-in">
-                <div class="faq-question" onclick="toggleFAQ(this)">
-                    Q. 프로젝트 완료까지 얼마나 걸리나요?
-                </div>
-                <div class="faq-answer">
-                    프로젝트 종류에 따라 다릅니다. 별밤사진관은 당일 완료, 3D 모델링은 1-2주, 대규모 VR 프로젝트는 1-3개월 소요됩니다. 정확한 일정은 상담 시 안내해드립니다.
-                </div>
-            </div>
-
-            <div class="faq-item fade-in">
-                <div class="faq-question" onclick="toggleFAQ(this)">
-                    Q. 제주도 외 지역에서도 서비스를 받을 수 있나요?
-                </div>
-                <div class="faq-answer">
-                    네, 전국 어디든 출장 서비스가 가능합니다. 다만 교통비와 숙박비가 별도로 발생할 수 있습니다. 원격으로 가능한 AI 콘텐츠 제작, 3D 모델링 등은 전국 서비스 제공합니다.
-                </div>
-            </div>
-
-            <div class="faq-item fade-in">
-                <div class="faq-question" onclick="toggleFAQ(this)">
-                    Q. 완성된 파일은 어떤 형태로 받나요?
-                </div>
-                <div class="faq-answer">
-                    프로젝트에 따라 다양한 형태로 제공됩니다. 영상은 MP4, 4K/8K 해상도, 3D 모델은 OBJ, FBX 등 범용 형식, VR 콘텐츠는 웹 링크 또는 앱 형태로 전달됩니다.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 연락처 -->
-    <section class="contact" id="contact">
-        <div class="container">
-            <h2 class="section-title" style="color: white;">문의 및 상담</h2>
-            <p class="section-subtitle" style="color: rgba(255,255,255,0.9);">
-                당신의 아이디어를 현실로 만들어드립니다.<br>지금 무료 상담을 받아보세요!
-            </p>
-            
-            <div class="contact-grid">
-                <div class="contact-item fade-in">
-                    <span class="contact-icon">📞</span>
-                    <h4>전화 상담</h4>
-                    <div class="contact-info">010-6778-9199</div>
-                    <p>평일 09:00 - 18:00<br>주말 및 공휴일 상담 가능</p>
-                </div>
-
-                <div class="contact-item fade-in">
-                    <span class="contact-icon">✉️</span>
-                    <h4>이메일 문의</h4>
-                    <div class="contact-info">whipia@naver.com</div>
-                    <p>24시간 접수 가능<br>상세한 프로젝트 문의서 첨부</p>
-                </div>
-
-                <div class="contact-item fade-in">
-                    <span class="contact-icon">📍</span>
-                    <h4>사무실 방문</h4>
-                    <div class="contact-info">제주시 산천단동1길 15</div>
-                    <p>사전 예약 필수<br>장비 시연 및 포트폴리오 확인</p>
-                </div>
-
-                <div class="contact-item fade-in">
-                    <span class="contact-icon">🌐</span>
-                    <h4>온라인 포트폴리오</h4>
-                    <div class="contact-info">7개 YouTube 채널</div>
-                    <p>실시간 작업물 확인<br>기술력 검증 가능</p>
-                </div>
-            </div>
-
-            <div style="margin-top: 60px;">
-                <a href="tel:010-6778-9199" class="btn" style="font-size: 1.3em; padding: 25px 50px;">
-                    📞 지금 바로 무료 상담받기
-                </a>
-                <p style="margin-top: 20px; opacity: 0.9;">
-                    평균 응답 시간: <strong>2시간 이내</strong> | 무료 견적: <strong>24시간 이내</strong>
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- 푸터 -->
-    <footer class="footer">
-        <div class="container">
-            <h3>제주그래퍼와 함께 상상 그 이상의 현실을 만나보세요!</h3>
-            
-            <div class="footer-links">
-                <div class="footer-section">
-                    <h4>🎬 YouTube 채널</h4>
-                    <a href="https://www.youtube.com/@jejugrapher">jejugrapher (메인 채널)</a>
-                    <a href="https://www.youtube.com/@High-ResChronicles-ku4dx">AI Visionary</a>
-                    <a href="https://www.youtube.com/@360VRjeju">360VRjeju</a>
-                    <a href="https://www.youtube.com/@AIraShortsMEDIA">AIRA-ShortsMEDIA</a>
-                    <a href="https://www.youtube.com/@starrynight2167">별밤사진관</a>
-                    <a href="https://www.youtube.com/@jeju-fpv">jeju-fpv</a>
-                    <a href="https://www.youtube.com/@haistirya80">haistirya80</a>
-                </div>
-
-                <div class="footer-section">
-                    <h4>🌐 프로젝트 결과물</h4>
-                    <a href="https://sketchfab.com/Hyun-seok.Jun">3D 모델 갤러리</a>
-                    <a href="https://cloud.3dvista.com//hosting/1552401/9/index.htm">오조리 마을 투어</a>
-                    <a href="https://cloud.3dvista.com//hosting/1552401/13/index.htm">제주교육도시 전경</a>
-                    <a href="https://youtu.be/A3n1rbk6Fis">360도 마트 시연</a>
-                    <a href="https://www.spatial.io/s/ojori-yes-sajinjeon-65bc7972a85d981acad9fbe2?share=4516772740041135852">오조리 옛사진전</a>
-                    <a href="https://drive.google.com/file/d/1e3pzWLDVsfM2n0FN6Il1pPL8IWRkKvtX/view">거문오름 분석 보고서</a>
-                </div>
-
-                <div class="footer-section">
-                    <h4>📞 연락처 정보</h4>
-                    <a href="tel:010-6778-9199">📞 010-6778-9199</a>
-                    <a href="mailto:whipia@naver.com">✉️ whipia@naver.com</a>
-                    <a>📍 제주특별자치도 제주시 산천단동1길 15</a>
-                    <a>🏢 제주그래퍼 (사업자: 512-11-63348)</a>
-                    <a>👨‍💼 대표: 전현석 (건국대학교 석사)</a>
-                </div>
-
-                <div class="footer-section">
-                    <h4>💡 주요 서비스</h4>
-                    <a>🌟 별밤사진관 (시그니처)</a>
-                    <a>🎨 3D 모델링 & 포토그래메트리</a>
-                    <a>🚁 전문 드론 촬영 & 분광분석</a>
-                    <a>🤖 AI 기반 콘텐츠 제작</a>
-                    <a>🌐 360도 VR & 웹 경험</a>
-                    <a>💻 맞춤형 디지털 솔루션</a>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>© 2024 제주그래퍼(Jejugrapher). All rights reserved.</p>
-                <p style="margin-top: 15px; opacity: 0.8;">
-                    <strong>디지털 혁신의 중심, 제주그래퍼가 여러분의 성공 파트너가 되겠습니다.</strong>
-                </p>
-                <p style="margin-top: 10px; font-size: 0.9em;">
-                    이 웹사이트는 Netlify를 통해 배포되었습니다 | 최적화된 모바일 환경 지원
-                </p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        // 로딩 화면 제거
-        window.addEventListener('load', function() {
-            const loading = document.getElementById('loading');
-            setTimeout(() => {
-                loading.classList.add('hidden');
-            }, 1000);
-        });
-
-        // 네비게이션 스크롤 효과
-        window.addEventListener('scroll', function() {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 100) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // 모바일 메뉴 토글
-        document.getElementById('menu-toggle').addEventListener('click', function() {
-            const navMenu = document.getElementById('nav-menu');
-            navMenu.classList.toggle('active');
-        });
-
-        // 스크롤 애니메이션
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        // 모든 fade-in 요소 관찰
-        document.addEventListener('DOMContentLoaded', function() {
-            const fadeElements = document.querySelectorAll('.fade-in');
-            fadeElements.forEach(el => {
-                observer.observe(el);
-            });
-        });
-
-        // 부드러운 스크롤
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // FAQ 토글 함수
-        function toggleFAQ(element) {
-            const answer = element.nextElementSibling;
-            const isActive = answer.classList.contains('active');
-            
-            // 모든 FAQ 답변 닫기
-            document.querySelectorAll('.faq-answer').forEach(ans => {
-                ans.classList.remove('active');
-            });
-            
-            // 클릭한 FAQ만 열기 (이미 열려있지 않은 경우)
-            if (!isActive) {
-                answer.classList.add('active');
-            }
-        }
-
-        // 실시간 시계 (옵션)
-        function updateClock() {
-            const now = new Date();
-            const koreaTime = new Date(now.getTime() + (9 * 60 * 60 * 1000));
-            const timeString = koreaTime.toLocaleString('ko-KR', {
-                timeZone: 'Asia/Seoul',
-                hour12: false
-            });
-            
-            // 필요시 시계 표시 영역에 추가
-            // document.getElementById('clock').textContent = timeString;
-        }
-
-        // 페이지 성능 추적 (Google Analytics 연동 시)
-        gtag('event', 'page_view', {
-            page_title: '제주그래퍼 메인페이지',
-            page_location: window.location.href
-        });
-
-        // 연락처 클릭 추적
-        document.querySelectorAll('a[href^="tel:"]').forEach(link => {
-            link.addEventListener('click', function() {
-                gtag('event', 'phone_call', {
-                    event_category: 'contact',
-                    event_label: 'phone_button_click'
-                });
-            });
-        });
-    </script>
+var secs=document.querySelectorAll('section[id]'),nis=document.querySelectorAll('.ni2');
+window.addEventListener('scroll',function(){
+var cur='';
+secs.forEach(function(s){if(window.pageYOffset>=s.offsetTop-200)cur=s.getAttribute('id')});
+nis.forEach(function(li){li.classList.remove('act');if(li.getAttribute('href')==='#'+cur)li.classList.add('act')});
+});
+})();
+</script>
 </body>
 </html>
