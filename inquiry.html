@@ -16,16 +16,18 @@ nav{position:fixed;top:0;left:0;right:0;background:rgba(248,244,236,.94);border-
 .navin{max-width:1180px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
 .logo{font-family:'Gowun Batang',serif;font-weight:700;font-size:19px;letter-spacing:2px;color:var(--navy)}
 .back{font-size:14px;color:var(--terra)}
-.wrap{max-width:720px;margin:0 auto;padding:150px 24px 120px}
+.wrap{max-width:760px;margin:0 auto;padding:150px 24px 120px}
 h1{font-size:30px;margin-bottom:14px}
-h2{font-size:20px;margin:64px 0 6px}
+h2{font-size:20px;margin:70px 0 6px}
 .lead{font-size:15px;color:#5a544c;margin-bottom:44px}
-form,.mycard{background:#fff;border:1px solid var(--line);padding:38px 34px}
+form,.bcard{background:#fff;border:1px solid var(--line)}
+form{padding:38px 34px}
 label{display:block;font-size:13.5px;font-weight:500;color:var(--navy);margin:22px 0 7px}
 label:first-child{margin-top:0}
 input,select,textarea{width:100%;border:1px solid var(--line);background:var(--bg);padding:12px 14px;font-family:inherit;font-size:14.5px;color:var(--ink)}
 input:focus,select:focus,textarea:focus{outline:1px solid var(--terra)}
 textarea{min-height:170px;resize:vertical}
+.hint{font-size:12px;color:#8d8577;margin-top:5px}
 .btnrow{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
 .cta{display:inline-block;background:var(--terra);color:#fff;padding:14px 30px;font-size:15px;font-weight:500;border:0;cursor:pointer}
 .cta:hover{background:#b56a4c}
@@ -33,22 +35,27 @@ textarea{min-height:170px;resize:vertical}
 .cta.sec:hover{background:#17304f}
 .note{font-size:12.5px;color:#8d8577;margin-top:26px;line-height:1.8}
 .note b{color:var(--terra);font-weight:500}
-.mylead{font-size:13.5px;color:#8d8577;margin-bottom:18px}
-.mycard{padding:22px 24px;margin-bottom:14px}
-.mhead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
-.mt{font-size:15px;font-weight:500;color:var(--navy)}
-.mmeta{font-size:12.5px;color:#8d8577;margin-top:3px}
+.blead{font-size:13.5px;color:#8d8577;margin-bottom:18px}
+.bcard{padding:20px 24px;margin-bottom:14px}
+.bhead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.bt{font-size:15px;font-weight:500;color:var(--navy)}
+.bmeta{font-size:12.5px;color:#8d8577;margin-top:3px}
+.tags{display:flex;gap:6px;align-items:center}
 .state{font-size:11.5px;padding:2px 10px;white-space:nowrap}
 .state.wait{color:var(--terra);border:1px solid var(--terra)}
-.state.done{color:#4a7a52;border:1px solid #9dbf a3}
 .state.done{color:#4a7a52;border:1px solid #9dbfa3}
-.state.mail{color:#8d8577;border:1px solid var(--line)}
-.mbody{font-size:13.5px;color:#5a544c;margin-top:12px;white-space:pre-wrap;border-top:1px dashed var(--line);padding-top:12px}
-.mlink{display:inline-block;margin-top:10px;font-size:12.5px;color:var(--terra);border-bottom:1px solid var(--terra)}
+.state.lock{color:#6b5f4c;border:1px solid #cbbfa8;background:#faf6ec}
+.bbody{font-size:13.5px;color:#5a544c;margin-top:12px;white-space:pre-wrap;border-top:1px dashed var(--line);padding-top:12px}
+.pwrow{display:flex;gap:8px;margin-top:14px}
+.pwrow input{flex:1}
+.pwbtn{background:var(--navy);color:#fff;border:0;padding:0 20px;font-size:13.5px;cursor:pointer;font-family:inherit}
+.pwbtn:hover{background:#17304f}
+.pwerr{font-size:12.5px;color:#b0502e;margin-top:6px;min-height:16px}
+.blink{display:inline-block;margin-top:10px;font-size:12.5px;color:var(--terra);border-bottom:1px solid var(--terra)}
 .empty{background:#fff;border:1px dashed var(--line);padding:44px 20px;text-align:center;color:#8d8577;font-size:14px}
-.refresh{border:1px solid var(--navy);color:var(--navy);background:transparent;padding:8px 18px;font-size:13px;cursor:pointer;margin-bottom:16px}
+.refresh{border:1px solid var(--navy);color:var(--navy);background:transparent;padding:8px 18px;font-size:13px;cursor:pointer;margin-bottom:16px;font-family:inherit}
 .refresh:hover{background:var(--navy);color:#fff}
-@media(max-width:767px){.wrap{padding:120px 18px 90px}form,.mycard{padding:26px 20px}}
+@media(max-width:767px){.wrap{padding:120px 18px 90px}form{padding:26px 20px}}
 </style>
 </head>
 <body>
@@ -74,44 +81,102 @@ textarea{min-height:170px;resize:vertical}
     </select>
     <label for="msg">문의 내용</label>
     <textarea id="msg" placeholder="프로젝트 내용, 일정, 참고 링크 등을 자유롭게 적어 주세요."></textarea>
+    <label for="pw">글 비밀번호 <span style="color:#8d8577;font-weight:400">(선택)</span></label>
+    <input id="pw" type="password" placeholder="입력하면 비밀글로 등록됩니다" autocomplete="new-password">
+    <div class="hint">비밀글은 내용이 암호화되어 올라가며, 게시판에서 비밀번호를 입력해야 열람할 수 있습니다. 관리자는 비밀번호 없이 열람합니다.</div>
     <div class="btnrow">
       <button class="cta" onclick="sendGithub()">문의 남기기</button>
       <button class="cta sec" onclick="sendMail()">이메일로 보내기</button>
     </div>
     <p class="note">
-      <b>문의 남기기</b>는 GitHub 계정 로그인 후 등록되며, 등록 내용은 답변과 함께 아래 <b>내 문의</b>에서 확인할 수 있습니다.<br>
-      견적 등 <b>비공개 문의는 이메일</b>(whipia@naver.com) 또는 전화 010-6778-9199 를 이용해 주세요.
+      <b>문의 남기기</b>는 GitHub 계정 로그인 후 등록됩니다. 등록 화면에서 내용이 암호문으로 보이는 것이 정상입니다 — 그대로 Submit 하시면 됩니다.<br>
+      이메일 문의는 whipia@naver.com, 전화는 010-6778-9199 입니다.
     </p>
   </form>
 
+  <h2>문의 게시판</h2>
+  <p class="blead">모든 문의가 표시됩니다. 🔒 비밀글은 비밀번호를 입력해야 내용을 볼 수 있습니다.</p>
+  <button class="refresh" onclick="loadBoard()">목록 새로고침</button>
+  <div id="board"><div class="empty">문의를 불러오는 중…</div></div>
+
   <h2>내 문의</h2>
-  <p class="mylead">이 브라우저에서 남긴 문의만 표시됩니다. 다른 사람의 문의는 보이지 않습니다.</p>
-  <button class="refresh" onclick="refreshStatus()">답변 상태 새로고침</button>
+  <p class="blead">이 브라우저에서 남긴 문의만 표시됩니다.</p>
   <div id="mylist"><div class="empty">아직 남긴 문의가 없습니다.</div></div>
 </div>
 
 <script>
 const REPO='jejugrapher/jejugrapher-website';
 const KEY='jg_my_inquiries';
+/* 관리자 공개키 (비밀글의 관리자 열람용 — 암호화만 가능) */
+const ADMIN_PUB='MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7JICkiyRR6Y0JEcb86yGHuZvESJhw8m0nfGlWMaEgq5N9/MeWosXT3gLkHrXYYHxs/zmWtOrR2LvbRGaRjDShvMbLdOcHZeklZOB5/BFurs23YMWiom+psCaeO28XfAmCYmxDDp2ZX/tsQAIddtZzpwaAu7q9bvDy6zXDD2Cj6GFV9u2nfFxNUcBSDh2k1OoTACngpWSUuz2zaIq5gSsxv0gV4eN+4LE2U+AVIyqksRk2LyVrRZCLc6BN7rAU9ZZq5+eWgUc8pMrWd4LKj2i77f0zUY2XtvhJFRrj9w1ufYGJPAZphWnyU2IKOlnUGHNtYjw9p3SeWID7IfOEAGoKwIDAQAB';
+
+/* ---------- 공통 유틸 ---------- */
+const te=new TextEncoder(),td=new TextDecoder();
+const b64e=b=>btoa(String.fromCharCode(...new Uint8Array(b)));
+const b64d=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function fmt(d){const t=new Date(d);const p=n=>String(n).padStart(2,'0');
+  return `${t.getFullYear()}.${p(t.getMonth()+1)}.${p(t.getDate())} ${p(t.getHours())}:${p(t.getMinutes())}`;}
+function stamp(){const t=new Date();const p=n=>String(n).padStart(2,'0');
+  return `${String(t.getFullYear()).slice(2)}${p(t.getMonth()+1)}${p(t.getDate())}-${p(t.getHours())}${p(t.getMinutes())}${p(t.getSeconds())}`;}
 function load(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}}
 function save(a){localStorage.setItem(KEY,JSON.stringify(a))}
+
+/* ---------- 암호화 ---------- */
+async function deriveKek(pw,salt){
+  const base=await crypto.subtle.importKey('raw',te.encode(pw),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:200000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+async function encryptPost(pw,contentObj){
+  const K=await crypto.subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt']);
+  const rawK=await crypto.subtle.exportKey('raw',K);
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},K,te.encode(JSON.stringify(contentObj)));
+  const us=crypto.getRandomValues(new Uint8Array(16));
+  const ui=crypto.getRandomValues(new Uint8Array(12));
+  const kek=await deriveKek(pw,us);
+  const uw=await crypto.subtle.encrypt({name:'AES-GCM',iv:ui},kek,rawK);
+  const pub=await crypto.subtle.importKey('spki',b64d(ADMIN_PUB),{name:'RSA-OAEP',hash:'SHA-256'},false,['encrypt']);
+  const aw=await crypto.subtle.encrypt({name:'RSA-OAEP'},pub,rawK);
+  return {v:1,iv:b64e(iv),ct:b64e(ct),us:b64e(us),ui:b64e(ui),uw:b64e(uw),aw:b64e(aw)};
+}
+async function decryptPostWithPw(enc,pw){
+  const kek=await deriveKek(pw,b64d(enc.us));
+  const rawK=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(enc.ui)},kek,b64d(enc.uw));
+  const K=await crypto.subtle.importKey('raw',rawK,{name:'AES-GCM'},false,['decrypt']);
+  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(enc.iv)},K,b64d(enc.ct));
+  return JSON.parse(td.decode(pt));
+}
+function parseEnc(body){
+  const m=(body||'').match(/<!--JGENC(\{[\s\S]*?\})-->/);
+  if(!m)return null;
+  try{return JSON.parse(m[1])}catch(e){return null}
+}
+
+/* ---------- 제출 ---------- */
 function collect(){
   return {name:document.getElementById('name').value.trim(),
           contact:document.getElementById('contact').value.trim(),
           field:document.getElementById('field').value,
-          msg:document.getElementById('msg').value.trim()};
+          msg:document.getElementById('msg').value.trim(),
+          pw:document.getElementById('pw').value};
 }
-function stamp(){const t=new Date();const p=n=>String(n).padStart(2,'0');
-  return `${String(t.getFullYear()).slice(2)}${p(t.getMonth()+1)}${p(t.getDate())}-${p(t.getHours())}${p(t.getMinutes())}${p(t.getSeconds())}`;}
-function sendGithub(){
+async function sendGithub(){
   const d=collect();
   if(!d.msg){alert('문의 내용을 적어 주세요.');return;}
   const code=stamp();
-  const title=`[문의] ${d.field}${d.name?` — ${d.name}`:''} (${code})`;
-  const body=`**성함/소속**: ${d.name||'-'}\n**연락처**: ${d.contact||'-'}\n**분야**: ${d.field}\n\n**내용**\n${d.msg}`;
+  let title,body;
+  if(d.pw){
+    title=`[문의] ${d.field} · 🔒 (${code})`;
+    const enc=await encryptPost(d.pw,{name:d.name,contact:d.contact,msg:d.msg});
+    body=`🔒 비밀글입니다. https://jejugrapher.com/inquiry.html 문의 게시판에서 비밀번호로 열람할 수 있습니다.\n\n<!--JGENC${JSON.stringify(enc)}-->`;
+  }else{
+    title=`[문의] ${d.field}${d.name?` — ${d.name}`:''} (${code})`;
+    body=`**성함/소속**: ${d.name||'-'}\n**연락처**: ${d.contact||'-'}\n**분야**: ${d.field}\n\n**내용**\n${d.msg}`;
+  }
   const arr=load();
-  arr.unshift({t:title,field:d.field,msg:d.msg,date:new Date().toISOString(),via:'board',state:null,url:null});
-  save(arr); render();
+  arr.unshift({t:title,field:d.field,msg:d.msg,date:new Date().toISOString(),via:'board',locked:!!d.pw,state:null,url:null});
+  save(arr); renderMy();
   window.open(`https://github.com/${REPO}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`,'_blank');
 }
 function sendMail(){
@@ -121,49 +186,95 @@ function sendMail(){
   const body=`성함/소속: ${d.name||'-'}\n연락처: ${d.contact||'-'}\n분야: ${d.field}\n\n내용:\n${d.msg}`;
   const arr=load();
   arr.unshift({t:subject,field:d.field,msg:d.msg,date:new Date().toISOString(),via:'email',state:'mail',url:null});
-  save(arr); render();
+  save(arr); renderMy();
   location.href=`mailto:whipia@naver.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
-function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
-function fmt(d){const t=new Date(d);const p=n=>String(n).padStart(2,'0');
-  return `${t.getFullYear()}.${p(t.getMonth()+1)}.${p(t.getDate())} ${p(t.getHours())}:${p(t.getMinutes())}`;}
+
+/* ---------- 게시판 ---------- */
+let boardItems=[];
+function titleInfo(t){
+  const m=(t||'').match(/^\[문의\]\s*(.+?)(?:\s*—\s*(.+?))?\s*(?:·\s*🔒\s*)?\(?([0-9]{6}-[0-9]{6})?\)?$/);
+  return {field:m?m[1].replace(/·\s*🔒/,'').trim():t};
+}
+function loadBoard(){
+  document.getElementById('board').innerHTML='<div class="empty">문의를 불러오는 중…</div>';
+  fetch(`https://api.github.com/repos/${REPO}/issues?state=all&per_page=100&sort=created&direction=desc`)
+   .then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
+   .then(d=>{boardItems=d.filter(i=>!i.pull_request);renderBoard();syncMy();})
+   .catch(e=>{document.getElementById('board').innerHTML=`<div class="empty">목록을 불러오지 못했습니다 (${e.message}). 잠시 후 다시 시도해 주세요.</div>`;});
+}
+function renderBoard(){
+  const el=document.getElementById('board');
+  if(!boardItems.length){el.innerHTML='<div class="empty">등록된 문의가 아직 없습니다. 첫 문의를 남겨 주세요.</div>';return;}
+  el.innerHTML=boardItems.map((i,idx)=>{
+    const enc=parseEnc(i.body);
+    const info=titleInfo(i.title);
+    const st=i.state==='closed'?'<span class="state done">답변 완료</span>':'<span class="state wait">답변 대기</span>';
+    const lock=enc?'<span class="state lock">🔒 비밀글</span>':'';
+    let inner;
+    if(enc){
+      inner=`<div id="bx${idx}">
+        <div class="pwrow"><input id="pwin${idx}" type="password" placeholder="글 비밀번호" onkeydown="if(event.key==='Enter')openLocked(${idx})">
+        <button class="pwbtn" onclick="openLocked(${idx})">열람</button></div>
+        <div class="pwerr" id="pe${idx}"></div></div>`;
+    }else{
+      inner=`<div class="bbody">${esc(i.body||'').slice(0,700)}</div>`;
+    }
+    return `<div class="bcard">
+      <div class="bhead">
+        <div><div class="bt">${esc(info.field)}</div>
+        <div class="bmeta">${fmt(i.created_at)} · 댓글 ${i.comments}</div></div>
+        <div class="tags">${lock}${st}</div>
+      </div>
+      ${inner}
+      <a class="blink" href="${i.html_url}" target="_blank" rel="noopener">답변 · 상세 ↗</a>
+    </div>`;}).join('');
+}
+async function openLocked(idx){
+  const i=boardItems[idx];
+  const enc=parseEnc(i.body);
+  const pw=document.getElementById('pwin'+idx).value;
+  const err=document.getElementById('pe'+idx);
+  if(!pw){err.textContent='비밀번호를 입력해 주세요.';return;}
+  try{
+    const c=await decryptPostWithPw(enc,pw);
+    document.getElementById('bx'+idx).innerHTML=
+      `<div class="bbody"><b>성함/소속</b> ${esc(c.name||'-')}\n<b>연락처</b> ${esc(c.contact||'-')}\n\n${esc(c.msg)}</div>`;
+  }catch(e){err.textContent='비밀번호가 올바르지 않습니다.';}
+}
+
+/* ---------- 내 문의 ---------- */
 function stateTag(it){
-  if(it.via==='email')return '<span class="state mail">이메일 발송</span>';
+  if(it.via==='email')return '<span class="state lock">이메일 발송</span>';
   if(it.state==='closed')return '<span class="state done">답변 완료</span>';
   if(it.state==='open')return '<span class="state wait">답변 대기</span>';
-  return '<span class="state mail">등록 확인 전</span>';
+  return '<span class="state lock">등록 확인 전</span>';
 }
-function render(){
+function renderMy(){
   const arr=load();const el=document.getElementById('mylist');
   if(!arr.length){el.innerHTML='<div class="empty">아직 남긴 문의가 없습니다.</div>';return;}
   el.innerHTML=arr.map(it=>`
-    <div class="mycard">
-      <div class="mhead">
-        <div><div class="mt">${esc(it.field)}</div>
-        <div class="mmeta">${fmt(it.date)} · ${it.via==='email'?'이메일':'문의 게시판'}</div></div>
-        ${stateTag(it)}
+    <div class="bcard">
+      <div class="bhead">
+        <div><div class="bt">${esc(it.field)}${it.locked?' · 🔒':''}</div>
+        <div class="bmeta">${fmt(it.date)} · ${it.via==='email'?'이메일':'문의 게시판'}</div></div>
+        <div class="tags">${stateTag(it)}</div>
       </div>
-      <div class="mbody">${esc(it.msg).slice(0,400)}</div>
-      ${it.url?`<a class="mlink" href="${it.url}" target="_blank" rel="noopener">답변 확인하기 ↗</a>`:''}
+      <div class="bbody">${esc(it.msg).slice(0,400)}</div>
+      ${it.url?`<a class="blink" href="${it.url}" target="_blank" rel="noopener">답변 확인하기 ↗</a>`:''}
     </div>`).join('');
 }
-function refreshStatus(){
-  const arr=load();
-  const board=arr.filter(i=>i.via==='board');
-  if(!board.length){render();return;}
-  fetch(`https://api.github.com/repos/${REPO}/issues?state=all&per_page=100&sort=created&direction=desc`)
-   .then(r=>r.json())
-   .then(list=>{
-     if(!Array.isArray(list))return;
-     arr.forEach(it=>{
-       if(it.via!=='board')return;
-       const hit=list.find(x=>x.title===it.t);
-       if(hit){it.state=hit.state;it.url=hit.html_url;}
-     });
-     save(arr);render();
-   }).catch(()=>render());
+function syncMy(){
+  const arr=load();let ch=false;
+  arr.forEach(it=>{
+    if(it.via!=='board')return;
+    const hit=boardItems.find(x=>x.title===it.t);
+    if(hit){it.state=hit.state;it.url=hit.html_url;ch=true;}
+  });
+  if(ch)save(arr);
+  renderMy();
 }
-render();refreshStatus();
+renderMy();loadBoard();
 </script>
 </body>
 </html>

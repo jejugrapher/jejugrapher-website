@@ -21,21 +21,23 @@ nav{position:fixed;top:0;left:0;right:0;background:rgba(248,244,236,.94);border-
 h1{font-size:28px;margin-bottom:8px}
 .lead{font-size:14px;color:#8d8577;margin-bottom:36px}
 .tabs{display:flex;gap:10px;margin-bottom:26px}
-.tab{border:1px solid var(--navy);color:var(--navy);padding:8px 18px;font-size:13.5px;cursor:pointer;background:transparent}
+.tab{border:1px solid var(--navy);color:var(--navy);padding:8px 18px;font-size:13.5px;cursor:pointer;background:transparent;font-family:inherit}
 .tab.on{background:var(--navy);color:#fff}
 .card{background:#fff;border:1px solid var(--line);padding:24px 26px;margin-bottom:16px}
 .chead{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
 .ct{font-size:16px;font-weight:500;color:var(--navy)}
 .cmeta{font-size:12.5px;color:#8d8577;margin-top:4px}
+.tags{display:flex;gap:6px}
 .state{font-size:11.5px;padding:2px 10px;white-space:nowrap}
 .state.open{color:var(--terra);border:1px solid var(--terra)}
 .state.closed{color:#8d8577;border:1px solid var(--line)}
+.state.lock{color:#6b5f4c;border:1px solid #cbbfa8;background:#faf6ec}
 .cbody{font-size:14px;color:#5a544c;margin-top:14px;white-space:pre-wrap;border-top:1px dashed var(--line);padding-top:14px}
+.cbody b{color:var(--navy);font-weight:500}
 .clink{display:inline-block;margin-top:12px;font-size:13px;color:var(--terra);border-bottom:1px solid var(--terra)}
 .empty{background:#fff;border:1px dashed var(--line);padding:60px 20px;text-align:center;color:#8d8577;font-size:14.5px}
 .err{background:#fff3ee;border:1px solid #e2b4a0;padding:20px;color:#8a4a30;font-size:14px}
 .count{font-size:13px;color:#8d8577;margin-bottom:16px}
-/* 게이트 */
 #gate{max-width:420px;margin:200px auto 0;background:#fff;border:1px solid var(--line);padding:44px 38px;text-align:center}
 #gate h1{font-size:22px;margin-bottom:8px}
 #gate p{font-size:13.5px;color:#8d8577;margin-bottom:26px}
@@ -45,14 +47,13 @@ h1{font-size:28px;margin-bottom:8px}
 #gate button:hover{background:#b56a4c}
 #gerr{color:#b0502e;font-size:13px;margin-top:12px;min-height:20px}
 #panel{display:none}
-.logout{border:1px solid var(--line);color:#8d8577;background:transparent;padding:6px 14px;font-size:12.5px;cursor:pointer;float:right}
+.logout{border:1px solid var(--line);color:#8d8577;background:transparent;padding:6px 14px;font-size:12.5px;cursor:pointer;float:right;font-family:inherit}
 @media(max-width:767px){.wrap{padding:120px 16px 90px}#gate{margin-top:140px}}
 </style>
 </head>
 <body>
 <nav><div class="navin"><a class="logo" href="./">JEJUGRAPHER</a><a class="back" href="./">← 메인으로</a></div></nav>
 
-<!-- 접근 게이트 (관리자 전용) -->
 <div id="gate">
   <h1>관리자 확인</h1>
   <p>문의 관리 페이지는 관리자만 볼 수 있습니다.</p>
@@ -61,11 +62,10 @@ h1{font-size:28px;margin-bottom:8px}
   <div id="gerr"></div>
 </div>
 
-<!-- 관리 패널 -->
 <div class="wrap" id="panel">
   <button class="logout" onclick="lock()">잠그기</button>
   <h1>문의 관리</h1>
-  <p class="lead">문의 게시판에 등록된 모든 문의를 한곳에서 봅니다. 답변·종결 처리는 각 문의의 게시판 링크에서 합니다.</p>
+  <p class="lead">모든 문의를 한곳에서 봅니다. 🔒 비밀글도 자동으로 해제되어 표시됩니다. 답변·종결 처리는 각 문의의 게시판 링크에서 합니다.</p>
   <div class="tabs">
     <button class="tab on" data-s="all">전체</button>
     <button class="tab" data-s="open">미답변</button>
@@ -76,26 +76,46 @@ h1{font-size:28px;margin-bottom:8px}
 </div>
 
 <script>
-/* 접근 코드 변경법: 새 코드의 SHA-256 해시로 아래 HASH 값을 교체
-   (터미널: echo -n '새코드' | shasum -a 256)  — 초기 코드: jeju2026 */
+/* 접근 코드 변경 시: HASH(코드의 SHA-256) 교체 + 개인키 재암호화 필요 — Claude에게 요청.
+   초기 코드: jeju2026 */
 const HASH='41110273c8e24471ea0c2e60fea1d5cca78bc22007eb41eeee15486f0aa5e387';
+const PRIV_ENC={salt:'LZr9OzqIE9u7ARLBC0WvZQ==',iv:'gdR1Sfqh3cf6LwI4',ct:'6JnKT6OWPMahlWxVF7Iims8ZV7R4PJlw2E5kKEZXorDL/n9G87JP4XAGhlYjJ3ZRt7yM0MFlS6AluPwrrpwBkP1jpg2+6Da5EXCyFHz7C15Iznz7iYmWkEEEHQphvE1qNyULPy4vBvTey1LeRCmrxurOTiO1eWIgNeZIGagORGzAzeVgik8gUPN8u9fDPsNiI1MGqZyC9pZo1cUx4fzUa0EvJfeVEA26J6/TvFdzzK9R1VI005xnBUdP1dfW9ae+kKMCE+M6/Sd4Td9SmoRPTF8+G0KYLjfjm3HBCh5ndmmjWt8iHZwm8l7W9XwVRY2VrPDabNi8f+4xFYDLLqVfdX3wq+xXg+TIcLM+Nn0lL3MEilm5nbyhR33MaKPJ6wQB1vgV9Hl6u0DF3AG51uLbX8wq3E1r5irqfU/MdkrNHyU9A18x+Ei+mfHjHJgVxnNiP+SIXnT6B4J+DohDhIcKLK+BDwxfEjT1kIvgtp4IgoaEhHfKWcgw4a9V+ViQX+Inywm60a+MDMuDwQIvin7HYXhYsW99gKOzOwKymIBfzbM2er9dqAnqKIaifRJfGs2kS9Oo6AjH+dDfSOMFkz0fvN8zh6T1zMkGsuNUpfCsoaUv9ngEKaGcZ2TGztI/X9Cj2rTPJudp4PwkXqXJz4jsjhDYhnG8ZWPVf/4KuVLSwe7JdbOx+B3+wDGvA1sZMwscXn4IzG2OME6kwwGCXa/Vj7jM7FYNQKRnKbBzbGy/GCtUsrDqkhZmNQAEpMymcOND+xOtJQKye5TTSVTKKuwWx3VsxODftn4l+vf83AI06ATjXqo6Yr6c2Q6kzju/G+ebsKrQi46TteYEEFUGxHGTvNAyKkSQDxmQ5mev38I5BkkgXtNcasQ03/pAX7weh/XIG9YlLBfEp5yfkSUsAkrlC112F7QzFYoiFUNhiDrHr3UkoI4LjHqFoYvFWuODQ8GXsh2z5a/YssspmUAJTbitDyyDToDTS/eLuOFZGwXfa/xDwRU1aBbBD4R8iVW9O278W1UCXAGx1tg0U6i6163si3wsJco1XaTdgQSQPWjkNTrx/mZJyNnRicK6VyQFqOX0AximjD2udFF40VC3WBmp2P0bM/XsD54JqsRrJhOQvsFjPxLTj+Xpsfa06Vx5evDaqyieW09kNmqtk6b1EaR4iNe3CGspTN7fErOEmaN47HRMC9GvYISzjJUPu/VgdgHCIR9IhjeL54/gxS69CdoQHkwsxFCKRVLJoWm42fRlU6/JJH/kRLPFswmA5dkYnreIt37CJJUjdnqRz5qf6VdUoWY4yAjwLhTSRKvNWn7srLv0kHdT+lwA4Vy2xPL/+hrC3r/CZCj7raWsKO5zd+5LeruFlcwO1olP05lWx8v4jOxBh00OcGuvIXdzUopXT9D68+og080hAXdMl6B6YmedcSKHtDcTe5lneCTmqaLTWLLV2zVwu46OFQMqupkiPTPwja0C0ZGuSQyvygph3ht/O+0Ly8mpxpyF+H6bdSNlEkPbadPz95OnCfpU/8nv0mbhjcyTennmJa6iO8aMOTWL2+bZ1LMBIY92VRe02zXWUH1dO90G7+RR5Ll/oEpKSLeCSGSGZKarutq0pt1N/2HAIk9BbrQ8ZIkR/hacWxEbH3Fb3Q=='};
 const REPO='jejugrapher/jejugrapher-website';
-let items=[],mode='all',loaded=false;
+let items=[],mode='all',loaded=false,privKey=null;
 
+const te=new TextEncoder(),td=new TextDecoder();
+const b64d=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 async function sha(s){
-  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
+  const b=await crypto.subtle.digest('SHA-256',te.encode(s));
   return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+async function openPriv(code){
+  const base=await crypto.subtle.importKey('raw',te.encode(code),'PBKDF2',false,['deriveKey']);
+  const aes=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64d(PRIV_ENC.salt),iterations:200000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+  const pkcs8=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(PRIV_ENC.iv)},aes,b64d(PRIV_ENC.ct));
+  return crypto.subtle.importKey('pkcs8',pkcs8,{name:'RSA-OAEP',hash:'SHA-256'},false,['decrypt']);
+}
+function parseEnc(body){
+  const m=(body||'').match(/<!--JGENC(\{[\s\S]*?\})-->/);
+  if(!m)return null; try{return JSON.parse(m[1])}catch(e){return null}
+}
+async function adminDecrypt(enc){
+  const rawK=await crypto.subtle.decrypt({name:'RSA-OAEP'},privKey,b64d(enc.aw));
+  const K=await crypto.subtle.importKey('raw',rawK,{name:'AES-GCM'},false,['decrypt']);
+  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(enc.iv)},K,b64d(enc.ct));
+  return JSON.parse(td.decode(pt));
 }
 async function unlock(){
   const v=document.getElementById('pw').value;
-  if(await sha(v)===HASH){
-    sessionStorage.setItem('jg_admin','1'); show();
-  }else{
+  if(await sha(v)!==HASH){
     document.getElementById('gerr').textContent='코드가 올바르지 않습니다.';
-    document.getElementById('pw').value='';
+    document.getElementById('pw').value=''; return;
   }
+  try{ privKey=await openPriv(v); }catch(e){ privKey=null; }
+  sessionStorage.setItem('jg_admin_code',v);
+  show();
 }
-function lock(){sessionStorage.removeItem('jg_admin');location.reload();}
+function lock(){sessionStorage.removeItem('jg_admin_code');location.reload();}
 function show(){
   document.getElementById('gate').style.display='none';
   document.getElementById('panel').style.display='block';
@@ -104,21 +124,38 @@ function show(){
 function fmt(d){const t=new Date(d);const p=n=>String(n).padStart(2,'0');
   return `${t.getFullYear()}.${p(t.getMonth()+1)}.${p(t.getDate())} ${p(t.getHours())}:${p(t.getMinutes())}`;}
 function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
-function render(){
+async function render(){
   const list=document.getElementById('list');
   const arr=items.filter(i=>mode==='all'||i.state===mode);
   document.getElementById('count').textContent=`전체 ${items.length}건 · 미답변 ${items.filter(i=>i.state==='open').length}건 · 완료 ${items.filter(i=>i.state==='closed').length}건`;
   if(!arr.length){list.innerHTML='<div class="empty">해당하는 문의가 아직 없습니다.</div>';return;}
-  list.innerHTML=arr.map(i=>`
-    <div class="card">
+  const cards=await Promise.all(arr.map(async i=>{
+    const enc=parseEnc(i.body);
+    let bodyHtml='',lockTag='';
+    if(enc){
+      lockTag='<span class="state lock">🔒 비밀글</span>';
+      if(privKey){
+        try{
+          const c=await adminDecrypt(enc);
+          bodyHtml=`<div class="cbody"><b>성함/소속</b> ${esc(c.name||'-')}\n<b>연락처</b> ${esc(c.contact||'-')}\n\n${esc(c.msg)}</div>`;
+        }catch(e){ bodyHtml='<div class="cbody">⚠ 이 비밀글은 해제할 수 없습니다 (다른 키로 암호화됨).</div>'; }
+      }else{
+        bodyHtml='<div class="cbody">⚠ 개인키를 열지 못해 비밀글을 해제할 수 없습니다.</div>';
+      }
+    }else if(i.body){
+      bodyHtml=`<div class="cbody">${esc(i.body).slice(0,800)}</div>`;
+    }
+    return `<div class="card">
       <div class="chead">
         <div><div class="ct">${esc(i.title)}</div>
         <div class="cmeta">${esc(i.user.login)} · ${fmt(i.created_at)} · 댓글 ${i.comments}</div></div>
-        <span class="state ${i.state}">${i.state==='open'?'미답변':'완료'}</span>
+        <div class="tags">${lockTag}<span class="state ${i.state}">${i.state==='open'?'미답변':'완료'}</span></div>
       </div>
-      ${i.body?`<div class="cbody">${esc(i.body).slice(0,800)}</div>`:''}
+      ${bodyHtml}
       <a class="clink" href="${i.html_url}" target="_blank" rel="noopener">게시판에서 답변하기 ↗</a>
-    </div>`).join('');
+    </div>`;
+  }));
+  list.innerHTML=cards.join('');
 }
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
@@ -131,7 +168,10 @@ function fetchList(){
    .catch(e=>{document.getElementById('list').innerHTML=
      `<div class="err">문의 목록을 불러오지 못했습니다 (${e.message}). 잠시 후 새로고침하거나, <a style="text-decoration:underline" href="https://github.com/${REPO}/issues" target="_blank" rel="noopener">게시판에서 직접 확인</a>해 주세요.</div>`;});
 }
-if(sessionStorage.getItem('jg_admin')==='1') show();
+(async()=>{
+  const c=sessionStorage.getItem('jg_admin_code');
+  if(c && await sha(c)===HASH){ try{privKey=await openPriv(c);}catch(e){} show(); }
+})();
 </script>
 </body>
 </html>
