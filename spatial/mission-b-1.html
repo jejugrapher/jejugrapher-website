@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AREA B-1 · 자연 변화·붕괴 지형 — JEJUGRAPHER</title>
+<meta name="description" content="화구벽 붕괴·해식애 후퇴·사구 침식·오름 지표 훼손. 무너지고 깎이는 지형의 정량 변화 추적. M3M RTK + Avata 360으로 3DGS 메시 + 8K VR 인터랙티브 투어 산출.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<style>
+  /* B-1 페이지 전용 */
+  .area-meta-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; padding: 1.5rem 1.75rem; background: var(--bg-soft); border-radius: 14px; margin: 2rem 0 3rem; }
+  .area-meta-item { display: flex; flex-direction: column; gap: 0.25rem; }
+  .area-meta-label { font-size: 0.6875rem; letter-spacing: 0.14em; color: var(--text-mute); text-transform: uppercase; font-weight: 600; }
+  .area-meta-value { font-family: 'Noto Serif KR', serif; font-size: 0.9375rem; font-weight: 500; color: var(--text-main); }
+
+  .site-list { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 2rem; }
+  .site-card { padding: 1.5rem 1.75rem; background: var(--bg-main); border-radius: 14px; border: 1px solid var(--border-line); display: grid; grid-template-columns: 100px 1fr; gap: 1.5rem; align-items: start; transition: border-color 0.2s, transform 0.15s; }
+  .site-card:hover { border-color: var(--accent-sage); transform: translateY(-1px); }
+  .site-card-rank { display: flex; flex-direction: column; align-items: center; padding-top: 0.25rem; }
+  .site-rank-num { font-family: 'Noto Serif KR', serif; font-size: 1.75rem; font-weight: 300; color: var(--text-mute); line-height: 1; margin-bottom: 0.5rem; }
+  .urgency-badge { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.625rem; border-radius: 999px; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
+  .urgency-badge .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .urgency-badge.max { background: #FBE3DC; color: #C44A2C; } .urgency-badge.max .dot { background: #C44A2C; }
+  .urgency-badge.high { background: #FBE8DC; color: #C97B5B; } .urgency-badge.high .dot { background: #C97B5B; }
+  .urgency-badge.mid { background: #FBF1DC; color: #B89570; } .urgency-badge.mid .dot { background: #D8AB4A; }
+  .urgency-badge.low { background: #DFE9EA; color: #5A8B8E; } .urgency-badge.low .dot { background: #5A8B8E; }
+  .site-name { font-family: 'Noto Serif KR', serif; font-size: 1.0625rem; font-weight: 500; color: var(--text-main); margin-bottom: 0.375rem; line-height: 1.4; }
+  .site-loc { font-size: 0.8125rem; color: var(--text-mute); margin-bottom: 0.875rem; }
+  .site-issue { font-size: 0.9375rem; color: var(--text-soft); line-height: 1.65; margin-bottom: 0.875rem; }
+  .site-cycle { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.75rem; background: var(--bg-accent); border-radius: 8px; font-size: 0.75rem; color: var(--accent-sage); font-weight: 500; }
+  .site-cycle-icon { font-size: 0.875rem; }
+  @media (max-width: 640px) { .site-card { grid-template-columns: 1fr; gap: 0.875rem; } .site-card-rank { flex-direction: row; align-items: center; gap: 1rem; padding-top: 0; } }
+
+  .tech-explain { padding: 2rem 2.25rem; background: linear-gradient(135deg, var(--bg-soft), var(--bg-accent)); border-radius: 18px; }
+  .tech-explain-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
+  .tech-explain-col h4 { font-family: 'Noto Serif KR', serif; font-size: 1.0625rem; font-weight: 500; margin-bottom: 0.875rem; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem; }
+  .tech-explain-col h4::before { content: ''; width: 4px; height: 16px; background: var(--accent-terracotta); border-radius: 2px; }
+  .tech-explain-col p { font-size: 0.9375rem; color: var(--text-soft); margin-bottom: 0.75rem; line-height: 1.7; }
+  .tech-explain-col p + p { margin-top: 0.5rem; }
+  .tech-explain-col strong { color: var(--text-main); font-weight: 500; }
+  @media (max-width: 768px) { .tech-explain-row { grid-template-columns: 1fr; gap: 1.5rem; } }
+</style>
+</head>
+
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../" class="nav-logo" style="text-decoration:none;">JEJUGRAPHER</a>
+    <div class="nav-tabs" id="navTabs">
+      <a href="./index.html" class="nav-tab">메인</a>
+      <a href="./mission-a.html" class="nav-tab"><span class="nav-tab-letter">A</span>건축물</a>
+      <a href="./mission-b.html" class="nav-tab active"><span class="nav-tab-letter">B</span>자연유산기록</a>
+      <a href="./mission-c.html" class="nav-tab"><span class="nav-tab-letter">C</span>도시계획</a>
+      <a href="./mission-d.html" class="nav-tab"><span class="nav-tab-letter">D</span>농림수산업</a>
+      <a href="./mission-e.html" class="nav-tab"><span class="nav-tab-letter">E</span>etc</a>
+    </div>
+    <button class="nav-mobile-toggle" onclick="document.getElementById('navTabs').classList.toggle('open')" aria-label="메뉴 토글">☰</button>
+    <a href="./index.html#contact" class="nav-cta">도입 문의<span class="nav-cta-meta">평균 1시간 응답</span></a>
+  </div>
+</nav>
+
+<header class="scenario-hero">
+  <div class="scenario-hero-image" style="background-image:url('./images/jgcv7_s03_axis1_aerial_v2.jpeg');"></div>
+  <div class="scenario-hero-overlay"></div>
+  <div class="container scenario-hero-content">
+    <div class="scenario-letter">MISSION B · AREA B-1 (1 / 6)</div>
+    <h1 class="scenario-title">⛰️ 자연 변화·붕괴 지형</h1>
+    <p class="scenario-tagline">화구벽 붕괴 · 해식애 후퇴 · 사구 침식 · 오름 지표 훼손. 무너지고 깎이는 지형의 형태 변화를 RTK 항공 매핑 + 360° 구면 파노라마로 정량 추적합니다.</p>
+    <div class="scenario-tags">
+      <span class="scenario-tag">대상지 9곳</span>
+      <span class="scenario-tag">시급성 최상 3곳</span>
+      <span class="scenario-tag">M3M RTK + Avata 360</span>
+      <span class="scenario-tag">3DGS + 8K VR 투어</span>
+    </div>
+  </div>
+</header>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="eyebrow">CORE METHOD</div>
+    <h2>이 영역의 기록 방법</h2>
+    <p class="section-lead">무너지고 깎이는 지형은 사진만으로는 변화량 측정이 불가능합니다. RTK 정밀 측위로 절대 좌표를 기록하고, 360° 구면 파노라마로 누락 없는 시각 자료를 동시 확보합니다.</p>
+
+    <div class="area-meta-bar">
+      <div class="area-meta-item">
+        <span class="area-meta-label">주력 장비</span>
+        <span class="area-meta-value">M3M 정밀 항공 매핑(RTK) + Avata 360</span>
+      </div>
+      <div class="area-meta-item">
+        <span class="area-meta-label">산출물</span>
+        <span class="area-meta-value">초고해상도 3DGS 메쉬 + 8K VR 투어</span>
+      </div>
+      <div class="area-meta-item">
+        <span class="area-meta-label">정밀도</span>
+        <span class="area-meta-value">RTK cm급 절대 좌표</span>
+      </div>
+      <div class="area-meta-item">
+        <span class="area-meta-label">대상지 수</span>
+        <span class="area-meta-value">9곳 (시급성 분류)</span>
+      </div>
+    </div>
+
+    <div class="tech-explain">
+      <div class="tech-explain-row">
+        <div class="tech-explain-col">
+          <h4>RTK 항공 매핑이 왜 필요한가</h4>
+          <p>화구벽·해식애·사구 같은 지형은 매년 mm~cm 단위로 변형됩니다. <strong>같은 위치를 매년 같은 정밀도로 측정</strong>해야 변화량을 비교할 수 있습니다.</p>
+          <p>일반 GPS는 오차가 수 미터에 달해 미세 변화를 측정할 수 없습니다. RTK(Real-Time Kinematic)는 보정 신호로 <strong>cm급 절대 좌표</strong>를 확보하여 다년간 측정 결과를 정확히 정합할 수 있게 합니다.</p>
+        </div>
+        <div class="tech-explain-col">
+          <h4>360° 구면 파노라마는 왜 함께 촬영하는가</h4>
+          <p>드론 항공 매핑은 위에서 내려다본 데이터입니다. 절벽 면·균열·낙석 같은 <strong>측면 디테일</strong>은 수직 시점만으로는 부족합니다.</p>
+          <p>Avata 360 8K 구면 파노라마는 360° 전방위를 동시 캡처하여 <strong>현장에 가지 않고도 절벽 면의 미세 균열을 확인</strong>할 수 있게 합니다. 발주처가 VR 헤드셋 또는 웹 브라우저로 직접 탐색하는 인터랙티브 투어로 활용 가능합니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="eyebrow">SITES (URGENCY ORDER)</div>
+    <h2>9개 대상지 — 시급성 순</h2>
+    <p class="section-lead">시급성 등급별로 정리한 대상지 목록. 각 대상지는 변화의 성격, 모니터링 권장 주기, 우선 기록 사유를 명시합니다.</p>
+
+    <div class="urgency-legend">
+      <div class="urgency-item"><span class="urgency-dot urgency-max"></span><strong style="margin-right:0.25rem;">최상</strong> 즉시 · 변화·붕괴 속도 최상</div>
+      <div class="urgency-item"><span class="urgency-dot urgency-high"></span><strong style="margin-right:0.25rem;">상</strong> 1년 내 기록 권장</div>
+      <div class="urgency-item"><span class="urgency-dot urgency-mid"></span><strong style="margin-right:0.25rem;">중</strong> 응급 통제 중</div>
+      <div class="urgency-item"><span class="urgency-dot urgency-low"></span><strong style="margin-right:0.25rem;">하</strong> 점진적 변화</div>
+    </div>
+
+    <div class="site-list">
+      <div class="site-card">
+        <div class="site-card-rank">
+          <div class="site-rank-num">01</div>
+          <span class="urgency-badge max"><span class="dot"></span>최상</span>
+        </div>
+        <div>
+          <div class="site-name">송악산 해안 단애·진지동굴 절벽</div>
+          <div class="site-loc">서귀포시 대정읍 상모리</div>
+          <div class="site-issue">해안 절벽·퇴적층 붕괴, 암석 낙반, 토사 유출, 진지동굴 매몰</div>
+          <div class="site-cycle"><span class="site-cycle-icon">⟳</span>연 2회 + 집중호우·태풍 직후</div>
+        </div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-card-rank">
+          <div class="site-rank-num">02</div>
+          <span class="urgency-badge max"><span class="dot"></span>최상</span>
+        </div>
+        <div>
+          <div class="site-name">한라산 백록담 화구벽 (북벽·동능벽)</div>
+          <div class="site-loc">제주시·서귀포시 경계 한라산 정상</div>
+          <div class="site-issue">화구벽 조면암·현무암 기반암 대형 균열, 자연 풍화, 암석 붕락·토양 유실</div>
+          <div class="site-cycle"><span class="site-cycle-icon">⟳</span>연 1회 (절리 팽창하는 해빙기 직후 권장)</div>
+        </div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-card-rank">
+          <div class="site-rank-num">03</div>
+          <span class="urgency-badge max"><span class="dot"></span>최상</span>
+        </div>
+        <div>
+          <div class="site-name">사계 황우치 해변 사구·백사장</div>
+          <div class="site-loc">서귀포시 안덕면 사계리</div>
+          <div class="site-issue">해안 사구 급격 침식, 백사장 모래 대량 유실, 기반암 노출, 산책로 붕괴 위기</div>
+          <div class="site-cycle"><span class="site-cycle-icon">⟳</span>연 2회 (계절별 파랑 에너지·태풍 전후 비교)</div>
+        </div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-card-rank">
+          <div class="site-rank-num">04</div>
+          <span class="urgency-badge high"><span class="dot"></span>상</span>
+        </div>
+        <div>
+          <div class="site-name">수월봉 엉알해안 화산쇄설층 절벽</div>
+          <div class="site-loc">제주시 한경면 고산리</div>
+          <div class="site-issue">화산쇄설층 해식애 붕락, 잦은 낙석</div>
+          <div class="site-cycle"><span class="site-cycle-icon">⟳</span>연 1회 + 지진·강풍 직후</div>
+        </div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-card-rank">
+          <div class="site-rank-num">05</div>
+          <span class="urgency-badge high"><span class="dot"></span>상</span>
+        </div>
+        <div>
+          <div class="site-name">천지연폭포 계곡 들머리 절벽</div>
+          <div class="site-loc">서귀포시 천지동</div>
+          <div class="site-issue">난대림 지구 절벽 암반 균열, 생물기계적 풍화, 대형 낙석</div>
+          <div class="site-cycle"><span class="site-cycle-icon">⟳</span>연 1회 + 해빙기 직후 (토사 유실·균열 팽창 확인)</div>
+        </div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-card-rank">
+          <div class="site-rank-num">06</div>
+          <span class="urgency-badge mid"><span class="dot"></span>중</span>
+        </div>
+        <div>
+          <div class="site-name">우도 검멀레 해안 응회암 단애</div>
+          <div class="site-loc">제주시 우도면 (우도 동북사면)</div>
+          <div class="site-issue">해안 절개지 수직·수평 절리 팽창, 대형 낙석·붕괴</div>
+          <div class="site-cycle"><span class="site-cycle-icon">⟳</span>2년 1회 (낙석 위험 상존하나 거대 변동 주기는 완만)</div>
+        </div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-card-rank">
+          <div class="site-rank-num">07</div>
+          <span class="urgency-badge mid"><span class="dot"></span>중</span>
+        </div>
+        <div>
+          <div class="site-name">산방산 용머리해안 응회암 층리</div>
+          <div class="site-loc">서귀포시 안덕면 사계리</div>
+          <div class="site-issue">해수면 상승 침수, 기저부 파랑 침식, 상부 해안 단애 대형 낙석</div>
+          <div class="site-cycle"><span class="site-cycle-icon">⟳</span>연 1회 (침수 심화·파도 에너지 누적 확인)</div>
+        </div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-card-rank">
+          <div class="site-rank-num">08</div>
+          <span class="urgency-badge low"><span class="dot"></span>하</span>
+        </div>
+        <div>
+          <div class="site-name">대포·갯깍 주상절리대</div>
+          <div class="site-loc">서귀포시 예래동(갯깍)·중문·대포 해안</div>
+          <div class="site-issue">현무암질 조면안산암 암석 기둥 붕괴, 수직 절리 단절·전도성 낙반</div>
+          <div class="site-cycle"><span class="site-cycle-icon">⟳</span>3년 1회 (평소 완만하나 붕괴 시 규모 거대)</div>
+        </div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-card-rank">
+          <div class="site-rank-num">09</div>
+          <span class="urgency-badge low"><span class="dot"></span>하</span>
+        </div>
+        <div>
+          <div class="site-name">지표 훼손 오름군 (용눈이·도너리·문석이 등)</div>
+          <div class="site-loc">제주시 구좌읍·서귀포시 안덕면 등 전역</div>
+          <div class="site-issue">탐방객 답압·산악 오토바이 진입 등에 의한 식생 파괴, 표토 침식, 사면 파임</div>
+          <div class="site-cycle"><span class="site-cycle-icon">⟳</span>연 1회 (지표면 스캔 유리한 늦가을·해빙기 직후)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="eyebrow">EXAMPLE</div>
+    <h2>구체적 예시 — 송악산 해안 단애 연 2회 모니터링</h2>
+    <p class="section-lead">시급성 최상 1순위 대상지인 송악산 해안 단애·진지동굴 절벽을 어떻게 기록하는지 구체적 흐름으로 설명합니다.</p>
+
+    <div class="example-card">
+      <div class="example-meta">
+        <div class="example-meta-item"><div class="example-meta-label">대상</div><div class="example-meta-value">송악산 해안 단애·진지동굴 절벽 (서귀포시 대정읍 상모리)</div></div>
+        <div class="example-meta-item"><div class="example-meta-label">주력 장비</div><div class="example-meta-value">M3M RTK + Avata 360</div></div>
+        <div class="example-meta-item"><div class="example-meta-label">기록 주기</div><div class="example-meta-value">연 2회 정기 + 집중호우·태풍 직후</div></div>
+        <div class="example-meta-item"><div class="example-meta-label">현장 소요</div><div class="example-meta-value">1회 약 1~2일</div></div>
+      </div>
+
+      <div class="example-story">
+        <div class="example-step">
+          <div class="example-step-num">01</div>
+          <div class="example-step-content">
+            <h4>비행 계획 수립</h4>
+            <p>해안선 약 1.5km 구간을 격자 비행 패턴으로 분할. RTK 기지국 좌표를 첫 측정 시 등록하여 이후 다년간 모든 데이터를 동일 좌표계로 정합합니다.</p>
+            <p>풍속·조위·일조 조건을 사전 확인. 해안 절벽은 오전 역광·오후 순광 차이가 크므로 그림자 영향이 최소화되는 시간대(주로 정오 전후)에 비행.</p>
+          </div>
+        </div>
+
+        <div class="example-step">
+          <div class="example-step-num">02</div>
+          <div class="example-step-content">
+            <h4>M3M 격자 항공 매핑</h4>
+            <p>다중분광 4채널 측량 드론으로 해안선을 따라 격자 패턴 자동 비행. 80% 종방향 오버랩·70% 횡방향 오버랩으로 모든 지점이 다중 시점에서 촬영되도록 합니다.</p>
+            <p>RTK 보정으로 각 사진의 절대 좌표를 cm급으로 기록. 가시광선(RGB)뿐 아니라 NIR·Red Edge·청색광 4채널이 동시 캡처되므로 절벽 표면의 습윤·식생·암석 차이도 분광 분석으로 구분 가능합니다.</p>
+          </div>
+        </div>
+
+        <div class="example-step">
+          <div class="example-step-num">03</div>
+          <div class="example-step-content">
+            <h4>Avata 360 절벽 면 근접 8K 구면 파노라마</h4>
+            <p>드론 항공 매핑이 위에서 내려다본 데이터라면, Avata 360은 절벽 면을 측면에서 근접 8K 구면 파노라마로 캡처합니다. 진지동굴 입구 같은 미세 구조가 매몰 전 모습대로 영구 기록됩니다.</p>
+            <p>접근 위험 구간(불안정한 절벽 직전·해상에서만 보이는 면)에 사람을 보내지 않고도 360° 데이터를 확보할 수 있습니다.</p>
+          </div>
+        </div>
+
+        <div class="example-step">
+          <div class="example-step-num">04</div>
+          <div class="example-step-content">
+            <h4>후처리 — 3DGS 메시 + VR 투어</h4>
+            <p>스튜디오의 다중 워크스테이션 환경에서 항공 매핑 데이터를 가우시안 스플래팅으로 재구성. 절벽 표면의 균열·낙석 흔적이 photorealistic하게 보존됩니다.</p>
+            <p>Avata 360 8K 구면 파노라마는 인터랙티브 VR 투어 콘텐츠로 변환. 발주처는 웹 브라우저 또는 VR 헤드셋으로 절벽 면을 자유롭게 탐색할 수 있고, 학술 논문·전시·교육 콘텐츠로 활용 가능합니다.</p>
+          </div>
+        </div>
+
+        <div class="example-step">
+          <div class="example-step-num">05</div>
+          <div class="example-step-content">
+            <h4>시계열 비교 리포트 (2회차 이후)</h4>
+            <p>두 번째 측정부터는 직전 측정 데이터와 정합하여 변화량을 정량 산출. <strong>"북측 절벽 A 지점이 6개월간 평균 12cm 후퇴, 진지동굴 입구 상부에서 0.8㎥ 토사 유출"</strong> 같은 정량 리포트를 발주처에 납품합니다.</p>
+            <p>태풍·집중호우 직후의 긴급 측정 데이터는 기존 시계열과 비교하여 단기간 변화량을 별도 리포트로 작성. 발주처가 안전 통제·관광객 출입 제한 의사결정에 활용할 수 있습니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="scn-cta">
+      <div class="scn-cta-title">자연 변화·붕괴 지형 기록을 검토하시나요?</div>
+      <div class="scn-cta-sub">대상 지역과 기록 주기를 알려주시면 정밀 견적과 권장 비행 계획을 안내해 드립니다. 시급성 최상 3개 대상지는 즉시 기록 권장 단계입니다.</div>
+      <a href="./index.html#contact" class="cta-primary">도입 문의 메일 보내기</a>
+      <div class="cta-promise">평균 1시간 내 응답 · whipia@naver.com · 010-6778-9199</div>
+    </div>
+
+    <div class="scn-other-grid">
+      <a href="./mission-b.html" class="scn-other-card"><div class="scn-other-letter">← MISSION B</div><div class="scn-other-name">자연유산기록 개요</div></a>
+      <a href="./mission-b-2.html" class="scn-other-card"><div class="scn-other-letter">AREA B-2</div><div class="scn-other-name">해수면 상승·침수 위험 지형</div></a>
+      <a href="./mission-b-3.html" class="scn-other-card"><div class="scn-other-letter">AREA B-3</div><div class="scn-other-name">동굴·용암동굴</div></a>
+      <a href="./mission-b-4.html" class="scn-other-card"><div class="scn-other-letter">AREA B-4</div><div class="scn-other-name">4·3 및 근현대 역사 유산</div></a>
+      <a href="./mission-b-5.html" class="scn-other-card"><div class="scn-other-letter">AREA B-5</div><div class="scn-other-name">문화재·인공 구조물 노후</div></a>
+      <a href="./mission-b-6.html" class="scn-other-card"><div class="scn-other-letter">AREA B-6</div><div class="scn-other-name">식생·생태 변화</div></a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p><strong>JEJUGRAPHER (제주그래퍼)</strong></p>
+    <p>공간 데이터 풀스택 스튜디오 · SINCE 2017</p>
+    <p>사업자등록번호 512-11-63348</p>
+    <div class="footer-meta">제주특별자치도 제주시 산천단동 1길 15 303호 · whipia@naver.com · 010-6778-9199</div>
+    <div class="footer-meta">© 2026 JEJUGRAPHER. All rights reserved.</div>
+  </div>
+</footer>
+
+</body>
+</html>

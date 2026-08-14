@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JEJUGRAPHER — 공간 데이터 풀스택 스튜디오</title>
+<meta name="description" content="제주 기반 1인 공간 데이터 풀스택 스튜디오. 동굴부터 박물관까지, 0.07mm부터 RTK cm급까지 — 한 회사 안에서.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-main: #FEFCF7;
+  --bg-soft: #F5EFE3;
+  --bg-accent: #EAF2F4;
+  --bg-warm: #FBE8C4;
+  --text-main: #2C2825;
+  --text-soft: #6B5440;
+  --text-mute: #8B7A60;
+  --accent-terracotta: #C97B5B;
+  --accent-sage: #5A8B8E;
+  --accent-moss: #5A6B45;
+  --accent-gold: #C9A66B;
+  --border-soft: #DCC8A8;
+  --border-line: #E8DCC4;
+  --shadow-soft: 0 1px 3px rgba(44, 40, 37, 0.06), 0 4px 12px rgba(44, 40, 37, 0.04);
+  --shadow-deep: 0 4px 16px rgba(44, 40, 37, 0.08), 0 12px 32px rgba(44, 40, 37, 0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 400; font-size: 16px; line-height: 1.7; color: var(--text-main); background: var(--bg-main); -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4 { font-family: 'Noto Serif KR', serif; font-weight: 500; color: var(--text-main); letter-spacing: -0.01em; }
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.25; }
+h2 { font-size: clamp(1.5rem, 3.5vw, 2.25rem); line-height: 1.3; margin-bottom: 1.5rem; }
+h3 { font-size: clamp(1.125rem, 2.5vw, 1.5rem); line-height: 1.4; margin-bottom: 1rem; }
+h4 { font-size: 1.0625rem; line-height: 1.5; margin-bottom: 0.5rem; }
+p { margin-bottom: 1rem; color: var(--text-soft); }
+a { color: var(--accent-terracotta); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--text-main); }
+.container { max-width: 1240px; margin: 0 auto; padding: 0 2rem; }
+.section { padding: clamp(4rem, 8vw, 7rem) 0; }
+.section-tight { padding: clamp(3rem, 6vw, 5rem) 0; }
+.section-alt { background: var(--bg-soft); }
+.eyebrow { font-family: 'Noto Sans KR', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent-terracotta); margin-bottom: 0.75rem; display: block; }
+.section-lead { font-size: 1.0625rem; color: var(--text-soft); max-width: 720px; margin-bottom: 3rem; }
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(254, 252, 247, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-line); }
+.nav-inner { max-width: 1240px; margin: 0 auto; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { font-family: 'Noto Serif KR', serif; font-weight: 700; font-size: 1.125rem; color: var(--text-main); letter-spacing: 0.08em; }
+.nav-cta { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1.25rem; background: var(--accent-terracotta); color: var(--bg-main); border-radius: 999px; font-size: 0.875rem; font-weight: 500; transition: background 0.2s; }
+.nav-cta:hover { background: #B86A4D; color: var(--bg-main); }
+.nav-cta-meta { font-size: 0.6875rem; opacity: 0.85; margin-left: 0.5rem; }
+.hero { position: relative; min-height: 100vh; padding-top: 6rem; display: flex; align-items: center; overflow: hidden; }
+.hero-bg { position: absolute; inset: 0; z-index: 0; background: linear-gradient(to bottom, var(--bg-main) 0%, var(--bg-soft) 100%); }
+.hero-image { position: absolute; inset: 0; background-image: url('./images/jgcv7_s01_hero_v2.jpeg'); background-size: cover; background-position: center; opacity: 0.45; z-index: 1; }
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(254, 252, 247, 0.55) 0%, rgba(245, 239, 227, 0.4) 100%); z-index: 2; }
+.hero-content { position: relative; z-index: 3; max-width: 900px; }
+.hero-eyebrow { font-family: 'Noto Sans KR', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 2rem; }
+.hero h1 { font-size: clamp(2rem, 4.5vw, 3.25rem); line-height: 1.3; letter-spacing: -0.015em; margin-bottom: 2rem; }
+.hero-sub { font-size: clamp(1rem, 1.5vw, 1.125rem); color: var(--text-soft); max-width: 640px; margin-bottom: 3rem; }
+.hero-meta { display: flex; flex-wrap: wrap; gap: 1.5rem 2.5rem; font-size: 0.875rem; color: var(--text-mute); }
+.hero-meta-item { display: flex; align-items: center; gap: 0.5rem; }
+.hero-meta-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-terracotta); }
+.social-proof-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 2rem; padding: 2rem 0; border-top: 1px solid var(--border-line); border-bottom: 1px solid var(--border-line); }
+.proof-item { text-align: center; }
+.proof-value { font-family: 'Noto Serif KR', serif; font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 500; color: var(--text-main); line-height: 1; margin-bottom: 0.5rem; }
+.proof-label { font-size: 0.8125rem; color: var(--text-mute); letter-spacing: 0.04em; }
+.proof-badges { margin-top: 3rem; display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+.badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1.25rem; background: var(--bg-soft); border: 1px solid var(--border-soft); border-radius: 999px; font-size: 0.875rem; color: var(--text-soft); }
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-sage); }
+.for-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+.for-card { padding: 2rem; background: var(--bg-soft); border-radius: 14px; border: 1px solid var(--border-line); }
+.for-card-for { font-size: 0.6875rem; letter-spacing: 0.22em; color: var(--accent-terracotta); font-weight: 600; margin-bottom: 0.625rem; }
+.for-card h4 { margin-bottom: 0.75rem; }
+.for-card p { font-size: 0.9375rem; margin-bottom: 0; }
+.fiveaxis-hero { margin-bottom: 4rem; }
+.fiveaxis-hero img { width: 100%; border-radius: 14px; display: block; box-shadow: var(--shadow-soft); }
+.axis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+.axis-card { background: var(--bg-main); border-radius: 14px; border: 1px solid var(--border-line); overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+.axis-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-deep); }
+.axis-card-image { width: 100%; aspect-ratio: 16 / 10; background-color: var(--bg-soft); background-size: cover; background-position: center; }
+.axis-card-body { padding: 1.5rem; }
+.axis-num { font-family: 'Noto Serif KR', serif; font-size: 0.8125rem; letter-spacing: 0.18em; color: var(--accent-terracotta); font-weight: 600; margin-bottom: 0.5rem; }
+.axis-name { font-family: 'Noto Serif KR', serif; font-size: 1.125rem; font-weight: 500; color: var(--text-main); margin-bottom: 0.75rem; line-height: 1.4; }
+.axis-spec { font-size: 0.875rem; color: var(--text-soft); line-height: 1.65; }
+.axis-tag { display: inline-block; margin-top: 0.75rem; padding: 0.25rem 0.75rem; background: var(--bg-accent); border-radius: 6px; font-size: 0.75rem; color: var(--accent-sage); font-weight: 500; }
+.axis-highlight { border: 1px solid var(--accent-terracotta); background: linear-gradient(to bottom, var(--bg-main), #FFF8F2); }
+.workflow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+.workflow-step { position: relative; }
+.workflow-step-image { width: 100%; aspect-ratio: 16 / 10; background-color: var(--bg-soft); background-size: cover; background-position: center; border-radius: 14px; margin-bottom: 1.25rem; }
+.workflow-num { font-family: 'Noto Serif KR', serif; font-size: 0.75rem; letter-spacing: 0.18em; color: var(--accent-terracotta); font-weight: 600; margin-bottom: 0.5rem; }
+.workflow-title { font-family: 'Noto Serif KR', serif; font-size: 1.0625rem; font-weight: 500; margin-bottom: 0.5rem; }
+.workflow-desc { font-size: 0.875rem; color: var(--text-soft); }
+.matrix-intro { background: var(--bg-accent); border-left: 3px solid var(--accent-sage); padding: 1.5rem 2rem; border-radius: 0 12px 12px 0; margin-bottom: 2.5rem; }
+.matrix-intro p { margin-bottom: 0; color: var(--text-soft); font-size: 0.9375rem; }
+.matrix-table-wrap { overflow-x: auto; margin-bottom: 3rem; }
+.matrix-table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; background: var(--bg-main); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-soft); min-width: 720px; }
+.matrix-table thead { background: var(--bg-soft); }
+.matrix-table th { text-align: left; padding: 1rem 1.25rem; font-weight: 500; font-size: 0.8125rem; letter-spacing: 0.06em; color: var(--text-main); text-transform: uppercase; border-bottom: 1px solid var(--border-soft); }
+.matrix-table td { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-line); color: var(--text-soft); vertical-align: top; line-height: 1.5; }
+.matrix-table tr:last-child td { border-bottom: none; }
+.matrix-table tr:hover td { background: var(--bg-soft); }
+.matrix-table .mark-pass { color: var(--accent-sage); font-weight: 500; }
+.matrix-limit-callout { margin-top: 2rem; padding: 1.75rem 2rem; background: linear-gradient(135deg, #F5EFE3, #EAF2F4); border-radius: 14px; }
+.matrix-limit-callout p { margin-bottom: 0; font-size: 0.9375rem; color: var(--text-main); line-height: 1.65; }
+.matrix-limit-callout strong { color: var(--accent-terracotta); font-weight: 500; }
+.equip-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+.equip-card { padding: 1.75rem; background: var(--bg-main); border-radius: 14px; border: 1px solid var(--border-line); transition: border-color 0.2s; }
+.equip-card:hover { border-color: var(--accent-sage); }
+.equip-card-num { font-family: 'Noto Serif KR', serif; font-size: 0.75rem; letter-spacing: 0.16em; color: var(--accent-terracotta); font-weight: 600; margin-bottom: 0.625rem; }
+.equip-card-name { font-family: 'Noto Serif KR', serif; font-size: 1.0625rem; font-weight: 500; margin-bottom: 0.875rem; line-height: 1.45; }
+.equip-card-spec { font-size: 0.875rem; color: var(--text-soft); line-height: 1.7; }
+.equip-card-highlight { border: 1px solid var(--accent-terracotta); background: linear-gradient(to bottom, var(--bg-main), #FFF8F2); }
+.services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+.service-card { padding: 2rem; background: var(--bg-main); border-radius: 14px; border: 1px solid var(--border-line); position: relative; }
+.service-num { position: absolute; top: 1.5rem; right: 1.5rem; font-family: 'Noto Serif KR', serif; font-size: 1.75rem; font-weight: 300; color: var(--border-soft); line-height: 1; }
+.service-name-en { font-family: 'Noto Serif KR', serif; font-size: 0.875rem; letter-spacing: 0.04em; color: var(--accent-terracotta); margin-bottom: 0.5rem; }
+.service-name-ko { font-family: 'Noto Serif KR', serif; font-size: 1.25rem; font-weight: 500; margin-bottom: 1rem; }
+.service-desc { font-size: 0.9375rem; color: var(--text-soft); margin-bottom: 1rem; }
+.service-spec { font-size: 0.8125rem; color: var(--text-mute); padding-top: 1rem; border-top: 1px solid var(--border-line); }
+.mission-list { display: flex; flex-direction: column; gap: 3rem; }
+.mission-row { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+.mission-row.reverse { direction: rtl; }
+.mission-row.reverse > * { direction: ltr; }
+.mission-image { width: 100%; aspect-ratio: 16 / 10; background-color: var(--bg-soft); background-size: cover; background-position: center; border-radius: 14px; box-shadow: var(--shadow-soft); }
+.mission-letter { font-family: 'Noto Serif KR', serif; font-size: 0.875rem; letter-spacing: 0.18em; color: var(--accent-terracotta); font-weight: 600; margin-bottom: 0.5rem; }
+.mission-title { font-family: 'Noto Serif KR', serif; font-size: 1.5rem; font-weight: 500; margin-bottom: 1rem; line-height: 1.35; }
+.mission-body p { font-size: 0.9375rem; margin-bottom: 0.75rem; }
+.mission-meta { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-line); font-size: 0.8125rem; color: var(--text-mute); }
+@media (max-width: 768px) { .mission-row, .mission-row.reverse { grid-template-columns: 1fr; direction: ltr; } }
+.output-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+.output-card { background: var(--bg-main); border-radius: 14px; border: 1px solid var(--border-line); overflow: hidden; }
+.output-image { width: 100%; aspect-ratio: 16 / 10; background-color: var(--bg-soft); background-size: cover; background-position: center; }
+.output-body { padding: 1.5rem; }
+.output-num { font-family: 'Noto Serif KR', serif; font-size: 0.75rem; letter-spacing: 0.16em; color: var(--accent-terracotta); font-weight: 600; margin-bottom: 0.5rem; }
+.output-name { font-family: 'Noto Serif KR', serif; font-size: 1.0625rem; font-weight: 500; margin-bottom: 0.5rem; }
+.output-desc { font-size: 0.875rem; color: var(--text-soft); }
+.industry-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+.industry-card { background: var(--bg-main); border-radius: 14px; border: 1px solid var(--border-line); overflow: hidden; }
+.industry-image { width: 100%; aspect-ratio: 16 / 10; background-color: var(--bg-soft); background-size: cover; background-position: center; }
+.industry-body { padding: 1.75rem; }
+.industry-letter { font-family: 'Noto Serif KR', serif; font-size: 0.75rem; letter-spacing: 0.18em; color: var(--accent-terracotta); font-weight: 600; margin-bottom: 0.5rem; }
+.industry-name { font-family: 'Noto Serif KR', serif; font-size: 1.125rem; font-weight: 500; margin-bottom: 0.75rem; line-height: 1.4; }
+.industry-desc { font-size: 0.9375rem; color: var(--text-soft); margin-bottom: 1rem; }
+.industry-clients { font-size: 0.8125rem; color: var(--text-mute); padding-top: 1rem; border-top: 1px solid var(--border-line); }
+.industry-multispectral { margin-top: 1rem; padding: 1rem; background: var(--bg-accent); border-radius: 8px; border-left: 3px solid var(--accent-sage); }
+.industry-multispectral-label { font-size: 0.6875rem; letter-spacing: 0.12em; color: var(--accent-sage); font-weight: 600; margin-bottom: 0.375rem; text-transform: uppercase; }
+.industry-multispectral-text { font-size: 0.8125rem; color: var(--text-soft); line-height: 1.6; }
+.roi-intro { background: var(--bg-accent); border-left: 3px solid var(--accent-terracotta); padding: 1.5rem 2rem; border-radius: 0 12px 12px 0; margin-bottom: 3rem; }
+.roi-intro p { margin-bottom: 0; font-size: 0.9375rem; color: var(--text-soft); }
+.roi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+.roi-card { padding: 1.75rem; background: var(--bg-main); border-radius: 14px; border: 1px solid var(--border-line); }
+.roi-case { font-family: 'Noto Serif KR', serif; font-size: 0.9375rem; font-weight: 500; color: var(--text-main); margin-bottom: 0.875rem; line-height: 1.4; }
+.roi-metric { font-family: 'Noto Serif KR', serif; font-size: 1.5rem; font-weight: 500; color: var(--accent-terracotta); line-height: 1.3; margin-bottom: 0.75rem; }
+.roi-source { font-size: 0.75rem; color: var(--text-mute); letter-spacing: 0.02em; }
+.market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+.market-card { padding: 1.75rem; background: var(--bg-main); border-radius: 14px; border: 1px solid var(--border-line); }
+.market-region { font-size: 0.75rem; letter-spacing: 0.16em; color: var(--accent-sage); font-weight: 600; margin-bottom: 0.5rem; text-transform: uppercase; }
+.market-stat { font-family: 'Noto Serif KR', serif; font-size: 1.5rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-main); line-height: 1.3; }
+.market-desc { font-size: 0.875rem; color: var(--text-soft); }
+.market-note { margin-top: 0.875rem; padding-top: 0.875rem; border-top: 1px solid var(--border-line); font-size: 0.75rem; color: var(--text-mute); }
+.partnership-wrap { display: grid; grid-template-columns: 1.1fr 1fr; gap: 3rem; align-items: center; }
+.partnership-image { width: 100%; aspect-ratio: 16 / 10; background-color: var(--bg-soft); background-size: cover; background-position: center; border-radius: 14px; box-shadow: var(--shadow-soft); }
+.partnership-callout { padding: 1.5rem 1.75rem; background: var(--bg-soft); border-left: 3px solid var(--accent-terracotta); border-radius: 0 12px 12px 0; margin-bottom: 1.5rem; }
+.partnership-callout p { margin-bottom: 0; font-size: 0.9375rem; color: var(--text-soft); line-height: 1.65; }
+.partnership-cases { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+.partnership-case { padding: 1rem 1.25rem; background: var(--bg-main); border: 1px solid var(--border-line); border-radius: 10px; font-size: 0.875rem; color: var(--text-soft); }
+.partnership-case strong { color: var(--text-main); font-weight: 500; }
+@media (max-width: 768px) { .partnership-wrap { grid-template-columns: 1fr; } }
+.infra-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; max-width: 920px; }
+.infra-item { padding: 1.25rem 1.5rem; background: var(--bg-soft); border-radius: 10px; border: 1px solid var(--border-line); }
+.infra-label { font-size: 0.6875rem; letter-spacing: 0.12em; color: var(--accent-terracotta); font-weight: 600; margin-bottom: 0.375rem; text-transform: uppercase; }
+.infra-text { font-size: 0.9375rem; color: var(--text-main); }
+.credentials-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+.credentials-list { display: flex; flex-direction: column; gap: 0.875rem; }
+.credential-item { display: flex; align-items: center; gap: 0.875rem; font-size: 0.9375rem; color: var(--text-soft); }
+.credential-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-sage); flex-shrink: 0; }
+.cta-block { padding: 2.5rem; background: linear-gradient(135deg, var(--bg-soft), var(--bg-accent)); border-radius: 18px; text-align: center; }
+.cta-title { font-family: 'Noto Serif KR', serif; font-size: 1.5rem; font-weight: 500; margin-bottom: 1rem; color: var(--text-main); }
+.cta-sub { font-size: 0.9375rem; color: var(--text-soft); margin-bottom: 2rem; }
+.cta-primary { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.875rem 2rem; background: var(--accent-terracotta); color: var(--bg-main); border-radius: 999px; font-size: 1rem; font-weight: 500; margin-bottom: 1rem; }
+.cta-primary:hover { background: #B86A4D; color: var(--bg-main); }
+.cta-promise { font-size: 0.8125rem; color: var(--text-mute); letter-spacing: 0.02em; }
+.cta-contact { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.375rem; font-size: 0.875rem; color: var(--text-soft); }
+@media (max-width: 768px) { .credentials-wrap { grid-template-columns: 1fr; } }
+.footer { background: var(--text-main); color: var(--bg-soft); padding: 3rem 0 2rem; text-align: center; }
+.footer p { color: var(--bg-soft); font-size: 0.875rem; margin-bottom: 0.5rem; }
+.footer-meta { font-size: 0.75rem; color: var(--border-soft); opacity: 0.7; margin-top: 1rem; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">JEJUGRAPHER</div>
+    <a href="#contact" class="nav-cta">도입 문의<span class="nav-cta-meta">평균 1시간 응답</span></a>
+  </div>
+</nav>
+
+<header class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-image"></div>
+  <div class="hero-overlay"></div>
+  <div class="container hero-content">
+    <div class="hero-eyebrow">JEJUGRAPHER · SPATIAL DATA STUDIO</div>
+    <h1>현장을 통째로 떠서, 모니터 위로 가져옵니다.<br>동굴부터 박물관까지, 0.07mm부터 RTK cm급까지.</h1>
+    <p class="hero-sub">제주 기반 1인 공간 데이터 풀스택 스튜디오. 자연·산업·문화·환대 전 영역에서 검증된 정밀 측정 표준을 충족합니다.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><span class="hero-meta-dot"></span>SINCE 2017</div>
+      <div class="hero-meta-item"><span class="hero-meta-dot"></span>제주 본사</div>
+      <div class="hero-meta-item"><span class="hero-meta-dot"></span>관·공공·민간 협업</div>
+      <div class="hero-meta-item"><span class="hero-meta-dot"></span>오프라인 보안망 처리</div>
+    </div>
+  </div>
+</header>
+
+<section class="section section-tight">
+  <div class="container">
+    <div class="social-proof-grid">
+      <div class="proof-item"><div class="proof-value">SINCE 2017</div><div class="proof-label">사업 운영</div></div>
+      <div class="proof-item"><div class="proof-value">16년</div><div class="proof-label">영상·사진 경력</div></div>
+      <div class="proof-item"><div class="proof-value">13년</div><div class="proof-label">360° VR 경력</div></div>
+      <div class="proof-item"><div class="proof-value">4년</div><div class="proof-label">AI 워크플로우 경력</div></div>
+      <div class="proof-item"><div class="proof-value">5축</div><div class="proof-label">캡처 라인업</div></div>
+      <div class="proof-item"><div class="proof-value">9개</div><div class="proof-label">운영 YouTube 채널</div></div>
+    </div>
+    <div class="proof-badges">
+      <span class="badge"><span class="badge-dot"></span>JCCEI 제주 창조경제혁신센터 입주기업</span>
+      <span class="badge"><span class="badge-dot"></span>청년창업사관학교 수료</span>
+      <span class="badge"><span class="badge-dot"></span>관·공공·민간 컨소시엄 협업</span>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="for">
+  <div class="container">
+    <div class="eyebrow">OVERVIEW</div>
+    <h2>다음의 발주처를 위한 공간 데이터 스튜디오</h2>
+    <p class="section-lead">자연·산업·문화·환대의 모든 공간을 측정 가능한 디지털 데이터로. 한 회사 안에서 처음부터 끝까지.</p>
+    <div class="for-grid">
+      <div class="for-card"><div class="for-card-for">FOR</div><h4>문화재·박물관 연구원</h4><p>유물·유적 정밀 실측, 보존 기록, 디지털 아카이브.</p></div>
+      <div class="for-card"><div class="for-card-for">FOR</div><h4>산업 현장 관리자</h4><p>안전진단 보조, 노후 시설 역설계, 다중분광 환경 모니터링.</p></div>
+      <div class="for-card"><div class="for-card-for">FOR</div><h4>콘텐츠·VFX 제작자</h4><p>실제 공간 기반 3D 애셋, 가우시안 스플래팅, 시네마틱 광역 캡처.</p></div>
+      <div class="for-card"><div class="for-card-for">FOR</div><h4>건축·설계 실무자</h4><p>Scan-to-BIM, 인테리어 도면화, 노후 건물 역설계.</p></div>
+      <div class="for-card"><div class="for-card-for">FOR</div><h4>호텔·카페·건축 마케팅 담당자</h4><p>가상 투어, 디지털 트윈 마케팅, 멀티 디바이스 임베드.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="fiveaxis">
+  <div class="container">
+    <div class="eyebrow">5-AXIS COVERAGE</div>
+    <h2>다섯 가지 스케일로 현장을 통째로 캡처합니다</h2>
+    <p class="section-lead">광역 시네마틱부터 마이크로 0.07mm까지. 한 사람이, 같은 현장에서, 같은 출장 한 번에.</p>
+    <div class="fiveaxis-hero"><img src="./images/jgcv7_s02_fivescale_v2.jpeg" alt="5축 통합 비주얼"></div>
+    <div class="axis-grid">
+      <div class="axis-card">
+        <div class="axis-card-image" style="background-image:url('./images/jgcv7_s03_axis1_aerial_v2.jpeg');"></div>
+        <div class="axis-card-body">
+          <div class="axis-num">AXIS 01</div>
+          <div class="axis-name">광역 시네마틱·360°</div>
+          <div class="axis-spec">5.1K ProRes 시네마틱 항공 캡처와 8K 360° 항공 비행을 통합. 광역 풍경·해안·도시·산악 지형의 시네마틱 도큐멘테이션.</div>
+        </div>
+      </div>
+      <div class="axis-card axis-highlight">
+        <div class="axis-card-image" style="background-image:url('./images/jgcv7_s04_axis2_widecave_v2.jpeg');"></div>
+        <div class="axis-card-body">
+          <div class="axis-num">AXIS 02 · 다중분광 측량 전용</div>
+          <div class="axis-name">광역 다중분광 측량 (RTK cm급)</div>
+          <div class="axis-spec"><strong>다중분광 4채널 동시 캡처</strong>: 가시광선(RGB) · 근적외선(NIR) · 적색광(Red Edge) · 청색광.<br>RTK cm급 절대 좌표. 한국 항공측량 ±30cm 표준 완벽 충족. 40W 카메라 추적 듀얼 조명으로 황혼·새벽·동굴 내부 다중분광 시계열 캡처 가능.<br>식생지수 산출: NDVI · NDRE · CCCI · Excess Green Composite · Yellow Composite Index.</div>
+          <span class="axis-tag">정밀 농업 · 임업 탄소 · 환경 모니터링</span>
+        </div>
+      </div>
+      <div class="axis-card">
+        <div class="axis-card-image" style="background-image:url('./images/jgcv7_s05_axis3_crawlcave_v2.jpeg');"></div>
+        <div class="axis-card-body">
+          <div class="axis-num">AXIS 03</div>
+          <div class="axis-name">좁은 범위 FPV · 진입 정찰</div>
+          <div class="axis-spec">프롭 가드 + 듀얼 LED 조명 장착 소형 FPV. 사람이 기어가야 하는 좁은 동굴(60cm 안팎) 진입 가능. 진입 정찰·내부 모니터링 특화.</div>
+        </div>
+      </div>
+      <div class="axis-card">
+        <div class="axis-card-image" style="background-image:url('./images/jgcv7_s06_axis4_walkingscan_v1.jpeg');"></div>
+        <div class="axis-card-body">
+          <div class="axis-num">AXIS 04</div>
+          <div class="axis-name">지상·도보 SLAM LiDAR</div>
+          <div class="axis-spec">정확도 <strong>2cm @10m</strong> / 3cm @20m / 5cm @40m. 스캔 반경 50m. 4K 컬러 점군 + 가우시안 스플래팅 동시 출력. 360° 카메라 확장 호환.<br>ANSI Z765 1인치(2.54cm) 표준 오버 엔지니어링 수준 충족.</div>
+        </div>
+      </div>
+      <div class="axis-card">
+        <div class="axis-card-image" style="background-image:url('./images/jgcv7_s07_axis5_microscan_v1.jpeg');"></div>
+        <div class="axis-card-body">
+          <div class="axis-num">AXIS 05</div>
+          <div class="axis-name">마이크로 객체</div>
+          <div class="axis-spec">정확도 <strong>0.07mm</strong>, 해상도 0.10mm. 40-1200mm 객체. NIR 광원 + 풀프레임 카메라 컬러 텍스처 하이브리드.<br>USIBD LOA50(1mm 미만) 초과 달성. 한국 전통건축 실측 척도 3mm 분해능 압도.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="workflow">
+  <div class="container">
+    <div class="eyebrow">WORKFLOW</div>
+    <h2>네 단계로 현장에서 발주처 화면까지</h2>
+    <p class="section-lead">현장 캡처 → 데이터 재구성 → 정밀도 검증 → 멀티 디바이스 활용. 한 회사 안에서 처음부터 끝까지.</p>
+    <div class="workflow-grid">
+      <div class="workflow-step"><div class="workflow-step-image" style="background-image:url('./images/jgcv7_s08_workflow1_capture_v1.jpeg');"></div><div class="workflow-num">STEP 01</div><div class="workflow-title">현장 캡처</div><div class="workflow-desc">5축 라인업의 한 사람 풀스택 운용. 광역·다중분광·좁은 범위·도보·마이크로 동시 수행.</div></div>
+      <div class="workflow-step"><div class="workflow-step-image" style="background-image:url('./images/jgcv7_s09_workflow2_reconstruct_v1.jpeg');"></div><div class="workflow-num">STEP 02</div><div class="workflow-title">데이터 재구성</div><div class="workflow-desc">점군·메시·가우시안 스플래팅 변환. Unreal Engine 5 통합. 오프라인 보안망 처리 가능.</div></div>
+      <div class="workflow-step"><div class="workflow-step-image" style="background-image:url('./images/jgcv7_s10_workflow3_validate_v1.jpeg');"></div><div class="workflow-num">STEP 03</div><div class="workflow-title">정밀도 검증 · 납품</div><div class="workflow-desc">정확도 분포 검증, 표준 충족 확인, 발주처 요구 포맷으로 납품(LAS·PCD·PLY·OBJ·E57·XYZ·DWG·Revit).</div></div>
+      <div class="workflow-step"><div class="workflow-step-image" style="background-image:url('./images/jgcv7_s11_workflow4_deploy_v1.jpeg');"></div><div class="workflow-num">STEP 04</div><div class="workflow-title">활용 · 임베드</div><div class="workflow-desc">모니터·태블릿·모바일·VR 헤드셋·대형 디스플레이까지 멀티 플랫폼 임베드.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="precision">
+  <div class="container">
+    <div class="eyebrow">PRECISION STANDARD</div>
+    <h2>정밀 사이즈 측정 표준 충족 매트릭스</h2>
+    <p class="section-lead">사진이 아닌 실측 데이터입니다. 글로벌·한국의 정밀 측정 표준 오차 허용 범위를 5축 라인업이 어떻게 충족하는지 사실 기반 매핑.</p>
+    <div class="matrix-intro"><p>본 스튜디오의 5축 라인업은 마이크로 0.07mm부터 광역 RTK cm급까지, 다음의 글로벌·한국 표준이 정의하는 오차 허용 범위를 물리적으로 충족합니다.</p></div>
+    <div class="matrix-table-wrap">
+      <table class="matrix-table">
+        <thead><tr><th>표준</th><th>요구 정밀도</th><th>충족 축</th><th>적용 분야</th></tr></thead>
+        <tbody>
+          <tr><td>ANSI Z765-2021<br><small>미국 거주공간 면적 표준</small></td><td>1인치 / 2.54cm</td><td class="mark-pass">AXIS 04 (2cm @10m, 오버 엔지니어링)</td><td>부동산 감정·대출 평가·면적 산정</td></tr>
+          <tr><td>USIBD LOA50<br><small>BIM 최고 정밀도</small></td><td>1mm 미만</td><td class="mark-pass">AXIS 05 (0.07mm, 초과 달성)</td><td>박물관 마이크로 문화재·항공우주 부품</td></tr>
+          <tr><td>USIBD LOA20<br><small>BIM 일반 정밀도</small></td><td>5cm ~ 15mm</td><td class="mark-pass">AXIS 04 (2cm, 완벽 충족)</td><td>외형 기록·Scan-to-BIM 일반</td></tr>
+          <tr><td>BIM LOD 500<br><small>준공 As-built</small></td><td>시공 후 검증</td><td class="mark-pass">AXIS 04 (빠른 SLAM 효율)</td><td>시설 유지보수·리노베이션 기초</td></tr>
+          <tr><td>한국 항공측량<br><small>국토지리정보원</small></td><td>±30cm 평면</td><td class="mark-pass">AXIS 02 (RTK cm급)</td><td>공공측량·지형도 작성</td></tr>
+          <tr><td>한국 용지경계측량</td><td>±3cm</td><td class="mark-pass">AXIS 04 (20m 내 충족)</td><td>부지 경계·재산권 보조</td></tr>
+          <tr><td>한국 전통건축 실측</td><td>3mm 분해능</td><td class="mark-pass">AXIS 04·05 (모두 충족)</td><td>한옥·사찰·궁궐 부재 변위 측정</td></tr>
+          <tr><td>다중분광 식생지수 산정</td><td>NDVI·NDRE·CCCI 정량 산출</td><td class="mark-pass">AXIS 02 (4채널 동시 캡처)</td><td>정밀 농업·임업 탄소·환경 모니터링</td></tr>
+          <tr><td>다중분광 비료 절감 검증</td><td>에이커당 정량</td><td class="mark-pass">AXIS 02 (PIX4Dfields 검증 ROI)</td><td>농업 컨설팅 (에이커당 23파운드 절감 실증)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="matrix-limit-callout"><p><strong>한계 솔직 인정.</strong> 장비 성능과 법적 자격은 분리됩니다. 본 스튜디오는 측량업·국가유산실측설계업 등 면허·자격이 요구되는 발주를 단독 수주할 수 없습니다(공간정보관리법 제34·35조, 국가유산수리법 제14조). 면허·자격이 요구되는 발주는 자격 보유 파트너 법인과의 컨소시엄으로 대응합니다. 본 스튜디오는 백엔드 기술 수행 전담.</p></div>
+  </div>
+</section>
+
+<section class="section section-alt" id="equipment">
+  <div class="container">
+    <div class="eyebrow">EQUIPMENT</div>
+    <h2>여섯 가지 장비로 다섯 가지 스케일을 커버합니다</h2>
+    <p class="section-lead">2026년 기준 확보된 풀라인업. 각 장비는 5축 캡처 워크플로우의 명확한 역할을 갖고 있습니다.</p>
+    <div class="equip-grid">
+      <div class="equip-card"><div class="equip-card-num">EQUIPMENT 01</div><div class="equip-card-name">핸드헬드 SLAM 라이다</div><div class="equip-card-spec">정확도 2cm @10m. 스캔 반경 50m. 4K 컬러 점군 + 3DGS 동시 출력. 360° 카메라 확장 호환. 1.1kg, 12000mAh 2시간 운용.</div></div>
+      <div class="equip-card"><div class="equip-card-num">EQUIPMENT 02</div><div class="equip-card-name">초정밀 오브젝트 스캐너</div><div class="equip-card-spec">정확도 0.07mm, 해상도 0.10mm. 40-1200mm 객체 캡처. NIR 광원. 풀프레임 카메라 컬러 텍스처 하이브리드 워크플로우.</div></div>
+      <div class="equip-card equip-card-highlight"><div class="equip-card-num">EQUIPMENT 03 · 다중분광 전용</div><div class="equip-card-name">다중분광 측량 전용 드론 + 40W 카메라 추적 듀얼 조명</div><div class="equip-card-spec"><strong>다중분광 4채널 동시 캡처</strong> (RGB · NIR · Red Edge · 청색광)<br>RTK cm급 절대 좌표. 한국 항공측량 ±30cm 표준 충족.<br>식생지수 5종 산출: NDVI · NDRE · CCCI · Excess Green Composite · Yellow Composite Index.<br>40W 카메라 추적 듀얼 조명으로 황혼·새벽·저조도 다중분광 시계열 캡처 가능.</div></div>
+      <div class="equip-card"><div class="equip-card-num">EQUIPMENT 04</div><div class="equip-card-name">소형 FPV 드론 + 협소 공간 조명</div><div class="equip-card-spec">사람이 기어가야 하는 좁은 동굴(60cm 안팎) 진입 가능. 프롭 가드 + 듀얼 LED 조명. 진입 정찰·내부 모니터링 특화.</div></div>
+      <div class="equip-card"><div class="equip-card-num">EQUIPMENT 05</div><div class="equip-card-name">광역 시네마틱·360° 드론 + 비전센서 조명</div><div class="equip-card-spec">5.1K ProRes 시네마틱 + 8K 360° 동시 운용. 프롭 가드 + 하향 비전센서 조명으로 어두운 입구 안정 호버링.</div></div>
+      <div class="equip-card"><div class="equip-card-num">EQUIPMENT 06</div><div class="equip-card-name">풀프레임·360° 컬러 텍스처 카메라</div><div class="equip-card-spec">8K 동영상·12K 파노라마. 마이크로 스캐너 컬러 텍스처 보완 하이브리드. 다양한 광학 옵션으로 임무별 최적 캡처.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="container">
+    <div class="eyebrow">SERVICES</div>
+    <h2>세 가지 우선순위 서비스 라인업</h2>
+    <p class="section-lead">3D 디지털 아카이빙·환경 모니터링·헤리티지 마이크로 트윈. 각 라인은 5축 라인업의 통합 운용으로 완성됩니다.</p>
+    <div class="services-grid">
+      <div class="service-card"><div class="service-num">01</div><div class="service-name-en">ABYSS MAPPING</div><div class="service-name-ko">심연 3D 디지털 아카이빙</div><div class="service-desc">동굴·지하공간·산업 시설의 풀스택 3D 아카이빙. GPS 음영 환경에서 FPV + 도보 SLAM + 다중분광 융합 워크플로우.</div><div class="service-spec">USIBD LOA20 충족. 점군·메시·3DGS·BIM 변환 가능.</div></div>
+      <div class="service-card"><div class="service-num">02</div><div class="service-name-en">ECO-SKY TRACKER</div><div class="service-name-ko">에코-스카이 시계열 모니터링</div><div class="service-desc">다중분광 측량 전용 드론(NDVI·NDRE 식생지수) + 도보 LiDAR 융합. 농업·임업·환경 시계열 모니터링.</div><div class="service-spec">GreenValley DBH 측정 RMSE 4.26cm급 정밀도. PIX4Dfields 검증 ROI 워크플로우.</div></div>
+      <div class="service-card"><div class="service-num">03</div><div class="service-name-en">HERITAGE MICRO TWIN</div><div class="service-name-ko">헤리티지 마이크로 트윈</div><div class="service-desc">마이크로 0.07mm 정밀 스캔 + 풀프레임 컬러 텍스처 하이브리드. 유물·유적 정밀 보존·디지털 전시.</div><div class="service-spec">USIBD LOA50 초과 달성. 한국 전통건축 실측 척도 3mm 분해능 충족.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="missions">
+  <div class="container">
+    <div class="eyebrow">MISSION SCENARIOS</div>
+    <h2>다섯 가지 임무 시나리오</h2>
+    <p class="section-lead">자연·산업·문화·환대의 다섯 가지 영역에서 검증된 실제 임무 시나리오. 각 시나리오는 5축 라인업의 통합 운용을 전제로 합니다.</p>
+    <div class="mission-list">
+      <div class="mission-row">
+        <div class="mission-image" style="background-image:url('./images/jgcv7_s12_mission_a_darkcave_v1.jpeg');"></div>
+        <div class="mission-body"><div class="mission-letter">MISSION A</div><div class="mission-title">암흑 동굴 풀스택</div><p>광역 입구 → 협소 정찰 → 도보 SLAM → 동굴 내 마이크로의 4단계 통합 캡처. GPS 수신 불가 지하공간에서 FPV + SLAM + 다중분광 융합으로 동굴 전체 형상을 왜곡 없이 매핑.</p><div class="mission-meta">제주 화산동굴 · 광산 · 터널 · 지하공간 / 학술 연구 · 디지털 아카이빙</div></div>
+      </div>
+      <div class="mission-row reverse">
+        <div class="mission-image" style="background-image:url('./images/jgcv7_s13_mission_b_multispectral_v1.jpeg');"></div>
+        <div class="mission-body"><div class="mission-letter">MISSION B · 다중분광 측량 주력</div><div class="mission-title">시간 비종속 다중분광 시계열</div><p>축 ② 다중분광 측량 전용 드론의 주력 임무 시나리오. 가시광선·NIR·Red Edge·청색광 4채널 동시 캡처로 NDVI·NDRE·CCCI 식생지수 산출. 황혼·새벽 시간 비종속 비행(40W 카메라 추적 듀얼 조명).</p><p><strong>농업:</strong> PIX4Dfields 18에이커 검증 사례 — 에이커당 23 파운드 비료 절감, 3,000에이커 확장 시 6개월 34.5톤 절감.</p><p><strong>임업:</strong> GreenValley DBH 측정 MAE 3.03cm / RMSE 4.26cm — 임목 본수·바이오매스·탄소 저장량 산정.</p><div class="mission-meta">정밀 농업 · 임업 자원 조사 · 환경 시계열 모니터링 · 재해 전후 평가</div></div>
+      </div>
+      <div class="mission-row">
+        <div class="mission-image" style="background-image:url('./images/jgcv7_s14_mission_c_microtwin_v1.jpeg');"></div>
+        <div class="mission-body"><div class="mission-letter">MISSION C</div><div class="mission-title">헤리티지 마이크로 트윈</div><p>축 ⑤ 마이크로 0.07mm + 풀프레임 컬러 텍스처 하이브리드. USIBD LOA50 초과 달성. 한국 국가유산청 정밀실측 표준의 한 치(3cm) 당 10등분(3mm) 분해능을 충족.</p><div class="mission-meta">유물·유적 디지털 보존 · 박물관 디지털 전시 · 보존처리 기록<br>※ 발주는 국가유산실측설계업 등록 파트너와 컨소시엄 필수</div></div>
+      </div>
+      <div class="mission-row reverse">
+        <div class="mission-image" style="background-image:url('./images/jgcv7_s23_mission_d_museum_v1.jpeg');"></div>
+        <div class="mission-body"><div class="mission-letter">MISSION D · 신규</div><div class="mission-title">박물관·미술관 디지털 전시 + 작품 아카이브</div><p>광역 드론(축 ①) + 도보 SLAM(축 ④) + 마이크로(축 ⑤)의 통합 워크플로우로 박물관·미술관 전체를 디지털 트윈으로 재구성. Unreal Engine 5 + 가우시안 스플래팅 기반 대형 인터랙티브 전시 콘텐츠 제작 가능.</p><div class="mission-meta">박물관 · 미술관 · 갤러리 / 디지털 전시 · 작품 아카이브 · 가상 도슨트</div></div>
+      </div>
+      <div class="mission-row">
+        <div class="mission-image" style="background-image:url('./images/jgcv7_s24_mission_e_hospitality_v1.jpeg');"></div>
+        <div class="mission-body"><div class="mission-letter">MISSION E · 신규</div><div class="mission-title">호텔·카페·건축물 인테리어 가상 투어·마케팅</div><p>축 ④ 도보 SLAM 중심 + 축 ⑤ 마이크로 디테일 보완. 매트포트 종속 없이 가우시안 스플래팅 기반 독자 솔루션. 발주처 자체 웹사이트·OTA 리스팅·마케팅 채널에 임베드 가능.</p><div class="mission-meta">호텔 · 리조트 · 카페 · 레스토랑 · 건축물 인테리어 / 가상 투어 · 마케팅 · 보수 공사 시각화</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="outputs">
+  <div class="container">
+    <div class="eyebrow">DELIVERABLES</div>
+    <h2>네 가지 결과물 포맷</h2>
+    <p class="section-lead">발주처의 활용 목적에 따라 네 가지 포맷으로 납품. 한 번의 캡처로 모든 포맷을 동시 생성 가능합니다.</p>
+    <div class="output-grid">
+      <div class="output-card"><div class="output-image" style="background-image:url('./images/jgcv7_s15_output1_pointcloud_v1.jpeg');"></div><div class="output-body"><div class="output-num">OUTPUT 01</div><div class="output-name">점군 · 메시</div><div class="output-desc">원시 측정 데이터. LAS · PCD · PLY · OBJ · E57 · XYZ 출력. 기하학적 참값 보존.</div></div></div>
+      <div class="output-card"><div class="output-image" style="background-image:url('./images/jgcv7_s16_output2_gaussiansplat_v1.jpeg');"></div><div class="output-body"><div class="output-num">OUTPUT 02</div><div class="output-name">3D 가우시안 스플래팅</div><div class="output-desc">photorealistic depth와 atmosphere 보존. Unreal Engine 5 통합. 멀티 디바이스 임베드 가능.</div></div></div>
+      <div class="output-card"><div class="output-image" style="background-image:url('./images/jgcv7_s17_output3_virtualtour_v1.jpeg');"></div><div class="output-body"><div class="output-num">OUTPUT 03</div><div class="output-name">가상 투어 인터랙티브</div><div class="output-desc">웹 브라우저 임베드 가상 투어. 핫스팟·minimap·인터랙티브 인터페이스. 발주처 자체 웹사이트 통합.</div></div></div>
+      <div class="output-card"><div class="output-image" style="background-image:url('./images/jgcv7_s18_output4_bimcad_v1.jpeg');"></div><div class="output-body"><div class="output-num">OUTPUT 04</div><div class="output-name">BIM · CAD 도면</div><div class="output-desc">Scan-to-BIM 변환. DWG · Revit · IFC · SketchUp 호환. LOD 300~500 단계별 납품 가능.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="industries">
+  <div class="container">
+    <div class="eyebrow">INDUSTRIES</div>
+    <h2>다섯 가지 산업 분야</h2>
+    <p class="section-lead">공공·산업·헤리티지부터 박물관·미술관·환대까지. 본 스튜디오의 5축 라인업은 다음 발주처를 지원합니다.</p>
+    <div class="industry-grid">
+      <div class="industry-card">
+        <div class="industry-image" style="background-image:url('./images/jgcv7_s19_industry_a_public_v1.jpeg');"></div>
+        <div class="industry-body"><div class="industry-letter">INDUSTRY A</div><div class="industry-name">공공 행정 · 인프라</div><div class="industry-desc">지자체 시설관리공단의 안전진단 보조, 노후 교량·터널·공공시설의 디지털 도큐멘테이션, 재난 전 사전 보존.</div><div class="industry-clients">지자체 시설관리공단 · 안전진단 기관 · 공공시설 관리부</div></div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-image" style="background-image:url('./images/jgcv7_s20_industry_b_industrial_v1.jpeg');"></div>
+        <div class="industry-body"><div class="industry-letter">INDUSTRY B</div><div class="industry-name">산업 · 제조 · 에너지 + 다중분광 환경</div><div class="industry-desc">해상풍력 구조 진단, 노후 플랜트 역설계, 반도체 클린룸 보안 시뮬레이션. 다중분광 환경 시계열 모니터링.</div><div class="industry-clients">해상풍력 발주처 · 산업단지 · 환경 모니터링 기관</div><div class="industry-multispectral"><div class="industry-multispectral-label">★ 다중분광 측량 전용 응용 (AXIS 02)</div><div class="industry-multispectral-text">정밀 농업(NDVI·NDRE·CCCI 식생지수 산정), 임업 자원 조사(DBH·바이오매스·탄소 저장량), 환경 시계열(식생·수질·토양 변화 추적, 재해 전후 평가).</div></div></div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-image" style="background-image:url('./images/jgcv7_s21_industry_c_heritage_v1.jpeg');"></div>
+        <div class="industry-body"><div class="industry-letter">INDUSTRY C</div><div class="industry-name">헤리티지 · 전시 · 관광</div><div class="industry-desc">국가유산청 정밀 실측 컨소시엄 백엔드 수행, 동굴·전통건축 디지털 아카이빙, 관광공사 가상 콘텐츠.</div><div class="industry-clients">국가유산청 · 시도 관광공사 · 박물관(컨소시엄)</div></div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-image" style="background-image:url('./images/jgcv7_s25_industry_d_culture_v1.jpeg');"></div>
+        <div class="industry-body"><div class="industry-letter">INDUSTRY D · 신규</div><div class="industry-name">박물관 · 미술관 · 문화 공간</div><div class="industry-desc">박물관·미술관 큐레이터·학예사의 디지털 아카이브 워크플로우 지원. 가우시안 스플래팅 기반 인터랙티브 전시 콘텐츠. 작품·전시 공간의 풀스택 디지털화.</div><div class="industry-clients">박물관 · 미술관 · 갤러리 · 문화재단</div></div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-image" style="background-image:url('./images/jgcv7_s26_industry_e_hospitality_v1.jpeg');"></div>
+        <div class="industry-body"><div class="industry-letter">INDUSTRY E · 신규</div><div class="industry-name">호텔 · 카페 · 상업 공간 · 건축물</div><div class="industry-desc">호텔·리조트·부티크 카페·건축물 인테리어의 가상 투어 콘텐츠 제작. 발주처 자체 웹사이트·OTA·마케팅 채널 임베드. 매트포트 종속 회피.</div><div class="industry-clients">호텔 · 리조트 · 부티크 카페 · 건축사무소 · 인테리어 디자이너</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="roi">
+  <div class="container">
+    <div class="eyebrow">VERIFIED ROI</div>
+    <h2>검증된 글로벌 ROI 데이터</h2>
+    <p class="section-lead">본 스튜디오가 만든 데이터가 아닌, 글로벌 검증 사례입니다. 동일 워크플로우 적용 시 기대 가능한 효과의 참고 지표.</p>
+    <div class="roi-intro"><p>호텔·환대·농업·임업 영역의 글로벌 표준 ROI 수치. 본 스튜디오는 동일 워크플로우(가상 투어, 다중분광, LiDAR 융합)로 발주처를 지원합니다.</p></div>
+    <div class="roi-grid">
+      <div class="roi-card"><div class="roi-case">Vacasa (북미 휴가 렌탈 플랫폼)</div><div class="roi-metric">예약률 +12% / 탐색 시간 3배</div><div class="roi-source">Matterport 공식 케이스 스터디</div></div>
+      <div class="roi-card"><div class="roi-case">Lindner Hotels (유럽)</div><div class="roi-metric">온라인 참여도 +25%</div><div class="roi-source">Matterport 백서</div></div>
+      <div class="roi-card"><div class="roi-case">Allseated (미국 이벤트)</div><div class="roi-metric">환대 매출 +30% / 효율성 +60%</div><div class="roi-source">Matterport 공식 케이스</div></div>
+      <div class="roi-card"><div class="roi-case">UAE 럭셔리 부티크 (2025)</div><div class="roi-metric">예약률 최대 +67%</div><div class="roi-source">산업 보고서</div></div>
+      <div class="roi-card"><div class="roi-case">Visual Media Group (미국)</div><div class="roi-metric">매출 +50% · ROI 200%</div><div class="roi-source">Matterport 공식 케이스 (신규 고객 +60%)</div></div>
+      <div class="roi-card"><div class="roi-case">미국 18에이커 농장</div><div class="roi-metric">에이커당 23 파운드 비료 절감</div><div class="roi-source">PIX4D 공식 케이스 (3,000에이커 확장 시 6개월 34.5톤 절감)</div></div>
+      <div class="roi-card"><div class="roi-case">GreenValley 임업 DBH</div><div class="roi-metric">MAE 3.03cm · RMSE 4.26cm</div><div class="roi-source">GreenValley International 공식 자료</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="market">
+  <div class="container">
+    <div class="eyebrow">MARKET</div>
+    <h2>국내·국제 시장 데이터</h2>
+    <p class="section-lead">본 스튜디오가 자리한 시장의 거시 데이터.</p>
+    <div class="market-grid">
+      <div class="market-card"><div class="market-region">KOREA</div><div class="market-stat">283억 원 (2024)</div><div class="market-desc">한국 드론 측량 시장 규모</div><div class="market-note">출처: 국내 산업 보고서</div></div>
+      <div class="market-card"><div class="market-region">KOREA</div><div class="market-stat">5,500만 ~ 1억 1,400만 원</div><div class="market-desc">국가유산청 / 지자체 정밀 실측 발주 실측 단가 범위</div><div class="market-note">2024-2026 공공 발주 공고 기준</div></div>
+      <div class="market-card"><div class="market-region">GLOBAL</div><div class="market-stat">Matterport ⇄ 3DGS 전환</div><div class="market-desc">Zillow가 SkyTours로 가우시안 스플래팅 도입 (2024). 첫 메이저 부동산 플랫폼.</div><div class="market-note">Matterport-Zillow 분쟁 직후</div></div>
+      <div class="market-card"><div class="market-region">GLOBAL</div><div class="market-stat">€3,000 ~ €20,000+</div><div class="market-desc">유럽 가상 투어 단가 (Design4real 공개 기준)</div><div class="market-note">발주 범위에 따라 변동</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="partnership">
+  <div class="container">
+    <div class="eyebrow">PARTNERSHIP</div>
+    <h2>컨소시엄 백엔드 모델</h2>
+    <p class="section-lead">한계의 솔직한 인정과 협업으로 해결합니다. 면허·자격 보유 파트너 법인이 1차 계약 주체가 되고, 본 스튜디오는 백엔드에서 기술 수행 전담.</p>
+    <div class="partnership-wrap">
+      <div class="partnership-image" style="background-image:url('./images/jgcv7_s22_partnership_consortium_v1.jpeg');"></div>
+      <div>
+        <div class="partnership-callout"><p><strong>한계 인정.</strong> 본 스튜디오는 측량업·국가유산실측설계업 등 면허·자격이 요구되는 발주를 단독 수주할 수 없습니다(공간정보관리법 제34·35조, 국가유산수리법 제14조).</p></div>
+        <div class="partnership-callout"><p><strong>해결 모델.</strong> 면허 보유 파트너 법인이 1차 계약, 본 스튜디오는 백엔드에서 드론 GIS 매핑, 3D 가우시안 스플래팅, 풀프레임·360° 통합 캡처, Unreal Engine 5 변환, 가상 투어, 오프라인 보안 처리 등 최전선 기술 수행을 전담합니다.</p></div>
+        <div class="partnership-cases">
+          <div class="partnership-case"><strong>국가유산청 문화유적 3D 스캔 정밀실측용역</strong> — 5,500만 원 / 150일 / <strong>컨소시엄 허용</strong></div>
+          <div class="partnership-case"><strong>충북 영동군 영동 가학루 정밀실측 + 3D 스캔</strong> — 1억 1,400만 원 / 180일 / 국가유산실측설계업 등록 필수</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="infrastructure">
+  <div class="container">
+    <div class="eyebrow">INFRASTRUCTURE</div>
+    <h2>처리 인프라</h2>
+    <p class="section-lead">단순한 1인 스튜디오가 아닙니다. 발주처 보안 요구에 부합하는 처리 환경.</p>
+    <div class="infra-list">
+      <div class="infra-item"><div class="infra-label">메인 워크스테이션</div><div class="infra-text">Mac Studio M4 64GB</div></div>
+      <div class="infra-item"><div class="infra-label">스토리지</div><div class="infra-text">60TB+ RAID 어레이</div></div>
+      <div class="infra-item"><div class="infra-label">보안망 처리</div><div class="infra-text">오프라인 단독 환경 가능</div></div>
+      <div class="infra-item"><div class="infra-label">3D 재구성</div><div class="infra-text">Postshot · RealityCapture · Metashape</div></div>
+      <div class="infra-item"><div class="infra-label">측량 처리</div><div class="infra-text">Pix4D · DJI Terra</div></div>
+      <div class="infra-item"><div class="infra-label">가상 투어 · 게임엔진</div><div class="infra-text">Unreal Engine 5 · 3D Vista</div></div>
+      <div class="infra-item"><div class="infra-label">영상 후반</div><div class="infra-text">Adobe Premiere Pro · Topaz Photo AI</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="container">
+    <div class="eyebrow">CREDENTIALS &amp; CONTACT</div>
+    <h2>SINCE 2017, 제주에서 시작했습니다</h2>
+    <div class="credentials-wrap">
+      <div class="credentials-list">
+        <div class="credential-item"><span class="credential-dot"></span>SINCE 2017</div>
+        <div class="credential-item"><span class="credential-dot"></span>JCCEI 제주 창조경제혁신센터 입주기업</div>
+        <div class="credential-item"><span class="credential-dot"></span>청년창업사관학교 수료</div>
+        <div class="credential-item"><span class="credential-dot"></span>2022 제주 로컬크리에이터 선정</div>
+        <div class="credential-item"><span class="credential-dot"></span>16년 영상·사진 경력 · 13년 360° VR 경력 · 4년 AI 워크플로우 경력</div>
+        <div class="credential-item"><span class="credential-dot"></span>9개 YouTube 채널 운영 (메인 · 음악 · 광고 · 다큐 · 360VR · FPV 등)</div>
+        <div class="credential-item"><span class="credential-dot"></span>관·공공·민간 컨소시엄 협업 경험</div>
+      </div>
+      <div class="cta-block">
+        <div class="cta-title">도입을 검토하시나요?</div>
+        <div class="cta-sub">발주 범위·일정·견적은 발주처 요구에 따라 맞춤 산정합니다. 짧은 통화 한 번에 시작합니다.</div>
+        <a href="mailto:whipia@naver.com" class="cta-primary">도입 문의 메일 보내기</a>
+        <div class="cta-promise">평균 1시간 내 응답</div>
+        <div class="cta-contact">
+          <div>📧 whipia@naver.com</div>
+          <div>📱 010-6778-9199</div>
+          <div>📍 제주특별자치도 제주시 산천단동 1길 15 303호</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p><strong>JEJUGRAPHER (제주그래퍼)</strong></p>
+    <p>공간 데이터 풀스택 스튜디오 · SINCE 2017</p>
+    <p>사업자등록번호 512-11-63348</p>
+    <div class="footer-meta">제주특별자치도 제주시 산천단동 1길 15 303호 · whipia@naver.com · 010-6778-9199</div>
+    <div class="footer-meta">© 2026 JEJUGRAPHER. All rights reserved.</div>
+  </div>
+</footer>
+
+</body>
+</html>
