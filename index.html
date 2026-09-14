@@ -3,534 +3,430 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2026생태관광주간 · 제주</title>
-<meta name="description" content="2026생태관광주간 — 제주, 나만의 계절을 발견하다. 오름 너머로, 제주 빛에 물들며. 습지·곶자왈·오름·동굴·가로숲을 걷는 가을 생태관광 프로그램.">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="2026생태관광주간">
-<meta property="og:title" content="2026생태관광주간 · 오름 너머로, 제주 빛에 물들며">
-<meta property="og:description" content="제주, 나만의 계절을 발견하다 — 가을 생태관광 프로그램. 습지·곶자왈·오름·동굴·가로숲을 걷다.">
-<meta property="og:url" content="https://jejuecotourism.com/">
-<meta property="og:image" content="https://jejuecotourism.com/assets/hero.jpg">
-<meta name="twitter:card" content="summary_large_image">
-<meta property="og:locale" content="ko_KR">
-<meta name="keywords" content="생태관광주간, 제주 생태관광, 2026 생태관광주간, 제주생태관광협회, 생태관광지원센터, 곶자왈, 습지, 오름, 동굴, 가로숲, 다크투어, 제주 가을 여행, 제주 체험 프로그램">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<meta name="author" content="제주생태관광협회 · 제주특별자치도 생태관광지원센터">
-<link rel="canonical" href="https://jejuecotourism.com/">
-<!-- 네이버 서치어드바이저 소유확인: 발급받은 태그로 아래 주석을 교체 -->
-<!-- <meta name="naver-site-verification" content="여기에_발급코드" /> -->
-<script type="application/ld+json">
-{
- "@context": "https://schema.org",
- "@type": "Event",
- "name": "2026 생태관광주간 · 제주",
- "alternateName": "제주, 나만의 계절을 발견하다 — 오름 너머로, 제주 빛에 물들며",
- "description": "2026년 10월 3일부터 9일까지 제주 곳곳의 생태관광마을과 기관이 진행하는 가을 생태관광 프로그램. 습지·곶자왈·오름·동굴·가로숲·다크투어·바다 16개 프로그램.",
- "startDate": "2026-10-03",
- "endDate": "2026-10-09",
- "eventStatus": "https://schema.org/EventScheduled",
- "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
- "url": "https://jejuecotourism.com/",
- "image": [
-  "https://jejuecotourism.com/assets/hero.jpg"
- ],
- "location": {
-  "@type": "Place",
-  "name": "제주특별자치도 일원",
-  "address": {
-   "@type": "PostalAddress",
-   "addressRegion": "제주특별자치도",
-   "addressCountry": "KR"
-  }
- },
- "organizer": [
-  {
-   "@type": "Organization",
-   "name": "(사)제주생태관광협회",
-   "telephone": "+82-64-782-3253",
-   "url": "https://jejuecotourism.com/"
-  },
-  {
-   "@type": "Organization",
-   "name": "제주특별자치도 생태관광지원센터"
-  }
- ],
- "inLanguage": "ko"
-}
-</script>
+<title>JEJUGRAPHER — 제주그래퍼 | 3D 공간데이터 · AI 영상 · 촬영 · 편집 · 웹</title>
+<meta name="description" content="모든 기술을 자체 보유한 제주 기반 풀스택 스튜디오 JEJUGRAPHER. 3D 가우시안 스플래팅 공간데이터, AI 뮤직비디오, 드론·360 VR 촬영, 편집, 웹 제작까지 전 과정을 다룹니다.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;500;600;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --maple:#C0492B; --maple-soft:#D9743F; --persimmon:#E0913C; --gold:#E7B45A;
-  --forest:#2F5E3A; --forest-deep:#1E3F27; --moss:#6B8F5A;
-  --grass:#D8C9A3; --sky:#8FB2C9;
-  --bg:#F7F2E8; --bg-deep:#EFE6D4; --card:#FFFFFF;
-  --ink:#2A2320; --ink-soft:#5E5248; --ink-faint:#8B7E70;
-  --line:#E6DAC4; --line-soft:#F0E7D6;
-  --shadow:0 1px 2px rgba(60,40,20,.04),0 6px 20px rgba(120,70,30,.07);
-  --shadow-lg:0 14px 44px rgba(120,70,30,.14);
-  --r:16px; --r-lg:24px;
-  --maxw:1180px;
+  --bg:#F8F4EC; --navy:#1F3A5F; --terra:#C97B5B; --ink:#2C2825; --line:#E3DCCE;
 }
-*{box-sizing:border-box;margin:0;padding:0}
+*{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:"Noto Sans KR",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;-webkit-font-smoothing:antialiased}
-img{max-width:100%;display:block}
+body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;font-weight:400}
+h1,h2,h3{font-family:'Gowun Batang',serif}
+.container{max-width:1180px;margin:0 auto;padding:0 24px}
+section{padding:150px 0}
 a{color:inherit;text-decoration:none}
-.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
-.serif{font-family:"Noto Serif KR",serif}
-.tbd{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.02em;color:#9A6B14;background:#FBEFCF;border:1px solid #EAD59A;border-radius:999px;padding:.12em .6em;vertical-align:middle}
-.badge{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:.14em .66em}
-.badge.free{color:#1E6B3A;background:#DFF0E2;border:1px solid #B7DcC0}
-.badge.paid{color:#8A4A1E;background:#F6E6D3;border:1px solid #E7CBA9}
-.badge.new{color:#fff;background:var(--maple)}
-.badge.center{color:#274E6B;background:#DEEAF2;border:1px solid #BAD3E4}
-.badge.demo{color:#5A3A86;background:#ECE3F7;border:1px solid #D3C2ED}
-.badge.closed{color:#fff;background:#8B7E70}
+img{max-width:100%;display:block}
 
-/* ===== NAV ===== */
-.nav{position:sticky;top:0;z-index:900;background:rgba(247,242,232,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
-.nav-logo{display:flex;align-items:center;gap:10px;font-family:"Noto Serif KR",serif;font-weight:700;font-size:1.05rem;color:var(--forest-deep)}
-.nav-logo .mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--maple),var(--persimmon));display:grid;place-items:center;color:#fff;font-size:.9rem}
-.nav-menu{display:flex;gap:26px;font-size:.94rem;font-weight:500;color:var(--ink-soft)}
-.nav-menu a:hover{color:var(--maple)}
-.nav-menu .tbd{margin-left:4px}
-@media(max-width:720px){.nav-menu{display:none}}
+nav{position:fixed;top:0;left:0;right:0;background:rgba(248,244,236,.94);border-bottom:1px solid var(--line);z-index:100;backdrop-filter:blur(8px)}
+.navin{max-width:1180px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Gowun Batang',serif;font-weight:700;font-size:19px;letter-spacing:2px;color:var(--navy)}
+.menu{display:flex;gap:22px;font-size:14px}
+.menu a{color:var(--ink)}
+.menu a:hover{color:var(--terra)}
+.menu .map{color:var(--terra);font-weight:500}
 
-/* ===== HERO ===== */
-.hero{position:relative;overflow:hidden;color:#fff;min-height:clamp(460px,72vh,680px);display:flex;align-items:flex-end}
-.hero svg.scene{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
-.hero-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
-.hero-video{opacity:0;transition:opacity 1.2s ease}
-.hero.video-on .hero-video{opacity:1}
-.hero.video-on .hero-leaves{display:none} /* 영상 자체에 낙엽이 있어 이모지 낙엽은 숨김 */
-@media(prefers-reduced-motion:reduce){.hero-video{display:none}}
-.hero-scrim{position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(20,20,10,.12) 0%,rgba(20,20,10,.10) 45%,rgba(20,20,10,.52) 100%)}
-.hero-note{position:absolute;top:14px;right:16px;z-index:5;font-size:.72rem;background:rgba(0,0,0,.32);color:#fff;padding:.3em .7em;border-radius:999px;backdrop-filter:blur(4px)}
-.hero-in{position:relative;z-index:4;width:100%;max-width:var(--maxw);margin:0 auto;padding:0 22px 8vh}
-.hero-kicker{font-weight:700;letter-spacing:.14em;font-size:.8rem;color:#FCE6C4;margin-bottom:14px}
-.hero-title{font-family:"Gowun Batang","Noto Serif KR",serif;font-weight:700;line-height:1.12;font-size:clamp(2.1rem,6vw,3.9rem);text-shadow:0 2px 24px rgba(20,20,10,.35)}
-.hero-sub{font-family:"Noto Serif KR",serif;font-weight:500;margin-top:12px;font-size:clamp(1.05rem,2.6vw,1.6rem);color:#FBEAD0;text-shadow:0 2px 16px rgba(20,20,10,.4)}
-.hero-meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px 18px;font-size:.95rem;color:#F3E7D2}
-.hero-meta b{color:#fff}
-.hero-cta{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:.96rem;border-radius:999px;padding:.85em 1.5em;border:0;cursor:pointer;transition:transform .15s,box-shadow .15s}
-.btn.primary{background:var(--maple);color:#fff;box-shadow:0 8px 24px rgba(192,73,43,.35)}
-.btn.ghost{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.5);backdrop-filter:blur(4px)}
-.btn:hover{transform:translateY(-2px)}
+.hero{padding:210px 0 150px;text-align:center}
+.eyebrow{font-size:13.5px;letter-spacing:3px;color:var(--terra);margin-bottom:22px;font-weight:500}
+.hero h1{font-size:42px;line-height:1.5;color:var(--navy);font-weight:700;margin-bottom:26px}
+.hero .sub{font-size:16.5px;color:#5a544c;max-width:660px;margin:0 auto 40px}
+.cta{display:inline-block;background:var(--terra);color:#fff;padding:16px 38px;font-size:15.5px;font-weight:500;letter-spacing:.5px;border:0;cursor:pointer}
+.cta:hover{background:#b56a4c}
+.stackrow{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:54px}
+.stack{border:1px solid var(--line);background:#fff;padding:9px 18px;font-size:13.5px;color:var(--navy)}
+.stack b{color:var(--terra);font-weight:500;margin-right:6px}
 
-/* ===== SECTION ===== */
-section{padding:clamp(56px,8vw,96px) 0}
-.eyebrow{font-weight:700;letter-spacing:.12em;font-size:.8rem;color:var(--maple);text-transform:uppercase}
-.s-title{font-family:"Noto Serif KR",serif;font-weight:700;font-size:clamp(1.6rem,4vw,2.5rem);line-height:1.25;margin:.3em 0 .5em;color:var(--forest-deep)}
-.s-lead{font-size:1.05rem;color:var(--ink-soft);max-width:62ch}
+.shead{margin-bottom:60px}
+.snum{font-size:13px;letter-spacing:3px;color:var(--terra);margin-bottom:14px;font-weight:500}
+.shead h2{font-size:30px;color:var(--navy);line-height:1.5;font-weight:700}
+.shead p{margin-top:14px;font-size:15.5px;color:#5a544c;max-width:680px}
 
-/* ===== INTRO ===== */
-.intro{background:linear-gradient(180deg,#fff 0%,var(--bg) 100%)}
-.intro-slogan{font-family:"Gowun Batang",serif;font-weight:700;font-size:clamp(1.9rem,5vw,3rem);color:var(--maple);line-height:1.25}
-.intro-slogan small{display:block;font-family:"Noto Serif KR",serif;font-weight:500;font-size:clamp(1rem,2.4vw,1.35rem);color:var(--forest);margin-top:.5em}
-.intro-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;margin-top:40px}
-@media(max-width:820px){.intro-grid{grid-template-columns:1fr;gap:26px}}
-.intro-copy p{margin-bottom:1em;color:var(--ink-soft)}
-.leaf-tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:8px}
-.leaf-tags span{font-size:.86rem;font-weight:600;background:#fff;border:1px solid var(--line);border-radius:999px;padding:.4em .9em;color:var(--forest)}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:64px}
+.scitem{position:relative;background:#000;overflow:hidden}
+.scitem img{width:100%;height:190px;object-fit:cover;transition:.25s}
+.scitem:hover img{transform:scale(1.05)}
+.sclab{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,rgba(20,18,15,.85));color:#fff;font-size:12.5px;padding:26px 12px 10px}
+.sclab b{display:block;font-size:13.5px;font-weight:500}
 
-/* ===== PROGRAMS ===== */
-.prog{background:var(--bg-deep)}
-.filters{display:flex;flex-wrap:wrap;gap:9px;margin:26px 0 8px}
-.chip{font-size:.9rem;font-weight:600;border-radius:999px;padding:.5em 1.05em;border:1px solid var(--line);background:#fff;color:var(--ink-soft);cursor:pointer;transition:.15s}
-.chip[aria-pressed="true"]{background:var(--forest);color:#fff;border-color:var(--forest)}
-.chip:hover{border-color:var(--forest)}
-.chip.demo{color:#5A3A86;border-color:#D3C2ED;background:#F5F0FB}
-.chip.demo[aria-pressed="true"]{background:#5A3A86;color:#fff;border-color:#5A3A86}
-.viewtoggle{display:flex;gap:6px;margin:16px 0 22px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px;width:max-content}
-.viewtoggle button{border:0;background:transparent;font-weight:700;font-size:.88rem;color:var(--ink-soft);padding:.5em 1.1em;border-radius:999px;cursor:pointer}
-.viewtoggle button[aria-pressed="true"]{background:var(--maple);color:#fff}
-#map{height:460px;border-radius:var(--r-lg);border:1px solid var(--line);box-shadow:var(--shadow);margin-bottom:26px}
-.leaflet-popup-content{font-family:"Noto Sans KR",sans-serif;margin:12px 14px}
-.pin-t{font-weight:700;color:var(--forest-deep)}
-.pin-m{font-size:.85rem;color:var(--ink-soft)}
-.pin-t a:hover{color:var(--maple)}
-.pin-go{display:inline-block;margin-top:8px;font-size:.84rem;font-weight:700;color:var(--maple)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:22px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s}
-.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
-.card-img{aspect-ratio:16/10;background:linear-gradient(135deg,var(--grass),#EFE6D2);position:relative;display:grid;place-items:center;color:#B39A6E;overflow:hidden}
-.card-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.card-img .ph{font-size:.82rem;font-weight:600}
-.card-img .cat{position:absolute;top:12px;left:12px;font-size:.74rem;font-weight:700;color:#fff;background:rgba(47,94,58,.9);border-radius:999px;padding:.24em .7em}
-.card-body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:9px;flex:1}
-.card-no{font-size:.78rem;font-weight:700;color:var(--maple)}
-.card-title{font-family:"Noto Serif KR",serif;font-weight:700;font-size:1.18rem;line-height:1.35;color:var(--forest-deep)}
-.card-meta{font-size:.88rem;color:var(--ink-soft);display:flex;flex-direction:column;gap:3px}
-.card-meta .row{display:flex;gap:7px}
-.card-meta .k{color:var(--ink-faint);min-width:44px;font-weight:600}
-.card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
-.card-cta{margin-top:auto;padding-top:12px;display:flex;gap:8px}
-.card-cta .btn{padding:.6em 1.05em;font-size:.86rem}
-.btn.sm-line{background:#fff;border:1px solid var(--line);color:var(--forest)}
-.count{font-size:.9rem;color:var(--ink-faint);margin:6px 0 0}
+.domains{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.dom{background:#fff;border:1px solid var(--line);padding:34px 32px}
+.dom h3{font-size:18px;color:var(--navy);margin-bottom:12px}
+.dom p{font-size:14.5px;color:#5a544c}
+.morelink{display:inline-block;margin-top:40px;font-size:15px;color:var(--terra);font-weight:500;border-bottom:1px solid var(--terra);padding-bottom:2px;margin-right:28px}
 
-/* ===== SCHEDULE ===== */
-.sched{background:#fff}
-.sched-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-lg);margin-top:24px}
-table{border-collapse:collapse;width:100%;min-width:640px;font-size:.92rem}
-th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line-soft)}
-thead th{background:var(--bg-deep);color:var(--forest-deep);font-weight:700;position:sticky;top:0}
-tbody tr:hover{background:#FBF7EE}
-.note{font-size:.88rem;color:var(--ink-faint);margin-top:14px}
-/* 달력 */
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-top:24px}
-@media(max-width:900px){.cal{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:520px){.cal{grid-template-columns:1fr}}
-.cal-day{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:12px;min-height:120px;display:flex;flex-direction:column}
-.cal-day.weekend{background:#FBF3EC;border-color:#EBCDBF}
-.cal-day.weekend .cal-date,.cal-day.weekend .cal-date .dow{color:var(--maple)}
-.cal-date{font-family:"Noto Serif KR",serif;font-weight:700;font-size:1.35rem;line-height:1.1;color:var(--forest-deep);margin-bottom:10px;border-bottom:2px solid var(--line);padding-bottom:8px;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
-.cal-date .dow{font-size:.9rem;color:var(--ink-faint);font-weight:700}
-.cal-date .hol{font-size:.72rem;font-weight:700;color:#fff;background:var(--maple);border-radius:999px;padding:.1em .6em;margin-left:auto}
-.cal-legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:14px;font-size:.82rem;color:var(--ink-soft)}
-.cal-legend .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
-.cal-item{font-size:.82rem;line-height:1.4;color:var(--ink-soft);padding:4px 0;border-bottom:1px dashed var(--line-soft);display:block}
-.cal-item:last-child{border-bottom:0}
-.cal-item:hover{color:var(--maple)}
-.cal-item .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--forest);margin-right:5px;vertical-align:middle}
-.cal-item.demo .dot{background:#8B6BC0}
-.cal-empty{font-size:.8rem;color:var(--ink-faint);opacity:.7}
+.feat{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.feat .vwrap{position:relative;padding-top:56.25%;background:#000}
+.feat iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.feat .vt{margin-top:14px;font-size:15px;font-weight:500;color:var(--navy)}
+.feat .vd{font-size:13.5px;color:#8d8577}
 
-/* ===== FOOTER ===== */
-footer{background:linear-gradient(180deg,var(--gold) 0%,var(--persimmon) 100%);color:#3A2A14;padding:52px 0 40px;margin-top:0}
-.foot-grid{display:flex;flex-wrap:wrap;gap:30px;justify-content:space-between;align-items:center}
-.foot-logos{display:flex;gap:26px;flex-wrap:wrap;align-items:center}
-/* 로고: 흰 박스 없이 배경 위에 PNG 그대로(회의 09-14) */
-.foot-logo{background:transparent;border:0;padding:0;font-weight:700;color:#4A3418;font-size:.95rem;display:flex;align-items:center}
-.foot-logo img{height:46px;width:auto;display:block}
-@media(max-width:520px){.foot-logo img{height:38px}}
-.foot-info{font-size:.9rem;line-height:1.9}
-.foot-qr{display:flex;flex-direction:column;align-items:center;gap:6px}
-.foot-qr img{width:96px;height:96px;background:#fff;border-radius:12px;padding:6px;box-shadow:0 4px 14px rgba(60,40,20,.18)}
-.foot-qr span{font-size:.78rem;font-weight:600;color:#4A3418}
-.foot-bottom{margin-top:26px;padding-top:18px;border-top:1px solid rgba(60,40,20,.2);font-size:.82rem;color:#5A4522;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.works{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:52px}
+.wcard{background:#fff;border:1px solid var(--line);transition:.15s}
+.wcard:hover{border-color:var(--terra)}
+.wthumb{position:relative;padding-top:56.25%;overflow:hidden;background:#ddd}
+.wthumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.wbody{padding:15px 17px 17px}
+.wt{font-size:15px;font-weight:500;color:var(--navy)}
+.wd{font-size:13px;color:#8d8577;margin-top:3px}
+.badge{display:inline-block;font-size:11.5px;color:#fff;background:var(--navy);padding:2px 9px;margin-top:8px;letter-spacing:.5px}
 
-.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s,transform .7s}
-.reveal.in{opacity:1;transform:none}
+.chans{margin-top:56px;padding-top:40px;border-top:1px solid var(--line)}
+.chans .ct{font-size:14px;color:#8d8577;margin-bottom:16px}
+.chrow{display:flex;flex-wrap:wrap;gap:12px}
+.chip{border:1px solid var(--navy);color:var(--navy);padding:10px 20px;font-size:14px;background:transparent;cursor:pointer}
+.chip:hover{background:var(--navy);color:#fff}
 
-/* ===== HERO 모션 (억새 살랑 + 단풍잎 낙하) ===== */
-.hero-leaves{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
-.hero-leaves i{position:absolute;top:-8%;font-style:normal;font-size:1.5rem;opacity:0;
-  animation:leafFall linear infinite;will-change:transform,opacity}
-.hero-leaves i:nth-child(1){left:16%;font-size:1.4rem;animation-duration:11s;animation-delay:0s}
-.hero-leaves i:nth-child(2){left:44%;font-size:1.8rem;animation-duration:14s;animation-delay:4s}
-.hero-leaves i:nth-child(3){left:72%;font-size:1.2rem;animation-duration:12.5s;animation-delay:8s}
-@keyframes leafFall{
-  0%{transform:translateY(0) translateX(0) rotate(0);opacity:0}
-  8%{opacity:.9}
-  50%{transform:translateY(52vh) translateX(26px) rotate(180deg)}
-  90%{opacity:.9}
-  100%{transform:translateY(108vh) translateX(-18px) rotate(360deg);opacity:0}}
-/* 억새 살랑 — SVG 배경이 보일 때(사진 미로드) 부드럽게 흔들림 */
-.hero svg .grass{transform-box:fill-box;transform-origin:bottom center;animation:sway 6s ease-in-out infinite}
-@keyframes sway{0%,100%{transform:skewX(-1.2deg)}50%{transform:skewX(1.2deg)}}
-@media(prefers-reduced-motion:reduce){.hero-leaves i,.hero svg .grass{animation:none}.hero-leaves i{opacity:0}}
+.gearwrap{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.gear{background:#fff;border:1px solid var(--line);padding:30px 26px}
+.gear .gt{font-size:13px;letter-spacing:2px;color:var(--terra);margin-bottom:10px;font-weight:500}
+.gear h3{font-size:17.5px;color:var(--navy);margin-bottom:8px}
+.gear p{font-size:13.5px;color:#5a544c}
+.years{display:flex;gap:44px;margin-top:56px;flex-wrap:wrap}
+.years .y{font-family:'Gowun Batang',serif;font-size:34px;color:var(--terra)}
+.years .yl{font-size:13.5px;color:#8d8577}
+
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.step{background:#fff;border:1px solid var(--line);padding:28px 26px}
+.step .n{font-family:'Gowun Batang',serif;font-size:24px;color:var(--terra);margin-bottom:12px}
+.step h3{font-size:16.5px;color:var(--navy);margin-bottom:9px}
+.step p{font-size:13.5px;color:#5a544c}
+.comm{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:52px}
+.commcard{background:#fff;border:1px solid var(--line);padding:26px 24px}
+.commcard h3{font-size:15.5px;color:var(--navy);margin-bottom:8px}
+.commcard p{font-size:13px;color:#5a544c}
+.commcard .st{display:inline-block;font-size:11.5px;color:var(--terra);border:1px solid var(--terra);padding:1px 8px;margin-top:10px}
+
+.mapsec{background:var(--navy);color:#f4efe4}
+.mapsec .snum{color:#e8b49a}
+.mapsec h2{color:#fff}
+.mapsec .shead p{color:#c3cddc}
+.mapgrid{display:grid;grid-template-columns:1.2fr 1fr;gap:44px;align-items:center;margin-bottom:60px}
+.mapframe{border:1px solid #3a557e;background:#16294a;position:relative;padding-top:66%}
+.mapframe iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.mapinfo h3{font-family:'Gowun Batang',serif;font-size:24px;margin-bottom:16px;color:#fff}
+.mapinfo p{font-size:15px;color:#c3cddc;margin-bottom:12px}
+.mapstat{display:flex;gap:36px;margin:26px 0}
+.mapstat .num{font-family:'Gowun Batang',serif;font-size:29px;color:#e8b49a}
+.mapstat .lab{font-size:13px;color:#93a5c1;margin-top:2px}
+.mapbtn{display:inline-block;background:var(--terra);color:#fff;padding:14px 32px;font-size:15px;font-weight:500}
+.mapbtn:hover{background:#b56a4c}
+.webgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.webcard{background:#243f66;border:1px solid #3a557e;padding:28px 26px}
+.webcard h3{font-family:'Gowun Batang',serif;font-size:17px;color:#fff;margin-bottom:8px}
+.webcard p{font-size:13.5px;color:#c3cddc}
+.webcard a{display:inline-block;margin-top:14px;font-size:13.5px;color:#e8b49a;border-bottom:1px solid #e8b49a}
+
+.contact{text-align:center}
+.contact .closing{font-family:'Gowun Batang',serif;font-size:22px;line-height:1.9;color:var(--navy);max-width:680px;margin:0 auto 48px}
+.cinfo{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;font-size:14.5px;color:#5a544c;margin:48px 0 36px}
+.cinfo b{color:var(--navy);font-weight:500}
+.creds{font-size:13px;color:#8d8577;margin-top:40px;letter-spacing:.3px}
+.snsrow{display:flex;justify-content:center;gap:14px;margin-top:24px}
+
+footer{border-top:1px solid var(--line);padding:32px 0;font-size:13px;color:#8d8577}
+.fin{max-width:1180px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+footer a{color:var(--terra)}
+footer .adminlink{color:#b7ab97}
+
+@media (max-width:1024px){
+  .hero h1{font-size:33px}
+  .scale{grid-template-columns:repeat(3,1fr)}
+  .works{grid-template-columns:repeat(2,1fr)}
+  .steps,.gearwrap,.comm{grid-template-columns:1fr 1fr}
+  .mapgrid{grid-template-columns:1fr}
+  .webgrid{grid-template-columns:1fr}
+}
+@media (max-width:767px){
+  section{padding:96px 0}
+  .hero{padding:150px 0 100px}
+  .hero h1{font-size:26px}
+  .menu{display:none}
+  .scale{grid-template-columns:repeat(2,1fr)}
+  .feat,.works,.steps,.gearwrap,.comm,.domains{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav class="nav"><div class="wrap nav-in">
-  <a class="nav-logo" href="#top"><span class="mark">가</span>2026생태관광주간</a>
-  <div class="nav-menu">
-    <a href="#intro">소개</a>
-    <a href="#programs">프로그램</a>
-    <a href="#schedule">일정</a>
-    <a href="#programs" id="navDemo">시범 프로그램</a>
-    <a href="#map-sec">오시는 길</a>
+<nav>
+  <div class="navin">
+    <a class="logo" href="#top">JEJUGRAPHER</a>
+    <div class="menu">
+      <a href="#gs3d">공간데이터</a>
+      <a href="#filming">촬영</a>
+      <a href="#editing">편집</a>
+      <a href="#aivideo">AI 영상</a>
+      <a href="#web">웹 제작</a>
+      <a href="byeolbam.html">별밤사진관</a>
+      <a class="map" href="https://jajumap.com" target="_blank" rel="noopener">제주맵 ↗</a>
+      <a href="inquiry.html">문의</a>
+    </div>
   </div>
-</div></nav>
+</nav>
 
 <!-- HERO -->
 <header class="hero" id="top">
-  <svg class="scene" viewBox="0 0 1440 760" preserveAspectRatio="xMidYMid slice" role="img" aria-label="가을 제주 오름과 숲길 임시 일러스트">
-    <defs>
-      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#F3C98A"/><stop offset=".45" stop-color="#E9A96A"/><stop offset="1" stop-color="#D98450"/>
-      </linearGradient>
-      <linearGradient id="or1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8C6A4E"/><stop offset="1" stop-color="#6E4E38"/></linearGradient>
-      <linearGradient id="or2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B5763E"/><stop offset="1" stop-color="#8A5227"/></linearGradient>
-      <linearGradient id="fg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3C6B3E"/><stop offset="1" stop-color="#264A2A"/></linearGradient>
-    </defs>
-    <rect width="1440" height="760" fill="url(#sky)"/>
-    <circle cx="1090" cy="230" r="72" fill="#FCE8C6" opacity=".85"/>
-    <!-- 억새 안개 오름 -->
-    <path class="grass" d="M0 470 Q200 360 420 452 T900 450 Q1150 370 1440 460 L1440 760 0 760Z" fill="url(#or1)" opacity=".55"/>
-    <path class="grass" d="M0 540 Q260 430 560 520 T1080 512 Q1300 452 1440 528 L1440 760 0 760Z" fill="url(#or2)" opacity=".9"/>
-    <!-- 숲 지평 -->
-    <path d="M0 610 Q360 560 720 606 T1440 600 L1440 760 0 760Z" fill="url(#fg)"/>
-    <!-- 나무 실루엣 -->
-    <g fill="#22421F" opacity=".9">
-      <path d="M180 612c8-46 8-70 0-110-14 8-30 8-44 0 10 30 18 44 18 110z"/>
-      <path d="M1230 606c9-52 9-78 0-122-16 9-33 9-48 0 11 33 20 48 20 122z"/>
-    </g>
-    <!-- 단풍잎 낙엽 -->
-    <g opacity=".9">
-      <circle cx="330" cy="180" r="9" fill="#D9743F"/><circle cx="520" cy="120" r="7" fill="#C0492B"/>
-      <circle cx="760" cy="200" r="8" fill="#E7B45A"/><circle cx="980" cy="150" r="7" fill="#D9743F"/>
-      <circle cx="1180" cy="120" r="8" fill="#C0492B"/><circle cx="430" cy="250" r="6" fill="#E0913C"/>
-    </g>
-    <!-- 걷는 사람 실루엣 -->
-    <g fill="#1C3A1F" transform="translate(690 588)">
-      <circle cx="0" cy="-56" r="13"/><rect x="-9" y="-44" width="18" height="34" rx="8"/>
-      <rect x="-8" y="-12" width="7" height="26" rx="3" transform="rotate(10 -5 0)"/>
-      <rect x="2" y="-12" width="7" height="26" rx="3" transform="rotate(-14 5 0)"/>
-    </g>
-  </svg>
-  <img class="hero-photo" src="assets/hero.jpg" alt="2026생태관광주간 메인 이미지" onload="var n=document.getElementById('heroNote');if(n)n.remove()" onerror="this.remove()">
-  <!-- 히어로 루프 영상(무음·자동재생). 재생 불가/동작 줄임 설정이면 위 정지 이미지 유지 -->
-  <video class="hero-photo hero-video" id="heroVideo" autoplay muted loop playsinline preload="auto" poster="assets/hero.jpg" aria-hidden="true" tabindex="-1">
-    <source src="assets/hero_loop.webm" type="video/webm">
-    <source src="assets/hero_loop.mp4" type="video/mp4">
-  </video>
-  <div class="hero-scrim"></div>
-  <div class="hero-leaves" aria-hidden="true"><i>🍁</i><i>🍂</i><i>🍁</i></div>
-  <div class="hero-note" id="heroNote">🎨 메인 이미지 예정 · 임시 배경 <span class="tbd">미정</span></div>
-  <div class="hero-in">
-    <div class="hero-kicker">2026생태관광주간 · 제주</div>
-    <h1 class="hero-title">제주, 나만의 계절을 발견하다</h1>
-    <div class="hero-sub">오름 너머로, 제주 빛에 물들며</div>
-    <div class="hero-meta">
-      <span><b>기간</b> 2026.10.03(토)~10.09(금)</span>
-      <span><b>프로그램</b> 제주 생태관광 13개 마을·기관</span>
-      <span><b>주최</b> 제주생태관광협회 · 제주생태관광지원센터</span>
-    </div>
-    <div class="hero-cta">
-      <a class="btn primary" id="heroBook" href="#programs">예약하기 (탐나오 기획전)</a>
-      <a class="btn ghost" href="#programs">프로그램 둘러보기</a>
-      <button class="btn ghost" id="heroShare" type="button">공유하기</button>
+  <div class="container">
+    <div class="eyebrow">JEJUGRAPHER · 제주그래퍼 · SINCE 2017</div>
+    <h1>현실의 공간과 이야기를<br>기술로 빚어내는 풀스택 스튜디오</h1>
+    <p class="sub">3D 가우시안 스플래팅 공간데이터부터 AI 뮤직비디오, 드론·360° 촬영과 편집, 웹 서비스 제작까지 — 다섯 개의 기술 영역을 모두 자체 보유해, 기획부터 납품까지 외주 없이 원스톱으로 진행합니다.</p>
+    <a class="cta" href="inquiry.html">프로젝트 편하게 문의하기</a>
+    <div class="stackrow">
+      <a class="stack" href="#gs3d"><b>01</b>3D 공간데이터</a>
+      <a class="stack" href="#filming"><b>02</b>촬영</a>
+      <a class="stack" href="#editing"><b>03</b>편집 · 포스트</a>
+      <a class="stack" href="#aivideo"><b>04</b>AI 영상 제작</a>
+      <a class="stack" href="#web"><b>05</b>웹 · 인터랙티브</a>
     </div>
   </div>
 </header>
 
-<!-- INTRO -->
-<section class="intro" id="intro">
-  <div class="wrap">
-    <div class="eyebrow reveal">Introduction</div>
-    <div class="intro-slogan reveal">제주, 나만의 계절을 발견하다
-      <small>가을 — 오름 너머로, 제주 빛에 물들며</small>
+<!-- 01 3DGS 공간데이터 -->
+<section id="gs3d" style="background:#fff">
+  <div class="container">
+    <div class="shead">
+      <div class="snum">01 — 3D SPATIAL DATA · GAUSSIAN SPLATTING</div>
+      <h2>현장을 통째로 떠서, 모니터 위로 가져옵니다.</h2>
+      <p>하늘의 항공 촬영부터 동굴 내부, 걸어서 담는 실내, 0.07mm급 초정밀 접사까지 — 전혀 다른 다섯 가지 크기의 공간이 하나의 3D 파이프라인에서 만들어집니다. 촬영·재구성·검증·배포 전 과정을 자체 기술과 장비로 수행합니다.</p>
     </div>
-    <div class="intro-grid">
-      <div class="intro-copy reveal">
-        <p>여름의 바다를 지나, 가을의 제주는 <b>숲과 오름, 습지와 곶자왈, 동굴과 가로숲</b>으로 이어집니다. 걷고, 만지고, 귀 기울이는 동안 제주의 가을빛이 몸에 스밉니다.</p>
-        <p><b>2026생태관광주간</b>은 제주 곳곳의 마을과 사람들이 준비한 생태관광 프로그램을 한자리에 모았습니다. 지도와 카테고리로 원하는 프로그램을 찾고, 각 프로그램 담당처로 바로 신청·문의할 수 있습니다.</p>
-        <p class="note">※ 올해는 영화제 없이 <b>생태관광 프로그램만</b>으로 진행됩니다. 세부 일정·장소·신청 링크는 확정되는 대로 업데이트됩니다. <span class="tbd">세부 미정</span></p>
+
+    <div class="scale">
+      <a class="scitem" href="spatial/index.html"><img loading="lazy" src="spatial/images/jgcv7_s03_axis1_aerial_v2.jpeg" alt="항공 광역 스캔"><span class="sclab"><b>항공 광역</b>드론 · km 단위</span></a>
+      <a class="scitem" href="spatial/index.html"><img loading="lazy" src="spatial/images/jgcv7_s04_axis2_widecave_v2.jpeg" alt="대형 동굴 스캔"><span class="sclab"><b>대형 동굴</b>광대역 내부 공간</span></a>
+      <a class="scitem" href="spatial/index.html"><img loading="lazy" src="spatial/images/jgcv7_s05_axis3_crawlcave_v2.jpeg" alt="협소 동굴 스캔"><span class="sclab"><b>협소 동굴</b>포복 구간 정밀 기록</span></a>
+      <a class="scitem" href="spatial/index.html"><img loading="lazy" src="spatial/images/jgcv7_s06_axis4_walkingscan_v1.jpeg" alt="보행 스캔"><span class="sclab"><b>보행 스캔</b>실내·시설 공간</span></a>
+      <a class="scitem" href="spatial/index.html"><img loading="lazy" src="spatial/images/jgcv7_s07_axis5_microscan_v1.jpeg" alt="초정밀 접사 스캔"><span class="sclab"><b>초정밀 접사</b>0.07mm급 사물</span></a>
+    </div>
+
+    <div class="domains">
+      <div class="dom"><h3>3D 가우시안 입자 기술</h3><p>수천만 개의 빛나는 점으로 사물을 빚어냅니다. 투명한 유리나 거친 질감까지 눈앞에 있는 것처럼 생생하게 살려냅니다.</p></div>
+      <div class="dom"><h3>사진 3D 변환 기술</h3><p>여러 장의 평면 사진을 마치 찰흙처럼 이어 붙여 입체로 만듭니다. 여러분의 소중한 공간이 자연스러운 3D 작품으로 새롭게 태어납니다.</p></div>
+      <div class="dom"><h3>초정밀 드론 항공 측량</h3><p>하늘의 위성 좌표계로 거대한 대자연을 스케치합니다. 복잡한 마을이나 거대한 산맥도 오차 없이 꼼꼼하게 3D 지도로 펼쳐냅니다.</p></div>
+      <div class="dom"><h3>고품질 3D 엔진 통합</h3><p>흩어진 조각들을 영화 속 한 장면처럼 아름답게 합쳐냅니다. 인터넷 연결 없이도 누구나 편안하게 현장을 거닐며 체험할 수 있습니다.</p></div>
+    </div>
+
+    <a class="morelink" href="spatial/index.html">공간데이터 스튜디오 전체 보기 ↗</a>
+    <a class="morelink" href="https://sketchfab.com/Hyun-seok.Jun" target="_blank" rel="noopener">3D 작품 직접 감상해보기 ↗</a>
+  </div>
+</section>
+
+<!-- 03 촬영 -->
+<section id="filming">
+  <div class="container">
+    <div class="shead">
+      <div class="snum">02 — FILMING · AERIAL · 360°</div>
+      <h2>하늘에서, 물가에서, 동굴 속에서 찍습니다.</h2>
+      <p>시네마틱 드론과 FPV, 8K 360° 카메라, 풀프레임 미러리스를 현장에 맞게 조합합니다. 영상·사진 16년, 360° VR 13년의 촬영 경험이 바탕입니다. 이 섹션의 영상은 모두 실제 촬영본입니다.</p>
+    </div>
+
+    <div class="feat" style="margin-bottom:56px">
+      <div>
+        <div class="vwrap"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/MeDE5tZcCZc" title="만장굴 360 VR" allowfullscreen></iframe></div>
+        <div class="vt">만장굴 내부 360° VR — 지하 실시간 지도 <span class="badge" style="margin-left:6px">360° 실사</span></div>
+        <div class="vd">8K 360° 실사 촬영 · GPS가 닿지 않는 동굴 내부를 3D 재구성 지도와 함께 걷습니다</div>
       </div>
-      <div class="reveal">
-        <div class="leaf-tags">
-          <span>🪸 습지</span><span>🌳 곶자왈</span><span>⛰️ 오름</span><span>🕳️ 동굴</span><span>🍂 가로숲</span><span>🕯️ 다크투어</span><span>🐬 바다</span>
+      <div>
+        <div style="background:#fff;border:1px solid var(--line);padding:30px 28px;height:100%">
+          <div class="gt" style="font-size:13px;letter-spacing:2px;color:var(--terra);font-weight:500;margin-bottom:12px">REAL FOOTAGE CHANNELS</div>
+          <h3 style="font-size:17.5px;color:var(--navy);margin-bottom:10px">실사 영상은 유형별 채널에서</h3>
+          <p style="font-size:14px;color:#5a544c;margin-bottom:18px">오름·해변·계곡을 담은 8K 360° VR과 스피드감 있는 FPV, 행사·풍경 시네마틱 실사 영상을 채널에서 감상할 수 있습니다.</p>
+          <div class="chrow">
+            <a class="chip" href="https://www.youtube.com/@360VRjeju" target="_blank" rel="noopener">360° VR 영상 ↗</a>
+            <a class="chip" href="https://youtube.com/@jejugrapher" target="_blank" rel="noopener">FPV · 실사 영상 ↗</a>
+          </div>
         </div>
       </div>
     </div>
+
+    <div class="gearwrap">
+      <div class="gear"><div class="gt">CINEMATIC DRONE</div><h3>시네마틱 항공 촬영</h3><p>해안선과 오름, 행사장을 부드러운 항공 시점으로 담습니다. 대형 화면에도 견디는 고해상도 촬영.</p></div>
+      <div class="gear"><div class="gt">FPV</div><h3>FPV 다이나믹 촬영</h3><p>고공 낙하, 좁은 공간 통과, 인물 추적 — 일반 드론이 만들 수 없는 속도감 있는 시점을 만듭니다.</p></div>
+      <div class="gear"><div class="gt">8K 360°</div><h3>360° VR 촬영</h3><p>8K 360° 카메라로 공간 전체를 기록합니다. VR 헤드셋 감상과 리프레이밍 편집 모두 대응합니다.</p></div>
+      <div class="gear"><div class="gt">FULL-FRAME</div><h3>지상 시네마틱</h3><p>풀프레임 미러리스로 인물과 현장을 시네마틱하게 담습니다. 8K 촬영과 저조도 환경에 강합니다.</p></div>
+    </div>
+    <div class="years">
+      <div><div class="y">16년+</div><div class="yl">영상 · 사진</div></div>
+      <div><div class="y">13년+</div><div class="yl">360° VR</div></div>
+      <div><div class="y">4년+</div><div class="yl">AI 워크플로우</div></div>
+      <div><div class="y">2017</div><div class="yl">스튜디오 설립</div></div>
+    </div>
   </div>
 </section>
 
-<!-- PROGRAMS -->
-<section class="prog" id="programs">
-  <div class="wrap">
-    <div class="eyebrow reveal">Programs</div>
-    <h2 class="s-title reveal">가을 생태관광 프로그램</h2>
-    <p class="s-lead reveal">카테고리로 좁히거나 지도에서 위치를 확인하세요. 예약은 <b>탐나오</b>에서, 문의는 각 담당처 연락처로 연결됩니다. <b>시범 프로그램</b>은 무료 시범 운영으로 모집이 마감되어 예약할 수 없습니다.</p>
+<!-- 04 편집 · 포스트 -->
+<section id="editing" style="background:#fff">
+  <div class="container">
+    <div class="shead">
+      <div class="snum">03 — EDITING · POST-PRODUCTION</div>
+      <h2>찍은 것을 작품으로 다듬습니다.</h2>
+      <p>비트에 맞춘 컷 편집, 모션그래픽과 자막, 색보정, 다국어 배리에이션까지 — 촬영본과 AI 생성물이 한 편의 완성작으로 이어집니다.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h3>구성 · 컷 편집</h3><p>음악의 비트와 에너지 곡선에 맞춰 컷을 배치합니다. 훅이 터지는 순간을 계산해 설계합니다.</p></div>
+      <div class="step"><div class="n">02</div><h3>모션그래픽 · 자막</h3><p>타이틀, 지도 오버레이, 정보 카드, 캘리그래피 타이포를 영상 위에 얹습니다.</p></div>
+      <div class="step"><div class="n">03</div><h3>색보정 · 사운드</h3><p>장면의 감정에 맞는 색을 입히고, 음악과 효과음의 균형을 잡습니다.</p></div>
+      <div class="step"><div class="n">04</div><h3>플랫폼별 마감</h3><p>유튜브·쇼츠·릴스 규격과 다국어 자막·메타데이터까지 배포 형태로 마무리합니다.</p></div>
+    </div>
+    <div class="comm">
+      <div class="commcard"><h3>갯것이영화제 인트로</h3><p>새벽 갯벌과 아이, 갯고둥의 이야기. AI 이미지·영상 제작 담당.</p><span class="st">진행 중</span></div>
+      <div class="commcard"><h3>2026 세계 습지의 날 오프닝</h3><p>「생명이 머무는 곳, 습지」 해양환경공단 발주 오프닝 영상.</p><span class="st">진행 중</span></div>
+      <div class="commcard"><h3>K-Dream Dance Festa 2026</h3><p>곽지해변 댄스 페스타 항공·FPV 촬영과 애프터무비 편집.</p><span class="st">완료</span></div>
+      <div class="commcard"><h3>생태관광 주간 × 갯것이 영화제</h3><p>영화 6편·생태 체험 6개를 담은 홍보 영상과 안내 그래픽.</p><span class="st">완료</span></div>
+    </div>
+  </div>
+</section>
 
-    <div class="filters" id="filters" role="group" aria-label="카테고리 필터"></div>
-    <div class="viewtoggle" role="group" aria-label="보기 방식">
-      <button id="vCard" aria-pressed="true">카드 보기</button>
-      <button id="vMap" aria-pressed="false">지도 보기</button>
+<!-- 02 AI 영상 제작 -->
+<section id="aivideo">
+  <div class="container">
+    <div class="shead">
+      <div class="snum">04 — AI FILMS &amp; MUSIC VIDEOS</div>
+      <h2>AI로 이야기를 노래와 영상으로 만듭니다.</h2>
+      <p>음악 생성부터 이미지·영상 생성, 유통까지 AI 파이프라인 전 과정을 직접 설계해 운용합니다. 최대 9개 언어로 같은 노래를 다시 부르고, 제주를 배경으로 한 세계관을 쌓아 갑니다. 아래 작품은 모두 AI로 제작했습니다.</p>
     </div>
 
-    <div id="map-sec">
-      <div id="map" style="display:none"></div>
+    <div class="feat">
+      <div>
+        <div class="vwrap"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/s6JVKpELk3E" title="Hello Stranger Ep.1" allowfullscreen></iframe></div>
+        <div class="vt">Hello Stranger — Ep.1 Signal of Edge</div>
+        <div class="vd">자체 IP 뮤직비디오 시리즈 · 제주를 배경으로 한 이방인들의 이야기</div>
+      </div>
+      <div>
+        <div class="vwrap"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/jhK_eqwDmBI" title="Snow Tonight" allowfullscreen></iframe></div>
+        <div class="vt">Snow Tonight — Funk Pop</div>
+        <div class="vd">AI 생성 뮤직비디오 · 제주 겨울밤 · 50클립 드론샷 스타일</div>
+      </div>
     </div>
-    <p class="count" id="count"></p>
-    <div class="grid" id="grid"></div>
+
+    <div class="works">
+      <a class="wcard" href="https://youtu.be/ihgfKZY7Hfs" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/ihgfKZY7Hfs/hqdefault.jpg" alt="가을에 놓다"></div>
+        <div class="wbody"><div class="wt">가을에 놓다</div><div class="wd">Progressive House</div><span class="badge">9개 언어</span></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/MLaU5dq7J6o" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/MLaU5dq7J6o/hqdefault.jpg" alt="바람이 말해줘"></div>
+        <div class="wbody"><div class="wt">바람이 말해줘</div><div class="wd">90년대 팝 발라드</div><span class="badge">4개 언어</span></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/2fgWcRZVNtI" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/2fgWcRZVNtI/hqdefault.jpg" alt="디지털 아리랑"></div>
+        <div class="wbody"><div class="wt">디지털 아리랑</div><div class="wd">K-Pop · 판소리 퓨전</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/4V_pfyzVWt4" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/4V_pfyzVWt4/hqdefault.jpg" alt="아리랑 2026"></div>
+        <div class="wbody"><div class="wt">아리랑 2026</div><div class="wd">퓨전국악</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/mc2WNM2zQQs" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/mc2WNM2zQQs/hqdefault.jpg" alt="보고 싶어"></div>
+        <div class="wbody"><div class="wt">보고 싶어</div><div class="wd">샤우팅 랩</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/Kn7OSYGoAH0" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/Kn7OSYGoAH0/hqdefault.jpg" alt="웨스 앤더슨 스타일 뮤직비디오"></div>
+        <div class="wbody"><div class="wt">웨스 앤더슨 스타일 MV</div><div class="wd">대칭 구도 · 파스텔</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/cteAqGGwDZ4" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/cteAqGGwDZ4/hqdefault.jpg" alt="그냥, 옆에"></div>
+        <div class="wbody"><div class="wt">그냥, 옆에</div><div class="wd">발라드</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/AI7w-trKFQQ" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/AI7w-trKFQQ/hqdefault.jpg" alt="혼자 온 제주"></div>
+        <div class="wbody"><div class="wt">혼자 온 제주</div><div class="wd">힐링 여행</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/M7x6o0pMcHY" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/M7x6o0pMcHY/hqdefault.jpg" alt="우리의 새해"></div>
+        <div class="wbody"><div class="wt">우리의 새해</div><div class="wd">신년 · 위로</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/XSrJiy757U4" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/XSrJiy757U4/hqdefault.jpg" alt="바람이 말해줘 일본어"></div>
+        <div class="wbody"><div class="wt">風が教えてくれる</div><div class="wd">바람이 말해줘 · 일본어판</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/rw6olFCKUR0" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/rw6olFCKUR0/hqdefault.jpg" alt="Let Go in Autumn"></div>
+        <div class="wbody"><div class="wt">Let Go in Autumn</div><div class="wd">가을에 놓다 · 영어판</div></div>
+      </a>
+    </div>
+
+    <div class="chans">
+      <div class="ct">유튜브 채널 — 성격별로 나누어 운영합니다.</div>
+      <div class="chrow">
+        <a class="chip" href="https://youtube.com/@high-reschronicles-ku4dx" target="_blank" rel="noopener">뮤직비디오 ↗</a>
+        <a class="chip" href="https://youtube.com/@airamedia_kids" target="_blank" rel="noopener">아동 뮤직비디오 ↗</a>
+        <a class="chip" href="https://youtube.com/@airashortsmedia" target="_blank" rel="noopener">광고 · 실험 쇼츠 ↗</a>
+        <a class="chip" href="https://youtube.com/@jejugrapher" target="_blank" rel="noopener">FPV · 실험 영상 ↗</a>
+        <a class="chip" href="https://www.youtube.com/@360VRjeju" target="_blank" rel="noopener">360° VR ↗</a>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- SCHEDULE -->
-<section class="sched" id="schedule">
-  <div class="wrap">
-    <div class="eyebrow reveal">Schedule</div>
-    <h2 class="s-title reveal">전체 일정 <span class="tbd">일부 미정</span></h2>
-    <p class="s-lead reveal">2026.10.03(토)~10.09(금), 7일간. 날짜별로 진행되는 프로그램을 확인하고 프로그램을 눌러 안내·예약으로 이동하세요. 대부분 오전 10시 또는 오후 1시 시작이며, 정확한 시간은 각 프로그램 안내에서 확인하세요.</p>
-    <div class="cal reveal" id="cal"></div>
-    <div class="cal-legend" id="calLegend"></div>
-    <p class="note">※ <span style="color:var(--maple);font-weight:700">빨간 날짜</span>는 주말·공휴일(10.03 개천절, 10.09 한글날). 일부 프로그램은 세부 일정이 조정될 수 있습니다. 평대리·호근동은 공개 일정·요금·신청이 확정되는 대로 달력에 추가됩니다.</p>
+<!-- 05 웹 · 인터랙티브 -->
+<section class="mapsec" id="web">
+  <div class="container">
+    <div class="shead">
+      <div class="snum">05 — WEB · INTERACTIVE</div>
+      <h2>콘텐츠가 사는 집까지 직접 짓습니다.</h2>
+      <p>지도 서비스부터 행사 안내 페이지, 이 웹사이트까지 — 프레임워크 없는 가벼운 정적 웹으로 직접 설계하고 구현합니다.</p>
+    </div>
+    <div class="mapgrid">
+      <div class="mapframe">
+        <iframe loading="lazy" src="https://jajumap.com" title="제주맵 — 제주 여행자 지도"></iframe>
+      </div>
+      <div class="mapinfo">
+        <h3>제주 여행자 지도, 제주맵</h3>
+        <p>직접 다니며 모은 제주의 장소들을 한 장의 지도에 담았습니다. 촬영한 영상이 지도 위의 자리와 연결됩니다.</p>
+        <div class="mapstat">
+          <div><div class="num">930+</div><div class="lab">등록 스팟</div></div>
+          <div><div class="num">4</div><div class="lab">지원 언어</div></div>
+          <div><div class="num">자동</div><div class="lab">드론 규제 판별</div></div>
+        </div>
+        <a class="mapbtn" href="https://jajumap.com" target="_blank" rel="noopener">jajumap.com 바로가기 ↗</a>
+      </div>
+    </div>
+    <div class="webgrid">
+      <div class="webcard"><h3>갯것이 영화제 × 생태관광 주간</h3><p>상영작·체험 프로그램·예매를 안내하는 행사 공식 페이지.</p><a href="https://jejuecotourism.com" target="_blank" rel="noopener">jejuecotourism.com ↗</a></div>
+      <div class="webcard"><h3>공간데이터 쇼케이스</h3><p>5축 스캔 라인업과 워크플로우를 소개하는 기술 갤러리.</p><a href="spatial/index.html">jejugrapher.com/spatial ↗</a></div>
+      <div class="webcard"><h3>이 웹사이트</h3><p>지금 보고 계신 페이지 — 단일 HTML과 바닐라 JS로 직접 제작.</p><a href="https://jejugrapher.com">jejugrapher.com</a></div>
+    </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- 별밤사진관 -->
+<section id="byeolbam" style="background:radial-gradient(120% 90% at 50% 0%,#0e2547 0%,#0B1D3A 45%,#06122A 100%);color:#EEF3F9;overflow:hidden">
+  <div class="container" style="text-align:center">
+    <div class="snum" style="color:#BFF3FF">EXPERIENCE · 별밤사진관 · 야간 빛그림 사진</div>
+    <h2 style="font-size:31px;color:#fff;line-height:1.5;text-shadow:0 0 22px rgba(86,203,239,.45)">제주 밤하늘 아래, 빛으로 그린 한 장</h2>
+    <p style="font-size:15.5px;color:#c3d4e8;max-width:660px;margin:16px auto 0">전현석이 직접 진행하는 야간 라이트 페인팅 사진 체험입니다. 어두운 제주의 밤, 빛으로 그린 그림 속에 여러분의 한 장면을 남깁니다. 방송 「산꾼도시여자들」에도 소개되었습니다.</p>
+    <a class="cta" href="byeolbam.html" style="margin-top:34px;background:#56CBEF;color:#06122A">별밤사진관 자세히 보기 ↗</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="snum" style="margin-bottom:36px">06 — CONTACT</div>
+    <p class="closing">봐 주셔서 고맙습니다.<br>여러분의 소중한 공간과 이야기가 디지털 세상에서 오래 숨 쉴 수 있도록 정성껏 만들어 드릴게요.<br>언제든 편안하게 이야기를 들려주세요.</p>
+    <a class="cta" href="inquiry.html">문의 남기기</a>
+    <div class="cinfo">
+      <span><b>이메일</b> whipia@naver.com</span>
+      <span><b>전화</b> 010-6778-9199</span>
+      <span><b>주소</b> 제주 제주시 산천단동1길 15, 1동 3층 303호</span>
+    </div>
+    <div class="snsrow">
+      <a class="chip" href="https://instagram.com/jejugrapher" target="_blank" rel="noopener">Instagram ↗</a>
+      <a class="chip" href="https://sketchfab.com/Hyun-seok.Jun" target="_blank" rel="noopener">Sketchfab ↗</a>
+      <a class="chip" href="https://jajumap.com" target="_blank" rel="noopener">제주맵 ↗</a>
+    </div>
+    <div class="creds">2017년 설립 · 제주창조경제혁신센터 입주기업 · 청년창업사관학교 수료 · 사업자등록번호 512-11-63348</div>
+  </div>
+</section>
+
 <footer>
-  <div class="wrap">
-    <div class="foot-grid">
-      <div class="foot-logos">
-        <div class="foot-logo"><img src="assets/logo_assoc.png" alt="사단법인 제주생태관광협회" onerror="this.replaceWith(document.createTextNode('제주생태관광협회'))"></div>
-        <div class="foot-logo"><img src="assets/logo_center.png" alt="제주특별자치도 생태관광지원센터" onerror="this.replaceWith(document.createTextNode('제주생태관광지원센터'))"></div>
-      </div>
-      <div class="foot-qr">
-        <img src="assets/qr.png" alt="홈페이지 QR" onerror="this.style.display='none'">
-        <span>휴대폰으로 열기</span>
-      </div>
-    </div>
-    <div class="foot-info" style="margin-top:22px">
-      <b>2026생태관광주간</b> · 주최·주관 : 제주생태관광협회 · 제주생태관광지원센터<br>
-      대표전화 : <a href="tel:0647823253" style="font-weight:700">064-782-3253</a> (사단법인 제주생태관광협회) · 예약 : <a href="https://www.tamnao.com/web/evnt/detailPromotion.do?prmtDiv=PLAN&prmtNum=PM00002412" target="_blank" rel="noopener" style="font-weight:700">탐나오 기획전 페이지 ↗</a>
-    </div>
-    <div class="foot-bottom">
-      <span>© 2026 제주생태관광. 제작 : 제주그래퍼.</span>
-      <span>오름 너머로, 제주 빛에 물들며</span>
-    </div>
+  <div class="fin">
+    <span>© 2026 JEJUGRAPHER · 전현석</span>
+    <span><a href="https://jajumap.com" target="_blank" rel="noopener">jajumap.com</a> · <a href="https://jejuecotourism.com" target="_blank" rel="noopener">jejuecotourism.com</a></span>
   </div>
 </footer>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="assets/data.js"></script>
-<script>
-/* 프로그램 데이터: assets/data.js (PROGRAMS, CATS) */
-const P = PROGRAMS;
-
-const grid=document.getElementById('grid'), filters=document.getElementById('filters'),
-      countEl=document.getElementById('count'), calEl=document.getElementById('cal');
-let activeCat="전체", map=null, markers=[];
-
-// 필터 칩 (카테고리 + 시범 프로그램 모아보기)
-function setFilter(c){activeCat=c;
-  document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x.textContent===c));render();}
-[...CATS, DEMO_FILTER].forEach(c=>{const b=document.createElement('button');b.className='chip'+(c===DEMO_FILTER?' demo':'');b.textContent=c;
-  b.setAttribute('aria-pressed',c===activeCat);b.onclick=()=>setFilter(c);filters.appendChild(b);});
-const navDemo=document.getElementById('navDemo');
-if(navDemo)navDemo.onclick=()=>{setFilter(DEMO_FILTER);};
-function matchFilter(p){return activeCat==="전체"||(activeCat===DEMO_FILTER?p.type==="시범":p.cat===activeCat);}
-
-function feeBadge(p){
-  if(p.closed)return '<span class="badge demo">시범 프로그램</span> <span class="badge closed">모집 마감</span>';
-  if((p.fee||'').trim()==='무료')return '<span class="badge free">무료</span>';
-  if(p.fee==='미정')return '<span class="tbd">요금 미정</span>'; return '<span class="badge paid">유료</span>';}
-function extraTags(p){let t='';(p.tags||[]).forEach(x=>{if(x==='new')t+='<span class="badge new">신규</span>';if(x==='center')t+='<span class="badge center">센터 단독</span>';});return t;}
-
-function card(p){
-  const bookBtn = p.closed
-    ? `<span class="btn sm-line" style="opacity:.6;cursor:default">모집 마감</span>`
-    : `<a class="btn primary" href="${TAMNAO_PLAN||'#programs'}" ${TAMNAO_PLAN?'target="_blank" rel="noopener"':''}>예약하기</a>`;
-  return `<article class="card" data-cat="${p.cat}">
-    <a class="card-img" href="program.html?id=${p.id}"><img src="${p.img||('assets/il_'+p.id+'.png')}" alt="${p.title}" loading="lazy" onerror="this.remove()"><span class="cat">${p.cat}</span><span class="ph">대표 이미지 준비중 · 미정</span></a>
-    <div class="card-body">
-      <div class="card-title">${p.title}${p.tbd?' <span class="tbd">미제출</span>':''}</div>
-      <div class="card-tags">${feeBadge(p)} ${extraTags(p)}</div>
-      <div class="card-meta">
-        <div class="row"><span class="k">운영</span><span>${p.op}</span></div>
-        <div class="row"><span class="k">장소</span><span>${p.place==='미정'?'<span class=\"tbd\">미정</span>':p.place}</span></div>
-        <div class="row"><span class="k">일정</span><span>${p.date==='미정'?'<span class=\"tbd\">미정</span>':p.date}</span></div>
-        ${p.note?`<div class="row"><span class="k">비고</span><span>${p.note}</span></div>`:''}
-      </div>
-      <div class="card-cta">
-        <a class="btn sm-line" href="program.html?id=${p.id}">자세히 보기</a>
-        ${bookBtn}
-        <button class="btn sm-line share" type="button" data-id="${p.id}" data-title="${p.title.replace(/"/g,'')}" title="공유하기" aria-label="공유하기">↗ 공유</button>
-      </div>
-    </div>
-  </article>`;
-}
-
-function render(){
-  const list=P.filter(matchFilter);
-  grid.innerHTML=list.map(card).join('');
-  countEl.textContent=activeCat===DEMO_FILTER
-    ? `시범 프로그램 ${list.length}개 · 무료 시범 운영으로 모집이 마감되어 예약할 수 없습니다`
-    : `${list.length}개 프로그램 표시 · 전체 ${P.length}개 (평대리·호근동은 일정 확정 중)`;
-  bindShare();
-  if(map)renderMarkers(list);
-}
-
-// 달력 (10.03 토 ~ 10.09 금)
-const DOW=['일','월','화','수','목','금','토'];
-function buildCalendar(){
-  let html='';
-  for(let d=3;d<=9;d++){
-    const dow=new Date(2026,9,d).getDay(); // 2026-10-d
-    const hol=HOLIDAYS[d];
-    const weekend=(dow===0||dow===6||hol)?' weekend':'';
-    const todays=P.filter(p=>(p.days||[]).includes(d));
-    const items=todays.length
-      ? todays.map(p=>`<a class="cal-item${p.closed?' demo':''}" href="program.html?id=${p.id}"><span class="dot" style="background:${p.closed?'#8B6BC0':(CAT_COLORS[p.cat]||'var(--forest)')}"></span>${p.title}${p.closed?' (시범)':''}</a>`).join('')
-      : '<span class="cal-empty">— 준비중</span>';
-    html+=`<div class="cal-day${weekend}"><div class="cal-date">10.${String(d).padStart(2,'0')}<span class="dow">${DOW[dow]}</span>${hol?`<span class="hol">${hol}</span>`:''}</div>${items}</div>`;
-  }
-  calEl.innerHTML=html;
-  const lg=document.getElementById('calLegend');
-  if(lg)lg.innerHTML=Object.entries(CAT_COLORS).map(([c,col])=>`<span><i class="dot" style="background:${col}"></i>${c}</span>`).join('')
-    +`<span><i class="dot" style="background:#8B6BC0"></i>시범 프로그램(모집 마감)</span>`;
-}
-buildCalendar();
-
-// 공유하기
-async function shareLink(url,title){
-  const data={title:'2026생태관광주간 · 제주',text:title||'제주, 나만의 계절을 발견하다',url};
-  if(navigator.share){try{await navigator.share(data);return;}catch(e){if(e.name==='AbortError')return;}}
-  try{await navigator.clipboard.writeText(url);alert('링크를 복사했습니다.\n'+url);}
-  catch(e){prompt('아래 링크를 복사하세요',url);}
-}
-function bindShare(){
-  document.querySelectorAll('.share').forEach(b=>b.onclick=()=>{
-    const u=location.origin+location.pathname.replace(/index\.html$/,'')+'program.html?id='+b.dataset.id;
-    shareLink(u,b.dataset.title);});
-}
-// 히어로 루프 영상: 재생 시작되면 페이드인, 실패하면 정지 이미지 유지
-(function(){
-  const hv=document.getElementById('heroVideo'), hero=document.getElementById('top');
-  if(!hv||!hero)return;
-  const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduce){hv.removeAttribute('autoplay');hv.pause();hv.remove();return;}
-  const on=()=>hero.classList.add('video-on');
-  hv.addEventListener('playing',on,{once:true});
-  hv.addEventListener('error',()=>hv.remove(),{once:true});
-  const tryPlay=()=>{if(!hv.isConnected||!hv.paused)return;const p=hv.play();if(p&&p.catch)p.catch(()=>{});};
-  tryPlay();
-  // 탭이 숨김 상태로 열렸거나 자동재생이 막힌 경우: 다시 보일 때 / 첫 조작 시 재시도
-  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')tryPlay();});
-  ['pointerdown','touchstart','keydown','scroll'].forEach(ev=>window.addEventListener(ev,tryPlay,{once:true,passive:true}));
-})();
-// 히어로: 예약(탐나오)·공유
-const heroBook=document.getElementById('heroBook'), heroShare=document.getElementById('heroShare');
-if(TAMNAO_PLAN){heroBook.href=TAMNAO_PLAN;heroBook.target='_blank';heroBook.rel='noopener';}
-else heroBook.title='탐나오 기획전 링크 준비중';
-heroShare.onclick=()=>shareLink(SITE_URL||location.href,SLOGAN_MAIN);
-
-// 지도
-function initMap(){
-  map=L.map('map',{scrollWheelZoom:false}).setView([33.38,126.55],10);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(map);
-  renderMarkers(P.filter(p=>activeCat==="전체"||p.cat===activeCat));
-}
-function renderMarkers(list){
-  markers.forEach(m=>map.removeLayer(m));markers=[];
-  list.filter(p=>p.ll).forEach(p=>{
-    const mk=L.marker(p.ll).addTo(map).bindPopup(
-      `<div class="pin-t"><a href="program.html?id=${p.id}">${p.title}</a></div><div class="pin-m">${p.cat} · ${p.op}<br>${p.place&&p.place!=='미정'?p.place:(p.region||'')+' <span style="color:#9A6B14">· 정확한 주소 미정</span>'}</div><a class="pin-go" href="program.html?id=${p.id}">자세히 보기 →</a>`);
-    markers.push(mk);});
-}
-
-// 보기 전환
-const vCard=document.getElementById('vCard'), vMap=document.getElementById('vMap'), mapEl=document.getElementById('map');
-vCard.onclick=()=>{vCard.setAttribute('aria-pressed','true');vMap.setAttribute('aria-pressed','false');mapEl.style.display='none';grid.style.display='';};
-vMap.onclick=()=>{vMap.setAttribute('aria-pressed','true');vCard.setAttribute('aria-pressed','false');mapEl.style.display='';grid.style.display='none';
-  if(!map)initMap();setTimeout(()=>map.invalidateSize(),60);};
-
-render();
-
-// reveal
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-</script>
 </body>
 </html>
