@@ -1,0 +1,20 @@
+# 2026 생태관광주간(가을) · 제주 — https://jejuecotourism.com
+User-agent: *
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Yeti
+Allow: /
+
+User-agent: Daum
+Allow: /
+
+User-agent: Daumoa
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://jejuecotourism.com/sitemap.xml
