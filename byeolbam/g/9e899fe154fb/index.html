@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>서머셋의 별밤 | 별밤사진관</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* byeolbam.html 과 같은 색·글꼴 체계 */
+:root{
+  --sky:#0B1D3A; --deep:#06122A; --panel:#0F2446; --cloud:#EEF3F9;
+  --glow:#BFF3FF; --glow-2:#56CBEF; --amber:#F0A650; --mute:#9AAECB;
+  --line:rgba(191,243,255,.18); --ok:#8FE3B8; --err:#FF9A8F;
+  --serif:"Gowun Batang","Noto Serif KR","Apple SD Gothic Neo",serif;
+  --pen:"Nanum Pen Script","Gowun Batang",cursive;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;background:var(--deep)}
+body{background:var(--sky);color:var(--cloud);font:1rem/1.8 var(--serif);word-break:keep-all;overflow-wrap:break-word}
+img{display:block;max-width:100%}
+a{color:var(--glow)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+.wrap{width:min(1180px,100% - 2.5rem);margin-inline:auto}
+.pen{font-family:var(--pen);font-weight:400;color:#F6FDFF;text-shadow:0 0 8px rgba(191,243,255,.85),0 0 24px rgba(86,203,239,.6)}
+
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.2rem;color:var(--deep);background:var(--glow);text-decoration:none;font-weight:700;border:0;cursor:pointer;box-shadow:0 0 16px rgba(86,203,239,.45)}
+.btn:hover{background:#fff}
+.btn.ghost{background:transparent;color:var(--cloud);border:1px solid var(--line);box-shadow:none;font-weight:400}
+.btn.ghost:hover{border-color:var(--glow);color:var(--glow)}
+.btn.sm{padding:.45rem .8rem;font-size:.88rem}
+
+/* 잠금 화면 */
+.gate{min-height:100svh;display:grid;place-items:center;padding:2rem 1.25rem;background:radial-gradient(110% 80% at 50% 0%,#12305c 0%,var(--sky) 50%,var(--deep) 100%)}
+.gate-box{width:min(440px,100%);text-align:center}
+.gate-box .pen{font-size:clamp(3.4rem,12vw,5rem);line-height:1}
+.gate-box p{color:var(--mute);margin:.9rem 0 1.6rem}
+.gate form{display:flex;gap:.5rem}
+.gate input{flex:1;min-width:0;background:rgba(6,18,42,.7);border:1px solid var(--line);padding:.75rem 1rem;font:500 1.15rem var(--mono);letter-spacing:.14em;text-align:center;color:var(--cloud)}
+.gate input::placeholder{letter-spacing:.06em;color:#5f7394}
+.gate .err{color:var(--err);min-height:1.8em;margin-top:.8rem;font-size:.95rem}
+.gate small{display:block;color:#6f84a6;margin-top:1.4rem;font-size:.85rem}
+
+/* 머리말 */
+.top{padding:clamp(3rem,8vw,5.5rem) 0 2.5rem;background:radial-gradient(110% 90% at 70% 0%,#143462 0%,var(--sky) 55%);border-bottom:1px solid var(--line)}
+.back{font-size:.9rem;color:var(--mute);text-decoration:none}
+.back:hover{color:var(--glow)}
+.top-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:2rem 3rem;align-items:end;margin-top:1.4rem}
+.top h1{font-size:clamp(3.6rem,10vw,6.4rem);line-height:.95}
+.lede{margin-top:1rem;max-width:32em;color:var(--cloud)}
+.log{font:400 .82rem/2 var(--mono);color:var(--mute);border-left:1px solid var(--line);padding-left:1.1rem}
+.log b{color:var(--cloud);font-weight:500}
+.acts{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.6rem}
+
+section{padding:clamp(3rem,7vw,5rem) 0}
+h2{font-family:var(--pen);font-weight:400;font-size:clamp(2.4rem,5.5vw,3.3rem);line-height:1.05;color:#F6FDFF;text-shadow:0 0 10px rgba(86,203,239,.55);margin-bottom:.9rem}
+.sub{color:var(--mute);max-width:40em;margin-bottom:1.6rem}
+
+.tv{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(1.5rem,4vw,3.5rem);align-items:center}
+.player{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden;max-width:100%}
+.player button{position:absolute;inset:0;border:0;padding:0;background:none;cursor:pointer;width:100%;height:100%}
+.player button img{width:100%;height:100%;object-fit:cover;opacity:.9}
+.player .play{position:absolute;left:50%;top:50%;width:78px;height:78px;margin:-39px 0 0 -39px;border-radius:50%;border:2px solid var(--glow);box-shadow:0 0 18px rgba(86,203,239,.8),inset 0 0 14px rgba(86,203,239,.5);background:rgba(6,18,42,.45)}
+.player .play::after{content:"";position:absolute;left:31px;top:24px;border-left:21px solid var(--glow);border-top:15px solid transparent;border-bottom:15px solid transparent}
+.player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.notes{display:grid;gap:1rem}
+.notes div{border-top:1px solid var(--line);padding-top:.9rem}
+.notes b{display:block}
+.notes p{color:#CFDAE8;font-size:.95rem}
+
+.vers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.4rem}
+.ver{display:grid;grid-template-columns:128px minmax(0,1fr);gap:1rem;align-items:center}
+.ver img{width:128px;aspect-ratio:3/2;object-fit:cover;background:var(--deep)}
+.ver p{color:#CFDAE8;font-size:.95rem}
+
+.tools{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(11,29,58,.93);backdrop-filter:blur(8px);border-block:1px solid var(--line);padding-block:.75rem}
+.tools .wrap{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{border:1px solid var(--line);background:transparent;padding:.25rem .8rem;font-size:.88rem;cursor:pointer;color:var(--mute)}
+.chip[aria-pressed="true"]{background:var(--glow);color:var(--deep);border-color:var(--glow)}
+.chip .c{font:500 .72rem var(--mono);opacity:.7;margin-left:.3rem}
+.seg{display:inline-flex;border:1px solid var(--line)}
+.seg button{border:0;background:transparent;padding:.3rem .9rem;cursor:pointer;font-size:.9rem;color:var(--mute)}
+.seg button[aria-pressed="true"]{background:var(--amber);color:var(--deep);font-weight:700}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.6rem 1.2rem;padding-block:1.8rem .5rem}
+.card{display:grid;gap:.55rem}
+.shot{position:relative;aspect-ratio:3/2;overflow:hidden;background:var(--deep);cursor:zoom-in;border:0;padding:0;width:100%}
+.shot img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease,filter .5s ease}
+.shot:hover img{transform:scale(1.035);filter:brightness(1.08)}
+.tag{position:absolute;top:.5rem;left:.5rem;font:500 .72rem/1 var(--mono);background:rgba(6,18,42,.8);border:1px solid var(--line);padding:.35rem .45rem;letter-spacing:.04em}
+.tag.fix{left:auto;right:.5rem;color:var(--amber)}
+.meta{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem}
+.meta .no{font:500 .95rem var(--mono);font-variant-numeric:tabular-nums}
+.meta .ex{font:400 .78rem var(--mono);color:#7489ab}
+.row{display:flex;flex-wrap:wrap;gap:.4rem}
+
+footer{padding:2.5rem 0 3rem;border-top:1px solid var(--line);color:var(--mute);font-size:.85rem}
+footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+
+dialog{border:0;padding:0;background:transparent;color:var(--cloud)}
+dialog::backdrop{background:rgba(3,9,22,.94)}
+#viewer{max-width:100vw;max-height:100vh;width:100vw;height:100vh;margin:0}
+.vw{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:max(.8rem,env(safe-area-inset-top,0px)) 1rem max(1rem,env(safe-area-inset-bottom,0px))}
+.vw-top{display:flex;justify-content:space-between;align-items:center;gap:.6rem;flex-wrap:wrap}
+.vw-top .t{font:500 .9rem var(--mono)}
+.vw-img{position:relative;display:flex;align-items:center;justify-content:center;min-height:0}
+.vw-img img{max-width:100%;max-height:100%;object-fit:contain}
+.nav,.x{background:rgba(6,18,42,.6);border:1px solid var(--line);color:var(--cloud);width:46px;height:46px;cursor:pointer;font-size:1.4rem}
+.nav:hover,.x:hover{border-color:var(--glow);color:var(--glow)}
+.nav{position:absolute;top:50%;margin-top:-23px}
+.nav.prev{left:.25rem}.nav.next{right:.25rem}
+.vw-bot{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;padding-top:.8rem}
+
+#req{width:min(560px,100vw - 2rem);max-height:calc(100vh - 2rem);margin:auto}
+.sheet{background:var(--sky);border:1px solid var(--line);padding:1.5rem;overflow:auto;max-height:calc(100vh - 2rem)}
+.sheet h3{font-family:var(--pen);font-weight:400;font-size:2.4rem;line-height:1;color:#F6FDFF}
+.sheet .sub{margin:.5rem 0 1.1rem;font-size:.95rem}
+.pv{display:grid;grid-template-columns:112px minmax(0,1fr);gap:.8rem;align-items:center;margin-bottom:1.1rem}
+.pv img{width:112px;aspect-ratio:3/2;object-fit:cover;background:var(--deep)}
+.pv .no{font:500 1rem var(--mono)}
+form.rq{display:grid;gap:1rem}
+label{display:grid;gap:.35rem;font-size:.88rem;color:var(--mute)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}
+.rq input[type=text],.rq select,.rq textarea{width:100%;background:var(--deep);border:1px solid var(--line);padding:.6rem .75rem;color:var(--cloud);font-size:1rem}
+.rq textarea{min-height:110px;resize:vertical}
+.kinds{display:flex;flex-wrap:wrap;gap:.4rem}
+.kinds label{display:block}
+.kinds input{position:absolute;opacity:0;pointer-events:none}
+.kinds span{display:inline-block;border:1px solid var(--line);padding:.3rem .8rem;font-size:.9rem;color:var(--cloud);cursor:pointer}
+.kinds input:checked+span{background:var(--glow);border-color:var(--glow);color:var(--deep);font-weight:700}
+.kinds input:focus-visible+span{outline:2px solid var(--amber);outline-offset:2px}
+.agree{display:flex;gap:.5rem;align-items:flex-start;font-size:.88rem}
+.agree input{margin-top:.35rem}
+.hp{position:absolute;left:-9999px}
+.msg{font-size:.93rem;min-height:1.4em}
+.msg.ok{color:var(--ok)}.msg.err{color:var(--err)}
+.foot{display:flex;justify-content:flex-end;gap:.5rem}
+.done{text-align:center;padding:1.8rem .5rem}
+.done .pen{font-size:2.6rem;display:block;line-height:1.1;margin-bottom:.5rem}
+
+@media (max-width:860px){
+  .top-grid,.tv,.vers{grid-template-columns:minmax(0,1fr)}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1.1rem .8rem}
+  .meta .ex{display:none}
+  .two{grid-template-columns:minmax(0,1fr)}
+  .nav{top:auto;bottom:-3.4rem;margin:0}
+  .nav.prev{left:calc(50% - 56px)}.nav.next{right:calc(50% - 56px)}
+  .vw-bot{padding-top:3.8rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gate-box">
+    <div class="pen">서머셋의 별밤</div>
+    <p>이 사진은 그날 함께한 가족만 볼 수 있어요.<br>촬영 날짜 여섯 자리를 입력해 주세요.</p>
+    <form id="gateForm" autocomplete="off">
+      <input id="pw" inputmode="numeric" maxlength="10" placeholder="예) 250101" aria-label="촬영 날짜 여섯 자리" required>
+      <button class="btn" type="submit">열기</button>
+    </form>
+    <div class="err" id="gateErr" role="alert"></div>
+    <small>날짜를 모르시면 안내받은 문자나 카카오톡 메시지를 확인해 주세요.</small>
+  </div>
+</div>
+
+<div id="app" hidden>
+<header class="top">
+  <div class="wrap">
+    <a class="back" href="../../../byeolbam.html">← 별밤사진관</a>
+    <div class="top-grid">
+      <div>
+        <h1 class="pen">서머셋의 별밤</h1>
+        <p class="lede">셔터를 길게 열어 둔 채 빛으로 하늘에 그림을 그리고, 곧바로 플래시를 터뜨려 가족의 얼굴을 담았습니다. 그날 밤의 사진을 크게 보고, 원본을 받고, 고치고 싶은 곳을 알려 주세요.</p>
+        <div class="acts">
+          <a class="btn" id="allDrive" href="#" target="_blank" rel="noopener">전체 원본 받기 (구글 드라이브)</a>
+          <a class="btn ghost" href="#photos">사진 보기</a>
+          <a class="btn ghost" href="#video">영상 보기</a>
+        </div>
+      </div>
+      <p class="log">
+        <b>2026. 9. 18 (금)</b> 19:11 – 20:08<br>
+        서머셋 제주신화월드 · 두리함께<br>
+        남쪽 하늘 · 사수자리와 전갈자리, 상현달<br>
+        14mm · f/8 · ISO 400 · 장노출 9–32초<br>
+        <b id="countLine"></b>
+      </p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="video">
+    <div class="wrap">
+      <h2>그날 밤의 기록</h2>
+      <p class="sub">촬영 현장과 완성된 사진을 2분 남짓한 스케치 영상으로 엮었습니다.</p>
+      <div class="tv">
+        <div class="player" id="player">
+          <button type="button" id="playBtn" aria-label="별밤사진관 스케치 영상 재생">
+            <img id="ytThumb" alt="" loading="lazy">
+            <span class="play" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="notes">
+          <div><b>사진은 두 장씩 있어요</b><p>한 장면마다 플래시 버전과 실루엣 버전을 드립니다. 마음에 드는 쪽을, 또는 둘 다 받으세요.</p></div>
+          <div><b>하늘의 별은 제자리에 있어요</b><p>그날 밤은 달이 밝고 구름이 있어 별이 잘 보이지 않았습니다. 촬영 시각과 방향으로 계산한 실제 별자리를 그 자리에 넣었습니다.</p></div>
+          <div><b>YouTube에서 보기</b><p><a id="ytLink" target="_blank" rel="noopener"></a></p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap vers">
+      <div class="ver"><img id="exF" alt="플래시 버전 예시" loading="lazy"><div><b>플래시</b><p>플래시로 가족이 또렷하게, 빛 그림과 별이 함께 담긴 사진</p></div></div>
+      <div class="ver"><img id="exS" alt="실루엣 버전 예시" loading="lazy"><div><b>실루엣</b><p>가족은 그림자로, 빛 그림과 별하늘이 주인공인 사진</p></div></div>
+    </div>
+  </section>
+
+  <div class="tools" id="photos">
+    <div class="wrap">
+      <div class="chips" id="chips" role="group" aria-label="빛 그림 종류로 거르기"></div>
+      <div class="seg" id="seg" role="group" aria-label="보여 줄 버전">
+        <button type="button" data-v="f" aria-pressed="true">플래시</button>
+        <button type="button" data-v="s" aria-pressed="false">실루엣</button>
+      </div>
+    </div>
+  </div>
+  <div class="wrap"><div class="grid" id="grid"></div></div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 JEJUGRAPHER 별밤사진관 · 2026.09.18 서머셋 제주신화월드</span>
+    <span>수정 요청 때 사진 번호를 알려 주시면 더 빨리 찾아 드려요</span>
+  </div>
+</footer>
+</div>
+
+<dialog id="viewer" aria-label="사진 크게 보기">
+  <div class="vw">
+    <div class="vw-top">
+      <span class="t" id="vwTitle"></span>
+      <div class="row">
+        <div class="seg" id="vwSeg" role="group" aria-label="버전">
+          <button type="button" data-v="f">플래시</button>
+          <button type="button" data-v="s">실루엣</button>
+        </div>
+        <button class="x" type="button" id="vwClose" aria-label="닫기">×</button>
+      </div>
+    </div>
+    <div class="vw-img">
+      <img id="vwImg" alt="">
+      <button class="nav prev" type="button" id="vwPrev" aria-label="이전 사진">‹</button>
+      <button class="nav next" type="button" id="vwNext" aria-label="다음 사진">›</button>
+    </div>
+    <div class="vw-bot">
+      <a class="btn sm" id="vwDown" target="_blank" rel="noopener">원본 받기</a>
+      <button class="btn ghost sm" type="button" id="vwReq">수정 요청</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="req" aria-label="수정 요청">
+  <div class="sheet">
+    <div id="reqForm">
+      <h3>수정 요청</h3>
+      <p class="sub">고치고 싶은 곳을 적어 주세요. 확인한 뒤 수정본을 같은 드라이브에 올리고 알려 드립니다.</p>
+      <div class="pv"><img id="rqImg" alt=""><div><div class="no" id="rqNo"></div><div id="rqLb" style="color:var(--mute);font-size:.92rem"></div></div></div>
+      <form class="rq" id="form" novalidate>
+        <input type="hidden" id="f_photo">
+        <div class="two">
+          <label for="f_photo_sel">사진 번호<select id="f_photo_sel"></select></label>
+          <label for="f_version">버전
+            <select id="f_version"><option>플래시</option><option>실루엣</option><option>둘 다</option></select>
+          </label>
+        </div>
+        <div>
+          <div style="font-size:.88rem;color:var(--mute);margin-bottom:.4rem">어떤 수정인가요?</div>
+          <div class="kinds">
+            <label for="k1"><input type="radio" name="kind" id="k1" value="밝기·색감" checked><span>밝기·색감</span></label>
+            <label for="k2"><input type="radio" name="kind" id="k2" value="얼굴·표정"><span>얼굴·표정</span></label>
+            <label for="k3"><input type="radio" name="kind" id="k3" value="빛 그림 모양"><span>빛 그림 모양</span></label>
+            <label for="k4"><input type="radio" name="kind" id="k4" value="별·하늘"><span>별·하늘</span></label>
+            <label for="k5"><input type="radio" name="kind" id="k5" value="사진 내려 주세요"><span>사진 내려 주세요</span></label>
+            <label for="k6"><input type="radio" name="kind" id="k6" value="기타"><span>기타</span></label>
+          </div>
+        </div>
+        <label for="f_msg">요청 내용
+          <textarea id="f_msg" placeholder="예) 아이 얼굴이 조금 어두워요. 조금만 밝게 해 주세요."></textarea>
+        </label>
+        <div class="two">
+          <label for="f_name">이름 또는 가족 이름<input type="text" id="f_name" autocomplete="name" placeholder="예) 김OO 가족"></label>
+          <label for="f_contact">연락처 (휴대폰 또는 이메일)<input type="text" id="f_contact" autocomplete="tel" placeholder="수정이 끝나면 알려 드려요"></label>
+        </div>
+        <label class="hp" aria-hidden="true">웹사이트<input type="text" id="f_web" tabindex="-1" autocomplete="off"></label>
+        <label class="agree" for="f_agree"><input type="checkbox" id="f_agree"> 이름과 연락처는 이 사진의 수정 안내에만 쓰고, 안내가 끝나면 지웁니다.</label>
+        <p class="msg" id="rqMsg" role="status"></p>
+        <div class="foot">
+          <button class="btn ghost sm" type="button" id="rqCancel">닫기</button>
+          <button class="btn sm" type="submit" id="rqSend">요청 보내기</button>
+        </div>
+      </form>
+    </div>
+    <div class="done" id="reqDone" hidden>
+      <span class="pen">요청을 받았어요</span>
+      <p style="color:var(--mute);margin-bottom:1.2rem">수정본이 준비되면 남겨 주신 연락처로 알려 드릴게요.</p>
+      <button class="btn ghost sm" type="button" id="doneClose">닫기</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* ── 설정 ───────────────────────────────────── */
+const SESSION = "260918";
+const PW_HASH = "67623b593f77d387348ce14fcba25e594d290458543c0586e50e3130d2d9c00d";      // sha256("byeolbam-pw:" + 날짜 6자리)
+const ENDPOINT = "__ENDPOINT__";    // 구글 Apps Script 웹 앱 주소
+const YT = "gXPfDkbBdJ0";
+const DRIVE_FOLDER = "https://drive.google.com/drive/folders/1Vu6nTaarv2wREIsz2qA7MPIesk3XMhMJ";
+const PHOTOS = [{"n": "2183", "t": "19:11", "exp": "20초", "label": "황혼", "fixed": false}, {"n": "2185", "t": "19:18", "exp": "20초", "label": "제주 캐릭터", "fixed": false}, {"n": "2187", "t": "19:19", "exp": "22초", "label": "돌고래", "fixed": true}, {"n": "2189", "t": "19:20", "exp": "22초", "label": "날개", "fixed": false}, {"n": "2192", "t": "19:22", "exp": "17초", "label": "달", "fixed": false}, {"n": "2194", "t": "19:23", "exp": "16초", "label": "달", "fixed": true}, {"n": "2196", "t": "19:23", "exp": "32초", "label": "고래", "fixed": false}, {"n": "2198", "t": "19:24", "exp": "16초", "label": "빛의 물결", "fixed": false}, {"n": "2200", "t": "19:25", "exp": "18초", "label": "빛의 물결", "fixed": false}, {"n": "2202", "t": "19:26", "exp": "13초", "label": "별빛", "fixed": false}, {"n": "2204", "t": "19:27", "exp": "15초", "label": "달", "fixed": true}, {"n": "2206", "t": "19:28", "exp": "21초", "label": "돌고래", "fixed": true}, {"n": "2208", "t": "19:29", "exp": "19초", "label": "돌고래", "fixed": false}, {"n": "2210", "t": "19:30", "exp": "22초", "label": "돌고래", "fixed": false}, {"n": "2212", "t": "19:31", "exp": "18초", "label": "빛의 물결", "fixed": false}, {"n": "2214", "t": "19:31", "exp": "9초", "label": "별빛", "fixed": false}, {"n": "2216", "t": "19:32", "exp": "24초", "label": "하트", "fixed": false}, {"n": "2218", "t": "19:33", "exp": "14초", "label": "달", "fixed": true}, {"n": "2220", "t": "19:33", "exp": "13초", "label": "별빛", "fixed": false}, {"n": "2222", "t": "19:35", "exp": "23초", "label": "하트", "fixed": false}, {"n": "2224", "t": "19:36", "exp": "14초", "label": "달", "fixed": true}, {"n": "2226", "t": "19:36", "exp": "13초", "label": "별빛", "fixed": false}, {"n": "2228", "t": "19:37", "exp": "24초", "label": "빛 글씨", "fixed": false}, {"n": "2230", "t": "19:39", "exp": "27초", "label": "하트", "fixed": false}, {"n": "2232", "t": "19:39", "exp": "18초", "label": "빛의 물결", "fixed": false}, {"n": "2234", "t": "19:40", "exp": "14초", "label": "별빛", "fixed": false}, {"n": "2236", "t": "19:41", "exp": "23초", "label": "날개", "fixed": false}, {"n": "2238", "t": "19:42", "exp": "12초", "label": "달", "fixed": true}, {"n": "2240", "t": "19:44", "exp": "19초", "label": "날개", "fixed": false}, {"n": "2242", "t": "19:45", "exp": "19초", "label": "빛 그림", "fixed": false}, {"n": "2244", "t": "19:46", "exp": "17초", "label": "돌고래", "fixed": false}, {"n": "2246", "t": "19:47", "exp": "15초", "label": "불꽃", "fixed": false}, {"n": "2249", "t": "19:49", "exp": "17초", "label": "빛의 물결", "fixed": false}, {"n": "2251", "t": "19:50", "exp": "20초", "label": "빛 그림", "fixed": false}, {"n": "2253", "t": "19:52", "exp": "21초", "label": "하트", "fixed": false}, {"n": "2255", "t": "19:52", "exp": "15초", "label": "빛의 물결", "fixed": false}, {"n": "2257", "t": "19:53", "exp": "20초", "label": "빛의 물결", "fixed": false}, {"n": "2259", "t": "19:55", "exp": "19초", "label": "초승달", "fixed": false}, {"n": "2261", "t": "19:56", "exp": "22초", "label": "날개", "fixed": false}, {"n": "2263", "t": "20:03", "exp": "21초", "label": "빛 그림", "fixed": false}, {"n": "2266", "t": "20:04", "exp": "14초", "label": "하트", "fixed": false}, {"n": "2268", "t": "20:05", "exp": "20초", "label": "초승달", "fixed": false}, {"n": "2270", "t": "20:06", "exp": "21초", "label": "불꽃", "fixed": false}, {"n": "2272", "t": "20:07", "exp": "22초", "label": "별빛", "fixed": false}, {"n": "2274", "t": "20:08", "exp": "19초", "label": "달", "fixed": true}];          // [{n,t,exp,label,fixed}]
+const IDS = {"2274f": "1iiihj4NCf-tYC59tZaJjLQ7Xr9b00wJF", "2274s": "1MVNw8rEuM4ND7HwlXQ47v23BrZekcicl", "2238f": "1eKmjUZA5Y-33Hmw7empGx__Hrjw6sPBE", "2238s": "1w22hMqXoM0Jf8nNT_YJwFGtRgAusilQf", "2224f": "1HoeQ7vOEQqyTzKdCCjUu4vAUVmnVavZE", "2224s": "13lE58ofC7msWXw9PmTLrygzClAAm9vOS", "2218f": "1vwfSjKRrb_wv69m_gjhzIUWW9e6-mFkF", "2218s": "1ZF-Hr-7YF5RatgFvJa0g8TPMfK8vRmJM", "2206f": "1yfXh9opsMoaHRWZLndNMSSq8_G0t5Wjd", "2206s": "1zlet8BQpDos6UuE94oheq1QoDbX9-YHL", "2204f": "1naVltUqfQzeynA4zb6wDyCMoo8P5Vk1F", "2204s": "1pYVEbJCSHhOyVoWFg-pdRh3F6UAA_GcV", "2194f": "19KFP7HUhHD7KueFhuVbtunKQ_HW5ex3J", "2194s": "1Gy4QsYFlIvr-IN57mM3av9K7EYEVZW5y", "2187f": "1_9aAiWFElSnlkFWWXkLUVS9nR7ZXzKuF", "2187s": "1iRsxcwvJDBnzdzFiczF8g1_q6-_F2acM", "2272f": "10SN4CkCch7e5DksSdTXtahGgoBLrnJyw", "2272s": "1WqGcJygdjWB_3GG3u-MjaoelqVsamUHX", "2270f": "1jONEyBfMEVA8OEI2qcsAAD5n6EHTrnbJ", "2270s": "1VyiGTcXb3aByVF8ogDWDwG90SQoecObr", "2268f": "1qv4RmzYmvr8eom30Cw28EBjp2II1wM6g", "2268s": "1gp_9CAyUVUrNJPNyte1g_0ZpiJ6UdGfv", "2266f": "19Lmj9HR-G4s1u3hVFxSbNHNRNqWoWdJG", "2266s": "1ZqcAN93gznkAVq_AwfCzozYc65JV7maR", "2263f": "1mOJpYTj4LFv8m0iIEEDa416yI5p7VfVP", "2263s": "1TRzhCG2Oa91Q_p9cRu5bc0SCNv50DH8h", "2261f": "15eksTVrFyzqgiXIiHlFjQ9NdKF3eZBZ8", "2261s": "15HygRiXIR5vyJ6AqDUZjgwyTJnt9yH5D", "2259f": "1G4FFtDx-t-bLOoztMlYLGjKzsE1pvNrl", "2259s": "1bXM1EpGmdLbtvSKK3RztYIvdbnRaKI5T", "2257f": "1itPo4NOMFgQPcsnKE4_SXPBSVhU87jE3", "2257s": "1_TI29DkB9so8UByuzxSDF-lKrCc5WmNY", "2255f": "1oXVIDPt7kC3WnDLs6NYxHfjrLfWQZJy2", "2255s": "1_yMK3BaL5aYe7N1s_nSiXo168m5FJWvL", "2253f": "1_k937rclNkpEJCMoqUV2xCYDC7zzPIFu", "2253s": "1hV_MC9RPEv8l_wIdhz7ee0M8D4t7s2Me", "2251f": "1iyAda53ffAXMfvF689xCKjZvD7fp8SfR", "2251s": "1CzdbriisdPqUGdYhf_8VkzB3lPbd2SPL", "2249f": "1HwtG3-FooJNdkYNBaB_krkjRJDvWQfbv", "2249s": "1zgGxd9s4Nov1Osa8jtO-0ELYm3sXyYKc", "2246f": "1kqjN54-kuM2DHH1019HYbIecIudtcuIP", "2246s": "1nEo476HENPDlRHtNQuEzbvf0d6SWJpKb", "2244f": "12cxbsnJRKxVi7tjLxtf9yOO78FiTopmf", "2244s": "14p1okAukzcDLrETUCDvoqy1moSZHePaA", "2242f": "1gy4RBTDXcq57GnWTvWpMRfb1M5H89z2O", "2242s": "1F43m6PqEvPC72AL6NrRaClbXW5tbZcC2", "2240f": "1f4Lhe61NV_hXPDinvKq2_o51THgM4hMH", "2240s": "1StyzSVzP9sSqMZnTDfuSaM-Hr6zMF9Hv", "2236f": "1zCsJH04mU-4lmKcuEvzhpAMj5zewbEz4", "2236s": "1mqrcKOyfjsd-RJAOCQO-oX_q2twHk7di", "2234f": "1CaigMKTql7FqG29_NZwx3QaL5fby9np9", "2234s": "1QTk4oL0dyLyoM65cCCcO0rS6LF-FL0c0", "2232f": "1gu4Ldpb2YXBqHQOb6V8qFraJohP47Pp0", "2232s": "16m1mEXPSUSzx0PK1Zw0YCz-Ej2QRT0SF", "2230f": "1D5TrY4HTfcaX2wFOjJPocrEwR_3EDXqH", "2230s": "1RAQDJk4meMRU31_bVxEEtlA-wV2nt53p", "2228f": "1WmlbbeaIf-zlkCrxwDsAgxrhF1IDTWve", "2228s": "1cADVYaooqoN4ywXfgEskBAWBIb-68Hqr", "2226f": "1QkKC8QoQcSYj9K_XxAhWIyH_kiCw8OEV", "2226s": "1gcaq5QBZnfKWXxEZN29eEBG67SmeWS05", "2222f": "1aVRceWmw72QbPRp_cp4Rp2dIbJKU5UUs", "2222s": "1e--MvCuai099m6zUTDE9chemMC5YnH_9", "2220f": "1BEylHS3TQsIRU28JiVC5YxkqXRHQEr7B", "2220s": "1yBhqRGw0dOYwoT__wyF_U90Ct_HkBSu1", "2216f": "1pvdJUsEk5ZqcasLpxlMJ3ppo8VmDbDoy", "2216s": "1E6novUmFQrEAxAGrGYllrtMtRWAXDuIH", "2214f": "1ziPjGZMqsldDZGnMix6fXrMkjiRMg1OB", "2214s": "1P0HCIBKPys75JfuStfT1ahqsRnaQ_Yb3", "2212f": "1uWbOfmJIldtmTHg2zaE8fetuwg2uJgxP", "2212s": "1bajM_jKL5BKk20URxsWXZljHftDpjHF0", "2210f": "1OOWfKjTvNU65PLl6khVq48m0BruD08xN", "2210s": "1PCfKu_68E6UXQQtWSzni4i8cCz8Cject", "2208f": "1InR-a2QqCW_t6sG2VBjDeknj8vUSlolH", "2208s": "1VRsGlzSsNihYZOsC7apfkl-kdDuUrOVF", "2202f": "1eTUNZUGh0IoSGC1ZrbofK-mnJWZDMS-U", "2202s": "1SgcIrCS8bWriAi5c-PaBn26vvx5qasGA", "2200f": "1UWssDLhk-mw8JR5BirEL5OYtVZHRK2Am", "2200s": "1GJ97quVp8zzG20VMk_uIN_5JlE9R4MKR", "2198f": "1ATtxwLG0clObL9RyvT6OsGCjWH4_DhKf", "2198s": "19_i4h-WI1JQ12mT70P_NnNXGgM0P6iw3", "2196f": "1uGjaKKGP5UuJicN-kPA1s3DrierChcPZ", "2196s": "1BVJF0TBz3Zpput4SMJJrZ7z4x2umcvW5", "2192f": "1JbFvzOxOVaTHmGSKAuLYXlVWGFBKA1hK", "2192s": "1kQBIQjQ7O6TgyayHr_pXI5W_0vLtLZAc", "2189f": "1mAhLcMozk7oUEF3hMnGUj6rjzLS6gyAU", "2189s": "1JECafx2gnBWwoOhpyGRQUYgwKxuGH8aQ", "2185f": "1dC3nGbvW0Mu-JhbXyDe-SQW-VPYacfdV", "2185s": "1WiUFgQ-a4ThPGwCnfcouO82Mt8_I8xJd", "2183f": "1OnvCsz-iLEG_zWfCRwaK8IpprtZHzI9h", "2183s": "1y0DpXq3zjNyzV7gwi7vK0Zs4j02TXNcD"};                // {"2194f":"드라이브 파일 ID", ...}
+
+const $ = s => document.querySelector(s);
+const KEY = "byeolbam-open-" + SESSION;
+
+/* ── 날짜 잠금 ───────────────────────────────── */
+function normDate(v) {
+  const d = String(v).replace(/\D/g, "");
+  if (d.length === 8) return d.slice(2);         // 20260918 → 260918
+  return d;                                       // 260918
+}
+async function sha(s) {
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
+}
+async function tryOpen(v) { return (await sha("byeolbam-pw:" + normDate(v))) === PW_HASH; }
+function unlock() { $("#gate").hidden = true; $("#app").hidden = false; start(); }
+$("#gateForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (await tryOpen($("#pw").value)) {
+    try { sessionStorage.setItem(KEY, "1"); } catch (err) {}
+    $("#gateErr").textContent = ""; unlock();
+  } else {
+    $("#gateErr").textContent = "날짜가 맞지 않아요. 촬영한 날의 연도 끝 두 자리·월·일을 입력해 주세요.";
+    $("#pw").select();
+  }
+});
+
+/* ── 사진첩 ─────────────────────────────────── */
+const state = { v: "f", filter: "전체", list: PHOTOS, idx: 0, vwV: "f" };
+const vName = v => v === "f" ? "플래시" : "실루엣";
+const img = (n, v, w) => IDS[n + v] ? `https://drive.google.com/thumbnail?id=${IDS[n + v]}&sz=w${w}` : "";
+const dl = (n, v) => IDS[n + v] ? `https://drive.google.com/uc?export=download&id=${IDS[n + v]}` : DRIVE_FOLDER;
+
+function start() {
+  $("#allDrive").href = DRIVE_FOLDER;
+  $("#countLine").textContent = `${PHOTOS.length}장면 · ${PHOTOS.length * 2}장`;
+  $("#ytThumb").src = `https://i.ytimg.com/vi/${YT}/maxresdefault.jpg`;
+  $("#ytLink").href = `https://youtu.be/${YT}`; $("#ytLink").textContent = `youtu.be/${YT}`;
+  $("#exF").src = img("2194", "f", 400); $("#exS").src = img("2194", "s", 400);
+
+  const order = ["전체","달","돌고래","고래","날개","하트","초승달","불꽃","빛의 물결","빛 그림","제주 캐릭터","빛 글씨","별빛","황혼"];
+  const cnt = PHOTOS.reduce((m, p) => (m[p.label] = (m[p.label] || 0) + 1, m), {});
+  $("#chips").innerHTML = order.filter(l => l === "전체" || cnt[l]).map(l =>
+    `<button type="button" class="chip" data-l="${l}" aria-pressed="${l === "전체"}">${l}<span class="c">${l === "전체" ? PHOTOS.length : cnt[l]}</span></button>`).join("");
+  $("#f_photo_sel").innerHTML = PHOTOS.map(p => `<option value="${p.n}">${p.n} · ${p.label}</option>`).join("");
+  render();
+}
+$("#chips").addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if (!b) return;
+  state.filter = b.dataset.l;
+  document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c === b));
+  render();
+});
+document.querySelectorAll("#seg button").forEach(b => b.addEventListener("click", () => {
+  state.v = b.dataset.v;
+  document.querySelectorAll("#seg button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  render();
+}));
+function render() {
+  state.list = state.filter === "전체" ? PHOTOS : PHOTOS.filter(p => p.label === state.filter);
+  $("#grid").innerHTML = state.list.map((p, i) => `
+    <article class="card">
+      <button class="shot" type="button" data-i="${i}" aria-label="사진 ${p.n} ${p.label} 크게 보기">
+        <img src="${img(p.n, state.v, 640)}" alt="${p.label} — ${vName(state.v)} 버전, 사진 ${p.n}" loading="lazy" referrerpolicy="no-referrer">
+        <span class="tag">No. ${p.n}</span>${p.fixed ? '<span class="tag fix">모양 보정</span>' : ""}
+      </button>
+      <div class="meta"><span><span class="no">${p.n}</span> · ${p.label}</span><span class="ex">${p.t} · ${p.exp}</span></div>
+      <div class="row">
+        <a class="btn sm" href="${dl(p.n, "f")}" target="_blank" rel="noopener">플래시 받기</a>
+        <a class="btn sm" href="${dl(p.n, "s")}" target="_blank" rel="noopener">실루엣 받기</a>
+        <button class="btn ghost sm" type="button" data-req="${p.n}">수정 요청</button>
+      </div>
+    </article>`).join("");
+}
+$("#grid").addEventListener("click", e => {
+  const s = e.target.closest(".shot"); if (s) return openViewer(+s.dataset.i);
+  const r = e.target.closest("[data-req]"); if (r) openReq(r.dataset.req, state.v);
+});
+
+/* 크게 보기 */
+const viewer = $("#viewer");
+function openViewer(i) { state.idx = i; state.vwV = state.v; showV(); viewer.showModal(); }
+function showV() {
+  const p = state.list[state.idx];
+  $("#vwImg").src = img(p.n, state.vwV, 2000);
+  $("#vwImg").alt = `${p.label} — ${vName(state.vwV)} 버전, 사진 ${p.n}`;
+  $("#vwTitle").textContent = `No. ${p.n} · ${p.label} · ${p.t}`;
+  $("#vwDown").href = dl(p.n, state.vwV); $("#vwDown").textContent = `${vName(state.vwV)} 원본 받기`;
+  document.querySelectorAll("#vwSeg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === state.vwV));
+}
+const step = d => { state.idx = (state.idx + d + state.list.length) % state.list.length; showV(); };
+$("#vwPrev").onclick = () => step(-1); $("#vwNext").onclick = () => step(1);
+$("#vwClose").onclick = () => viewer.close();
+document.querySelectorAll("#vwSeg button").forEach(b => b.onclick = () => { state.vwV = b.dataset.v; showV(); });
+$("#vwReq").onclick = () => { const p = state.list[state.idx]; viewer.close(); openReq(p.n, state.vwV); };
+viewer.addEventListener("keydown", e => { if (e.key === "ArrowLeft") step(-1); if (e.key === "ArrowRight") step(1); });
+viewer.addEventListener("click", e => { if (e.target === viewer || e.target.classList.contains("vw-img")) viewer.close(); });
+let tx = null;
+viewer.addEventListener("touchstart", e => tx = e.touches[0].clientX, { passive: true });
+viewer.addEventListener("touchend", e => { if (tx === null) return; const d = e.changedTouches[0].clientX - tx; if (Math.abs(d) > 50) step(d < 0 ? 1 : -1); tx = null; });
+
+/* 수정 요청 */
+const req = $("#req");
+function setReq(n) {
+  const p = PHOTOS.find(x => x.n === n);
+  $("#f_photo").value = n; $("#f_photo_sel").value = n;
+  $("#rqImg").src = img(n, $("#f_version").value === "실루엣" ? "s" : "f", 400);
+  $("#rqNo").textContent = `No. ${n}`; $("#rqLb").textContent = `${p.label} · ${p.t}`;
+}
+function openReq(n, v) {
+  $("#reqForm").hidden = false; $("#reqDone").hidden = true; $("#rqMsg").textContent = ""; $("#rqMsg").className = "msg";
+  $("#f_version").value = vName(v); setReq(n);
+  try { const d = JSON.parse(localStorage.getItem("byeolbam-who") || "{}"); if (d.name) $("#f_name").value = d.name; if (d.contact) $("#f_contact").value = d.contact; } catch (e) {}
+  req.showModal(); $("#f_msg").focus();
+}
+$("#f_photo_sel").onchange = e => setReq(e.target.value);
+$("#f_version").onchange = () => setReq($("#f_photo").value);
+$("#rqCancel").onclick = () => req.close(); $("#doneClose").onclick = () => req.close();
+req.addEventListener("click", e => { if (e.target === req) req.close(); });
+$("#form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const msg = $("#rqMsg");
+  const data = {
+    session: SESSION, photo: $("#f_photo").value, version: $("#f_version").value,
+    kind: (document.querySelector('input[name="kind"]:checked') || {}).value || "",
+    message: $("#f_msg").value.trim(), name: $("#f_name").value.trim(), contact: $("#f_contact").value.trim(),
+    website: $("#f_web").value
+  };
+  if (!data.message) { msg.className = "msg err"; msg.textContent = "요청 내용을 적어 주세요."; $("#f_msg").focus(); return; }
+  if (data.contact && !$("#f_agree").checked) { msg.className = "msg err"; msg.textContent = "연락처를 남기시려면 안내 문구에 동의해 주세요."; return; }
+  try { localStorage.setItem("byeolbam-who", JSON.stringify({ name: data.name, contact: data.contact })); } catch (err) {}
+  if (!ENDPOINT || ENDPOINT.startsWith("__")) {
+    msg.className = "msg err"; msg.textContent = "요청 창구를 준비하고 있어요. 잠시 뒤 다시 보내 주세요."; return;
+  }
+  $("#rqSend").disabled = true; msg.className = "msg"; msg.textContent = "보내는 중…";
+  try {
+    await fetch(ENDPOINT, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) });
+    $("#form").reset(); $("#reqForm").hidden = true; $("#reqDone").hidden = false;
+  } catch (err) {
+    msg.className = "msg err"; msg.textContent = "보내지 못했어요. 인터넷 연결을 확인한 뒤 다시 눌러 주세요.";
+  } finally { $("#rqSend").disabled = false; }
+});
+
+/* 영상: 누르면 그 자리에서 재생 */
+$("#playBtn").addEventListener("click", () => {
+  const f = document.createElement("iframe");
+  f.src = `https://www.youtube-nocookie.com/embed/${YT}?autoplay=1&rel=0`;
+  f.title = "서머셋의 별밤 스케치 영상";
+  f.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+  f.allowFullscreen = true;
+  $("#player").replaceChildren(f);
+});
+
+/* 이미 날짜를 넣은 경우(별밤사진관 페이지에서 찾기 등) 바로 열기 */
+(function () {
+  let ok = false;
+  try { ok = sessionStorage.getItem(KEY) === "1"; } catch (e) {}
+  if (ok) return unlock();
+  $("#pw").focus();
+})();
+</script>
+</body>
+</html>

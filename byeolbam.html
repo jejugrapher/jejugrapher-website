@@ -106,6 +106,20 @@ h2{font-family:var(--pen);font-weight:400;font-size:clamp(2.6rem,6vw,3.8rem);lin
 .tv-meta{margin-top:.7rem;font-size:.88rem;color:var(--mute)}
 .tv-meta a{color:var(--cloud)}
 
+/* ---------- 우리 사진 받기 ---------- */
+.mine{background:var(--deep)}
+.finder{display:grid;grid-template-columns:auto minmax(0,16rem) auto;justify-content:start;gap:.6rem 1rem;align-items:center;margin-top:1.6rem;border-top:1px solid var(--line);padding-top:1.4rem}
+.finder label{color:var(--mute);font-size:.95rem}
+.finder input{background:rgba(11,29,58,.8);border:1px solid var(--line);padding:.75rem 1rem;color:var(--cloud);font:inherit;font-size:1.1rem;letter-spacing:.14em;text-align:center}
+.finder-err{grid-column:1/-1;color:#FF9A8F;font-size:.95rem;min-height:1.4em}
+.sessions{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.4rem;margin-top:1.2rem}
+.sessions a{display:grid;gap:.6rem;text-decoration:none;color:var(--cloud)}
+.sessions img{width:100%;aspect-ratio:3/2;object-fit:cover;filter:brightness(.85);transition:filter .4s}
+.sessions a:hover img{filter:brightness(1)}
+.sessions b{font-size:1.1rem}
+.sessions span{color:var(--mute);font-size:.9rem}
+@media (max-width:620px){.finder{grid-template-columns:minmax(0,1fr)}}
+
 /* ---------- 촬영자 / 문의 ---------- */
 .who{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(2rem,6vw,5rem);align-items:start}
 .contact{border:1px solid var(--line);padding:clamp(1.6rem,3vw,2.4rem)}
@@ -157,7 +171,7 @@ dialog::backdrop{background:rgba(3,9,22,.94)}
   </div>
   <div class="hero-foot">
     <span><b>JEJUGRAPHER</b> 전현석</span>
-    <a class="scroll" href="#about">아래로 내려 보기</a>
+    <a class="scroll" href="#mine">우리 사진 받기</a>
   </div>
 </header>
 
@@ -258,6 +272,23 @@ dialog::backdrop{background:rgba(3,9,22,.94)}
     </div>
   </section>
 
+  <!-- 우리 사진 받기: 촬영 회차별 사진 페이지 (촬영 날짜 6자리로 열림) -->
+  <section class="block mine" id="mine" aria-labelledby="h-mine">
+    <div class="wrap">
+      <div class="gallery-head">
+        <h2 id="h-mine">우리 사진 받기</h2>
+        <p>별밤사진관에서 찍은 사진은 촬영한 날마다 따로 모아 둡니다. 촬영 날짜 여섯 자리를 넣으면 그날 사진을 보고, 원본을 받고, 수정을 요청할 수 있어요.</p>
+      </div>
+      <form class="finder" id="finder" autocomplete="off">
+        <label for="finderPw">촬영 날짜</label>
+        <input id="finderPw" inputmode="numeric" maxlength="10" placeholder="예) 250101" required>
+        <button class="btn" type="submit" style="margin-top:0">사진 찾기</button>
+        <p class="finder-err" id="finderErr" role="alert"></p>
+      </form>
+      <ul class="sessions" id="sessions"></ul>
+    </div>
+  </section>
+
   <section class="block" id="contact" aria-labelledby="h-who">
     <div class="wrap who">
       <div class="prose">
@@ -317,6 +348,27 @@ dialog::backdrop{background:rgba(3,9,22,.94)}
   lb.addEventListener('keydown',function(e){if(e.key==='ArrowLeft')show(i-1);if(e.key==='ArrowRight')show(i+1);});
   lb.addEventListener('close',function(){items[i].focus();});
 })();
+(function(){
+  // 우리 사진 받기: 회차 목록과 날짜 찾기. 비밀번호 자체는 페이지에 없고 해시만 둡니다.
+  var SESSIONS=[{"title": "서머셋의 별밤", "place": "2026년 가을 · 서머셋 제주신화월드 · 두리함께", "path": "byeolbam/g/9e899fe154fb/", "hash": "67623b593f77d387348ce14fcba25e594d290458543c0586e50e3130d2d9c00d", "cover": "https://drive.google.com/thumbnail?id=1uGjaKKGP5UuJicN-kPA1s3DrierChcPZ&sz=w800"}];  // [{title, place, path, hash, cover}]
+  var ul=document.getElementById('sessions');
+  ul.innerHTML=SESSIONS.map(function(s){
+    return '<li><a href="'+s.path+'"><img src="'+s.cover+'" alt="'+s.title+' 대표 사진" loading="lazy" referrerpolicy="no-referrer"><b>'+s.title+'</b><span>'+s.place+'</span></a></li>';
+  }).join('');
+  function norm(v){var d=String(v).replace(/\D/g,'');return d.length===8?d.slice(2):d;}
+  function sha(s){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)).then(function(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return x.toString(16).padStart(2,'0');}).join('');});}
+  document.getElementById('finder').addEventListener('submit',function(e){
+    e.preventDefault();
+    var v=norm(document.getElementById('finderPw').value), err=document.getElementById('finderErr');
+    sha('byeolbam-pw:'+v).then(function(h){
+      var s=SESSIONS.filter(function(x){return x.hash===h;})[0];
+      if(!s){err.textContent='그날 촬영한 사진을 찾지 못했어요. 날짜 여섯 자리(연도 끝 두 자리·월·일)를 확인해 주세요.';return;}
+      try{sessionStorage.setItem('byeolbam-open-'+v,'1');}catch(x){}
+      location.href=s.path;
+    });
+  });
+})();
+
 </script>
 </body>
 </html>
