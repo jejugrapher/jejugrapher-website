@@ -350,7 +350,7 @@ dialog::backdrop{background:rgba(3,9,22,.94)}
 })();
 (function(){
   // 우리 사진 받기: 회차 목록과 날짜 찾기. 비밀번호 자체는 페이지에 없고 해시만 둡니다.
-  var SESSIONS=[{"title": "서머셋의 별밤", "place": "2026년 가을 · 서머셋 제주신화월드 · 두리함께", "path": "byeolbam/g/9e899fe154fb/", "hash": "67623b593f77d387348ce14fcba25e594d290458543c0586e50e3130d2d9c00d", "cover": "https://drive.google.com/thumbnail?id=1uGjaKKGP5UuJicN-kPA1s3DrierChcPZ&sz=w800"}];  // [{title, place, path, hash, cover}]
+  var SESSIONS=[{"title": "제대별밤", "place": "2026년 9월 · 제주대학교 · 두리함께", "path": "byeolbam/g/cde4005cf528/", "hash": "39536aef7290c5c58f3c031a3b13927e100604e35354e450f6f95349f9f1d8a2", "cover": "https://drive.google.com/thumbnail?id=1GKvLtD5PItHqqr51Lcm4GmpIwJl5y6ti&sz=w800"}, {"title": "서머셋의 별밤", "place": "2026년 9월 · 서머셋 제주신화월드 · 두리함께", "path": "byeolbam/g/9e899fe154fb/", "hash": "67623b593f77d387348ce14fcba25e594d290458543c0586e50e3130d2d9c00d", "cover": "https://drive.google.com/thumbnail?id=1uGjaKKGP5UuJicN-kPA1s3DrierChcPZ&sz=w800"}];  // [{title, place, path, hash, cover}]
   var ul=document.getElementById('sessions');
   ul.innerHTML=SESSIONS.map(function(s){
     return '<li><a href="'+s.path+'"><img src="'+s.cover+'" alt="'+s.title+' 대표 사진" loading="lazy" referrerpolicy="no-referrer"><b>'+s.title+'</b><span>'+s.place+'</span></a></li>';
