@@ -37,8 +37,10 @@
       .then(function () { return loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js'); })
       .then(function () {
         if (!firebase.apps.length) firebase.initializeApp(FB);
-        db = firebase.database(); base = db.ref('cg/' + room);
-        if (role === 'screen') listenScreen(); else listenPhone();
+        db = firebase.database(); base = db.ref('room/cg/' + room);
+        if (role === 'screen') listenScreen();
+        else if (role === 'phone') listenPhone();
+        // 'control' 등 그 외 역할은 자동 리스너 없음 (dbGet/onValue 로 직접 구독)
         readyRes(room);
       })
       .catch(function (e) { console.warn('firebase 연결 실패', e); readyRes(''); });
@@ -95,21 +97,19 @@
   function dbTx(p, fn) { return ready.then(function () { return base.child(p).transaction(fn).then(function (r) { return { committed: r.committed, value: r.snapshot.val() }; }); }); }
   function onValue(p, cb) { ready.then(function () { base.child(p).on('value', function (s) { cb(s.val()); }); }); }
 
-  /* 접속 순서 번호 배정 (한 번만, cid 로 기억) */
+  function nickKey(n) { return String(n).trim().toLowerCase().replace(/[.#$\[\]\/]/g, '_'); }
+  /* 이번 라운드 접속 순서 번호 (seq 는 초기화 때 0 으로 리셋됨) */
   function claimSeat() {
-    return dbGet('registry/' + myId).then(function (reg) {
-      if (reg && reg.seat) return reg.seat;
-      return dbTx('seq', function (n) { return (n || 0) + 1; }).then(function (r) { return r.value; });
-    });
+    return dbTx('seq', function (n) { return (n || 0) + 1; }).then(function (r) { return r.value; });
   }
-  /* 별명 중복 방지: nicks/<key> 를 내 cid 로만 선점 가능 */
+  /* 별명 중복 방지(영구): registry/<별명키> 를 내 cid 로만 선점. 점수는 보존 */
   function claimNick(nick) {
-    var key = String(nick).trim().toLowerCase().replace(/[.#$\[\]\/]/g, '_');
+    var key = nickKey(nick);
     if (!key) return Promise.resolve({ ok: false, reason: 'empty' });
-    return dbTx('nicks/' + key, function (cur) {
-      if (cur && cur !== myId) return;              // 다른 사람이 이미 씀 → 트랜잭션 취소
-      return myId;
-    }).then(function (r) { return { ok: !!r.committed, reason: r.committed ? '' : 'taken' }; });
+    return dbTx('registry/' + key, function (cur) {
+      if (cur && cur.cid && cur.cid !== myId) return;      // 다른 사람이 이미 쓰는 별명 → 취소
+      return { nick: String(nick).trim(), cid: myId, score: (cur && cur.score) || 0, ts: Date.now() };
+    }).then(function (r) { return { ok: !!r.committed, key: key, reason: r.committed ? '' : 'taken' }; });
   }
 
   var GameRT = {
@@ -122,7 +122,7 @@
     room: function () { return room; }, ready: ready, mode: function () { return 'firebase'; },
     id: function () { return myId; },
     dbGet: dbGet, dbSet: dbSet, dbUpdate: dbUpdate, dbTx: dbTx, onValue: onValue,
-    claimSeat: claimSeat, claimNick: claimNick
+    claimSeat: claimSeat, claimNick: claimNick, nickKey: nickKey
   };
   global.GameRT = GameRT;
 })(window);

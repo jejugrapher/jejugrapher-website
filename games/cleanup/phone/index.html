@@ -151,6 +151,13 @@ var cid=null;
 var nc=document.getElementById('nickChips');
 NICKS.forEach(function(n){var c=document.createElement('span');c.className='chip';c.textContent=n;c.onclick=function(){document.getElementById('nick').value=n;};nc.appendChild(c);});
 
+var joinedRound=false;
+function showNickEntry(){
+  document.getElementById('connMsg').textContent='';
+  document.getElementById('nickRow').style.display='';
+  document.getElementById('seatBig').textContent=seat+'번';
+  var saved=localStorage.getItem('cg_nick'); if(saved) document.getElementById('nick').value=saved;
+}
 function beginConnect(rm){
   document.getElementById('roomRow2').style.display='none';
   document.getElementById('connMsg').textContent='접속 중…';
@@ -161,11 +168,10 @@ function beginConnect(rm){
   GameRT.connect('phone',cid,onMsg);
   GameRT.ready.then(function(rr){
     if(!rr){ document.getElementById('connMsg').textContent='연결 실패 — 방 코드를 확인하고 새로고침해요'; document.getElementById('roomRow2').style.display=urlRoom?'none':''; return; }
-    GameRT.dbGet('registry/'+cid).then(function(reg){
-      if(reg && reg.nick){ seat=reg.seat; nick=reg.nick; document.getElementById('connMsg').textContent=''; afterNick(); }   // 재접속: 번호·별명 유지
-      else GameRT.claimSeat().then(function(s){ seat=s; document.getElementById('connMsg').textContent='';
-        document.getElementById('nickRow').style.display=''; document.getElementById('seatBig').textContent=seat+'번';
-        var saved=localStorage.getItem('cg_nick'); if(saved) document.getElementById('nick').value=saved; });
+    GameRT.dbGet('players/'+cid).then(function(p){          // 이번 라운드 참가 기록
+      if(p && p.nick){ seat=p.seat; nick=p.nick; document.getElementById('connMsg').textContent=''; afterNick(); }   // 재접속: 번호·별명 유지
+      else if(p && p.seat){ seat=p.seat; showNickEntry(); }                                                           // 번호는 받았고 별명만 남음
+      else GameRT.claimSeat().then(function(s){ seat=s; GameRT.dbSet('players/'+cid,{seat:seat,ts:Date.now()}); showNickEntry(); });  // ★번호 먼저 배정
     });
   });
 }
@@ -177,12 +183,12 @@ document.getElementById('startBtn').onclick=function(){
   GameRT.claimNick(v).then(function(r){
     if(!r.ok){ document.getElementById('nickWarn').textContent='😅 이미 있는 별명이에요. 다른 별명으로!'; return; }
     nick=v; localStorage.setItem('cg_nick',nick);
-    GameRT.dbUpdate('registry/'+cid,{seat:seat,nick:nick});
-    GameRT.dbTx('registry/'+cid+'/score',function(x){return x||0;});   // 점수 칸 보존/생성
+    GameRT.dbUpdate('players/'+cid,{seat:seat,nick:nick});
     afterNick();
   });
 };
 function afterNick(){
+  joinedRound=true;
   document.getElementById('meBadge').textContent=seat+'번 '+nick;
   GameRT.toScreen({type:'join',seat:seat,nick:nick,id:cid});
   buildCharCards(); show('pChar');
@@ -281,6 +287,9 @@ document.getElementById('special').addEventListener('pointerdown',function(e){e.
 function onMsg(m){
   if(m.type==='state'||m.type==='phase'){
     var ph=m.phase||'lobby';
+    // 라운드 초기화 감지: 게임 진행 중이던 폰이 lobby 로 돌아가면 새 라운드 → 다시 접속
+    if(joinedRound && ph==='lobby' && window._wasPlaying){ location.reload(); return; }
+    if(ph==='clean'||ph==='setup') window._wasPlaying=true;
     var label={lobby:'대기',setup:'준비',clean:'청소중!',grow:'성장',art:'정크아트',result:'결과'}[ph]||ph;
     document.getElementById('phaseBadge').textContent=label + (m.map&&G.MAPS[m.map]?(' · '+G.MAPS[m.map].emoji+G.MAPS[m.map].name):'');
     document.getElementById('act').textContent = ph==='art'?'놓기':'줍기';

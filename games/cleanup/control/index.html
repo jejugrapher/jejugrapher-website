@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>청소게임 — 컨트롤</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:#0e1630;color:#fff;font-family:-apple-system,"Apple SD Gothic Neo",sans-serif}
+  header{display:flex;align-items:center;gap:14px;padding:14px 20px;background:#12224a;flex-wrap:wrap}
+  header h1{font-size:20px;margin:0;flex:1}
+  .pill{background:#1b2d5c;border-radius:999px;padding:6px 14px;font-size:15px}
+  .pill b{color:#ffd166}
+  main{max-width:980px;margin:0 auto;padding:18px 20px;display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+  .card{background:#152046;border:1px solid #263a72;border-radius:16px;padding:16px}
+  .card h2{margin:0 0 12px;font-size:18px}
+  .big{font-size:16px}
+  .countbox{text-align:center;padding:10px 0}
+  .countbox .n{font-size:64px;font-weight:900;color:#ffd166;line-height:1}
+  .countbox .sub{opacity:.8;margin-top:6px}
+  .btn{border:0;border-radius:14px;padding:16px;font-size:18px;font-weight:800;cursor:pointer;width:100%;margin-top:10px}
+  .btn.start{background:#00c2a8;color:#04231e}
+  .btn.end{background:#ff9f1c;color:#3a2a00}
+  .btn.reset{background:#e63946;color:#fff}
+  .btn.ghost{background:#22305c;color:#fff}
+  .maprow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+  .mapb{flex:1;min-width:80px;border:2px solid #2a3a6b;background:#1a2750;color:#fff;border-radius:12px;padding:12px 6px;font-size:15px;cursor:pointer;text-align:center}
+  .mapb.on{border-color:#00c2a8;background:#123a34}
+  .toggle{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:16px}
+  .sw{width:56px;height:30px;border-radius:999px;background:#33406b;position:relative;cursor:pointer;transition:.15s}
+  .sw.on{background:#00c2a8}
+  .sw i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.15s}
+  .sw.on i{left:29px}
+  #roster .r{display:flex;justify-content:space-between;padding:7px 10px;border-bottom:1px solid #22305c;font-size:16px}
+  #roster .r b{color:#ffd166}
+  #lb .r{display:flex;justify-content:space-between;padding:6px 10px;font-size:15px}
+  #lb .r b{color:#ffd166}
+  #roomRow{padding:40px 20px;text-align:center}
+  #roomRow input{font-size:24px;padding:12px;border-radius:12px;border:3px solid #3a4d86;background:#152046;color:#fff;text-transform:uppercase;text-align:center}
+  #roomRow button{margin-top:12px;font-size:18px;padding:14px 28px;border:0;border-radius:12px;background:#00c2a8;color:#04231e;font-weight:800}
+  .note{opacity:.65;font-size:13px;margin-top:10px;line-height:1.6}
+  @media(max-width:760px){main{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🕹️ 청소게임 컨트롤</h1>
+  <div class="pill">방 <b id="roomLbl">····</b></div>
+  <div class="pill">상태 <b id="phaseLbl">-</b></div>
+  <div class="pill" id="mapPill" style="display:none">맵 <b id="mapLbl">-</b></div>
+</header>
+
+<div id="roomRow">
+  <p class="big">대형화면에 뜬 <b>방 코드</b>를 입력하세요</p>
+  <input id="roomIn" placeholder="예: ABCD" maxlength="6">
+  <br><button id="connectBtn">연결</button>
+  <p class="note">보통은 대형화면(프로젝터)의 "🕹️ 컨트롤 화면 열기" 링크로 열면 방 코드가 자동으로 들어옵니다.</p>
+</div>
+
+<main id="panel" style="display:none">
+  <div class="card">
+    <h2>참가 인원</h2>
+    <div class="countbox"><div class="n"><span id="cnt">0</span></div><div class="sub"><span id="need">10</span>명이 차면 자동 시작</div></div>
+    <div class="toggle"><span>자동 시작</span><div class="sw on" id="autoSw"><i></i></div><span id="autoTxt">켜짐</span></div>
+    <h2 style="margin-top:16px">맵 선택</h2>
+    <div class="maprow" id="mapRow"></div>
+    <button class="btn start" id="startBtn">▶ 지금 시작 (선택한 맵)</button>
+    <button class="btn end" id="endBtn">⏹ 청소 강제 종료</button>
+    <button class="btn reset" id="resetBtn">↺ 초기화 (새 라운드)</button>
+    <p class="note">자동 진행: 10명이 차면 자동 시작 → 끝나면 점수·별명 저장 후 자동으로 초기화되어 다음 팀을 받습니다. 위 버튼으로 언제든 수동 제어할 수 있어요.</p>
+  </div>
+  <div class="card">
+    <h2>지금 팀 (<span id="cnt2">0</span>명)</h2>
+    <div id="roster"></div>
+    <h2 style="margin-top:18px">⭐ 누적 순위</h2>
+    <div id="lb"></div>
+  </div>
+</main>
+
+<script>(function(){var v=Date.now();['net_fb.js','game_data.js'].forEach(function(f){document.write('<script src="../lib/'+f+'?v='+v+'"><\/script>');});})();</script>
+<script>
+var G=GameData, chosenMap='';   // '' = 랜덤
+var urlRoom=(/[?&]room=([A-Za-z0-9]+)/.exec(location.search)||[])[1];
+
+function begin(room){
+  document.getElementById('roomRow').style.display='none';
+  document.getElementById('panel').style.display='grid';
+  window.CG_ROOM=room;
+  GameRT.connect('control',null);
+  GameRT.ready.then(function(rr){
+    document.getElementById('roomLbl').textContent=rr||'?';
+    // 맵 버튼
+    var mr=document.getElementById('mapRow'); mr.innerHTML='';
+    var opts=[['','🎲 랜덤']].concat(G.MVP_MAPS.map(function(k){return [k,G.MAPS[k].emoji+' '+G.MAPS[k].name];}));
+    opts.forEach(function(o){var b=document.createElement('button');b.className='mapb'+(o[0]===chosenMap?' on':'');b.textContent=o[1];
+      b.onclick=function(){chosenMap=o[0];mr.querySelectorAll('.mapb').forEach(function(x){x.classList.remove('on');});b.classList.add('on');
+        GameRT.dbSet('cmd',{action:'setmap',map:chosenMap||null,n:Date.now()});};mr.appendChild(b);});
+    // 상태 구독
+    GameRT.onValue('game',function(g){ g=g||{};
+      document.getElementById('phaseLbl').textContent={lobby:'대기',clean:'청소중',result:'결과'}[g.phase]||g.phase||'-';
+      document.getElementById('cnt').textContent=g.count||0;
+      document.getElementById('need').textContent=g.need||10;
+      if(g.map&&G.MAPS[g.map]){document.getElementById('mapPill').style.display='';document.getElementById('mapLbl').textContent=G.MAPS[g.map].emoji+G.MAPS[g.map].name;}
+      if(typeof g.autoStartOn==='boolean') setAutoUI(g.autoStartOn);
+    });
+    GameRT.onValue('players',function(p){ p=p||{};
+      var rows=Object.keys(p).map(function(id){return p[id];}).filter(function(x){return x&&x.nick;}).sort(function(a,b){return (a.seat||0)-(b.seat||0);});
+      document.getElementById('cnt2').textContent=rows.length;
+      document.getElementById('roster').innerHTML=rows.map(function(r){return '<div class="r"><span>'+(r.seat||'?')+'번 '+r.nick+'</span><b>'+(r.char?(G.CHARACTERS[r.char]?G.CHARACTERS[r.char].emoji:''):'')+'</b></div>';}).join('')||'<div class="r"><span style="opacity:.6">아직 없어요</span></div>';
+    });
+    GameRT.onValue('registry',function(reg){ reg=reg||{};
+      var rows=Object.keys(reg).map(function(k){return reg[k];}).filter(function(r){return r&&r.nick;}).sort(function(a,b){return (b.score||0)-(a.score||0);}).slice(0,12);
+      document.getElementById('lb').innerHTML=rows.map(function(r,i){return '<div class="r"><span>'+(i+1)+'. '+r.nick+'</span><b>'+(r.score||0)+'</b></div>';}).join('')||'<div class="r"><span style="opacity:.6">아직 점수 없음</span></div>';
+    });
+  });
+}
+function setAutoUI(on){ var sw=document.getElementById('autoSw'); sw.classList.toggle('on',on); document.getElementById('autoTxt').textContent=on?'켜짐':'꺼짐'; }
+document.getElementById('autoSw').onclick=function(){ var on=!this.classList.contains('on'); setAutoUI(on); GameRT.dbSet('cmd',{action:'auto',on:on,n:Date.now()}); };
+document.getElementById('startBtn').onclick=function(){ GameRT.dbSet('cmd',{action:'start',map:chosenMap||null,n:Date.now()}); };
+document.getElementById('endBtn').onclick=function(){ GameRT.dbSet('cmd',{action:'end',n:Date.now()}); };
+document.getElementById('resetBtn').onclick=function(){ if(confirm('지금 라운드를 초기화할까요? (점수는 저장됩니다)')) GameRT.dbSet('cmd',{action:'reset',n:Date.now()}); };
+document.getElementById('connectBtn').onclick=function(){ var rc=(document.getElementById('roomIn').value||'').trim().toUpperCase(); if(!rc){alert('방 코드를 입력해요');return;} begin(rc); };
+
+if(urlRoom) begin(urlRoom); else document.getElementById('roomRow').style.display='block';
+</script>
+</body>
+</html>

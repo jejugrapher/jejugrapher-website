@@ -53,6 +53,7 @@
     <p>③ 맵 랜덤! 청소 경쟁 시작</p>
     <div style="margin-top:14px;font-size:22px">방 코드 <b id="roomCode" style="font-size:38px;color:#ffd166;letter-spacing:4px">····</b></div>
     <div class="u" id="phoneUrl"></div>
+    <div style="margin-top:12px"><a id="ctrlLink" href="#" target="_blank" style="color:#8ee;font-size:16px;text-decoration:underline">🕹️ 컨트롤 화면 열기</a></div>
     <div id="roster"></div>
   </div>
 </div>
@@ -89,14 +90,20 @@ function showRoomQR(room){
   var box=document.getElementById('qrbox'); box.innerHTML='';
   if(window.QRCode){ new QRCode(box,{text:phoneURL,width:380,height:380,colorDark:'#0b3d91',colorLight:'#ffffff'}); }
   else { box.innerHTML='<div style="color:#000;font-size:18px;padding:20px;text-align:center">'+phoneURL+'</div>'; }
+  var cl=document.getElementById('ctrlLink'); if(cl&&room&&room!=='LOCAL'){ cl.href=new URL('../control/?room='+room, location.href).href; } else if(cl){ cl.style.display='none'; }
 }
 
 /* ───────── 게임 상태 ───────── */
 var G=GameData;
-var phase='lobby';           // lobby setup clean grow art result
+var phase='lobby';           // lobby clean result
 var players={};              // id -> {seat,nick,char,equip, hasCreature}
-var curMap='sea';            // 시작 시 랜덤으로 정해짐
+var curMap='sea';            // 시작 시 랜덤 또는 지정
+var manualMap=null;          // 컨트롤에서 맵 지정 시
 var cleanSeconds=90, timeLeft=0, clockTimer=null;
+var AUTO_N=10;               // 이 인원이 차면 자동 시작
+var autoStartOn=true;        // 자동 시작 on/off (컨트롤에서 토글)
+var resetTimer=null;
+function readyCount(){ return Object.keys(players).filter(function(id){return players[id]&&players[id].nick;}).length; }
 
 function setPhase(p){
   phase=p;
@@ -118,8 +125,9 @@ function applyStatsAll(){
   Object.keys(players).forEach(function(id){ var p=players[id]; if(!p||!p.char)return;
     var st=G.finalStats(p.char,p.equip,terrain); E.setStats(id,st); });
 }
-function startGame(){
-  curMap=G.randomMap();                                       // ★맵 랜덤
+function startGame(mapArg){
+  curMap = mapArg || manualMap || G.randomMap();              // 지정 맵 없으면 랜덤
+  manualMap=null;
   E.setWorld(curMap);
   setPhase('clean');
   applyStatsAll();
@@ -140,20 +148,32 @@ function showResult(){
   document.getElementById('cleanKing').textContent=king?(king.seat+'번 '+king.nick+' ('+rank[0].n+'개)'):'-';
   document.getElementById('artKing').textContent='(정크아트 준비중)';
   setPhase('result');
-  // 이번 라운드 점수를 누적 저장 → 리더보드
-  if(GameRT.dbTx){
-    var jobs=Object.keys(sc).map(function(id){ return sc[id]?GameRT.dbTx('registry/'+id+'/score',function(x){return (x||0)+sc[id];}):null; });
+  // 이번 라운드 점수를 별명별로 누적 저장 → 리더보드
+  if(GameRT.dbTx&&GameRT.nickKey){
+    var jobs=Object.keys(sc).map(function(id){ var p=players[id]; if(!p||!p.nick||!sc[id])return null; var key=GameRT.nickKey(p.nick);
+      return GameRT.dbTx('registry/'+key+'/score',function(x){return (x||0)+sc[id];}); });
     Promise.all(jobs).then(loadLeaderboard);
   } else loadLeaderboard();
+  // 자동 초기화(다음 라운드 준비)
+  if(resetTimer)clearTimeout(resetTimer);
+  resetTimer=setTimeout(resetRound, 9000);
 }
 function loadLeaderboard(){
   if(!GameRT.dbGet){ document.getElementById('leaderboard').innerHTML=''; return; }
   GameRT.dbGet('registry').then(function(reg){
     reg=reg||{};
-    var rows=Object.keys(reg).map(function(id){var r=reg[id];return {seat:r.seat,nick:r.nick,score:r.score||0};}).filter(function(r){return r.nick;}).sort(function(a,b){return b.score-a.score;}).slice(0,10);
-    document.getElementById('leaderboard').innerHTML=rows.map(function(r,i){return '<div class="row" style="display:flex;justify-content:space-between;padding:4px 10px">'+'<span>'+(i+1)+'. '+r.seat+'번 '+r.nick+'</span><b style="color:#ffd166">'+r.score+'</b></div>';}).join('')||'<div style="text-align:center;opacity:.6">아직 점수가 없어요</div>';
+    var rows=Object.keys(reg).map(function(k){var r=reg[k];return {nick:r.nick,score:r.score||0};}).filter(function(r){return r.nick;}).sort(function(a,b){return b.score-a.score;}).slice(0,10);
+    document.getElementById('leaderboard').innerHTML=rows.map(function(r,i){return '<div class="row" style="display:flex;justify-content:space-between;padding:4px 10px">'+'<span>'+(i+1)+'. '+r.nick+'</span><b style="color:#ffd166">'+r.score+'</b></div>';}).join('')||'<div style="text-align:center;opacity:.6">아직 점수가 없어요</div>';
   });
 }
+function resetRound(){
+  if(resetTimer){clearTimeout(resetTimer);resetTimer=null;}
+  E.clear(); players={}; lastScore={}; renderRoster();
+  if(GameRT.dbSet){ ['players','ctrl','act','me','score'].forEach(function(k){GameRT.dbSet(k,null);}); GameRT.dbSet('seq',0); }
+  setPhase('lobby'); publishStatus();
+}
+function publishStatus(){ if(GameRT.dbUpdate) GameRT.dbUpdate('game',{phase:phase,map:curMap,count:readyCount(),need:AUTO_N,autoStartOn:autoStartOn}); }
+function checkAutoStart(){ if(autoStartOn && phase==='lobby' && readyCount()>=AUTO_N) startGame(); publishStatus(); }
 
 /* ───────── 점수판 ───────── */
 var lastScore={};
@@ -188,8 +208,8 @@ function addCreature(m){
 }
 GameRT.connect('screen',null,function(m){
   switch(m.type){
-    case 'join': players[m.id]={seat:m.seat,nick:m.nick,char:null,equip:null,hasCreature:false}; renderRoster(); break;
-    case 'creature': players[m.id]=players[m.id]||{seat:m.seat,nick:m.nick}; players[m.id].char=m.char; players[m.id].equip=m.equip; addCreature(m); break;
+    case 'join': players[m.id]=players[m.id]||{}; players[m.id].seat=m.seat; if(m.nick)players[m.id].nick=m.nick; renderRoster(); checkAutoStart(); break;
+    case 'creature': players[m.id]=players[m.id]||{seat:m.seat,nick:m.nick}; if(m.nick)players[m.id].nick=m.nick; players[m.id].char=m.char; players[m.id].equip=m.equip; addCreature(m); checkAutoStart(); break;
     case 'ctrl':
       if(m.act==='grab') E.grab(m.id);
       else if(m.act==='steal') { /* TODO 꼬챙이 뺏기 */ }
@@ -197,7 +217,19 @@ GameRT.connect('screen',null,function(m){
       break;
   }
 });
-if(GameRT.ready&&GameRT.ready.then){ GameRT.ready.then(showRoomQR); } else { showRoomQR('LOCAL'); }
+var lastCmd=0;
+if(GameRT.ready&&GameRT.ready.then){ GameRT.ready.then(function(room){
+  showRoomQR(room);
+  publishStatus();
+  if(GameRT.onValue){ GameRT.onValue('cmd', function(c){
+    if(!c||!c.n||c.n===lastCmd) return; lastCmd=c.n;
+    if(c.action==='start') startGame(c.map||null);
+    else if(c.action==='end'){ if(phase==='clean') endClean(); }
+    else if(c.action==='reset') resetRound();
+    else if(c.action==='setmap') manualMap=c.map||null;
+    else if(c.action==='auto'){ autoStartOn=!!c.on; publishStatus(); }
+  }); }
+}); } else { showRoomQR('LOCAL'); }
 
 /* ───────── 시작 게이트 + 진행 키 ───────── */
 var gate=document.getElementById('gate');
