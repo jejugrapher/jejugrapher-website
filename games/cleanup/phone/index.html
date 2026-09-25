@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>청소게임 — 내 폰</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;}
+  html,body{margin:0;height:100%;background:#0e1630;color:#fff;font-family:-apple-system,"Apple SD Gothic Neo",sans-serif;font-size:17px;overflow:hidden;}
+  .page{display:none;position:absolute;inset:0;padding:14px;flex-direction:column;overflow-y:auto;}
+  .page.on{display:flex;}
+  h2{font-size:22px;margin:4px 0 12px;text-align:center;}
+  .sub{text-align:center;opacity:.7;font-size:14px;margin:-6px 0 10px;}
+  .grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+  .seat{aspect-ratio:1;border:0;border-radius:14px;background:#22305c;color:#fff;font-size:22px;font-weight:800;}
+  .seat.on{background:#ffb703;color:#12203f;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0;}
+  .chip{border:3px solid #3a4d86;background:#1a2750;color:#fff;border-radius:999px;padding:10px 16px;font-size:16px;}
+  input{width:100%;font-size:20px;padding:12px;border-radius:12px;border:3px solid #3a4d86;background:#152046;color:#fff;text-align:center;}
+  .big{width:100%;border:0;border-radius:18px;padding:18px;font-size:22px;font-weight:800;background:#00c2a8;color:#04231e;margin-top:12px;}
+  .big.y{background:#ffb703;color:#3a2a00;} .big:disabled{opacity:.35;}
+  /* 캐릭터 카드 */
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .card{background:#152046;border:3px solid #2a3a6b;border-radius:16px;padding:8px;text-align:center;}
+  .card.on{border-color:#ffb703;background:#20305e;}
+  .card canvas{width:100%;aspect-ratio:1;background:#fff;border-radius:10px;}
+  .card .nm{font-size:17px;font-weight:800;margin-top:6px;}
+  .card .tr{font-size:12px;opacity:.8;line-height:1.3;margin-top:2px;min-height:32px;}
+  /* 장비 슬롯 */
+  .slot{margin-bottom:12px;}
+  .slot .lab{font-size:15px;opacity:.8;margin-bottom:6px;}
+  .opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .opt{background:#152046;border:3px solid #2a3a6b;border-radius:14px;padding:10px 6px;text-align:center;}
+  .opt.on{border-color:#00c2a8;background:#123a34;}
+  .opt.dis{opacity:.35;}
+  .opt .em{font-size:26px;} .opt .nm{font-size:14px;font-weight:700;margin-top:2px;}
+  #equipPrev{width:120px;height:120px;background:#fff;border-radius:12px;align-self:center;margin:4px 0 8px;}
+  #equipDesc{font-size:13px;opacity:.85;text-align:center;min-height:34px;margin-bottom:4px;}
+  #warn{color:#ff8a8a;text-align:center;font-size:14px;min-height:18px;}
+  /* 색칠 */
+  #colorWrap{flex:1;position:relative;background:#fff;border-radius:16px;overflow:hidden;touch-action:none;min-height:0;}
+  #colorWrap canvas{position:absolute;inset:0;width:100%;height:100%;}
+  .tools{display:flex;gap:6px;align-items:center;margin:8px 0;flex-wrap:wrap;justify-content:center;}
+  .sw{width:36px;height:36px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px #345;}
+  .sw.on{box-shadow:0 0 0 4px #ffb703;}
+  .szb,.tbtn{min-width:48px;height:44px;border:0;border-radius:10px;background:#22305c;color:#fff;font-size:15px;padding:0 10px;}
+  .szb.on{background:#ffb703;color:#12203f;}
+  /* 컨트롤러 */
+  #ctrlTop{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .badge{background:#152046;border-radius:12px;padding:8px 12px;font-size:15px;}
+  .badge b{font-size:20px;color:#ffb703;}
+  #gauge{height:10px;background:#223;border-radius:6px;overflow:hidden;margin:8px 0;display:none;}
+  #gauge.on{display:block;} #gaugeFill{height:100%;width:100%;background:#3ad;}
+  #pad{flex:1;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:10px;margin:10px 0;}
+  #pad button{border:0;border-radius:16px;background:#22305c;color:#fff;font-size:32px;font-weight:800;}
+  #pad button:active,#pad button.on{background:#3f57a8;}
+  #act{grid-column:2;grid-row:2;background:#ff6b3d !important;font-size:19px;}
+  #special{width:100%;border:0;border-radius:14px;padding:14px;font-size:18px;font-weight:800;background:#8338ec;color:#fff;display:none;}
+  #special.on{display:block;}
+  .msg{background:#152046;border-radius:12px;padding:12px;text-align:center;margin:8px 0;}
+</style>
+</head>
+<body>
+
+<!-- 1 입장 (번호 자동배정 + 별명) -->
+<div class="page on" id="pEnter">
+  <h2>🎮 청소 대작전</h2>
+  <div id="roomRow2" style="display:none">
+    <p class="sub">화면에 있는 방 코드를 입력해요</p>
+    <input id="roomIn" placeholder="예: ABCD" maxlength="6" style="text-transform:uppercase">
+    <button class="big" id="connectBtn">접속하기 ▶</button>
+  </div>
+  <div id="nickRow" style="display:none">
+    <div style="text-align:center;margin:6px 0 2px">당신은</div>
+    <div id="seatBig" style="text-align:center;font-size:52px;font-weight:900;color:#ffb703">?번</div>
+    <p class="sub">별명을 정해요 · 다른 친구와 겹치면 안 돼요</p>
+    <input id="nick" placeholder="별명을 써요" maxlength="8">
+    <div class="chips" id="nickChips"></div>
+    <div id="nickWarn" style="color:#ff8a8a;text-align:center;min-height:20px"></div>
+    <button class="big y" id="startBtn">시작하기 ▶</button>
+  </div>
+  <div id="connMsg" class="sub" style="margin-top:12px"></div>
+</div>
+
+<!-- 2 캐릭터 선택 -->
+<div class="page" id="pChar">
+  <h2>어떤 캐릭터로 할까?</h2>
+  <p class="sub">맵은 시작할 때 랜덤! 잘 골라야 유리해요</p>
+  <div class="cards" id="charCards"></div>
+  <button class="big y" id="charNext" disabled>장비 고르기 ▶</button>
+</div>
+
+<!-- 3 장비 선택 -->
+<div class="page" id="pEquip">
+  <h2>장비 3가지를 골라요</h2>
+  <canvas id="equipPrev" width="240" height="240"></canvas>
+  <div id="equipDesc"></div>
+  <div class="slot"><div class="lab">🧹 줍는 도구</div><div class="opts" id="slotTool"></div></div>
+  <div class="slot"><div class="lab">🗑️ 담는 도구</div><div class="opts" id="slotContainer"></div></div>
+  <div class="slot"><div class="lab">👟 신발</div><div class="opts" id="slotFeet"></div></div>
+  <div id="warn"></div>
+  <button class="big y" id="equipNext" disabled>색칠하기 ▶</button>
+</div>
+
+<!-- 4 색칠 -->
+<div class="page" id="pColor">
+  <h2>내 캐릭터를 색칠해요! 🎨</h2>
+  <div id="colorWrap"><canvas id="guideCv"></canvas><canvas id="paintCv"></canvas></div>
+  <div class="tools" id="palette"></div>
+  <div class="tools">
+    <button class="szb on" data-s="12">가늘게</button>
+    <button class="szb" data-s="28">굵게</button>
+    <button class="szb" data-s="54">채우기용</button>
+    <button class="tbtn" id="undo">되돌리기</button>
+    <button class="tbtn" id="clearPaint">다시</button>
+  </div>
+  <button class="big y" id="doneBtn">✅ 준비 완료!</button>
+</div>
+
+<!-- 5 컨트롤러 -->
+<div class="page" id="pPlay">
+  <div id="ctrlTop">
+    <div class="badge" id="meBadge">나</div>
+    <div class="badge">청소 <b id="myScore">0</b></div>
+    <div class="badge" id="phaseBadge">대기</div>
+  </div>
+  <div class="badge" id="carryBadge" style="text-align:center">가방 0 / 0</div>
+  <div id="gauge"><div id="gaugeFill"></div></div>
+  <div id="pad">
+    <button data-d="0,-1" style="grid-column:2;grid-row:1">▲</button>
+    <button data-d="-1,0" style="grid-column:1;grid-row:2">◀</button>
+    <button id="act">줍기</button>
+    <button data-d="1,0" style="grid-column:3;grid-row:2">▶</button>
+    <button data-d="0,1" style="grid-column:2;grid-row:3">▼</button>
+  </div>
+  <button id="special">🍢 뺏기!</button>
+  <div class="msg" id="playMsg" style="display:none"></div>
+</div>
+
+<script>(function(){var v=Date.now();var net=/[?&]net=local/.test(location.search)?'game_rt.js':'net_fb.js';
+['../lib/'+net,'../lib/game_data.js','../lib/char_art.js'].forEach(function(f){document.write('<script src="'+f+'?v='+v+'"><\/script>');});})();</script>
+<script>
+var G=GameData;
+var seat=null, nick='', myId='', myChar=null, equip={tool:null,container:null,feet:null};
+var COLORS=['#111','#e63946','#ff9f1c','#ffd166','#2ec4b6','#1f6feb','#8338ec','#ff7ab6','#7a4b2a','#2a9d3f','#ffffff','#8fa3b8'];
+var NICKS=['번개','무지개','씩씩이','반짝','초코','왕눈이','통통','바다'];
+function show(id){document.querySelectorAll('.page').forEach(function(p){p.classList.toggle('on',p.id===id);var el=document.getElementById(id);});window.scrollTo(0,0);}
+/* ── 1 입장: 접속 → 번호 자동배정(접속 순서) → 별명(중복 불가) ── */
+var urlRoom=(/[?&]room=([A-Za-z0-9]+)/.exec(location.search)||[])[1];
+var cid=null;
+var nc=document.getElementById('nickChips');
+NICKS.forEach(function(n){var c=document.createElement('span');c.className='chip';c.textContent=n;c.onclick=function(){document.getElementById('nick').value=n;};nc.appendChild(c);});
+
+function beginConnect(rm){
+  document.getElementById('roomRow2').style.display='none';
+  document.getElementById('connMsg').textContent='접속 중…';
+  if(rm) window.CG_ROOM=rm;
+  var room=urlRoom||window.CG_ROOM;
+  cid=localStorage.getItem('cg_cid_'+room); if(!cid){ cid='c'+Date.now()+Math.floor(Math.random()*1000); localStorage.setItem('cg_cid_'+room,cid); }
+  myId=cid;
+  GameRT.connect('phone',cid,onMsg);
+  GameRT.ready.then(function(rr){
+    if(!rr){ document.getElementById('connMsg').textContent='연결 실패 — 방 코드를 확인하고 새로고침해요'; document.getElementById('roomRow2').style.display=urlRoom?'none':''; return; }
+    GameRT.dbGet('registry/'+cid).then(function(reg){
+      if(reg && reg.nick){ seat=reg.seat; nick=reg.nick; document.getElementById('connMsg').textContent=''; afterNick(); }   // 재접속: 번호·별명 유지
+      else GameRT.claimSeat().then(function(s){ seat=s; document.getElementById('connMsg').textContent='';
+        document.getElementById('nickRow').style.display=''; document.getElementById('seatBig').textContent=seat+'번';
+        var saved=localStorage.getItem('cg_nick'); if(saved) document.getElementById('nick').value=saved; });
+    });
+  });
+}
+document.getElementById('connectBtn').onclick=function(){ var rc=(document.getElementById('roomIn').value||'').trim().toUpperCase(); if(!rc){alert('방 코드를 입력해요');return;} beginConnect(rc); };
+document.getElementById('startBtn').onclick=function(){
+  var v=document.getElementById('nick').value.trim();
+  if(!v){ document.getElementById('nickWarn').textContent='별명을 써요'; return; }
+  document.getElementById('nickWarn').textContent='확인 중…';
+  GameRT.claimNick(v).then(function(r){
+    if(!r.ok){ document.getElementById('nickWarn').textContent='😅 이미 있는 별명이에요. 다른 별명으로!'; return; }
+    nick=v; localStorage.setItem('cg_nick',nick);
+    GameRT.dbUpdate('registry/'+cid,{seat:seat,nick:nick});
+    GameRT.dbTx('registry/'+cid+'/score',function(x){return x||0;});   // 점수 칸 보존/생성
+    afterNick();
+  });
+};
+function afterNick(){
+  document.getElementById('meBadge').textContent=seat+'번 '+nick;
+  GameRT.toScreen({type:'join',seat:seat,nick:nick,id:cid});
+  buildCharCards(); show('pChar');
+}
+/* 자동 시작: QR(?room=) 있으면 바로 접속, 없으면 코드 입력칸 */
+if(urlRoom) beginConnect(); else document.getElementById('roomRow2').style.display='';
+
+/* ── 2 캐릭터 선택 ── */
+var TRAIT={seal:'물속 최고속·오래 잠수. 육지는 느려요',crab:'모래사장 최고! 몸이 마르면 기절해요',monkey:'숲에서 나무 점프로 슝슝',human:'모든 곳 평균. 안정적',bird:'트인 곳 비행 최고. 숲·도시선 느려요'};
+function buildCharCards(){
+  var box=document.getElementById('charCards');box.innerHTML='';
+  G.CHAR_ORDER.forEach(function(k){var ch=G.CHARACTERS[k];
+    var d=document.createElement('div');d.className='card';d.dataset.k=k;
+    var cv=document.createElement('canvas');cv.width=cv.height=200;CharArt.draw(k,cv.getContext('2d'),200,{guide:false});
+    d.appendChild(cv);
+    var nm=document.createElement('div');nm.className='nm';nm.textContent=ch.emoji+' '+ch.name;d.appendChild(nm);
+    var tr=document.createElement('div');tr.className='tr';tr.textContent=TRAIT[k]||'';d.appendChild(tr);
+    d.onclick=function(){myChar=k;box.querySelectorAll('.card').forEach(function(x){x.classList.toggle('on',x===d);});document.getElementById('charNext').disabled=false;};
+    box.appendChild(d);});
+}
+document.getElementById('charNext').onclick=function(){ if(!myChar)return; buildEquip(); show('pEquip'); };
+
+/* ── 3 장비 선택 ── */
+function opt(slot,key,data){var d=document.createElement('div');d.className='opt';d.dataset.k=key;
+  d.innerHTML='<div class="em">'+data.emoji+'</div><div class="nm">'+data.name+'</div>';
+  d.onclick=function(){ if(d.classList.contains('dis'))return; equip[slot]=key; refreshEquip(); }; return d;}
+function buildEquip(){
+  var st=document.getElementById('slotTool');st.innerHTML='';G.TOOL_ORDER.forEach(function(k){st.appendChild(opt('tool',k,G.TOOLS[k]));});
+  var sc=document.getElementById('slotContainer');sc.innerHTML='';G.CONTAINER_ORDER.forEach(function(k){sc.appendChild(opt('container',k,G.CONTAINERS[k]));});
+  var sf=document.getElementById('slotFeet');sf.innerHTML='';G.FEET_ORDER.forEach(function(k){sf.appendChild(opt('feet',k,G.FEET[k]));});
+  equip={tool:'tongs',container:'bag',feet:'sneakers'}; refreshEquip();
+}
+function refreshEquip(){
+  [['slotTool','tool'],['slotContainer','container'],['slotFeet','feet']].forEach(function(p){
+    document.querySelectorAll('#'+p[0]+' .opt').forEach(function(o){o.classList.toggle('on',equip[p[1]]===o.dataset.k);});
+  });
+  // 제약: 등가방+빗자루 불가 → 빗자루 비활성 표시
+  document.querySelectorAll('#slotTool .opt').forEach(function(o){o.classList.toggle('dis', equip.container==='backpack'&&o.dataset.k==='broom');});
+  var v=G.validate(equip);
+  document.getElementById('warn').textContent=v.ok?'':v.msg;
+  document.getElementById('equipNext').disabled=!v.ok;
+  // 미리보기 + 설명
+  var pv=document.getElementById('equipPrev');var g=pv.getContext('2d');g.clearRect(0,0,240,240);g.fillStyle='#fff';g.fillRect(0,0,240,240);CharArt.draw(myChar,g,240,{guide:false,equip:equip});
+  var desc=[];if(equip.tool)desc.push(G.TOOLS[equip.tool].desc);if(equip.container)desc.push(G.CONTAINERS[equip.container].desc);if(equip.feet)desc.push(G.FEET[equip.feet].desc);
+  document.getElementById('equipDesc').textContent=desc.join(' · ');
+}
+document.getElementById('equipNext').onclick=function(){ if(!G.validate(equip).ok)return; setupColor(); show('pColor'); };
+
+/* ── 4 색칠 ── */
+var gcv=document.getElementById('guideCv'),pcv=document.getElementById('paintCv'),pctx,CW=600,CH=600,color='#e63946',size=12,hist=[],drawing=false,last=null;
+function setupColor(){
+  gcv.width=pcv.width=CW;gcv.height=pcv.height=CH;
+  var g=gcv.getContext('2d');g.clearRect(0,0,CW,CH);g.fillStyle='#fff';g.fillRect(0,0,CW,CH);CharArt.draw(myChar,g,CW,{guide:true,equip:equip});
+  pctx=pcv.getContext('2d');pctx.clearRect(0,0,CW,CH);hist=[];
+  var pal=document.getElementById('palette');pal.innerHTML='';
+  COLORS.forEach(function(col,i){var d=document.createElement('div');d.className='sw'+(i===1?' on':'');d.style.background=col;
+    d.onclick=function(){color=col;pal.querySelectorAll('.sw').forEach(function(x){x.classList.toggle('on',x===d);});};pal.appendChild(d);});
+  color='#e63946';
+}
+function cpos(e){var r=pcv.getBoundingClientRect();return{x:(e.clientX-r.left)*CW/r.width,y:(e.clientY-r.top)*CH/r.height};}
+function csnap(){hist.push(pctx.getImageData(0,0,CW,CH));if(hist.length>15)hist.shift();}
+pcv.addEventListener('pointerdown',function(e){e.preventDefault();pcv.setPointerCapture(e.pointerId);csnap();drawing=true;last=cpos(e);cdot(last);});
+pcv.addEventListener('pointermove',function(e){if(!drawing)return;var p=cpos(e);pctx.strokeStyle=color;pctx.lineWidth=size;pctx.lineCap='round';pctx.lineJoin='round';pctx.beginPath();pctx.moveTo(last.x,last.y);pctx.lineTo(p.x,p.y);pctx.stroke();last=p;});
+pcv.addEventListener('pointerup',function(){drawing=false;});
+function cdot(p){pctx.fillStyle=color;pctx.beginPath();pctx.arc(p.x,p.y,size/2,0,6.3);pctx.fill();}
+document.querySelectorAll('#pColor .szb').forEach(function(b){b.onclick=function(){size=+b.dataset.s;document.querySelectorAll('#pColor .szb').forEach(function(x){x.classList.toggle('on',x===b);});};});
+document.getElementById('undo').onclick=function(){var im=hist.pop();if(im)pctx.putImageData(im,0,0);};
+document.getElementById('clearPaint').onclick=function(){csnap();pctx.clearRect(0,0,CW,CH);};
+
+document.getElementById('doneBtn').onclick=function(){
+  // 합성: 색칠 + 진한 윤곽선, 투명 배경
+  var out=document.createElement('canvas');out.width=out.height=CW;var o=out.getContext('2d');
+  o.drawImage(pcv,0,0);                     // 아이 색칠
+  CharArt.draw(myChar,o,CW,{guide:false,equip:equip});   // 진한 윤곽선 위에
+  var url=out.toDataURL('image/png');
+  GameRT.toScreen({type:'creature',id:myId,seat:seat,nick:nick,char:myChar,equip:equip,transparent:true,dataUrl:url});
+  document.getElementById('special').classList.toggle('on',equip.tool==='skewer');
+  show('pPlay');
+  var msg=document.getElementById('playMsg');msg.style.display='';msg.innerHTML='무대를 봐요! 내 '+G.CHARACTERS[myChar].name+'가 나타났어요 🎉<br>맵이 정해지면 시작해요';
+};
+
+/* ── 5 컨트롤러 ── */
+var pressDir=null, sendTimer=null;
+function startSend(){ if(sendTimer)return; sendTimer=setInterval(function(){ if(pressDir) GameRT.toScreen({type:'ctrl',id:myId,dx:pressDir[0],dy:pressDir[1]}); },100); }
+document.querySelectorAll('#pad [data-d]').forEach(function(b){
+  var d=b.dataset.d.split(',').map(Number);
+  var on=function(e){e.preventDefault();pressDir=d;b.classList.add('on');GameRT.toScreen({type:'ctrl',id:myId,dx:d[0],dy:d[1]});startSend();};
+  var off=function(e){e.preventDefault();pressDir=null;b.classList.remove('on');GameRT.toScreen({type:'ctrl',id:myId,dx:0,dy:0});};
+  b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointercancel',off);b.addEventListener('pointerleave',off);
+});
+document.getElementById('act').addEventListener('pointerdown',function(e){e.preventDefault();this.classList.add('on');GameRT.toScreen({type:'ctrl',id:myId,act:'grab'});});
+document.getElementById('act').addEventListener('pointerup',function(e){e.preventDefault();this.classList.remove('on');});
+document.getElementById('special').addEventListener('pointerdown',function(e){e.preventDefault();GameRT.toScreen({type:'ctrl',id:myId,act:'steal'});});
+
+/* ── 화면 → 폰 ── */
+function onMsg(m){
+  if(m.type==='state'||m.type==='phase'){
+    var ph=m.phase||'lobby';
+    var label={lobby:'대기',setup:'준비',clean:'청소중!',grow:'성장',art:'정크아트',result:'결과'}[ph]||ph;
+    document.getElementById('phaseBadge').textContent=label + (m.map&&G.MAPS[m.map]?(' · '+G.MAPS[m.map].emoji+G.MAPS[m.map].name):'');
+    document.getElementById('act').textContent = ph==='art'?'놓기':'줍기';
+  }
+  if(m.type==='score'&&m.score){ var s=m.score[myId]; if(s!=null) document.getElementById('myScore').textContent=s; }
+  if(m.type==='me'&&m.id===myId){
+    if(m.carry!=null){ document.getElementById('carryBadge').textContent='가방 '+m.carry+' / '+m.cap; }
+    if(m.moist!=null){ var gg=document.getElementById('gauge');gg.classList.add('on');document.getElementById('gaugeFill').style.width=Math.max(0,m.moist)+'%';document.getElementById('gaugeFill').style.background=m.moist<25?'#ff5a5a':'#3ad'; }
+    if(m.stun){ var msg=document.getElementById('playMsg');msg.style.display='';msg.innerHTML='😵 기절! 쓰레기를 놓쳤어요…'; setTimeout(function(){msg.style.display='none';},2500);}
+  }
+}
+</script>
+</body>
+</html>

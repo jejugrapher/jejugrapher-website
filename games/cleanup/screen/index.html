@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>청소게임 — 대형화면</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  html,body{margin:0;height:100%;background:#03132b;overflow:hidden;font-family:-apple-system,"Apple SD Gothic Neo",sans-serif;color:#fff;}
+  canvas{display:block;width:100vw;height:100vh;}
+  .overlay{position:fixed;inset:0;pointer-events:none;}
+  /* 시작 게이트 */
+  #gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:rgba(0,10,30,.9);cursor:pointer;z-index:20;}
+  #gate h1{font-size:52px;margin:0;} #gate p{font-size:22px;opacity:.85;margin:0;}
+  /* 로비 */
+  #lobby{position:fixed;inset:0;display:none;align-items:center;justify-content:center;gap:60px;background:linear-gradient(#0b3d91,#03132b);z-index:10;}
+  #lobby.on{display:flex;}
+  #lobby img{width:min(46vh,440px);background:#fff;padding:18px;border-radius:20px;}
+  #lobby .txt h1{font-size:56px;margin:0 0 10px;} #lobby .txt p{font-size:26px;margin:6px 0;opacity:.92;}
+  #lobby .u{font-size:22px;font-family:monospace;opacity:.75;margin-top:14px;}
+  #roster{display:flex;flex-wrap:wrap;gap:10px;max-width:520px;margin-top:20px;}
+  #roster .p{background:rgba(255,255,255,.15);border-radius:12px;padding:8px 14px;font-size:20px;}
+  /* 상단 배너 */
+  #banner{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:14px 24px;z-index:8;pointer-events:none;}
+  #phaseName{font-size:30px;font-weight:800;text-shadow:0 2px 8px #000;}
+  #timer{font-size:44px;font-weight:900;color:#ffd166;text-shadow:0 2px 10px #000;display:none;}
+  #timer.on{display:block;}
+  /* 점수판 */
+  #scores{position:fixed;top:64px;right:20px;width:230px;background:rgba(0,10,30,.55);border-radius:16px;padding:12px;z-index:8;display:none;}
+  #scores.on{display:block;} #scores h3{margin:0 0 8px;font-size:18px;opacity:.8;}
+  #scores .row{display:flex;justify-content:space-between;font-size:20px;padding:4px 0;}
+  #scores .row b{color:#ffd166;}
+  /* 결과 */
+  #result{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;background:rgba(3,10,30,.92);z-index:12;}
+  #result.on{display:flex;}
+  #result h1{font-size:56px;margin:0;}
+  .crown{background:rgba(255,255,255,.1);border-radius:20px;padding:24px 40px;text-align:center;}
+  .crown .k{font-size:26px;opacity:.8;} .crown .n{font-size:40px;font-weight:900;color:#ffd166;margin-top:8px;}
+  #hostHelp{position:fixed;left:12px;bottom:10px;font-size:13px;color:rgba(255,255,255,.5);z-index:8;}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="banner"><div id="phaseName"></div><div id="timer"></div></div>
+<div id="scores"><h3>🧹 청소 점수</h3><div id="scoreList"></div></div>
+
+<div id="lobby">
+  <div id="qrbox" style="width:min(46vh,440px);background:#fff;padding:18px;border-radius:20px;display:flex;align-items:center;justify-content:center;"></div>
+  <div class="txt">
+    <h1>🧹 청소 대작전</h1>
+    <p>① 폰 카메라로 QR을 찍어요</p>
+    <p>② 캐릭터·장비를 고르고 색칠</p>
+    <p>③ 맵 랜덤! 청소 경쟁 시작</p>
+    <div style="margin-top:14px;font-size:22px">방 코드 <b id="roomCode" style="font-size:38px;color:#ffd166;letter-spacing:4px">····</b></div>
+    <div class="u" id="phoneUrl"></div>
+    <div id="roster"></div>
+  </div>
+</div>
+
+<div id="gate"><h1>🧹 청소 대작전</h1><p>화면을 한 번 누르면 시작합니다 (소리 켜짐)</p></div>
+
+<div id="result">
+  <h1>🎉 시상식 🎉</h1>
+  <div style="display:flex;gap:30px;flex-wrap:wrap;justify-content:center">
+    <div class="crown"><div class="k">🧹 청소왕</div><div class="n" id="cleanKing">-</div></div>
+    <div class="crown"><div class="k">🎨 예술왕</div><div class="n" id="artKing">-</div></div>
+  </div>
+  <div style="width:min(560px,86vw)"><h3 style="opacity:.7;text-align:center;margin:6px 0">⭐ 누적 순위</h3><div id="leaderboard" style="font-size:20px"></div></div>
+  <p style="opacity:.7">스페이스바로 새 게임</p>
+</div>
+
+<div id="hostHelp">진행: [Space] 다음단계(로비→준비→청소시작→결과) · [1]로비 [2]준비 [3]게임시작(맵랜덤) [4]청소끝 [6]결과 · [Q]QR · [F]전체화면</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function(){var v=Date.now();var net=/[?&]net=local/.test(location.search)?'game_rt.js':'net_fb.js';
+[net,'game_data.js','char_art.js','stage_guides.js','stage_demos.js','stage_engine.js'].forEach(function(f){document.write('<script src="../lib/'+f+'?v='+v+'"><\/script>');});})();
+</script>
+<script>
+/* ───────── 엔진 ───────── */
+var E=new StageEngine({canvas:document.getElementById('c'),soundBase:'/assets/sound/',
+  onCount:function(){},onWorld:function(){}});
+
+/* 로비 QR — 방코드는 GameRT(Firebase) 연결 후 확정 */
+function showRoomQR(room){
+  var phoneURL=new URL('../phone/?room='+room, location.href).href;
+  document.getElementById('phoneUrl').textContent=phoneURL.replace(/^https?:\/\//,'');
+  document.getElementById('roomCode').textContent=room||'····';
+  var box=document.getElementById('qrbox'); box.innerHTML='';
+  if(window.QRCode){ new QRCode(box,{text:phoneURL,width:380,height:380,colorDark:'#0b3d91',colorLight:'#ffffff'}); }
+  else { box.innerHTML='<div style="color:#000;font-size:18px;padding:20px;text-align:center">'+phoneURL+'</div>'; }
+}
+
+/* ───────── 게임 상태 ───────── */
+var G=GameData;
+var phase='lobby';           // lobby setup clean grow art result
+var players={};              // id -> {seat,nick,char,equip, hasCreature}
+var curMap='sea';            // 시작 시 랜덤으로 정해짐
+var cleanSeconds=90, timeLeft=0, clockTimer=null;
+
+function setPhase(p){
+  phase=p;
+  var names={lobby:'로비',setup:'🎨 캐릭터·장비 준비중',clean:'🧹 '+(G.MAPS[curMap]?G.MAPS[curMap].emoji+' '+G.MAPS[curMap].name:'')+' 청소 대작전!',grow:'🌟 성장 상점',art:'🎨 정크아트',result:'시상식'};
+  document.getElementById('phaseName').textContent=names[p]||p;
+  document.getElementById('lobby').classList.toggle('on',p==='lobby');
+  document.getElementById('result').classList.toggle('on',p==='result');
+  document.getElementById('scores').classList.toggle('on',p==='clean'||p==='grow');
+  document.getElementById('timer').classList.toggle('on',p==='clean');
+  GameRT.toPhones({type:'phase',phase:p,map:curMap});
+  pushState();
+}
+function pushState(){ GameRT.send('screen',{type:'state',phase:phase,map:curMap}); }
+
+/* ───────── 단계 전환 ───────── */
+function goSetup(){ E.setWorld('sea'); setPhase('setup'); }   // 대기: 폰에서 캐릭터·장비·색칠. 도착하는 크리처는 로비 옆에 등장
+function applyStatsAll(){
+  var terrain=(G.MAPS[curMap]||{}).terrain||'park';
+  Object.keys(players).forEach(function(id){ var p=players[id]; if(!p||!p.char)return;
+    var st=G.finalStats(p.char,p.equip,terrain); E.setStats(id,st); });
+}
+function startGame(){
+  curMap=G.randomMap();                                       // ★맵 랜덤
+  E.setWorld(curMap);
+  setPhase('clean');
+  applyStatsAll();
+  E.say('맵: '+G.MAPS[curMap].emoji+' '+G.MAPS[curMap].name+'!','#ffd166');
+  setTimeout(function(){ E.missionStart(curMap==='sea'?'sea':'forest'); applyStatsAll(); },900);
+  timeLeft=cleanSeconds; updateTimer();
+  if(clockTimer)clearInterval(clockTimer);
+  clockTimer=setInterval(function(){ timeLeft--; updateTimer(); if(timeLeft<=0){ clearInterval(clockTimer); endClean(); } },1000);
+}
+function updateTimer(){ var m=Math.max(0,timeLeft); document.getElementById('timer').textContent='⏱ '+m+'초'; }
+function endClean(){ E.missionStop(); showResult(); }   // MVP: 청소 끝 → 바로 결과(성장·정크아트는 이후)
+function goArt(){ setPhase('art'); /* TODO 정크아트 */ }
+function showResult(){
+  if(clockTimer)clearInterval(clockTimer);
+  var sc=lastScore||{};
+  var rank=Object.keys(sc).map(function(id){return{id:id,n:sc[id]};}).sort(function(a,b){return b.n-a.n;});
+  var king=rank[0]&&players[rank[0].id]?players[rank[0].id]:null;
+  document.getElementById('cleanKing').textContent=king?(king.seat+'번 '+king.nick+' ('+rank[0].n+'개)'):'-';
+  document.getElementById('artKing').textContent='(정크아트 준비중)';
+  setPhase('result');
+  // 이번 라운드 점수를 누적 저장 → 리더보드
+  if(GameRT.dbTx){
+    var jobs=Object.keys(sc).map(function(id){ return sc[id]?GameRT.dbTx('registry/'+id+'/score',function(x){return (x||0)+sc[id];}):null; });
+    Promise.all(jobs).then(loadLeaderboard);
+  } else loadLeaderboard();
+}
+function loadLeaderboard(){
+  if(!GameRT.dbGet){ document.getElementById('leaderboard').innerHTML=''; return; }
+  GameRT.dbGet('registry').then(function(reg){
+    reg=reg||{};
+    var rows=Object.keys(reg).map(function(id){var r=reg[id];return {seat:r.seat,nick:r.nick,score:r.score||0};}).filter(function(r){return r.nick;}).sort(function(a,b){return b.score-a.score;}).slice(0,10);
+    document.getElementById('leaderboard').innerHTML=rows.map(function(r,i){return '<div class="row" style="display:flex;justify-content:space-between;padding:4px 10px">'+'<span>'+(i+1)+'. '+r.seat+'번 '+r.nick+'</span><b style="color:#ffd166">'+r.score+'</b></div>';}).join('')||'<div style="text-align:center;opacity:.6">아직 점수가 없어요</div>';
+  });
+}
+
+/* ───────── 점수판 ───────── */
+var lastScore={};
+setInterval(function(){
+  if(phase!=='clean')return;
+  var mi=E.mission(); if(!mi)return;
+  lastScore=mi.score||{};
+  GameRT.toPhones({type:'score',score:lastScore});
+  renderScores();
+},500);
+function renderScores(){
+  var rank=Object.keys(lastScore).map(function(id){return{id:id,n:lastScore[id]};}).sort(function(a,b){return b.n-a.n;}).slice(0,8);
+  document.getElementById('scoreList').innerHTML=rank.map(function(r){var p=players[r.id];return '<div class="row"><span>'+(p?(p.seat+'번 '+p.nick):'?')+'</span><b>'+r.n+'</b></div>';}).join('')||'<div class="row"><span>아직 없어요</span></div>';
+}
+function renderRoster(){
+  document.getElementById('roster').innerHTML=Object.keys(players).map(function(id){var p=players[id];return '<span class="p">'+p.seat+'번 '+p.nick+(p.hasCreature?' ✅':'')+'</span>';}).join('');
+}
+
+/* ───────── 폰 → 화면 메시지 ───────── */
+function toCanvas(im){var c=document.createElement('canvas');c.width=im.width;c.height=im.height;c.getContext('2d').drawImage(im,0,0);return c;}
+function addCreature(m){
+  var im=new Image();
+  im.onload=function(){ var cut=m.transparent?toCanvas(im):E.cutout(im,512); if(!cut)return;
+    var cat=(m.char&&G.CHARACTERS[m.char])?G.CHARACTERS[m.char].cat:(m.cat||'crawler');
+    E.removeSprite(m.id);
+    E.add(cut,{id:m.id,seat:m.seat,nick:m.nick,cat:cat});
+    if(players[m.id])players[m.id].hasCreature=true; renderRoster();
+    // 이미 게임 중이면 즉시 스탯 적용
+    if(phase==='clean'){ applyStatsAll(); }
+  };
+  im.src=m.dataUrl;
+}
+GameRT.connect('screen',null,function(m){
+  switch(m.type){
+    case 'join': players[m.id]={seat:m.seat,nick:m.nick,char:null,equip:null,hasCreature:false}; renderRoster(); break;
+    case 'creature': players[m.id]=players[m.id]||{seat:m.seat,nick:m.nick}; players[m.id].char=m.char; players[m.id].equip=m.equip; addCreature(m); break;
+    case 'ctrl':
+      if(m.act==='grab') E.grab(m.id);
+      else if(m.act==='steal') { /* TODO 꼬챙이 뺏기 */ }
+      else E.control(m.id, +m.dx||0, +m.dy||0);
+      break;
+  }
+});
+if(GameRT.ready&&GameRT.ready.then){ GameRT.ready.then(showRoomQR); } else { showRoomQR('LOCAL'); }
+
+/* ───────── 시작 게이트 + 진행 키 ───────── */
+var gate=document.getElementById('gate');
+gate.onclick=function(){ E.sound.enable(); gate.style.display='none'; setPhase('lobby'); if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(function(){}); };
+
+function nextPhase(){
+  if(phase==='lobby'){ goSetup(); }
+  else if(phase==='setup'){ startGame(); }
+  else if(phase==='clean'){ endClean(); }
+  else if(phase==='result'){ E.clear(); players={}; renderRoster(); setPhase('lobby'); }
+  else setPhase('lobby');
+}
+document.addEventListener('keydown',function(e){
+  var k=e.key.toLowerCase();
+  if(k===' '){e.preventDefault();nextPhase();}
+  else if(k==='1'){E.clear();players={};renderRoster();setPhase('lobby');}
+  else if(k==='2'){goSetup();}
+  else if(k==='3'){startGame();}
+  else if(k==='4'){endClean();}
+  else if(k==='6'){showResult();}
+  else if(k==='q'){document.getElementById('lobby').classList.toggle('on');}
+  else if(k==='f'){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();}
+});
+</script>
+</body>
+</html>
