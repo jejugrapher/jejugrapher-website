@@ -75,12 +75,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 (function(){var v=Date.now();var net=/[?&]net=local/.test(location.search)?'game_rt.js':'net_fb.js';
-[net,'game_data.js','char_art.js','stage_guides.js','stage_demos.js','stage_engine.js'].forEach(function(f){document.write('<script src="../lib/'+f+'?v='+v+'"><\/script>');});})();
+[net,'game_data.js','char_art.js','topdown.js'].forEach(function(f){document.write('<script src="../lib/'+f+'?v='+v+'"><\/script>');});})();
 </script>
 <script>
-/* ───────── 엔진 ───────── */
-var E=new StageEngine({canvas:document.getElementById('c'),soundBase:'/assets/sound/',
-  onCount:function(){},onWorld:function(){}});
+/* ───────── 탑다운 엔진 ───────── */
+var E=TopDown({canvas:document.getElementById('c'), onCount:function(){}});
 
 /* 로비 QR — 방코드는 GameRT(Firebase) 연결 후 확정 */
 function showRoomQR(room){
@@ -119,7 +118,7 @@ function setPhase(p){
 function pushState(){ GameRT.send('screen',{type:'state',phase:phase,map:curMap}); }
 
 /* ───────── 단계 전환 ───────── */
-function goSetup(){ E.setWorld('sea'); setPhase('setup'); }   // 대기: 폰에서 캐릭터·장비·색칠. 도착하는 크리처는 로비 옆에 등장
+function goSetup(){ E.setMap('park'); setPhase('setup'); }   // 대기: 폰에서 캐릭터·장비·색칠
 function applyStatsAll(){
   var terrain=(G.MAPS[curMap]||{}).terrain||'park';
   Object.keys(players).forEach(function(id){ var p=players[id]; if(!p||!p.char)return;
@@ -128,17 +127,15 @@ function applyStatsAll(){
 function startGame(mapArg){
   curMap = mapArg || manualMap || G.randomMap();              // 지정 맵 없으면 랜덤
   manualMap=null;
-  E.setWorld(curMap);
   setPhase('clean');
+  E.startRound(curMap);                                       // 맵 로드 + 쓰레기 배치
   applyStatsAll();
-  E.say('맵: '+G.MAPS[curMap].emoji+' '+G.MAPS[curMap].name+'!','#ffd166');
-  setTimeout(function(){ E.missionStart(curMap==='sea'?'sea':'forest'); applyStatsAll(); },900);
   timeLeft=cleanSeconds; updateTimer();
   if(clockTimer)clearInterval(clockTimer);
   clockTimer=setInterval(function(){ timeLeft--; updateTimer(); if(timeLeft<=0){ clearInterval(clockTimer); endClean(); } },1000);
 }
 function updateTimer(){ var m=Math.max(0,timeLeft); document.getElementById('timer').textContent='⏱ '+m+'초'; }
-function endClean(){ E.missionStop(); showResult(); }   // MVP: 청소 끝 → 바로 결과(성장·정크아트는 이후)
+function endClean(){ E.endRound(); showResult(); }   // 청소 끝 → 결과(성장·정크아트는 이후)
 function goArt(){ setPhase('art'); /* TODO 정크아트 */ }
 function showResult(){
   if(clockTimer)clearInterval(clockTimer);
@@ -179,8 +176,7 @@ function checkAutoStart(){ if(autoStartOn && phase==='lobby' && readyCount()>=AU
 var lastScore={};
 setInterval(function(){
   if(phase!=='clean')return;
-  var mi=E.mission(); if(!mi)return;
-  lastScore=mi.score||{};
+  lastScore=E.score()||{};
   GameRT.toPhones({type:'score',score:lastScore});
   renderScores();
 },500);
@@ -196,13 +192,10 @@ function renderRoster(){
 function toCanvas(im){var c=document.createElement('canvas');c.width=im.width;c.height=im.height;c.getContext('2d').drawImage(im,0,0);return c;}
 function addCreature(m){
   var im=new Image();
-  im.onload=function(){ var cut=m.transparent?toCanvas(im):E.cutout(im,512); if(!cut)return;
-    var cat=(m.char&&G.CHARACTERS[m.char])?G.CHARACTERS[m.char].cat:(m.cat||'crawler');
-    E.removeSprite(m.id);
-    E.add(cut,{id:m.id,seat:m.seat,nick:m.nick,cat:cat});
+  im.onload=function(){ var cut=toCanvas(im);
+    E.addPlayer(m.id,{seat:m.seat,nick:m.nick,char:m.char,img:cut});
     if(players[m.id])players[m.id].hasCreature=true; renderRoster();
-    // 이미 게임 중이면 즉시 스탯 적용
-    if(phase==='clean'){ applyStatsAll(); }
+    if(phase==='clean'){ applyStatsAll(); }   // 이미 게임 중이면 즉시 스탯 적용
   };
   im.src=m.dataUrl;
 }

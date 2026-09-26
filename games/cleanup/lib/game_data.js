@@ -4,13 +4,13 @@
 
   /* 지형 키: water 물속 · sand 모래 · forest 숲 · city 도시 · park 평지 · air 하늘 */
   var MAPS = {
-    sea:    { name: '바다',  emoji: '🌊', view: 'side', terrain: 'water',  hasWater: true,  trees: false, sky: false },
-    island: { name: '섬',    emoji: '🏝️', view: 'top',  terrain: 'sand',   hasWater: true,  trees: false, sky: true  },
-    forest: { name: '숲',    emoji: '🌳', view: 'top',  terrain: 'forest', hasWater: false, trees: true,  sky: false },
-    city:   { name: '도시',  emoji: '🏙️', view: 'side', terrain: 'city',   hasWater: false, trees: false, sky: false },
-    park:   { name: '공원',  emoji: '🌷', view: 'top',  terrain: 'park',   hasWater: false, trees: false, sky: true  }
+    sea:    { name: '바다',  emoji: '🌊', view: 'top', terrain: 'water',  hasWater: true,  trees: false, sky: false },
+    island: { name: '섬',    emoji: '🏝️', view: 'top', terrain: 'sand',   hasWater: true,  trees: false, sky: true  },
+    forest: { name: '숲',    emoji: '🌳', view: 'top', terrain: 'forest', hasWater: false, trees: true,  sky: false },
+    city:   { name: '도시',  emoji: '🏙️', view: 'top', terrain: 'city',   hasWater: false, trees: false, sky: false },
+    park:   { name: '공원',  emoji: '🌷', view: 'top', terrain: 'park',   hasWater: false, trees: false, sky: true  }
   };
-  var MVP_MAPS = ['sea', 'forest'];       // 지금 구현된 맵
+  var MVP_MAPS = ['sea', 'island', 'forest', 'city', 'park'];   // 전 맵 탑다운 구현
 
   /* 캐릭터: 지형별 이동배수(사람=1.0), 잠수 지속(초), 특수 플래그, 엔진 리그용 cat */
   var CHARACTERS = {
