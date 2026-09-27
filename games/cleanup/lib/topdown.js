@@ -121,7 +121,7 @@ function TopDown(opts) {
   /* ───────── 상태 ───────── */
   var mapKey = 'gotjawal', players = {}, trash = [], particles = [], texts = [], M = null;
   var t0 = performance.now(), last = t0, banner = null;
-  var BASE_SPEED_FRAC = 0.30;                                   // 화면 높이 기준 초당 이동(×speedMul)
+  var BASE_SPEED_FRAC = 0.19;                                   // 화면 높이 기준 초당 이동(×speedMul) — 캐릭터 이동속도
   var spread = 1.0;                                             // 맵 크기(0.72 작게 ~ 1.18 크게): 배치를 중심 기준 확대/축소
   var wind = { x: 0, y: 0, t: 0 };                              // 바람/해류 벡터
 
