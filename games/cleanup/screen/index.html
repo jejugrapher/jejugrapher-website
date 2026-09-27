@@ -185,6 +185,7 @@ function showResult(){
   var rank=Object.keys(sc).map(function(id){return{id:id,n:sc[id]};}).sort(function(a,b){return b.n-a.n;});
   var king=rank[0]&&players[rank[0].id]?players[rank[0].id]:null;
   document.getElementById('cleanKing').textContent=king?(king.seat+'번 '+king.nick+' ('+rank[0].n+'점)'):'-';
+  try{ if(E.sound&&E.sound.fanfare) E.sound.fanfare(); }catch(e){}   // 🎉 승리 팡파레
   setPhase('result');
   // 이번 라운드 점수를 별명별로 누적 저장 → 리더보드
   if(GameRT.dbTx&&GameRT.nickKey){

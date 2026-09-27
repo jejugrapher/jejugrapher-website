@@ -260,12 +260,13 @@ function TopDown(opts) {
       var got = 0, R = s.areaR || 130;
       M.trash.forEach(function (t) { if (!ok(t) || p.holds.length >= cap(p)) return; if (t.heavy || t.corner) return;
         if (Math.hypot(t.x - p.x, t.y - p.y) < R) { t.held = p.id; p.holds.push(t); got++; } });
-      say(got ? '쓸었다! +' + got : '가벼운 쓰레기만 쓸려요', p.x, p.y - 46, got ? '#fff' : '#ffd166'); if (got) sfx('pick');
+      say(got ? '쓸었다! +' + got : '가벼운 쓰레기만 쓸려요', p.x, p.y - 46, got ? '#fff' : '#ffd166');
+      if (got) { var lk = p.holds[p.holds.length-1]; sfxTrash(lk ? lk.kind : 'cup', true); noise(0.14, 0.12, 'highpass', 3500, 0.7); }   // 빗자루 쓸기=바스락 섞임
     } else {                                                     // 집게/꼬챙이: 하나
       var best = null, bd = 66;
       M.trash.forEach(function (t) { if (!ok(t)) return; if (!s.canHeavy && t.heavy) return; if (!s.canCorner && t.corner) return;
         var d = Math.hypot(t.x - p.x, t.y - p.y); if (d < bd) { bd = d; best = t; } });
-      if (best) { best.held = p.id; p.holds.push(best); say('주웠다!', p.x, p.y - 46, '#fff'); sfx(best.big ? 'big' : 'pick'); }
+      if (best) { best.held = p.id; p.holds.push(best); say('주웠다!', p.x, p.y - 46, '#fff'); if (best.big) sfx('big'); else sfxTrash(best.kind, true); }
       else say(s.canCorner ? '가까이에 쓰레기가 없어' : '구석/무거운 건 못 집어', p.x, p.y - 46, '#ffd166');
     }
   }
@@ -289,10 +290,11 @@ function TopDown(opts) {
     var vs = st(vic);
     if (vs.superArmor && now >= (vic.armorCD||0)) { vic.armorCD = now + 10000; vic.iframe = now + 800; say('끄떡없다! 💪', vic.x, vic.y - 46, '#8ee'); sfx('block'); return; }  // 물개 슈퍼아머
     var n = vic.holds.length, drop = Math.min(Math.ceil(n*0.5), 3) - (vs.dropResist||0); if (drop < 0) drop = 0;
-    var got = 0;
-    for (var i = 0; i < drop; i++) { var t = vic.holds.pop(); if (!t) break; t.held = null;
+    var got = 0, dk = null;
+    for (var i = 0; i < drop; i++) { var t = vic.holds.pop(); if (!t) break; t.held = null; if (!dk) dk = t.kind;
       if (s.canSteal && p.holds.length < cap(p)) { t.held = p.id; p.holds.push(t); got++; }
       else { t.x = vic.x + (Math.random()-.5)*46; t.y = vic.y + (Math.random()-.5)*46; } }
+    if (dk && !got) sfxTrash(dk, false);                          // 떨어진 쓰레기 소리
     vic.iframe = now + IFRAME; vic.dwell = 0;
     if (p.char === 'crab') vic.slowUntil = now + 3000;           // 게: 명중 시 상대 둔화
     say(got ? '뺏었다! +' + got : (drop ? '삐용!' : '밀쳤다!'), p.x, p.y - 46, got ? '#ff7ab6' : '#fff');
@@ -407,40 +409,72 @@ function TopDown(opts) {
   function burst(x, y, col) { for (var i = 0; i < 10; i++) particles.push({ x: x, y: y, vx: (Math.random()-.5)*180, vy: -40 - Math.random()*160, life: .7, age: 0, s: 4, col: col }); }
   function say(txt, x, y, col, life, size) { texts.push({ txt: txt, x: x, y: y, age: 0, life: life||1.2, col: col||'#fff', size: size||22 }); }
 
-  /* ───────── 사운드 (WebAudio SFX) ───────── */
-  var AC = null, masterGain = null, sfxMuted = false;
+  /* ───────── 사운드 (WebAudio 합성) ───────── */
+  var AC = null, masterGain = null, sfxMuted = false, noiseBuf = null;
   function soundEnable() {
-    try { if (!AC) { AC = new (window.AudioContext || window.webkitAudioContext)(); masterGain = AC.createGain(); masterGain.gain.value = 0.4; masterGain.connect(AC.destination); }
+    try { if (!AC) { AC = new (window.AudioContext || window.webkitAudioContext)(); masterGain = AC.createGain(); masterGain.gain.value = 0.42; masterGain.connect(AC.destination);
+        var len = Math.floor(AC.sampleRate * 1.0), b = AC.createBuffer(1, len, AC.sampleRate), d = b.getChannelData(0);
+        for (var i = 0; i < len; i++) d[i] = Math.random()*2 - 1; noiseBuf = b; }
       if (AC.state === 'suspended') AC.resume(); } catch (e) {}
   }
-  function tone(freq, dur, type, vol, slideTo, delay) {
+  function tone(freq, dur, type, vol, slideTo, delay, attack) {
     if (!AC || sfxMuted) return; var t0 = AC.currentTime + (delay || 0);
     var o = AC.createOscillator(), g = AC.createGain(); o.type = type || 'sine'; o.frequency.setValueAtTime(freq, t0);
     if (slideTo) o.frequency.exponentialRampToValueAtTime(Math.max(1, slideTo), t0 + dur);
-    g.gain.setValueAtTime(vol || 0.3, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+    var at = attack || 0.005; g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol || 0.3, t0 + at); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
     o.connect(g); g.connect(masterGain); o.start(t0); o.stop(t0 + dur + 0.03);
+  }
+  function noise(dur, vol, ftype, ffreq, q, delay) {                // 노이즈 텍스처(바스락·캉·팟)
+    if (!AC || sfxMuted || !noiseBuf) return; var t0 = AC.currentTime + (delay || 0);
+    var src = AC.createBufferSource(); src.buffer = noiseBuf;
+    var f = AC.createBiquadFilter(); f.type = ftype || 'bandpass'; f.frequency.value = ffreq || 1200; f.Q.value = q || 1;
+    var g = AC.createGain(); g.gain.setValueAtTime(vol || 0.2, t0); g.gain.exponentialRampToValueAtTime(0.0008, t0 + dur);
+    src.connect(f); f.connect(g); g.connect(masterGain); src.start(t0); src.stop(t0 + dur + 0.03);
+  }
+  /* 쓰레기 종류별 소리 (pickup=주움, false=떨어뜨림 살짝 낮게) */
+  function sfxTrash(kind, pickup) {
+    if (!AC || sfxMuted) return; var p = pickup ? 1 : 0.8;
+    switch (kind) {
+      case 'glass': tone(1500*p, 0.09, 'sine', 0.2); tone(2200*p, 0.13, 'sine', 0.16, null, 0.04); break;                 // 유리 딸랑
+      case 'can': case 'scrap': noise(0.07, 0.24, 'bandpass', 2400*p, 7); tone(340*p, 0.11, 'triangle', 0.16, 200); break; // 캔 캉
+      case 'bottle': case 'juice': tone(260*p, 0.09, 'sine', 0.24, 130); noise(0.05, 0.1, 'lowpass', 700, 1, 0.02); break; // 플라스틱 통
+      case 'paper': tone(0, 0); noise(0.15, 0.16, 'highpass', 2000*p, 0.7); break;                                        // 종이 바스락
+      case 'leaf':  noise(0.16, 0.15, 'highpass', 1500*p, 0.6); break;                                                    // 잎 사각
+      case 'snack': case 'bag': noise(0.13, 0.2, 'bandpass', 3200*p, 0.8); break;                                         // 봉지 바스락
+      case 'stick': tone(190*p, 0.08, 'square', 0.2, 100); noise(0.04, 0.1, 'lowpass', 500, 1, 0.005); break;            // 나무 톡
+      default:      tone(720*p, 0.07, 'triangle', 0.18, 980); break;                                                      // cup 등 기본 콕
+    }
+  }
+  /* 승리 팡파레 */
+  function fanfare() {
+    if (!AC || sfxMuted) return;
+    var mel = [[523,0],[659,0.14],[784,0.28],[1046,0.44]];
+    mel.forEach(function (n) { tone(n[0], 0.5, 'triangle', 0.3, null, n[1], 0.01); tone(n[0]*2, 0.5, 'sine', 0.1, null, n[1]); });
+    [523,659,784,1046,1319].forEach(function (f) { tone(f, 0.9, 'triangle', 0.2, null, 0.62, 0.02); });   // 마무리 화음
+    for (var s = 0; s < 8; s++) tone(1400 + Math.random()*900, 0.14, 'sine', 0.1, null, 0.66 + s*0.07);    // 반짝반짝
+    noise(0.3, 0.15, 'highpass', 5000, 0.6, 0.6);                                                          // 팡! 색종이
   }
   var _sfxLast = {};
   function sfx(name) {
     if (!AC || sfxMuted) return;
-    var now = AC.currentTime, gap = (name === 'pick' || name === 'bump' || name === 'raid') ? 0.09 : 0.05;
+    var now = AC.currentTime, gap = (name === 'pick' || name === 'bump' || name === 'raid') ? 0.08 : 0.04;
     if (now - (_sfxLast[name] || 0) < gap) return;             // 같은 소리 연타 방지(AI 다수 대비)
     _sfxLast[name] = now;
     switch (name) {
-      case 'pick':  tone(620, 0.07, 'square', 0.22, 950); break;                         // 콕
-      case 'bank':  tone(523, 0.09, 'sine', 0.3); tone(784, 0.11, 'sine', 0.3, null, 0.07); tone(1046, 0.14, 'sine', 0.32, null, 0.15); break;  // 저장! 상승
-      case 'bump':  tone(200, 0.14, 'sawtooth', 0.34, 70); break;                         // 삐용
-      case 'steal': tone(440, 0.09, 'triangle', 0.3, 660); tone(880, 0.1, 'triangle', 0.28, null, 0.08); break;
-      case 'raid':  tone(360, 0.1, 'triangle', 0.3, 260); break;
-      case 'big':   tone(880, 0.09, 'sine', 0.3); tone(1320, 0.16, 'sine', 0.32, null, 0.09); break;   // 반짝
-      case 'break': tone(300, 0.09, 'square', 0.24, 150); tone(200, 0.1, 'square', 0.2, null, 0.06); break;
-      case 'alarm': tone(900, 0.1, 'square', 0.32); tone(680, 0.12, 'square', 0.32, null, 0.12); break;
-      case 'stun':  tone(220, 0.26, 'sine', 0.3, 80); break;
-      case 'start': tone(523, 0.11, 'sine', 0.32); tone(659, 0.11, 'sine', 0.32, null, 0.12); tone(880, 0.2, 'sine', 0.34, null, 0.24); break;
-      case 'block': tone(520, 0.12, 'sine', 0.28, 700); break;                            // 방어됨
-      case 'jump':  tone(300, 0.16, 'sine', 0.3, 780); break;                             // 폴짝
-      case 'fire':  tone(520, 0.12, 'square', 0.32, 180); tone(120, 0.1, 'sawtooth', 0.25, null, 0.02); break;  // 뿅~ 발사
-      case 'land':  tone(220, 0.08, 'square', 0.22, 140); break;
+      case 'pick':  sfxTrash('cup', true); break;                                          // 기본 줍기(종류 소리는 sfxTrash 직접호출)
+      case 'bank':  tone(523, 0.1, 'sine', 0.3, null, 0, 0.008); tone(784, 0.11, 'sine', 0.3, null, 0.08); tone(1046, 0.16, 'triangle', 0.32, null, 0.16); tone(1568, 0.22, 'sine', 0.22, null, 0.24); noise(0.05, 0.08, 'highpass', 6000, 0.5, 0.24); break;  // 딩동댕~✨ 저장
+      case 'bump':  noise(0.09, 0.3, 'lowpass', 500, 1); tone(180, 0.16, 'sawtooth', 0.32, 60); tone(500, 0.1, 'sine', 0.18, 900, 0.02); break;   // 퍽+삐용
+      case 'steal': noise(0.05, 0.15, 'bandpass', 2500, 3); tone(440, 0.09, 'triangle', 0.28, 680); tone(900, 0.1, 'triangle', 0.24, null, 0.08); break;
+      case 'raid':  noise(0.1, 0.22, 'bandpass', 1600, 2); tone(360, 0.12, 'triangle', 0.26, 240); break;
+      case 'big':   tone(880, 0.1, 'sine', 0.28); tone(1320, 0.14, 'sine', 0.3, null, 0.08); tone(1760, 0.2, 'sine', 0.26, null, 0.16); noise(0.12, 0.08, 'highpass', 7000, 0.5, 0.02); break;   // 반짝 차임
+      case 'break': noise(0.12, 0.26, 'bandpass', 1800, 1.5); tone(300, 0.1, 'square', 0.2, 150); break;   // 와장창
+      case 'alarm': tone(950, 0.11, 'square', 0.3); tone(700, 0.13, 'square', 0.3, null, 0.13); break;
+      case 'stun':  tone(240, 0.3, 'sine', 0.3, 70); tone(360, 0.3, 'sine', 0.14, 100); break;             // 삥~ 별
+      case 'start': [523,659,784].forEach(function(f,i){ tone(f, 0.16, 'triangle', 0.3, null, i*0.1, 0.01); }); tone(1046, 0.3, 'triangle', 0.32, null, 0.3, 0.01); break;  // 시작 팡파레
+      case 'block': noise(0.05, 0.14, 'bandpass', 900, 4); tone(520, 0.13, 'sine', 0.26, 720); break;      // 깡! 방어
+      case 'jump':  tone(320, 0.16, 'sine', 0.28, 820, 0, 0.01); break;                                    // 폴짝
+      case 'fire':  noise(0.14, 0.34, 'lowpass', 700, 0.8); tone(160, 0.16, 'sawtooth', 0.3, 60); tone(600, 0.08, 'square', 0.18, 200, 0.01); break;  // 펑! 발사
+      case 'land':  tone(220, 0.08, 'square', 0.2, 140); break;
     }
   }
 
@@ -533,7 +567,7 @@ function TopDown(opts) {
       if (p.moving) p.gait = (p.gait || 0) + dt * gaitSpeed;
       p.mv = (p.mv || 0) + ((p.moving ? 1 : 0) - (p.mv || 0)) * Math.min(1, dt * 10);   // 0..1
       // 쓰레받이: 이동 중 새는 확률 (담은 것 하나 흘림)
-      if (p.moving && s.leak && p.holds.length && Math.random() < s.leak*dt*6) { var t = p.holds.pop(); t.held = null; t.x = p.x - p.dir*14; t.y = p.y + 16; say('앗, 흘렸다', p.x, p.y - 46, '#ffd166'); }
+      if (p.moving && s.leak && p.holds.length && Math.random() < s.leak*dt*6) { var t = p.holds.pop(); t.held = null; t.x = p.x - p.dir*14; t.y = p.y + 16; say('앗, 흘렸다', p.x, p.y - 46, '#ffd166'); sfxTrash(t.kind, false); }
       // 자동 뱅킹: 내 창고 반경 안에서 0.5초 머무르면 손에 든 보물 전부 저장(=점수)
       if (M && !M.ended && M.warehouses) { var wh = M.warehouses[id];
         if (wh && Math.hypot(p.x - wh.x, p.y - wh.y) < WH_R) {
@@ -564,9 +598,9 @@ function TopDown(opts) {
       if (M.shots.length) for (var si = M.shots.length-1; si >= 0; si--) { var sh = M.shots[si]; sh.age += dt; sh.x += sh.vx*dt; sh.y += sh.vy*dt; sh.rot += 9*dt;
         var owner = players[sh.owner], hit = false;
         for (var hid in players) { if (hid === sh.owner) continue; var o = players[hid]; if (o.afk || now < (o.iframe||0)) continue; if (owner && protectedTarget(owner, o)) continue;
-          if (Math.hypot(o.x - sh.x, o.y - sh.y) < 30) { var n = o.holds.length, drop = Math.min(Math.ceil(n*0.5), 3);
-            for (var d3 = 0; d3 < drop; d3++) { var t3 = o.holds.pop(); if (!t3) break; t3.held = null; t3.x = o.x + (Math.random()-.5)*46; t3.y = o.y + (Math.random()-.5)*46; }
-            o.iframe = now + 1000; say(drop ? '명중! 떨어뜨림' : '명중!', o.x, o.y - 46, '#ffb3b3'); burst(o.x, o.y, sh.col); sfx('bump'); hit = true; break; } }
+          if (Math.hypot(o.x - sh.x, o.y - sh.y) < 30) { var n = o.holds.length, drop = Math.min(Math.ceil(n*0.5), 3), dk2 = null;
+            for (var d3 = 0; d3 < drop; d3++) { var t3 = o.holds.pop(); if (!t3) break; t3.held = null; if (!dk2) dk2 = t3.kind; t3.x = o.x + (Math.random()-.5)*46; t3.y = o.y + (Math.random()-.5)*46; }
+            o.iframe = now + 1000; say(drop ? '명중! 떨어뜨림' : '명중!', o.x, o.y - 46, '#ffb3b3'); burst(o.x, o.y, sh.col); sfx('bump'); if (dk2) sfxTrash(dk2, false); hit = true; break; } }
         if (!hit && M.warehouses) for (var twid in M.warehouses) { if (twid === sh.owner) continue; var tw2 = M.warehouses[twid]; var tow = players[twid]; if (!tow) continue; if (owner && protectedTarget(owner, tow)) continue;
           if (Math.hypot(tw2.x - sh.x, tw2.y - sh.y) < WH_R) {
             if ((tow.bank||0) > MIN_SAFE_VAULT) { tow.bank -= 1; M.score[twid] = tow.bank; M.trash.push(makeTrash(tw2.x + (Math.random()-.5)*50, tw2.y + 34 + Math.random()*18, sh.kind, { drift: true })); say('창고 명중! 튕겨나옴', tw2.x, tw2.y - 46, '#ff7ab6'); }
@@ -895,7 +929,7 @@ function TopDown(opts) {
     positions: function () { var o = {}; Object.keys(players).forEach(function (id){ var p = players[id]; o[id] = { x:+(p.x/W).toFixed(3), y:+(p.y/H).toFixed(3), seat:p.seat, nick:p.nick }; }); return o; },
     clear: clear, say: function (txt, col) { say(txt, W/2, H*0.2, col || '#ffd166', 2, 34); },
     setMapSize: function (v) { spread = Math.max(0.6, Math.min(1.2, +v || 1)); }, mapSize: function () { return spread; },
-    sound: { enable: soundEnable, sfx: sfx, mute: function (v) { sfxMuted = !!v; }, on: true },
+    sound: { enable: soundEnable, sfx: sfx, fanfare: fanfare, mute: function (v) { sfxMuted = !!v; }, on: true },
     MAPS: MAPS
   };
 }
