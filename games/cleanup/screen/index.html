@@ -179,6 +179,11 @@ setInterval(function(){
   lastScore=E.score()||{};
   GameRT.toPhones({type:'score',score:lastScore});
   renderScores();
+  // 개인 상태(가방·수분·기절) 각 폰에 전송
+  var ps=E.players(), now=performance.now();
+  Object.keys(ps).forEach(function(id){ var p=ps[id]; var s=p.stats||{};
+    GameRT.toPhones({type:'me',id:id, carry:(p.holds?p.holds.length:0), cap:(s.capacity||15), moist:(s.moisture?Math.round(p.moist):null), stun:(now<p.stunUntil)});
+  });
 },500);
 function renderScores(){
   var rank=Object.keys(lastScore).map(function(id){return{id:id,n:lastScore[id]};}).sort(function(a,b){return b.n-a.n;}).slice(0,8);

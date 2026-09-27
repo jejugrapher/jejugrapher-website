@@ -15,6 +15,16 @@ function TopDown(opts) {
   }
   window.addEventListener('resize', resize);
 
+  /* ───────── 생성 이미지 에셋 (있으면 사용, 없으면 벡터 폴백) ───────── */
+  var ASSET_BASE = opts.assetBase || '../assets/';
+  var GROUND = {}, SPRITE = {};
+  function loadImg(src, into, key) { var im = new Image(); im.onload = function () { im._ok = true; into[key] = im; }; im.onerror = function () {}; im.src = src; }
+  function loadAssets() {
+    ['sea', 'island', 'forest', 'city', 'park'].forEach(function (k) { loadImg(ASSET_BASE + 'maps/' + k + '.jpg', GROUND, k); });
+    ['tree', 'palm', 'rock', 'coral', 'building', 'wall', 'bench', 'bush', 'pond', 'bear', 'squirrel'].forEach(function (k) { loadImg(ASSET_BASE + 'obstacles/' + k + '.png', SPRITE, k); });
+  }
+  loadAssets();
+
   /* ───────── 쓰레기 종류 ───────── */
   var TRASH = {
     cup:   { c: '#ff9f1c', d: function (c, s) { c.fillStyle = '#ff9f1c'; c.beginPath(); c.moveTo(-s*.5, -s*.6); c.lineTo(s*.5, -s*.6); c.lineTo(s*.35, s*.6); c.lineTo(-s*.35, s*.6); c.closePath(); c.fill(); c.fillStyle = '#fff'; c.fillRect(-s*.5, -s*.6, s, s*.18); } },
@@ -110,7 +120,7 @@ function TopDown(opts) {
   function addPlayer(id, meta) {
     meta = meta || {};
     var p = players[id];
-    if (!p) { p = players[id] = { id: id, x: W*(0.2 + Math.random()*0.6), y: H*0.86, dir: 1, hold: null, score: 0, ctrl: null, bob: Math.random()*6 }; }
+    if (!p) { p = players[id] = { id: id, x: W*(0.2 + Math.random()*0.6), y: H*0.86, dir: 1, holds: [], score: 0, ctrl: null, bob: Math.random()*6, moist: 100, stunUntil: 0, cool: 0 }; p.startX = p.x; p.startY = p.y; }
     p.nick = meta.nick || p.nick || ''; p.seat = meta.seat || p.seat; p.char = meta.char || p.char;
     p.img = meta.img || p.img; p.speedMul = meta.speedMul != null ? meta.speedMul : (p.speedMul || 1);
     if (opts.onCount) opts.onCount(Object.keys(players).length);
@@ -118,23 +128,50 @@ function TopDown(opts) {
   }
   function removePlayer(id) { delete players[id]; if (opts.onCount) opts.onCount(Object.keys(players).length); }
   function setStats(id, s) { var p = players[id]; if (p && s) { p.speedMul = s.speedMul != null ? s.speedMul : p.speedMul; p.stats = s; } }
-  function control(id, dx, dy) { var p = players[id]; if (!p) return; if (!dx && !dy) { p.ctrl = null; return; } p.ctrl = { dx: dx, dy: dy, until: performance.now() + 600 }; }
-  function act(id, a) { var p = players[id]; if (!p) return; if (a === 'grab') grab(p); }
+  function st(p) { return p.stats || { capacity: 15, pickup: 'single', areaR: 0, canHeavy: true, canCorner: true, canSteal: false, cooldown: 0.4, collect: 1, leak: 0, skewerLoss: 0.3 }; }
+  function cap(p) { return st(p).capacity || 15; }
+  function control(id, dx, dy) { var p = players[id]; if (!p) return; if (performance.now() < p.stunUntil) { p.ctrl = null; return; } if (!dx && !dy) { p.ctrl = null; return; } p.ctrl = { dx: dx, dy: dy, until: performance.now() + 600 }; }
+  function act(id, a) { var p = players[id]; if (!p) return; if (performance.now() < p.stunUntil) return; if (a === 'grab') grab(p); else if (a === 'steal') steal(p); }
 
+  function nearBin(p) { var bins = curMap().bins.map(px); for (var i = 0; i < bins.length; i++) if (Math.hypot(p.x - bins[i].x, p.y - bins[i].y) < 96) return true; return false; }
+  function deposit(p) {
+    var n = p.holds.length; if (!n) return;
+    p.holds.forEach(function (t) { M.trash = M.trash.filter(function (x) { return x !== t; }); });
+    p.score = (p.score||0) + n; M.score[p.id] = p.score; p.holds = [];
+    say('+' + n, p.x, p.y - 46, '#b6ff7a'); burst(p.x, p.y - 20, '#ffd166');
+    if (!M.trash.length) endRound();
+  }
   function grab(p) {
     if (!M || M.ended) return;
-    if (p.hold) {                                              // 놓기: 수거함 근처면 점수
-      var bins = curMap().bins.map(px), near = false;
-      for (var i = 0; i < bins.length; i++) { if (Math.hypot(p.x - bins[i].x, p.y - bins[i].y) < 90) { near = true; break; } }
-      if (near) { M.trash = M.trash.filter(function (t) { return t !== p.hold; }); p.score = (p.score||0)+1; M.score[p.id] = p.score;
-        say('+1', p.x, p.y - 46, '#b6ff7a'); burst(p.x, p.y - 20, '#ffd166'); p.hold = null;
-        if (!M.trash.length) endRound(); }
-      else { p.hold.x = p.x; p.hold.y = p.y + 22; p.hold.held = null; p.hold = null; say('여기 아니야!', p.x, p.y - 46, '#ffb3b3'); }
-      return;
+    var s = st(p);
+    if (nearBin(p) && p.holds.length) { deposit(p); return; }   // 수거함 옆 → 한 번에 비우기
+    if (p.holds.length >= cap(p)) { say('가방이 꽉 찼어! 수거함으로', p.x, p.y - 46, '#ffd166'); return; }
+    if (s.pickup === 'area') {                                   // 빗자루: 주변 여러 개(가벼운·안구석)
+      var got = 0, R = s.areaR || 130;
+      M.trash.forEach(function (t) { if (t.held || p.holds.length >= cap(p)) return; if (t.heavy || t.corner) return;
+        if (Math.hypot(t.x - p.x, t.y - p.y) < R) { t.held = p.id; p.holds.push(t); got++; } });
+      say(got ? '쓸었다! +' + got : '가벼운 쓰레기만 쓸려요', p.x, p.y - 46, got ? '#fff' : '#ffd166');
+    } else {                                                     // 집게/꼬챙이: 하나
+      var best = null, bd = 66;
+      M.trash.forEach(function (t) { if (t.held) return; if (!s.canHeavy && t.heavy) return; if (!s.canCorner && t.corner) return;
+        var d = Math.hypot(t.x - p.x, t.y - p.y); if (d < bd) { bd = d; best = t; } });
+      if (best) { best.held = p.id; p.holds.push(best); say('주웠다!', p.x, p.y - 46, '#fff'); }
+      else say(s.canCorner ? '가까이에 쓰레기가 없어' : '구석/무거운 건 못 집어', p.x, p.y - 46, '#ffd166');
     }
-    var best = null, bd = 64;                                  // 줍기: 가까운 쓰레기
-    M.trash.forEach(function (t) { if (t.held) return; var d = Math.hypot(t.x - p.x, t.y - p.y); if (d < bd) { bd = d; best = t; } });
-    if (best) { best.held = p.id; p.hold = best; say('주웠다!', p.x, p.y - 46, '#fff'); }
+  }
+  /* 꼬챙이: 근처 다른 친구가 든 쓰레기 1개 뺏기 (상대 담는 도구가 방어) */
+  function steal(p) {
+    if (!M || M.ended) return; var s = st(p); if (!s.canSteal) return;
+    if (performance.now() < (p.cool||0)) return; p.cool = performance.now() + 500;
+    if (p.holds.length >= cap(p)) { say('내 가방이 꽉 찼어', p.x, p.y - 46, '#ffd166'); return; }
+    var victim = null, bd = 96;
+    Object.keys(players).forEach(function (id) { if (id === p.id) return; var o = players[id]; if (!o.holds || !o.holds.length) return;
+      var d = Math.hypot(o.x - p.x, o.y - p.y); if (d < bd) { bd = d; victim = o; } });
+    if (!victim) { say('뺏을 친구가 없어', p.x, p.y - 46, '#ffd166'); return; }
+    var vs = st(victim), lose = vs.skewerLoss != null ? vs.skewerLoss : 0.3;
+    if (Math.random() > lose) { say('방어됐다!', victim.x, victim.y - 46, '#8ee'); return; }   // 상대 방어 성공
+    var t = victim.holds.pop(); if (!t) return; t.held = p.id; p.holds.push(t);
+    say('뺏었다!', p.x, p.y - 46, '#ff7ab6'); say('뺏겼다!', victim.x, victim.y - 46, '#ffb3b3'); burst(victim.x, victim.y, '#ff7ab6');
   }
 
   /* ───────── 라운드 ───────── */
@@ -145,10 +182,14 @@ function TopDown(opts) {
       var x, y, tries = 0;
       do { x = W*(0.06 + Math.random()*0.88); y = H*(0.22 + Math.random()*0.72); tries++; }
       while (tries < 30 && (hitsObstacle(x, y, 20, obs) || y < H*0.2));
-      list.push({ x: x, y: y, kind: m.trashKinds[i % m.trashKinds.length], s: 13 + Math.random()*4, rot: Math.random()*6.3, held: null });
+      var kind = m.trashKinds[i % m.trashKinds.length];
+      var heavy = (kind === 'can' || kind === 'bottle' || kind === 'juice');            // 무거운 쓰레기: 빗자루로 못 담음
+      var corner = false; for (var k = 0; k < obs.length; k++) { var o = obs[k]; var rr = (o.rect ? Math.max(o.w, o.h)/2 : o.r) + 46; if (Math.hypot(o.x - x, o.y - y) < rr) { corner = true; break; } }
+      list.push({ x: x, y: y, kind: kind, s: 13 + Math.random()*4, rot: Math.random()*6.3, held: null, heavy: heavy, corner: corner });
     }
     M = { trash: list, score: {}, ended: false };
-    Object.keys(players).forEach(function (id) { players[id].hold = null; players[id].score = 0; });
+    Object.keys(players).forEach(function (id) { var p = players[id]; p.holds = []; p.score = 0; p.moist = 100; p.stunUntil = 0;
+      p.startX = W*(0.15 + Math.random()*0.7); p.startY = H*0.9; });
     say(m.emoji + ' ' + m.name + '!', W/2, H*0.5, '#ffd166', 2.2, 40);
   }
   function endRound() { if (M) M.ended = true; }
@@ -159,18 +200,40 @@ function TopDown(opts) {
   function say(txt, x, y, col, life, size) { texts.push({ txt: txt, x: x, y: y, age: 0, life: life||1.2, col: col||'#fff', size: size||22 }); }
 
   /* ───────── 업데이트 ───────── */
+  var OPEN_MAPS = { sea: 1, island: 1, park: 1 };               // 새가 날 수 있는 트인 맵
+  function inWater(p) {
+    if (mapKey === 'sea') return true;
+    if (mapKey === 'island') return p.y > H*0.72;                // 해변 물가
+    if (mapKey === 'park') { var pond = curMap().obstacles.filter(function(o){return o.kind==='pond';})[0]; if (pond) return Math.hypot(pond.x*W - p.x, pond.y*H - p.y) < (pond.r||60)*1.1; }
+    return false;
+  }
   function step(dt, now) {
-    var obs = obstaclePx(), sp = Math.min(W, H) * BASE_SPEED_FRAC;
-    Object.keys(players).forEach(function (id) { var p = players[id];
+    var obsAll = obstaclePx(), sp = Math.min(W, H) * BASE_SPEED_FRAC;
+    Object.keys(players).forEach(function (id) { var p = players[id]; var s = st(p);
+      // 게: 수분 게이지 (물 밖이면 마름 → 0이면 기절, 쓰레기 다 흘리고 시작점 복귀)
+      if (s.moisture) {
+        if (inWater(p)) p.moist = Math.min(100, p.moist + 40*dt);
+        else p.moist = Math.max(0, p.moist - 12*dt);
+        if (p.moist <= 0 && now >= p.stunUntil && !p._stunned) { p._stunned = true; p.stunUntil = now + 3000;
+          (p.holds||[]).forEach(function (t) { t.held = null; t.x = p.x + (Math.random()-.5)*50; t.y = p.y + (Math.random()-.5)*50; }); p.holds = [];
+          say('😵 말라서 기절!', p.x, p.y - 46, '#ffb3b3'); }
+      }
+      if (p._stunned && now >= p.stunUntil) { p._stunned = false; p.x = p.startX; p.y = p.startY; p.moist = 100; }
+      if (now < p.stunUntil) { p.moving = false; return; }        // 기절 중 이동 불가
+      // 콜리전 필터: 원숭이는 숲에서 나무 통과, 새는 트인 맵에서 전부 날아 통과
+      var obs = obsAll;
+      if (s.treeJump && mapKey === 'forest') obs = obsAll.filter(function(o){ return o.kind !== 'tree'; });
+      else if (s.fly && OPEN_MAPS[mapKey]) obs = [];
       if (p.ctrl && now > p.ctrl.until) p.ctrl = null;
       if (p.ctrl) { var dx = p.ctrl.dx, dy = p.ctrl.dy, mag = Math.hypot(dx, dy) || 1; dx /= mag; dy /= mag;
-        var s = sp * (p.speedMul || 1) * dt;
-        var nx = p.x + dx*s; if (inBounds(nx, p.y, 20) && !hitsObstacle(nx, p.y, 20, obs)) p.x = nx;
-        var ny = p.y + dy*s; if (inBounds(p.x, ny, 20) && !hitsObstacle(p.x, ny, 20, obs)) p.y = ny;
+        var mv = sp * (p.speedMul || 1) * dt;
+        var nx = p.x + dx*mv; if (inBounds(nx, p.y, 20) && !hitsObstacle(nx, p.y, 20, obs)) p.x = nx;
+        var ny = p.y + dy*mv; if (inBounds(p.x, ny, 20) && !hitsObstacle(p.x, ny, 20, obs)) p.y = ny;
         if (dx) p.dir = dx > 0 ? 1 : -1;
         p.moving = true;
       } else p.moving = false;
-      if (p.hold) { p.hold.x = p.x - p.dir*10; p.hold.y = p.y + 20; }
+      // 쓰레받이: 이동 중 새는 확률 (담은 것 하나 흘림)
+      if (p.moving && s.leak && p.holds.length && Math.random() < s.leak*dt*6) { var t = p.holds.pop(); t.held = null; t.x = p.x - p.dir*14; t.y = p.y + 16; say('앗, 흘렸다', p.x, p.y - 46, '#ffd166'); }
     });
     for (var i = particles.length-1; i >= 0; i--) { var q = particles[i]; q.age += dt; if (q.age > q.life) { particles.splice(i,1); continue; } q.vy += 400*dt; q.x += q.vx*dt; q.y += q.vy*dt; }
     for (var j = texts.length-1; j >= 0; j--) { texts[j].age += dt; texts[j].y -= 14*dt; if (texts[j].age > texts[j].life) texts.splice(j,1); }
@@ -179,7 +242,7 @@ function TopDown(opts) {
   /* ───────── 렌더 ───────── */
   function draw(now) {
     var t = (now - t0)/1000, m = curMap();
-    m.bg(g, W, H, t);
+    if (GROUND[mapKey] && GROUND[mapKey]._ok) g.drawImage(GROUND[mapKey], 0, 0, W, H); else m.bg(g, W, H, t);
     // 수거함
     m.bins.map(px).forEach(function (b) {
       g.save(); g.translate(b.x, b.y);
@@ -193,12 +256,18 @@ function TopDown(opts) {
     // 장애물 (y 정렬로 겹침 자연스럽게)
     var obs = curMap().obstacles.slice().sort(function (a, b) { return a.y - b.y; });
     obs.forEach(function (o) { g.save(); g.translate(o.x*W, o.y*H);
-      if (o.w != null) (OB[o.kind]||OB.building)(g, o.w*W, o.h*H); else (OB[o.kind]||OB.rock)(g, o.r||30); g.restore(); });
+      var sp = SPRITE[o.kind];
+      if (sp && sp._ok) { var sz = (o.r != null) ? o.r*2.9 : Math.max(o.w*W, o.h*H)*1.4; var ar = sp.height/sp.width; g.drawImage(sp, -sz/2, -sz*ar*0.62, sz, sz*ar); }
+      else if (o.w != null) (OB[o.kind]||OB.building)(g, o.w*W, o.h*H); else (OB[o.kind]||OB.rock)(g, o.r||30); g.restore(); });
     // 플레이어 (y 정렬)
     var ps = Object.keys(players).map(function (k){return players[k];}).sort(function (a,b){return a.y-b.y;});
     ps.forEach(function (p) { drawPlayer(p, t); });
-    // 들고 있는 쓰레기 (플레이어 위에)
-    ps.forEach(function (p) { if (p.hold) { g.save(); g.translate(p.hold.x, p.hold.y); g.rotate(0.2); (TRASH[p.hold.kind]||TRASH.cup).d(g, p.hold.s); g.restore(); } });
+    // 들고 있는 쓰레기 스택 (플레이어 머리 위에 쌓임) + 용량
+    ps.forEach(function (p) { var n = p.holds ? p.holds.length : 0; if (!n) return;
+      for (var i = 0; i < Math.min(n, 5); i++) { var t = p.holds[i]; g.save(); g.translate(p.x + (i-2)*7, p.y - 44 - i*7); g.rotate(0.1); (TRASH[t.kind]||TRASH.cup).d(g, 10); g.restore(); }
+      var c = cap(p); g.font = 'bold 13px -apple-system,sans-serif'; g.textAlign = 'center'; g.fillStyle = n >= c ? '#ffb3b3' : '#fff'; g.strokeStyle = 'rgba(0,0,0,.55)'; g.lineWidth = 3;
+      g.strokeText(n + '/' + c, p.x, p.y - 44 - Math.min(n,5)*7 - 4); g.fillText(n + '/' + c, p.x, p.y - 44 - Math.min(n,5)*7 - 4);
+    });
     // 파티클/텍스트
     particles.forEach(function (q) { g.globalAlpha = Math.max(0, 1 - q.age/q.life); g.fillStyle = q.col; g.beginPath(); g.arc(q.x, q.y, q.s, 0, 6.3); g.fill(); }); g.globalAlpha = 1;
     texts.forEach(function (tx) { g.globalAlpha = Math.max(0, 1 - tx.age/tx.life); g.fillStyle = tx.col; g.font = 'bold ' + tx.size + 'px -apple-system,sans-serif'; g.textAlign = 'center'; g.lineWidth = 4; g.strokeStyle = 'rgba(0,0,0,.5)'; g.strokeText(tx.txt, tx.x, tx.y); g.fillText(tx.txt, tx.x, tx.y); }); g.globalAlpha = 1;
@@ -227,7 +296,7 @@ function TopDown(opts) {
     setMap: function (k) { mapKey = k; }, startRound: startRound, endRound: endRound,
     addPlayer: addPlayer, removePlayer: removePlayer, setStats: setStats,
     control: control, act: act, grab: function (id) { act(id, 'grab'); },
-    score: function () { return M ? M.score : {}; }, mission: function () { return M ? { ended: M.ended, left: M.trash.length } : null; },
+    score: function () { return M ? M.score : {}; }, mission: function () { return M ? { ended: M.ended, left: M.trash.length } : null; }, trash: function () { return M ? M.trash : []; },
     players: function () { return players; }, map: function () { return mapKey; },
     positions: function () { var o = {}; Object.keys(players).forEach(function (id){ var p = players[id]; o[id] = { x:+(p.x/W).toFixed(3), y:+(p.y/H).toFixed(3), seat:p.seat, nick:p.nick }; }); return o; },
     clear: clear, say: function (txt, col) { say(txt, W/2, H*0.2, col || '#ffd166', 2, 34); },
