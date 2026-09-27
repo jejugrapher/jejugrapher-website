@@ -308,24 +308,23 @@ function TopDown(opts) {
     var t = makeTrash(p.x, p.y, 'cup', {}); t.held = p.id; p.holds.push(t);
     say('새치기! +1', p.x, p.y - 46, '#ff7ab6'); say('앗 내 창고!', wh.x, wh.y - 46, '#ffb3b3'); burst(wh.x, wh.y, wh.col); sfx('raid');
   }
-  /* 터렛 발사: 내 창고에 모은 보물 1개를 포신으로 발사 → 상대/상대창고 맞히면 보물 떨어뜨림 */
+  /* 현재 1등(최다 저장, 0 초과) id */
+  function leaderId() { var a = rankAsc(); if (!a.length) return null; var top = a[a.length-1]; return top.b > 0 ? top.id : null; }
+  /* 터렛 발사 — 후순위가 1등을 견제하는 역전 장치. 1등만 자동조준, 1등은 발사 불가, 점수 소모 없음 */
   function fireTurret(p) {
     if (!M || M.ended) return; var now = performance.now(); if (now < (p.fireCD||0)) return;
     var wh = M.warehouses ? M.warehouses[p.id] : null; if (!wh) return;
-    if ((p.bank||0) <= 0) { say('창고가 비었어요!', wh.x, wh.y - 46, '#ffd166'); return; }
-    // 조준: 가장 가까운 상대 캐릭터 → 없으면 가장 가까운 상대 창고
-    var tx, ty, best = 1e9, found = false;
-    Object.keys(players).forEach(function (id) { if (id === p.id) return; var o = players[id]; if (o.afk) return; if (protectedTarget(p, o)) return;
-      var d = Math.hypot(o.x - wh.x, o.y - wh.y); if (d < best) { best = d; tx = o.x; ty = o.y; found = true; } });
-    if (!found) for (var wid in M.warehouses) { if (wid === p.id) continue; var w = M.warehouses[wid]; var ow = players[wid]; if (ow && protectedTarget(p, ow)) continue;
-      var dd = Math.hypot(w.x - wh.x, w.y - wh.y); if (dd < best) { best = dd; tx = w.x; ty = w.y; found = true; } }
-    if (!found) { say('쏠 대상이 없어요', wh.x, wh.y - 46, '#ffd166'); return; }
-    p.fireCD = now + 650; p.bank -= 1; M.score[p.id] = p.bank;
+    var lead = leaderId();
+    if (!lead) { say('아직 1등이 없어요', wh.x, wh.y - 46, '#ffd166'); return; }
+    if (lead === p.id) { say('1등은 발사 못해요! 😎', wh.x, wh.y - 46, '#ffd166'); return; }
+    var tw = M.warehouses[lead], to = players[lead];
+    var tx = to ? to.x : tw.x, ty = to ? to.y : tw.y;
+    p.fireCD = now + 650;
     var ang = Math.atan2(ty - wh.y, tx - wh.x); wh.aim = ang; wh.recoil = now + 160;
-    var spd = Math.min(W, H) * 0.6, mz = WH_R + 10, kinds = curMap().trashKinds;
+    var spd = Math.min(W, H) * 0.62, mz = WH_R + 10, kinds = curMap().trashKinds;
     M.shots.push({ x: wh.x + Math.cos(ang)*mz, y: wh.y + Math.sin(ang)*mz, vx: Math.cos(ang)*spd, vy: Math.sin(ang)*spd,
-      owner: p.id, col: wh.col, kind: kinds[Math.floor(Math.random()*kinds.length)], age: 0, life: 1.8, rot: Math.random()*6.3 });
-    sfx('fire'); say('🎯 발사!', wh.x, wh.y - 46, wh.col);
+      owner: p.id, target: lead, col: wh.col, kind: kinds[Math.floor(Math.random()*kinds.length)], age: 0, life: 1.8, rot: Math.random()*6.3 });
+    sfx('fire'); say('🎯 1등 견제!', wh.x, wh.y - 46, wh.col);
   }
 
   /* ───────── 창고(거점) & 보물 생성 헬퍼 ───────── */
@@ -388,7 +387,9 @@ function TopDown(opts) {
     Object.keys(players).forEach(function (id) { var p = players[id]; p.holds = []; p.bank = 0; p.score = 0; p.dwell = 0; p.moist = 100; p.stunUntil = 0;
       p.iframe = 0; p.slowUntil = 0; p.afk = false; p.lastInput = performance.now(); p._lastVic = null; p.hits = 0;
       p.armorCD = 0; p.boostCD = 0; p.boostUntil = 0; p.alarmUntil = 0; p.alarmCD = 0; p.trapCharges = 2; p.trapCD = 0;
-      var wh = warehouses[id]; var sp0 = wh ? { x: wh.x, y: wh.y } : nudgeWalkable(0.5, 0.85);
+      var wh = warehouses[id];
+      var sp0 = nudgeWalkable(0.5, 0.85);
+      if (wh) { var ox = W/2 - wh.x, oy = H/2 - wh.y, dd = Math.hypot(ox, oy) || 1; sp0 = { x: wh.x + ox/dd*(WH_R+22), y: wh.y + oy/dd*(WH_R+22) }; }   // 창고 살짝 앞(터렛·왕관 보이게)
       p.x = sp0.x; p.y = sp0.y; p.startX = sp0.x; p.startY = sp0.y; });
     say(m.emoji + ' ' + m.name + '!', W/2, H*0.5, '#ffd166', 2.2, 40); sfx('start');
   }
@@ -451,8 +452,9 @@ function TopDown(opts) {
     if (p._stx == null) { p._stx = p.x; p._sty = p.y; p._stChk = now; }
     if (now - p._stChk > 700) { if (Math.hypot(p.x - p._stx, p.y - p._sty) < 8 && p.ctrl) { p._t = null; p._wander = now + 600; jump(p); } p._stx = p.x; p._sty = p.y; p._stChk = now; }  // 막히면 점프로 탈출
     if (p._wander && now < p._wander) { p.ctrl = { dx: Math.cos(now*0.004 + p.bob), dy: Math.sin(now*0.005 + p.bob*2), until: now + 300 }; return; }
-    // 기회형 PvP: 옆에 적 창고면 습격, 옆에 짐 든 상대면 밀치기
+    // 기회형 PvP: 1등 견제 발사 / 옆에 적 창고면 습격 / 옆에 짐 든 상대면 밀치기
     if (now > (p.aiPvp || 0)) {
+      var ld = leaderId(); if (ld && ld !== p.id && now > (p.fireCD||0) && Math.random() < 0.5) { p.aiPvp = now + 500; fireTurret(p); return; }   // AI도 1등 견제
       var rw = null, rd = WH_R + 8; if (M.warehouses) for (var wid in M.warehouses) { if (wid === p.id) continue; var w = M.warehouses[wid]; var ow = players[wid]; if (!ow || (ow.bank||0) <= MIN_SAFE_VAULT) continue; var dw = Math.hypot(p.x - w.x, p.y - w.y); if (dw < rd) { rd = dw; rw = w; } }
       if (rw && p.holds.length < cap(p)) { p.aiPvp = now + 400; raid(p, rw); return; }
       var opp = null, od = BUMP_R; Object.keys(players).forEach(function (id) { if (id === p.id) return; var o = players[id]; if (!o.holds || !o.holds.length || o.afk || now < (o.iframe||0)) return; var d = Math.hypot(p.x - o.x, p.y - o.y); if (d < od) { od = d; opp = o; } });
@@ -553,21 +555,18 @@ function TopDown(opts) {
       if (M.spawnT >= interval && curN < (M.capN || 24) * 1.3) { M.spawnT = 0;
         var cp = centralPos(); M.trash.push(makeTrash(cp.x, cp.y, m2.trashKinds[Math.floor(Math.random()*m2.trashKinds.length)], { drift: true })); }
       M.bigT -= dt; if (M.bigT <= 0) { M.bigT = 20; var bp = centralPos(); M.trash.push(makeTrash(bp.x, bp.y, 'scrap', { big: true })); say('💎 대형 보물 등장!', bp.x, bp.y - 30, '#ffd23f', 1.6, 26); sfx('big'); }
-      // 발사체(터렛): 이동 → 상대/상대창고 명중 → 보물 떨어뜨림, 아니면 바닥에 떨어져 다시 주울 수 있음
+      // 발사체(터렛): 오직 조준한 1등의 캐릭터/창고에만 명중(다른 사람은 통과), 빗나가면 소멸
       if (M.shots.length) for (var si = M.shots.length-1; si >= 0; si--) { var sh = M.shots[si]; sh.age += dt; sh.x += sh.vx*dt; sh.y += sh.vy*dt; sh.rot += 9*dt;
-        var hit = false;
-        for (var hid in players) { if (hid === sh.owner) continue; var o = players[hid]; if (o.afk || now < (o.iframe||0)) continue;
-          if (Math.hypot(o.x - sh.x, o.y - sh.y) < 30) { var n = o.holds.length, drop = Math.min(Math.ceil(n*0.5), 3);
-            for (var d3 = 0; d3 < drop; d3++) { var t3 = o.holds.pop(); if (!t3) break; t3.held = null; t3.x = o.x + (Math.random()-.5)*46; t3.y = o.y + (Math.random()-.5)*46; }
-            o.iframe = now + 1200; say(drop ? '명중! 떨어뜨림' : '명중!', o.x, o.y - 46, '#ffb3b3'); burst(o.x, o.y, sh.col); sfx('bump'); hit = true; break; } }
-        if (!hit && M.warehouses) for (var twid in M.warehouses) { if (twid === sh.owner) continue; var tw2 = M.warehouses[twid]; var tow = players[twid]; if (!tow) continue;
-          if (Math.hypot(tw2.x - sh.x, tw2.y - sh.y) < WH_R) {
-            if ((tow.bank||0) > MIN_SAFE_VAULT) { tow.bank -= 1; M.score[twid] = tow.bank; M.trash.push(makeTrash(tw2.x + (Math.random()-.5)*46, tw2.y + 34 + Math.random()*16, sh.kind, { drift: true })); say('창고 명중! 튕겨나옴', tw2.x, tw2.y - 46, '#ff7ab6'); }
-            else say('금고 보호!', tw2.x, tw2.y - 46, '#8ee'); burst(tw2.x, tw2.y, sh.col); sfx('raid'); hit = true; break; } }
-        var oob = sh.x < 8 || sh.x > W-8 || sh.y < 8 || sh.y > H-8;
-        if (hit || sh.age >= sh.life || oob) {                  // 떨어진 자리에 보물로 남음(재수집 가능)
-          M.trash.push(makeTrash(Math.max(14, Math.min(W-14, sh.x)), Math.max(H*0.14, Math.min(H-14, sh.y)), sh.kind, { drift: true }));
-          M.shots.splice(si, 1); }
+        var hit = false, o = players[sh.target], tw2 = M.warehouses ? M.warehouses[sh.target] : null;
+        if (o && !o.afk && now >= (o.iframe||0) && Math.hypot(o.x - sh.x, o.y - sh.y) < 30) {   // 1등 캐릭터 명중 → 든 보물 떨어뜨림
+          var n = o.holds.length, drop = Math.min(Math.ceil(n*0.5), 3);
+          for (var d3 = 0; d3 < drop; d3++) { var t3 = o.holds.pop(); if (!t3) break; t3.held = null; t3.x = o.x + (Math.random()-.5)*46; t3.y = o.y + (Math.random()-.5)*46; }
+          o.iframe = now + 1000; say(drop ? '1등 명중! 떨어뜨림' : '1등 명중!', o.x, o.y - 46, '#ffb3b3'); burst(o.x, o.y, sh.col); sfx('bump'); hit = true;
+        } else if (tw2 && Math.hypot(tw2.x - sh.x, tw2.y - sh.y) < WH_R) {                       // 1등 창고 명중 → 보물 튕겨나옴
+          if (o && (o.bank||0) > MIN_SAFE_VAULT) { o.bank -= 1; M.score[sh.target] = o.bank; M.trash.push(makeTrash(tw2.x + (Math.random()-.5)*50, tw2.y + 34 + Math.random()*18, sh.kind, { drift: true })); say('1등 창고 명중! 튕겨나옴', tw2.x, tw2.y - 46, '#ff7ab6'); }
+          else say('금고 보호!', tw2.x, tw2.y - 46, '#8ee'); burst(tw2.x, tw2.y, sh.col); sfx('raid'); hit = true;
+        }
+        if (hit || sh.age >= sh.life || sh.x < 4 || sh.x > W-4 || sh.y < 4 || sh.y > H-4) M.shots.splice(si, 1);
       }
     }
     // 바람/파도: 안 잡힌 쓰레기가 흘러다녀 줍기 어려워짐 (바다>섬>육지)
@@ -662,6 +661,7 @@ function TopDown(opts) {
     // 플레이어별 전용 창고(거점): 고유색 + 저장량 + 뱅킹 반경
     var whs = (M && M.warehouses) ? M.warehouses : {};
     var pnowW = performance.now();
+    var _lead = (M && !M.ended) ? leaderId() : null;
     Object.keys(whs).forEach(function (wid) { var wh = whs[wid]; var p = players[wid]; var amt = p ? (p.bank||0) : 0;
       g.save(); g.translate(wh.x, wh.y);
       // 뱅킹 반경(옅은 링)
@@ -670,9 +670,11 @@ function TopDown(opts) {
       var lead = amt >= 15, pulse = lead ? (1 + Math.sin(t*6)*0.06) : 1, bw = 30*pulse;
       g.fillStyle = 'rgba(0,0,0,.20)'; g.beginPath(); g.ellipse(0, bw*0.5, bw*0.9, bw*0.3, 0, 0, 6.3); g.fill();
       if (lead) { g.fillStyle = 'rgba(255,235,120,'+(0.25+0.15*Math.sin(t*6))+')'; g.beginPath(); g.arc(0, 0, bw*1.5, 0, 6.3); g.fill(); }
-      // 포신(발사구) — 가장 가까운 상대를 조준, 발사 시 반동
-      var aim = wh.aim; if (M && !M.ended) { var abd = 1e9, ta = null; for (var oid in players) { if (oid === wid) continue; var oo = players[oid]; if (oo.afk) continue; var od = Math.hypot(oo.x - wh.x, oo.y - wh.y); if (od < abd) { abd = od; ta = oo; } } if (ta) { aim = Math.atan2(ta.y - wh.y, ta.x - wh.x); wh.aim = aim; } }
+      // 포신(발사구) — 내가 1등이 아니면 1등을 조준(모두가 1등을 겨눔). 1등/무리더는 정지
+      var aim = wh.aim; var aimT = (_lead && _lead !== wid) ? players[_lead] : null;
+      if (aimT) { aim = Math.atan2(aimT.y - wh.y, aimT.x - wh.x); wh.aim = aim; }
       if (aim == null) aim = -Math.PI/2;
+      var isLeaderWh = (_lead === wid);
       var recoil = (wh.recoil && pnowW < wh.recoil) ? -7 : 0;
       g.save(); g.rotate(aim); g.translate(recoil, 0);
       g.fillStyle = '#3b414d'; g.beginPath(); g.roundRect(bw*0.3, -7, bw*1.15, 14, 5); g.fill(); g.strokeStyle = 'rgba(0,0,0,.45)'; g.lineWidth = 2; g.stroke();
@@ -688,6 +690,7 @@ function TopDown(opts) {
       // 주인 이름표(작게)
       if (p && p.nick) { g.font = 'bold 12px -apple-system,sans-serif'; g.fillStyle = '#fff'; g.lineWidth = 3; g.strokeStyle = 'rgba(0,0,0,.5)';
         var nm = (p.seat?p.seat+'번 ':'') + p.nick; g.strokeText(nm, 0, bw*1.2); g.fillText(nm, 0, bw*1.2); }
+      if (isLeaderWh) { g.font = Math.round(bw*1.1)+'px sans-serif'; g.textAlign = 'center'; g.fillText('👑', 0, -bw*1.15 + Math.sin(pnowW*0.006)*3); }   // 1등 표시(견제 대상)
       g.restore();
     });
     // 발사체(터렛) — 색 꼬리 + 회전하는 쓰레기
