@@ -57,7 +57,7 @@
   function playerCb(s) {
     var id = s.key, v = s.val(); if (!v) return;
     if (!seenJoin[id]) { seenJoin[id] = 1; emit({ type: 'join', id: id, seat: v.seat, nick: v.nick }); }
-    if (v.img && seenImg[id] !== v.ts) { seenImg[id] = v.ts; emit({ type: 'creature', id: id, seat: v.seat, nick: v.nick, char: v.char, equip: v.equip, transparent: true, dataUrl: v.img }); }
+    if (v.char && seenImg[id] !== v.ts) { seenImg[id] = v.ts; emit({ type: 'creature', id: id, seat: v.seat, nick: v.nick, char: v.char, equip: v.equip }); }
   }
   function ctrlCb(s) { var v = s.val(); if (v) emit({ type: 'ctrl', id: s.key, dx: v.dx || 0, dy: v.dy || 0 }); }
   function actCb(s) { var v = s.val(); if (v && v.n !== lastAct[s.key]) { lastAct[s.key] = v.n; emit({ type: 'ctrl', id: s.key, act: v.act }); } }
@@ -75,7 +75,7 @@
     if (t === 'state' || t === 'noop') return Promise.resolve(null);   // Firebase 에선 불필요
     if (to === 'screen') {
       if (t === 'join') base.child('players/' + msg.id).update({ seat: msg.seat, nick: msg.nick, ts: TS() });
-      else if (t === 'creature') base.child('players/' + msg.id).update({ seat: msg.seat, nick: msg.nick, char: msg.char, equip: msg.equip || null, img: msg.dataUrl, ts: TS() });
+      else if (t === 'creature') base.child('players/' + msg.id).update({ seat: msg.seat, nick: msg.nick, char: msg.char, equip: msg.equip || null, ts: TS() });
       else if (t === 'ctrl') {
         if (msg.act) base.child('act/' + msg.id).set({ act: msg.act, n: (actN[msg.id] = (actN[msg.id] || 0) + 1), ts: TS() });
         else base.child('ctrl/' + msg.id).set({ dx: msg.dx || 0, dy: msg.dy || 0 });
