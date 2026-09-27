@@ -745,6 +745,17 @@ function TopDown(opts) {
       g.save(); g.rotate(aim); g.translate(recoil, 0);
       g.fillStyle = '#3b414d'; g.beginPath(); g.roundRect(bw*0.3, -7, bw*1.15, 14, 5); g.fill(); g.strokeStyle = 'rgba(0,0,0,.45)'; g.lineWidth = 2; g.stroke();
       g.fillStyle = '#1b1e25'; g.beginPath(); g.arc(bw*1.45, 0, 7.5, 0, 6.3); g.fill();      // 발사구 구멍
+      // 조준 점선: 가장 가까운 상대까지의 약 2/3 지점까지(어디로 날아갈지 예측)
+      if (M && !M.ended) {
+        var gd = 1e9;
+        for (var oid2 in players) { if (oid2 === wid) continue; if (players[oid2].afk) continue; var od2 = Math.hypot(players[oid2].x - wh.x, players[oid2].y - wh.y); if (od2 < gd) gd = od2; }
+        for (var w2 in whs) { if (w2 === wid) continue; var d2 = Math.hypot(whs[w2].x - wh.x, whs[w2].y - wh.y); if (d2 < gd) gd = d2; }
+        if (gd > 1e8) gd = Math.min(W, H)*0.5;
+        var lineLen = Math.max(60, gd*0.667 - bw*1.45);
+        g.setLineDash([9, 8]); g.globalAlpha = 0.55; g.strokeStyle = wh.col; g.lineWidth = 3.5; g.lineCap = 'round';
+        g.beginPath(); g.moveTo(bw*1.45 + 6, 0); g.lineTo(bw*1.45 + 6 + lineLen, 0); g.stroke();
+        g.setLineDash([]); g.globalAlpha = 0.85; g.fillStyle = wh.col; g.beginPath(); g.arc(bw*1.45 + 6 + lineLen, 0, 5, 0, 6.3); g.fill(); g.globalAlpha = 1;
+      }
       g.restore();
       g.fillStyle = wh.col; g.beginPath(); g.roundRect(-bw, -bw*0.7, bw*2, bw*1.3, 8); g.fill();
       g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 3; g.stroke();
