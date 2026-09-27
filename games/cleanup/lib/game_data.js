@@ -2,59 +2,58 @@
    폰(선택/색칠/검증)과 화면(적용)이 공용으로 사용. window.GameData */
 (function (global) {
 
-  /* 지형 키: water 물속 · sand 모래 · forest 숲 · city 도시 · park 평지 · air 하늘 */
+  /* 지형 키: water 물속 · sand 모래 · forest 숲(곶자왈) · village 마을(육지) · air 하늘 */
   var MAPS = {
-    sea:    { name: '바다',  emoji: '🌊', view: 'top', terrain: 'water',  hasWater: true,  trees: false, sky: false },
-    island: { name: '섬',    emoji: '🏝️', view: 'top', terrain: 'sand',   hasWater: true,  trees: false, sky: true  },
-    forest: { name: '숲',    emoji: '🌳', view: 'top', terrain: 'forest', hasWater: false, trees: true,  sky: false },
-    city:   { name: '도시',  emoji: '🏙️', view: 'top', terrain: 'city',   hasWater: false, trees: false, sky: false },
-    park:   { name: '공원',  emoji: '🌷', view: 'top', terrain: 'park',   hasWater: false, trees: false, sky: true  }
+    village:  { name: '제주 마을', emoji: '🏘️', view: 'top', terrain: 'village', hasWater: false, trees: false, sky: false },
+    beach:    { name: '제주 해변', emoji: '🏖️', view: 'top', terrain: 'sand',    hasWater: true,  trees: false, sky: true  },
+    valley:   { name: '제주 계곡', emoji: '🏞️', view: 'top', terrain: 'water',   hasWater: true,  trees: false, sky: false },
+    gotjawal: { name: '곶자왈',    emoji: '🌿', view: 'top', terrain: 'forest',  hasWater: false, trees: true,  sky: false }
   };
-  var MVP_MAPS = ['sea', 'island', 'forest', 'city', 'park'];   // 전 맵 탑다운 구현
+  var MVP_MAPS = ['village', 'beach', 'valley', 'gotjawal'];
 
-  /* 캐릭터: 지형별 이동배수(사람=1.0), 잠수 지속(초), 특수 플래그, 엔진 리그용 cat */
+  /* 캐릭터(제주): 지형별 이동배수(1.0=보통), 잠수 지속(초), 특수 플래그 */
   var CHARACTERS = {
-    seal:   { name: '물개',   emoji: '🦭', cat: 'whale',   dive: 30,
-              mul: { water: 2.0, sand: 0.5, forest: 0.5, city: 0.5, park: 0.5, air: 0.5 } },
-    crab:   { name: '게',     emoji: '🦀', cat: 'crawler', dive: 20, moisture: true,
-              mul: { water: 1.5, sand: 2.0, forest: 1.0, city: 1.0, park: 1.0, air: 1.0 } },
-    monkey: { name: '원숭이', emoji: '🐒', cat: 'animal',  dive: 8,  treeJump: true,
-              mul: { water: 0.8, sand: 1.0, forest: 1.8, city: 1.1, park: 1.1, air: 1.0 } },
-    human:  { name: '사람',   emoji: '🧍', cat: 'person',  dive: 12,
-              mul: { water: 1.0, sand: 1.0, forest: 1.0, city: 1.0, park: 1.0, air: 1.0 } },
-    bird:   { name: '새',     emoji: '🐦', cat: 'bird',    dive: 5,  fly: true,
-              mul: { water: 0.7, sand: 1.2, forest: 0.4, city: 0.4, park: 1.6, air: 2.0 } }
+    seal:    { name: '물개',   emoji: '🦭', cat: 'whale',   dive: 30, trait: '물속 최강·오래 잠수. 육지는 느려요',
+               mul: { water: 2.0, sand: 0.6, forest: 0.5, village: 0.5, air: 0.5 } },
+    crab:    { name: '게',     emoji: '🦀', cat: 'crawler', dive: 20, moisture: true, trait: '모래·바위 최고! 몸이 마르면 기절해요',
+               mul: { water: 1.5, sand: 2.0, forest: 1.0, village: 1.0, air: 1.0 } },
+    pony:    { name: '조랑말', emoji: '🐎', cat: 'animal',  dive: 6,  trait: '육지(마을·곶자왈) 최고속. 물은 약해요',
+               mul: { water: 0.7, sand: 1.2, forest: 1.3, village: 1.6, air: 1.1 } },
+    gull:    { name: '갈매기', emoji: '🐦', cat: 'bird',    dive: 5,  fly: true, trait: '트인 곳은 날아서 최고속. 숲·마을은 걸어서 느려요',
+               mul: { water: 0.8, sand: 1.2, forest: 0.5, village: 0.6, air: 2.0 } },
+    haenyeo: { name: '해녀',   emoji: '🧜', cat: 'person',  dive: 25, trait: '모든 곳 균형·잠수 좋음. 초보 추천 올라운더',
+               mul: { water: 1.6, sand: 1.1, forest: 1.0, village: 1.0, air: 1.0 } }
   };
-  var CHAR_ORDER = ['seal', 'crab', 'monkey', 'human', 'bird'];
+  var CHAR_ORDER = ['seal', 'crab', 'pony', 'gull', 'haenyeo'];
 
   /* 장비 슬롯 A: 줍는 도구 */
   var TOOLS = {
     broom:  { name: '빗자루', emoji: '🧹', pickup: 'area',   areaR: 130, canHeavy: false, canCorner: false,
-              desc: '한 번에 여러 개! 무겁거나 구석 쓰레기는 못 담아요' },
+              desc: '한 번에 여러 개 쓸어 담아요. 무겁거나 구석 쓰레기는 못 해요' },
     tongs:  { name: '집게',   emoji: '🦾', pickup: 'single', canHeavy: true,  canCorner: true,
-              desc: '무엇이든 집어요. 한 번에 하나씩' },
-    skewer: { name: '꼬챙이', emoji: '🍢', pickup: 'fast',   cooldown: 0.25, canHeavy: true, canCorner: false,
+              desc: '무엇이든 확실하게. 한 번에 하나씩' },
+    spear:  { name: '작살',   emoji: '🔱', pickup: 'fast',   cooldown: 0.25, canHeavy: true, canCorner: false,
               weakCollect: true, canSteal: true,
-              desc: '빠르게 콕콕! 줍는 힘은 약하지만 친구 쓰레기를 1개 뺏어요' }
+              desc: '빠르게 콕콕! 친구 쓰레기를 1개 뺏을 수 있어요(해녀 도구)' }
   };
-  var TOOL_ORDER = ['broom', 'tongs', 'skewer'];
+  var TOOL_ORDER = ['broom', 'tongs', 'spear'];
 
-  /* 장비 슬롯 B: 담는 도구 (cap=용량, collect=담기속도배수, leak=초당 흘릴 확률, skewerLoss=꼬챙이 피격 손실확률) */
+  /* 장비 슬롯 B: 담는 도구 (cap=용량, collect=담기속도, leak=흘림, skewerLoss=작살 피격 손실확률) */
   var CONTAINERS = {
-    dustpan: { name: '쓰레받이', emoji: '🗑️', cap: 5,  collect: 1.4, leak: 0.12, skewerLoss: 0.0, noBroom: false,
-               desc: '가장 빨리 담아요! 대신 적게 담기고, 다니다 보면 흘려요. 꼬챙이 방어 O' },
-    bag:     { name: '비닐봉투', emoji: '🛍️', cap: 15, collect: 1.0, leak: 0.0, skewerLoss: 0.9, noBroom: false,
-               desc: '가장 많이! 가벼워요. 대신 꼬챙이에 약해요(90%)' },
-    backpack:{ name: '등가방',   emoji: '🎒', cap: 15, collect: 0.6, leak: 0.0, skewerLoss: 0.3, noBroom: true,
-               desc: '많이 담고 안 흘려요. 담는 게 느리고, 빗자루와 같이 못 써요' }
+    basket: { name: '구덕',     emoji: '🧺', cap: 8,  collect: 1.3, leak: 0.05, skewerLoss: 0.0,
+              desc: '대나무 바구니. 안정적으로 빨리 담고 잘 안 흘려요. 작살 방어 O (중간 용량)' },
+    bag:    { name: '비닐봉투', emoji: '🛍️', cap: 15, collect: 1.0, leak: 0.0, skewerLoss: 0.9,
+              desc: '가장 많이! 가벼워요. 대신 작살에 약해요(90%)' },
+    net:    { name: '망사리',   emoji: '🕸️', cap: 15, collect: 1.1, leak: 0.0, skewerLoss: 0.3,
+              desc: '해녀 그물망. 많이 담고 튼튼해요(작살에 강함)' }
   };
-  var CONTAINER_ORDER = ['dustpan', 'bag', 'backpack'];
+  var CONTAINER_ORDER = ['basket', 'bag', 'net'];
 
   /* 장비 슬롯 C: 신발 */
   var FEET = {
     fins:     { name: '오리발', emoji: '🦶', desc: '물속 슝슝! 육지는 느려요' },
     sneakers: { name: '운동화', emoji: '👟', desc: '육지 어디서나 빨라요. 물속은 느려요' },
-    boots:    { name: '장화',   emoji: '🥾', desc: '숲에서 최고! 다른 곳은 그대로' }
+    boots:    { name: '장화',   emoji: '🥾', desc: '곶자왈에서 최고! 다른 곳은 보통' }
   };
   var FEET_ORDER = ['fins', 'sneakers', 'boots'];
 

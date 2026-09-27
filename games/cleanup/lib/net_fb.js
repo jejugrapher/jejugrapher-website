@@ -63,7 +63,7 @@
   function actCb(s) { var v = s.val(); if (v && v.n !== lastAct[s.key]) { lastAct[s.key] = v.n; emit({ type: 'ctrl', id: s.key, act: v.act }); } }
 
   function listenPhone() {
-    base.child('game').on('value', function (s) { var v = s.val() || {}; emit({ type: 'phase', phase: v.phase || 'lobby', map: v.map }); });
+    base.child('game').on('value', function (s) { var v = s.val() || {}; emit({ type: 'phase', phase: v.phase || 'lobby', map: v.map, count: v.count, need: v.need, cd: v.cd }); });
     base.child('score').on('value', function (s) { emit({ type: 'score', score: s.val() || {} }); });
     base.child('me/' + myId).on('value', function (s) { var v = s.val(); if (v) { v.type = 'me'; v.id = myId; emit(v); } });
   }

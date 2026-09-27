@@ -49,12 +49,14 @@
   <div class="txt">
     <h1>🧹 청소 대작전</h1>
     <p>① 폰 카메라로 QR을 찍어요</p>
-    <p>② 캐릭터·장비를 고르고 색칠</p>
+    <p>② 캐릭터·장비를 골라요</p>
     <p>③ 맵 랜덤! 청소 경쟁 시작</p>
     <div style="margin-top:14px;font-size:22px">방 코드 <b id="roomCode" style="font-size:38px;color:#ffd166;letter-spacing:4px">····</b></div>
     <div class="u" id="phoneUrl"></div>
-    <div style="margin-top:12px"><a id="ctrlLink" href="#" target="_blank" style="color:#8ee;font-size:16px;text-decoration:underline">🕹️ 컨트롤 화면 열기</a></div>
-    <div id="roster"></div>
+    <div style="margin-top:10px"><a id="ctrlLink" href="#" target="_blank" style="color:#8ee;font-size:16px;text-decoration:underline">🕹️ 컨트롤 화면 열기</a></div>
+    <div id="cdBox" style="display:none;margin-top:14px;font-size:30px;font-weight:900;color:#ffd166"></div>
+    <div style="margin-top:14px;font-size:17px;opacity:.85">참가한 친구 <b id="waitCount">0</b>명 <span style="opacity:.7">(한 명만 와도 60초 뒤 시작 · 최대 10명 · 5명 이하면 AI와 대결!)</span></div>
+    <div id="waitGrid" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;max-width:520px"></div>
   </div>
 </div>
 
@@ -96,13 +98,21 @@ function showRoomQR(room){
 var G=GameData;
 var phase='lobby';           // lobby clean result
 var players={};              // id -> {seat,nick,char,equip, hasCreature}
-var curMap='sea';            // 시작 시 랜덤 또는 지정
+var curMap='village';        // 시작 시 랜덤 또는 지정
 var manualMap=null;          // 컨트롤에서 맵 지정 시
 var cleanSeconds=90, timeLeft=0, clockTimer=null;
-var AUTO_N=10;               // 이 인원이 차면 자동 시작
+var MIN_START=1;             // 한 명만 들어와도 카운트다운 시작(혼자여도 60초 후 시작)
+var MAX_N=10;                // 이 인원 차면 즉시 시작 (상한, 최대 10명 동시 체험)
+var AI_FILL=5;              // 사람이 이 수 이하면 AI 캐릭터로 채워 함께 경쟁
+var COUNTDOWN=60;            // 카운트다운 초
+var cdLeft=0, cdTimer=null;
 var autoStartOn=true;        // 자동 시작 on/off (컨트롤에서 토글)
 var resetTimer=null;
 function readyCount(){ return Object.keys(players).filter(function(id){return players[id]&&players[id].nick;}).length; }
+function showCountdown(){ var el=document.getElementById('cdBox'); if(!el)return; if(cdLeft>0 && phase==='lobby'){ el.style.display=''; el.textContent='⏳ 곧 시작! '+cdLeft+'초'; } else el.style.display='none'; }
+function startCountdown(){ if(cdTimer)return; cdLeft=COUNTDOWN; showCountdown(); publishStatus();
+  cdTimer=setInterval(function(){ if(readyCount()>=MAX_N){ cancelCountdown(); startGame(); return; } cdLeft--; showCountdown(); publishStatus(); if(cdLeft<=0){ cancelCountdown(); if(readyCount()>=1) startGame(); } },1000); }
+function cancelCountdown(){ if(cdTimer){clearInterval(cdTimer);cdTimer=null;} cdLeft=0; showCountdown(); }
 
 function setPhase(p){
   phase=p;
@@ -118,17 +128,44 @@ function setPhase(p){
 function pushState(){ GameRT.send('screen',{type:'state',phase:phase,map:curMap}); }
 
 /* ───────── 단계 전환 ───────── */
-function goSetup(){ E.setMap('park'); setPhase('setup'); }   // 대기: 폰에서 캐릭터·장비·색칠
+function goSetup(){ E.setMap('village'); setPhase('setup'); }   // 대기: 폰에서 캐릭터·장비 선택
+var TERRAINS=['water','sand','forest','village','air'];
 function applyStatsAll(){
-  var terrain=(G.MAPS[curMap]||{}).terrain||'park';
+  var terrain=(G.MAPS[curMap]||{}).terrain||'village';
   Object.keys(players).forEach(function(id){ var p=players[id]; if(!p||!p.char)return;
-    var st=G.finalStats(p.char,p.equip,terrain); E.setStats(id,st); });
+    var st=G.finalStats(p.char,p.equip,terrain);
+    // 지형별 속도표: 엔진이 위치(모래·물 등)에 따라 실시간 적용
+    var byT={}; TERRAINS.forEach(function(t){ byT[t]=G.finalStats(p.char,p.equip,t).speedMul; });
+    st.speedByTerrain=byT;
+    E.setStats(id,st); });
+}
+var AI_NAMES=['깨끗이','반짝이','말끔이','보송이','뽀득이','산뜻이'];
+function addAIPlayers(){
+  // 기존 AI 제거
+  Object.keys(players).forEach(function(id){ if(players[id]&&players[id].ai){ if(E.removePlayer)E.removePlayer(id); delete players[id]; }});
+  var humans=Object.keys(players).filter(function(id){return players[id]&&players[id].nick;}).length;
+  if(humans>AI_FILL) return 0;                                // 6명 이상이면 AI 없음
+  var count=Math.max(1, AI_FILL-humans);                      // 사람 적을수록 AI 많이(솔로=4, 5명=1)
+  var pool=G.CHAR_ORDER.slice().sort(function(){return Math.random()-0.5;});   // 캐릭터 겹치지 않게 섞기
+  for(var i=0;i<count;i++){
+    var id='ai_'+i;
+    var ch=pool[i%pool.length];
+    var equip={ tool:G.TOOL_ORDER[i%3], container:G.CONTAINER_ORDER[i%3], feet:G.FEET_ORDER[i%3] };
+    var nick='🤖'+AI_NAMES[i%AI_NAMES.length];
+    var seat=humans+1+i;
+    players[id]={seat:seat, nick:nick, char:ch, equip:equip, ai:true};
+    E.addPlayer(id,{seat:seat, nick:nick, char:ch, ai:true});
+  }
+  return count;
 }
 function startGame(mapArg){
+  cancelCountdown();
   curMap = mapArg || manualMap || G.randomMap();              // 지정 맵 없으면 랜덤
   manualMap=null;
   setPhase('clean');
-  E.startRound(curMap);                                       // 맵 로드 + 쓰레기 배치
+  addAIPlayers();                                             // 5명 이하면 AI 경쟁자 투입
+  applyStatsAll();                                            // 스탯(지형속도)부터 → 스폰이 수영캐릭 판별
+  E.startRound(curMap);                                       // 맵 로드 + 쓰레기 배치 + 스폰
   applyStatsAll();
   timeLeft=cleanSeconds; updateTimer();
   if(clockTimer)clearInterval(clockTimer);
@@ -147,7 +184,7 @@ function showResult(){
   setPhase('result');
   // 이번 라운드 점수를 별명별로 누적 저장 → 리더보드
   if(GameRT.dbTx&&GameRT.nickKey){
-    var jobs=Object.keys(sc).map(function(id){ var p=players[id]; if(!p||!p.nick||!sc[id])return null; var key=GameRT.nickKey(p.nick);
+    var jobs=Object.keys(sc).map(function(id){ var p=players[id]; if(!p||!p.nick||!sc[id]||p.ai)return null; var key=GameRT.nickKey(p.nick);
       return GameRT.dbTx('registry/'+key+'/score',function(x){return (x||0)+sc[id];}); });
     Promise.all(jobs).then(loadLeaderboard);
   } else loadLeaderboard();
@@ -165,12 +202,19 @@ function loadLeaderboard(){
 }
 function resetRound(){
   if(resetTimer){clearTimeout(resetTimer);resetTimer=null;}
+  cancelCountdown();
   E.clear(); players={}; lastScore={}; renderRoster();
   if(GameRT.dbSet){ ['players','ctrl','act','me','score'].forEach(function(k){GameRT.dbSet(k,null);}); GameRT.dbSet('seq',0); }
   setPhase('lobby'); publishStatus();
 }
-function publishStatus(){ if(GameRT.dbUpdate) GameRT.dbUpdate('game',{phase:phase,map:curMap,count:readyCount(),need:AUTO_N,autoStartOn:autoStartOn}); }
-function checkAutoStart(){ if(autoStartOn && phase==='lobby' && readyCount()>=AUTO_N) startGame(); publishStatus(); }
+function publishStatus(){ if(GameRT.dbUpdate) GameRT.dbUpdate('game',{phase:phase,map:curMap,count:readyCount(),need:MAX_N,max:MAX_N,cd:cdLeft,autoStartOn:autoStartOn}); }
+function checkAutoStart(){
+  if(phase!=='lobby'){ publishStatus(); return; }
+  var n=readyCount();
+  if(n>=MAX_N){ cancelCountdown(); startGame(); return; }        // 10명 차면 즉시
+  if(autoStartOn && n>=1 && !cdTimer){ startCountdown(); }       // 한 명이라도 들어오면 60초 카운트
+  publishStatus();
+}
 
 /* ───────── 점수판 ───────── */
 var lastScore={};
@@ -190,24 +234,26 @@ function renderScores(){
   document.getElementById('scoreList').innerHTML=rank.map(function(r){var p=players[r.id];return '<div class="row"><span>'+(p?(p.seat+'번 '+p.nick):'?')+'</span><b>'+r.n+'</b></div>';}).join('')||'<div class="row"><span>아직 없어요</span></div>';
 }
 function renderRoster(){
-  document.getElementById('roster').innerHTML=Object.keys(players).map(function(id){var p=players[id];return '<span class="p">'+p.seat+'번 '+p.nick+(p.hasCreature?' ✅':'')+'</span>';}).join('');
+  var wg=document.getElementById('waitGrid'); if(!wg)return;
+  var ids=Object.keys(players).filter(function(id){return players[id]&&players[id].nick;});
+  var wc=document.getElementById('waitCount'); if(wc)wc.textContent=ids.length;
+  wg.innerHTML=ids.map(function(id){var p=players[id];
+    var ch=(p.char&&G.CHARACTERS[p.char])?G.CHARACTERS[p.char]:null;
+    var face='<div style="width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-size:34px;background:rgba(255,255,255,.08);border-radius:10px">'+(ch?ch.emoji:'🙂')+'</div>';
+    return '<div style="background:rgba(255,255,255,.12);border-radius:12px;padding:6px;text-align:center;width:76px">'+face+'<div style="font-size:12px;margin-top:3px">'+p.seat+'번 '+p.nick+'</div></div>';
+  }).join('');
 }
 
 /* ───────── 폰 → 화면 메시지 ───────── */
-function toCanvas(im){var c=document.createElement('canvas');c.width=im.width;c.height=im.height;c.getContext('2d').drawImage(im,0,0);return c;}
 function addCreature(m){
-  var im=new Image();
-  im.onload=function(){ var cut=toCanvas(im);
-    E.addPlayer(m.id,{seat:m.seat,nick:m.nick,char:m.char,img:cut});
-    if(players[m.id])players[m.id].hasCreature=true; renderRoster();
-    if(phase==='clean'){ applyStatsAll(); }   // 이미 게임 중이면 즉시 스탯 적용
-  };
-  im.src=m.dataUrl;
+  E.addPlayer(m.id,{seat:m.seat,nick:m.nick,char:m.char});
+  if(players[m.id])players[m.id].hasCreature=true; renderRoster();
+  if(phase==='clean'){ applyStatsAll(); }   // 이미 게임 중이면 즉시 스탯 적용
 }
 GameRT.connect('screen',null,function(m){
   switch(m.type){
     case 'join': players[m.id]=players[m.id]||{}; players[m.id].seat=m.seat; if(m.nick)players[m.id].nick=m.nick; renderRoster(); checkAutoStart(); break;
-    case 'creature': players[m.id]=players[m.id]||{seat:m.seat,nick:m.nick}; if(m.nick)players[m.id].nick=m.nick; players[m.id].char=m.char; players[m.id].equip=m.equip; addCreature(m); checkAutoStart(); break;
+    case 'creature': players[m.id]=players[m.id]||{seat:m.seat,nick:m.nick}; if(m.nick)players[m.id].nick=m.nick; players[m.id].char=m.char; players[m.id].equip=m.equip; players[m.id].dataUrl=m.dataUrl; addCreature(m); checkAutoStart(); break;
     case 'ctrl':
       if(m.act==='grab') E.grab(m.id);
       else if(m.act==='steal') { /* TODO 꼬챙이 뺏기 */ }
