@@ -270,6 +270,23 @@ function TopDown(opts) {
       else say(s.canCorner ? '가까이에 쓰레기가 없어' : '구석/무거운 건 못 집어', p.x, p.y - 46, '#ffd166');
     }
   }
+  /* 자동 줍기 — 가까이 가면 저절로 주움(용량 내) + 뭉친 쓰레기는 옆에 있으면 자동으로 부숨 */
+  function autoPickup(p, now) {
+    if (!M || M.ended || now < p.stunUntil) return; var s = st(p);
+    // 뭉친 쓰레기: 근처면 0.38초마다 1타
+    if (now > (p.clumpCD||0)) { var cb = null, cd = 66; M.trash.forEach(function (t) { if (!t.clump) return; var d = Math.hypot(t.x - p.x, t.y - p.y); if (d < cd) { cd = d; cb = t; } });
+      if (cb) { p.clumpCD = now + 380; cb.hp--; cb.shake = now + 220; burst(cb.x, cb.y - 10, '#cfd6df');
+        if (cb.hp <= 0) { M.trash = M.trash.filter(function (x) { return x !== cb; });
+          cb.kinds.forEach(function (kd, i) { var a = i/cb.kinds.length*6.28; M.trash.push({ x: cb.x + Math.cos(a)*30, y: cb.y + Math.sin(a)*30, kind: kd, cat: TRASH_CAT[kd]||'general', value:1, big:false, s: 13+Math.random()*3, rot: Math.random()*6.3, held: null, heavy:(kd==='can'||kd==='bottle'||kd==='glass'||kd==='scrap'), corner:false, stuck:false, hidden:false, revealed:true, drift:true, ph: Math.random()*6.3 }); });
+          say('분리 완료!', cb.x, cb.y - 40, '#b6ff7a'); burst(cb.x, cb.y, '#ffd166'); sfx('break'); } else say('부순다! (' + cb.hp + ')', cb.x, cb.y - 40, '#ffd166'); } }
+    // 일반 쓰레기 자동 줍기(도구 반경, 용량 내, 0.13초 간격)
+    if (p.holds.length >= cap(p) || now < (p.pickCD||0)) return;
+    var area = s.pickup === 'area', rad = area ? 92 : 52, best = null, bd = rad;
+    M.trash.forEach(function (t) { if (t.held || t.clump) return; if (t.hidden && !t.revealed) return;
+      if (area) { if (t.heavy || t.corner) return; } else { if (!s.canHeavy && t.heavy) return; if (!s.canCorner && t.corner) return; }
+      var d = Math.hypot(t.x - p.x, t.y - p.y); if (d < bd) { bd = d; best = t; } });
+    if (best) { best.held = p.id; p.holds.push(best); p.pickCD = now + 130; sfxTrash(best.kind, true); if (opts.onPick) opts.onPick(p.id); }
+  }
   /* ── PvP: 부딪히기(밀치기)·창고 습격·안티그리핑 ── */
   var BUMP_R = 66, MIN_SAFE_VAULT = 5, IFRAME = 3000, DR_WINDOW = 15000;
   function rankAsc() { return Object.keys(players).map(function (id) { return { id: id, b: players[id].bank||0 }; }).sort(function (a, b) { return a.b - b.b; }); }
@@ -494,8 +511,6 @@ function TopDown(opts) {
         var lo = players[ld], lw = M.warehouses && M.warehouses[ld], mw = M.warehouses && M.warehouses[p.id];
         if (mw) { var tgx = lo ? lo.x : (lw?lw.x:p.x), tgy = lo ? lo.y : (lw?lw.y:p.y); p.aimAngle = Math.atan2(tgy - mw.y, tgx - mw.x); }
         p.aiPvp = now + 500; fireTurret(p); return; }
-      var rw = null, rd = WH_R + 8; if (M.warehouses) for (var wid in M.warehouses) { if (wid === p.id) continue; var w = M.warehouses[wid]; var ow = players[wid]; if (!ow || (ow.bank||0) <= MIN_SAFE_VAULT) continue; var dw = Math.hypot(p.x - w.x, p.y - w.y); if (dw < rd) { rd = dw; rw = w; } }
-      if (rw && p.holds.length < cap(p)) { p.aiPvp = now + 400; raid(p, rw); return; }
       var opp = null, od = BUMP_R; Object.keys(players).forEach(function (id) { if (id === p.id) return; var o = players[id]; if (!o.holds || !o.holds.length || o.afk || now < (o.iframe||0)) return; var d = Math.hypot(p.x - o.x, p.y - o.y); if (d < od) { od = d; opp = o; } });
       if (opp && Math.random() < 0.5) { p.aiPvp = now + 700; bump(p); return; }
     }
@@ -521,10 +536,7 @@ function TopDown(opts) {
     else { tx = tgt.trash.x; ty = tgt.trash.y; reach = 52; }
     var dx = tx - p.x, dy = ty - p.y, dist = Math.hypot(dx, dy) || 1;
     p.ctrl = { dx: dx/dist, dy: dy/dist, until: now + 300 };
-    if (!tgt.home && dist < reach && now > (p.aiCool || 0)) {   // 창고는 근처 체류만 하면 자동저장
-      p.aiCool = now + Math.max(260, (s.cooldown||0.4)*1000);
-      grab(p); p._tExp = 0;
-    }
+    if (!tgt.home && dist < reach) p._tExp = 0;                 // 도착=자동 줍기(autoPickup)가 처리 → 다음 목표
   }
   function step(dt, now) {
     var sp = Math.min(W, H) * BASE_SPEED_FRAC;
@@ -568,6 +580,7 @@ function TopDown(opts) {
       p.mv = (p.mv || 0) + ((p.moving ? 1 : 0) - (p.mv || 0)) * Math.min(1, dt * 10);   // 0..1
       // 쓰레받이: 이동 중 새는 확률 (담은 것 하나 흘림)
       if (p.moving && s.leak && p.holds.length && Math.random() < s.leak*dt*6) { var t = p.holds.pop(); t.held = null; t.x = p.x - p.dir*14; t.y = p.y + 16; say('앗, 흘렸다', p.x, p.y - 46, '#ffd166'); sfxTrash(t.kind, false); }
+      autoPickup(p, now);                                        // 가까이 가면 자동으로 주움
       // 자동 뱅킹: 내 창고 반경 안에서 0.5초 머무르면 손에 든 보물 전부 저장(=점수)
       if (M && !M.ended && M.warehouses) { var wh = M.warehouses[id];
         if (wh && Math.hypot(p.x - wh.x, p.y - wh.y) < WH_R) {
