@@ -65,8 +65,7 @@
 <div id="result">
   <h1>🎉 시상식 🎉</h1>
   <div style="display:flex;gap:30px;flex-wrap:wrap;justify-content:center">
-    <div class="crown"><div class="k">🧹 청소왕</div><div class="n" id="cleanKing">-</div></div>
-    <div class="crown"><div class="k">🎨 예술왕</div><div class="n" id="artKing">-</div></div>
+    <div class="crown"><div class="k">👑 보물왕</div><div class="n" id="cleanKing">-</div></div>
   </div>
   <div style="width:min(560px,86vw)"><h3 style="opacity:.7;text-align:center;margin:6px 0">⭐ 누적 순위</h3><div id="leaderboard" style="font-size:20px"></div></div>
   <p style="opacity:.7">스페이스바로 새 게임</p>
@@ -81,7 +80,7 @@
 </script>
 <script>
 /* ───────── 탑다운 엔진 ───────── */
-var E=TopDown({canvas:document.getElementById('c'), onCount:function(){}});
+var E=TopDown({canvas:document.getElementById('c'), onCount:function(){}, onAlarm:function(id){ GameRT.toPhones({type:'alarm',id:id}); }});
 
 /* 로비 QR — 방코드는 GameRT(Firebase) 연결 후 확정 */
 function showRoomQR(room){
@@ -116,11 +115,11 @@ function cancelCountdown(){ if(cdTimer){clearInterval(cdTimer);cdTimer=null;} cd
 
 function setPhase(p){
   phase=p;
-  var names={lobby:'로비',setup:'🎨 캐릭터·장비 준비중',clean:'🧹 '+(G.MAPS[curMap]?G.MAPS[curMap].emoji+' '+G.MAPS[curMap].name:'')+' 청소 대작전!',grow:'🌟 성장 상점',art:'🎨 정크아트',result:'시상식'};
+  var names={lobby:'로비',setup:'🧺 캐릭터·장비 준비중',clean:'🧹 '+(G.MAPS[curMap]?G.MAPS[curMap].emoji+' '+G.MAPS[curMap].name:'')+' 보물 대작전!',result:'시상식'};
   document.getElementById('phaseName').textContent=names[p]||p;
   document.getElementById('lobby').classList.toggle('on',p==='lobby');
   document.getElementById('result').classList.toggle('on',p==='result');
-  document.getElementById('scores').classList.toggle('on',p==='clean'||p==='grow');
+  document.getElementById('scores').classList.toggle('on',p==='clean');
   document.getElementById('timer').classList.toggle('on',p==='clean');
   GameRT.toPhones({type:'phase',phase:p,map:curMap});
   pushState();
@@ -150,7 +149,7 @@ function addAIPlayers(){
   for(var i=0;i<count;i++){
     var id='ai_'+i;
     var ch=pool[i%pool.length];
-    var equip={ tool:G.TOOL_ORDER[i%3], container:G.CONTAINER_ORDER[i%3], feet:G.FEET_ORDER[i%3] };
+    var equip={ tool:G.TOOL_ORDER[i%3], container:G.CONTAINER_ORDER[i%3], feet:G.FEET_ORDER[i%3], gear:G.GEAR_ORDER[i%4] };
     var nick='🤖'+AI_NAMES[i%AI_NAMES.length];
     var seat=humans+1+i;
     players[id]={seat:seat, nick:nick, char:ch, equip:equip, ai:true};
@@ -172,15 +171,13 @@ function startGame(mapArg){
   clockTimer=setInterval(function(){ timeLeft--; updateTimer(); if(timeLeft<=0){ clearInterval(clockTimer); endClean(); } },1000);
 }
 function updateTimer(){ var m=Math.max(0,timeLeft); document.getElementById('timer').textContent='⏱ '+m+'초'; }
-function endClean(){ E.endRound(); showResult(); }   // 청소 끝 → 결과(성장·정크아트는 이후)
-function goArt(){ setPhase('art'); /* TODO 정크아트 */ }
+function endClean(){ E.endRound(); showResult(); }   // 청소 끝 → 바로 결과(정크아트 제외)
 function showResult(){
   if(clockTimer)clearInterval(clockTimer);
-  var sc=lastScore||{};
+  var sc=E.score()||{}; lastScore=sc;   // endRound가 미저장분 50% 합산한 최종 점수
   var rank=Object.keys(sc).map(function(id){return{id:id,n:sc[id]};}).sort(function(a,b){return b.n-a.n;});
   var king=rank[0]&&players[rank[0].id]?players[rank[0].id]:null;
-  document.getElementById('cleanKing').textContent=king?(king.seat+'번 '+king.nick+' ('+rank[0].n+'개)'):'-';
-  document.getElementById('artKing').textContent='(정크아트 준비중)';
+  document.getElementById('cleanKing').textContent=king?(king.seat+'번 '+king.nick+' ('+rank[0].n+'점)'):'-';
   setPhase('result');
   // 이번 라운드 점수를 별명별로 누적 저장 → 리더보드
   if(GameRT.dbTx&&GameRT.nickKey){
@@ -246,17 +243,19 @@ function renderRoster(){
 
 /* ───────── 폰 → 화면 메시지 ───────── */
 function addCreature(m){
-  E.addPlayer(m.id,{seat:m.seat,nick:m.nick,char:m.char});
-  if(players[m.id])players[m.id].hasCreature=true; renderRoster();
-  if(phase==='clean'){ applyStatsAll(); }   // 이미 게임 중이면 즉시 스탯 적용
+  if(players[m.id])players[m.id].hasCreature=true;
+  // 로비/준비 중에만 엔진에 투입. 게임 진행 중 도착한 사람은 다음 판 대기(폰이 자동 대기실 이동)
+  if(phase==='lobby'||phase==='setup'){ E.addPlayer(m.id,{seat:m.seat,nick:m.nick,char:m.char}); }
+  renderRoster();
 }
 GameRT.connect('screen',null,function(m){
   switch(m.type){
     case 'join': players[m.id]=players[m.id]||{}; players[m.id].seat=m.seat; if(m.nick)players[m.id].nick=m.nick; renderRoster(); checkAutoStart(); break;
     case 'creature': players[m.id]=players[m.id]||{seat:m.seat,nick:m.nick}; if(m.nick)players[m.id].nick=m.nick; players[m.id].char=m.char; players[m.id].equip=m.equip; players[m.id].dataUrl=m.dataUrl; addCreature(m); checkAutoStart(); break;
     case 'ctrl':
-      if(m.act==='grab') E.grab(m.id);
-      else if(m.act==='steal') { /* TODO 꼬챙이 뺏기 */ }
+      if(m.act==='grab') E.act(m.id,'grab');
+      else if(m.act==='bump'||m.act==='steal') E.act(m.id,'bump');
+      else if(m.act==='gear') E.act(m.id,'gear');
       else E.control(m.id, +m.dx||0, +m.dy||0);
       break;
   }

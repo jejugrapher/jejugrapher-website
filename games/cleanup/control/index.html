@@ -43,6 +43,13 @@
 </style>
 </head>
 <body>
+<div id="pwGate" style="position:fixed;inset:0;background:#0e1630;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px">
+  <div style="font-size:22px;font-weight:800">🔒 컨트롤 화면 잠금</div>
+  <div style="opacity:.7">비밀번호를 입력하세요</div>
+  <input id="pwIn" type="password" inputmode="numeric" placeholder="비밀번호" autocomplete="off" style="font-size:24px;padding:12px 16px;border-radius:12px;border:3px solid #3a4d86;background:#152046;color:#fff;text-align:center;letter-spacing:4px;width:min(260px,80vw)">
+  <button id="pwBtn" style="font-size:18px;padding:12px 32px;border:0;border-radius:12px;background:#00c2a8;color:#04231e;font-weight:800">열기</button>
+  <div id="pwWarn" style="color:#ff9f9f;height:18px;font-size:15px"></div>
+</div>
 <header>
   <h1>🕹️ 청소게임 컨트롤</h1>
   <div class="pill">방 <b id="roomLbl">····</b></div>
@@ -127,7 +134,14 @@ document.getElementById('endBtn').onclick=function(){ GameRT.dbSet('cmd',{action
 document.getElementById('resetBtn').onclick=function(){ if(confirm('지금 라운드를 초기화할까요? (점수는 저장됩니다)')) GameRT.dbSet('cmd',{action:'reset',n:Date.now()}); };
 document.getElementById('connectBtn').onclick=function(){ var rc=(document.getElementById('roomIn').value||'').trim().toUpperCase(); if(!rc){alert('방 코드를 입력해요');return;} begin(rc); };
 
-if(urlRoom) begin(urlRoom); else document.getElementById('roomRow').style.display='block';
+/* ── 비밀번호 잠금(1234567) ── */
+var CTRL_PW='1234567';
+function initApp(){ if(urlRoom) begin(urlRoom); else document.getElementById('roomRow').style.display='block'; }
+function tryPw(){ var v=document.getElementById('pwIn').value; if(v===CTRL_PW){ try{sessionStorage.setItem('cg_ctrl_ok','1');}catch(e){} document.getElementById('pwGate').style.display='none'; initApp(); } else { document.getElementById('pwWarn').textContent='비밀번호가 틀렸어요'; document.getElementById('pwIn').value=''; document.getElementById('pwIn').focus(); } }
+document.getElementById('pwBtn').onclick=tryPw;
+document.getElementById('pwIn').addEventListener('keydown',function(e){ if(e.key==='Enter'){e.preventDefault();tryPw();} });
+var _ctrlOk=false; try{_ctrlOk=sessionStorage.getItem('cg_ctrl_ok')==='1';}catch(e){}
+if(_ctrlOk){ document.getElementById('pwGate').style.display='none'; initApp(); } else { document.getElementById('pwIn').focus(); }
 </script>
 </body>
 </html>

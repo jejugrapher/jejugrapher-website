@@ -209,8 +209,11 @@ function TopDown(opts) {
   function setStats(id, s) { var p = players[id]; if (p && s) { p.speedMul = s.speedMul != null ? s.speedMul : p.speedMul; if (s.speedByTerrain) p.speedByTerrain = s.speedByTerrain; p.stats = s; } }
   function st(p) { return p.stats || { capacity: 15, pickup: 'single', areaR: 0, canHeavy: true, canCorner: true, canSteal: false, cooldown: 0.4, collect: 1, leak: 0, skewerLoss: 0.3 }; }
   function cap(p) { return st(p).capacity || 15; }
-  function control(id, dx, dy) { var p = players[id]; if (!p) return; if (performance.now() < p.stunUntil) { p.ctrl = null; return; } if (!dx && !dy) { p.ctrl = null; return; } p.ctrl = { dx: dx, dy: dy, until: performance.now() + 600 }; }
-  function act(id, a) { var p = players[id]; if (!p) return; if (performance.now() < p.stunUntil) return; if (a === 'grab') grab(p); else if (a === 'steal') steal(p); }
+  function control(id, dx, dy) { var p = players[id]; if (!p) return; p.lastInput = performance.now(); if (performance.now() < p.stunUntil) { p.ctrl = null; return; } if (!dx && !dy) { p.ctrl = null; return; } p.ctrl = { dx: dx, dy: dy, until: performance.now() + 600 }; }
+  function act(id, a) { var p = players[id]; if (!p) return; p.lastInput = performance.now(); if (performance.now() < p.stunUntil) return; if (a === 'grab') grab(p); else if (a === 'bump' || a === 'steal') bump(p); else if (a === 'gear') useGear(p); }
+  function useGear(p) { var s = st(p), now = performance.now();
+    if (s.gearBoost) { if (now < (p.boostCD||0)) return; p.boostCD = now + 10000; p.boostUntil = now + 1500; p.act = now; say('슝! 🚀', p.x, p.y - 46, '#7ae1ff'); burst(p.x, p.y, '#7ae1ff'); }
+  }
 
   function nearBin(p) { if (!M || !M.bins) return null; for (var i = 0; i < M.bins.length; i++) { var b = M.bins[i]; if (Math.hypot(p.x - b.x*W, p.y - b.y*H) < 90) return b; } return null; }
   function deposit(p, bin) {
@@ -229,7 +232,7 @@ function TopDown(opts) {
     best.hp--; best.shake = performance.now() + 220; burst(best.x, best.y - 10, '#cfd6df');
     if (best.hp <= 0) {
       M.trash = M.trash.filter(function (x) { return x !== best; });
-      best.kinds.forEach(function (kd, i) { var a = i/best.kinds.length*6.28; var t = { x: best.x + Math.cos(a)*30, y: best.y + Math.sin(a)*30, kind: kd, cat: TRASH_CAT[kd]||'general', s: 13+Math.random()*3, rot: Math.random()*6.3, held: null, heavy:(kd==='can'||kd==='bottle'||kd==='glass'||kd==='scrap'), corner:false, stuck:false, hidden:false, revealed:true, drift:true, ph: Math.random()*6.3 }; M.trash.push(t); });
+      best.kinds.forEach(function (kd, i) { var a = i/best.kinds.length*6.28; var t = { x: best.x + Math.cos(a)*30, y: best.y + Math.sin(a)*30, kind: kd, cat: TRASH_CAT[kd]||'general', value:1, big:false, s: 13+Math.random()*3, rot: Math.random()*6.3, held: null, heavy:(kd==='can'||kd==='bottle'||kd==='glass'||kd==='scrap'), corner:false, stuck:false, hidden:false, revealed:true, drift:true, ph: Math.random()*6.3 }; M.trash.push(t); });
       say('분리 완료!', best.x, best.y - 40, '#b6ff7a'); burst(best.x, best.y, '#ffd166');
     } else { say('한 번 더! (' + best.hp + ')', best.x, best.y - 40, '#ffd166'); }
     return true;
@@ -237,7 +240,8 @@ function TopDown(opts) {
   function grab(p) {
     if (!M || M.ended) return;
     var s = st(p); p.act = performance.now(); p.actSteal = false; // 도구 사용 애니메이션 트리거
-    var b = nearBin(p); if (b && p.holds.length) { deposit(p, b); return; }   // 분리수거함 옆 → 맞는 종류만 넣기
+    if (M.warehouses) { for (var wid in M.warehouses) { if (wid === p.id) continue; var wh = M.warehouses[wid];   // 적 창고 옆이면 습격
+      if (Math.hypot(p.x - wh.x, p.y - wh.y) < WH_R) { raid(p, wh); return; } } }
     if (hitClump(p)) return;                                     // 근처 뭉친 쓰레기부터 부순다
     if (p.holds.length >= cap(p)) { say('가방이 꽉 찼어! 수거함으로', p.x, p.y - 46, '#ffd166'); return; }
     function ok(t) { return !t.held && !t.clump && t.revealed; }
@@ -254,20 +258,75 @@ function TopDown(opts) {
       else say(s.canCorner ? '가까이에 쓰레기가 없어' : '구석/무거운 건 못 집어', p.x, p.y - 46, '#ffd166');
     }
   }
-  /* 꼬챙이: 근처 다른 친구가 든 쓰레기 1개 뺏기 (상대 담는 도구가 방어) */
-  function steal(p) {
-    if (!M || M.ended) return; var s = st(p); if (!s.canSteal) return;
-    if (performance.now() < (p.cool||0)) return; p.cool = performance.now() + 500; p.act = performance.now(); p.actSteal = true;
-    if (p.holds.length >= cap(p)) { say('내 가방이 꽉 찼어', p.x, p.y - 46, '#ffd166'); return; }
-    var victim = null, bd = 96;
-    Object.keys(players).forEach(function (id) { if (id === p.id) return; var o = players[id]; if (!o.holds || !o.holds.length) return;
-      var d = Math.hypot(o.x - p.x, o.y - p.y); if (d < bd) { bd = d; victim = o; } });
-    if (!victim) { say('뺏을 친구가 없어', p.x, p.y - 46, '#ffd166'); return; }
-    var vs = st(victim), lose = vs.skewerLoss != null ? vs.skewerLoss : 0.3;
-    if (Math.random() > lose) { say('방어됐다!', victim.x, victim.y - 46, '#8ee'); return; }   // 상대 방어 성공
-    var t = victim.holds.pop(); if (!t) return; t.held = p.id; p.holds.push(t);
-    say('뺏었다!', p.x, p.y - 46, '#ff7ab6'); say('뺏겼다!', victim.x, victim.y - 46, '#ffb3b3'); burst(victim.x, victim.y, '#ff7ab6');
+  /* ── PvP: 부딪히기(밀치기)·창고 습격·안티그리핑 ── */
+  var BUMP_R = 66, MIN_SAFE_VAULT = 5, IFRAME = 3000, DR_WINDOW = 15000;
+  function rankAsc() { return Object.keys(players).map(function (id) { return { id: id, b: players[id].bank||0 }; }).sort(function (a, b) { return a.b - b.b; }); }
+  function isLeader(p) { var a = rankAsc(); return a.length > 2 && a[a.length-1].id === p.id && (p.bank||0) > 0; }
+  function isBottom20(o) { var a = rankAsc(); if (a.length < 3) return false; var k = Math.max(1, Math.floor(a.length*0.2)); for (var i = 0; i < k; i++) if (a[i].id === o.id) return true; return false; }
+  function protectedTarget(p, o) { return isLeader(p) && isBottom20(o); }        // 1위는 하위20% 못 건드림
+  // 부딪히기: 가까운 상대의 손 보물 50%(최대3) 떨어뜨림 + 무적3s. 작살은 손으로 회수.
+  function bump(p) {
+    if (!M || M.ended) return; var now = performance.now(), s = st(p);
+    if (now < (p.cool||0)) return; p.cool = now + (s.canSteal ? 450 : 620); p.act = now; p.actSteal = !!s.canSteal;
+    var vic = null, bd = BUMP_R;
+    Object.keys(players).forEach(function (id) { if (id === p.id) return; var o = players[id];
+      if (o.afk || now < (o.iframe||0)) return; if (protectedTarget(p, o)) return;
+      var d = Math.hypot(o.x - p.x, o.y - p.y); if (d < bd) { bd = d; vic = o; } });
+    if (!vic) { say('아무도 없네!', p.x, p.y - 46, '#ffd166'); return; }
+    if (p._lastVic === vic.id && now - (p._lastVicT||0) < DR_WINDOW) { say('다른 친구를 찾아보자!', p.x, p.y - 46, '#8ee'); return; }  // 연속타격 무효
+    p._lastVic = vic.id; p._lastVicT = now;
+    var vs = st(vic);
+    if (vs.superArmor && now >= (vic.armorCD||0)) { vic.armorCD = now + 10000; vic.iframe = now + 800; say('끄떡없다! 💪', vic.x, vic.y - 46, '#8ee'); return; }  // 물개 슈퍼아머
+    var n = vic.holds.length, drop = Math.min(Math.ceil(n*0.5), 3) - (vs.dropResist||0); if (drop < 0) drop = 0;
+    var got = 0;
+    for (var i = 0; i < drop; i++) { var t = vic.holds.pop(); if (!t) break; t.held = null;
+      if (s.canSteal && p.holds.length < cap(p)) { t.held = p.id; p.holds.push(t); got++; }
+      else { t.x = vic.x + (Math.random()-.5)*46; t.y = vic.y + (Math.random()-.5)*46; } }
+    vic.iframe = now + IFRAME; vic.dwell = 0;
+    if (p.char === 'crab') vic.slowUntil = now + 3000;           // 게: 명중 시 상대 둔화
+    say(got ? '뺏었다! +' + got : (drop ? '삐용!' : '밀쳤다!'), p.x, p.y - 46, got ? '#ff7ab6' : '#fff');
+    say('😜', p.x, p.y - 54, '#ff7ab6'); if (drop) burst(vic.x, vic.y, '#fff');
   }
+  // 창고 습격: 적 창고에서 1개 → 내 손. 앞 5개 보호, 선두/러쉬면 딜레이 반감, 자물쇠 +2s.
+  function raid(p, wh) {
+    if (!M || M.ended) return; var now = performance.now(); if (now < (p.raidCool||0)) return;
+    var owner = players[wh.id]; if (!owner) return;
+    if (protectedTarget(p, owner)) { say('너무 약해서 못 뺏어!', p.x, p.y - 46, '#8ee'); p.raidCool = now + 800; return; }
+    if ((owner.bank||0) <= MIN_SAFE_VAULT) { say('금고 잠김(5개 보호)', p.x, p.y - 46, '#ffd166'); p.raidCool = now + 700; return; }
+    if (p.holds.length >= cap(p)) { say('가방이 꽉 찼어', p.x, p.y - 46, '#ffd166'); return; }
+    var fast = (owner.bank >= 15) || (M.phase === 'rush'); var delay = (fast ? 1000 : 2000) + (st(owner).gearLock ? 2000 : 0);
+    p.raidCool = now + delay; p.act = now; p.actSteal = true;
+    owner.bank -= 1; M.score[wh.id] = owner.bank;
+    var t = makeTrash(p.x, p.y, 'cup', {}); t.held = p.id; p.holds.push(t);
+    say('새치기! +1', p.x, p.y - 46, '#ff7ab6'); say('앗 내 창고!', wh.x, wh.y - 46, '#ffb3b3'); burst(wh.x, wh.y, wh.col);
+  }
+
+  /* ───────── 창고(거점) & 보물 생성 헬퍼 ───────── */
+  var WH_R = 46;                                                // 뱅킹/창고 반경(px)
+  var WH_SLOTS = []; (function () { for (var i = 0; i < 10; i++) { var a = -Math.PI/2 + i*(2*Math.PI/10); WH_SLOTS.push({ ux: 0.5 + Math.cos(a)*0.40, uy: 0.5 + Math.sin(a)*0.40 }); } })();
+  function nudgeWalkable(ux, uy) { var x = ux*W, y = uy*H;
+    if (!blockedAt(x, y) && terrainAt(x, y) !== 'water') return { x: x, y: y };
+    for (var r = 24; r < 240; r += 24) for (var k = 0; k < 8; k++) { var a = k*Math.PI/4, nx = x + Math.cos(a)*r, ny = y + Math.sin(a)*r;
+      if (nx > 24 && nx < W-24 && ny > 24 && ny < H-24 && !blockedAt(nx, ny) && terrainAt(nx, ny) !== 'water') return { x: nx, y: ny }; }
+    return { x: Math.max(24, Math.min(W-24, x)), y: Math.max(24, Math.min(H-24, y)) };
+  }
+  function buildWarehouses() {                                  // 테두리 10방향 대칭, 참여수만큼 균등 활성
+    var ids = Object.keys(players).sort(function (a, b) { return (players[a].seat||0) - (players[b].seat||0); });
+    var n = Math.max(1, ids.length), wh = {};
+    ids.forEach(function (id, idx) { var s = WH_SLOTS[Math.floor(idx*10/n) % 10]; var pos = nudgeWalkable(s.ux, s.uy);
+      wh[id] = { id: id, seat: players[id].seat, x: pos.x, y: pos.y, col: PCOL[((players[id].seat||1)-1) % PCOL.length] }; });
+    return wh;
+  }
+  function centralPos() {                                       // 중앙 자원 밀집 구역
+    var x, y, t = 0; do { x = W*(0.28 + Math.random()*0.44); y = H*(0.28 + Math.random()*0.44); t++; } while (t < 25 && blockedAt(x, y));
+    return { x: x, y: y };
+  }
+  function makeTrash(x, y, kind, opt) { opt = opt || {};
+    var heavy = (kind === 'can' || kind === 'bottle' || kind === 'glass' || kind === 'scrap');
+    var big = !!opt.big;
+    return { x: x, y: y, kind: kind, cat: TRASH_CAT[kind] || 'general', value: big ? 4 : 1, big: big,
+             s: big ? 26 : 13 + Math.random()*4, rot: Math.random()*6.3, held: null, heavy: heavy || big,
+             corner: !!opt.corner, stuck: !!opt.stuck, hidden: !!opt.hidden, revealed: !opt.hidden, drift: opt.drift !== false && !big, ph: Math.random()*6.3 }; }
 
   /* ───────── 라운드 ───────── */
   function startRound(key) {
@@ -276,50 +335,42 @@ function TopDown(opts) {
     var m = curMap(), list = [];
     var N = Math.round(m.trashN * spread);
     function nearBlocked(x, y) { for (var a = -1; a <= 1; a++) for (var b = -1; b <= 1; b++) if (blockedAt(x + a*36, y + b*36)) return true; return false; }
-    function newTrash(x, y, kind, opt) { opt = opt || {};
-      var heavy = (kind === 'can' || kind === 'bottle' || kind === 'glass' || kind === 'scrap');
-      return { x: x, y: y, kind: kind, cat: TRASH_CAT[kind] || 'general', s: 13 + Math.random()*4, rot: Math.random()*6.3, held: null,
-               heavy: heavy, corner: !!opt.corner, stuck: !!opt.stuck, hidden: !!opt.hidden, revealed: !opt.hidden, drift: opt.drift !== false, ph: Math.random()*6.3 }; }
     for (var i = 0; i < N; i++) {
       var x, y, tries = 0, nearObs = false;
-      do { x = W*(0.06 + Math.random()*0.88); y = H*(0.2 + Math.random()*0.74); tries++;
+      do { x = W*(0.18 + Math.random()*0.64); y = H*(0.18 + Math.random()*0.64); tries++;  // 중앙 집중
         nearObs = nearBlocked(x, y);
-      } while (tries < 30 && (blockedAt(x, y) || y < H*0.18));
+      } while (tries < 30 && (blockedAt(x, y) || y < H*0.14));
       var kind = m.trashKinds[i % m.trashKinds.length];
-      // 구석에 박힌 것(장애물 옆, 안 흐름) / 숨겨진 것(가까이 가야 보임) / 나머지는 바람에 흐름
       var r = Math.random();
       var opt = { drift: true };
       if (nearObs) { opt.corner = true; opt.stuck = true; opt.drift = false; }        // 구석에 박힘
-      else if (r < 0.16) { opt.hidden = true; opt.drift = false; }                     // 숨겨짐
-      list.push(newTrash(x, y, kind, opt));
+      else if (r < 0.12) { opt.hidden = true; opt.drift = false; }                    // 숨겨짐
+      list.push(makeTrash(x, y, kind, opt));
     }
-    // 뭉친 쓰레기: 여러 번 충격을 줘야 분리되어 흩어짐 (맵당 2~4개)
+    // 뭉친 쓰레기(여러 번 타격→흩어짐) 2~4개
     var clumpN = 2 + Math.floor(Math.random()*3);
     for (var ci = 0; ci < clumpN; ci++) {
-      var cx, cy, ct = 0; do { cx = W*(0.15 + Math.random()*0.7); cy = H*(0.28 + Math.random()*0.6); ct++; } while (ct < 20 && blockedAt(cx, cy));
-      var ck = []; for (var j = 0; j < 4; j++) ck.push(m.trashKinds[Math.floor(Math.random()*m.trashKinds.length)]);
-      list.push({ clump: true, x: cx, y: cy, hp: 3, kinds: ck, s: 22, rot: 0, held: null, shake: 0, drift: false, ph: Math.random()*6.3 });
+      var cp = centralPos(); var ck = []; for (var j = 0; j < 4; j++) ck.push(m.trashKinds[Math.floor(Math.random()*m.trashKinds.length)]);
+      list.push({ clump: true, x: cp.x, y: cp.y, hp: 3, kinds: ck, s: 22, rot: 0, held: null, shake: 0, drift: false, ph: Math.random()*6.3, value: 1 });
     }
-    // 분리수거함: 이 맵에 나오는 카테고리별로 상단에 배치
-    var catsPresent = []; m.trashKinds.forEach(function (kd) { var c = TRASH_CAT[kd] || 'general'; if (catsPresent.indexOf(c) < 0) catsPresent.push(c); });
-    var bins = catsPresent.map(function (c, i) { return { cat: c, x: (i + 1) / (catsPresent.length + 1), y: 0.09 }; });
-    M = { trash: list, score: {}, ended: false, bins: bins };
+    // 플레이어별 전용 창고
+    var warehouses = buildWarehouses();
+    M = { trash: list, score: {}, ended: false, warehouses: warehouses, roundT: 0, phase: 'farm', spawnT: 0, bigT: 8, capN: N };
     wind = { x: 0, y: 0, t: 0 };
-    // 스폰: 막힌 곳(바위·돌담) 피하고, 헤엄 못 하는 캐릭터는 물도 피해 마른 땅에 배치
-    function safeSpawn(swimmer) {
-      var x, y, t = 0;
-      do { x = W*(0.12 + Math.random()*0.76); y = H*(0.55 + Math.random()*0.35); t++;
-      } while (t < 40 && (blockedAt(x, y) || (!swimmer && terrainAt(x, y) === 'water')));
-      if (t >= 40) { for (var yy = H*0.9; yy > H*0.2; yy -= H*0.06) for (var xx = W*0.1; xx < W*0.9; xx += W*0.06)
-        if (!blockedAt(xx, yy) && (swimmer || terrainAt(xx, yy) !== 'water')) return { x: xx, y: yy }; }
-      return { x: x, y: y };
-    }
-    Object.keys(players).forEach(function (id) { var p = players[id]; p.holds = []; p.score = 0; p.moist = 100; p.stunUntil = 0;
-      var s = st(p); var swim = !!(s.fly || s.moisture || (p.speedByTerrain && p.speedByTerrain.water >= 1.2));
-      var sp0 = safeSpawn(swim); p.x = sp0.x; p.y = sp0.y; p.startX = sp0.x; p.startY = sp0.y; });
+    // 스폰: 자기 창고(거점)에서 시작 → 여기가 돌아올 집. 창고가 막힌 땅이면 nudge된 위치
+    Object.keys(players).forEach(function (id) { var p = players[id]; p.holds = []; p.bank = 0; p.score = 0; p.dwell = 0; p.moist = 100; p.stunUntil = 0;
+      p.iframe = 0; p.slowUntil = 0; p.afk = false; p.lastInput = performance.now(); p._lastVic = null; p.hits = 0;
+      p.armorCD = 0; p.boostCD = 0; p.boostUntil = 0; p.alarmUntil = 0; p.alarmCD = 0; p.trapCharges = 2; p.trapCD = 0;
+      var wh = warehouses[id]; var sp0 = wh ? { x: wh.x, y: wh.y } : nudgeWalkable(0.5, 0.85);
+      p.x = sp0.x; p.y = sp0.y; p.startX = sp0.x; p.startY = sp0.y; });
     say(m.emoji + ' ' + m.name + '!', W/2, H*0.5, '#ffd166', 2.2, 40);
   }
-  function endRound() { if (M) M.ended = true; }
+  function endRound() { if (!M) return; M.ended = true;
+    // 미저장분: 손에 든 보물 가치의 50%(올림) 최종 인정
+    Object.keys(players).forEach(function (id) { var p = players[id]; var hv = 0; (p.holds||[]).forEach(function (t) { hv += (t.value||1); });
+      var bonus = Math.ceil(hv*0.5); p.bank = (p.bank||0) + bonus; M.score[id] = p.bank;
+      if (bonus > 0) say('+' + bonus + ' 배달!', p.x, p.y - 46, '#b6ff7a'); });
+  }
   function clear() { players = {}; trash = []; M = null; if (opts.onCount) opts.onCount(0); }
 
   /* ───────── 이펙트 ───────── */
@@ -336,15 +387,20 @@ function TopDown(opts) {
     if (p._stx == null) { p._stx = p.x; p._sty = p.y; p._stChk = now; }
     if (now - p._stChk > 700) { if (Math.hypot(p.x - p._stx, p.y - p._sty) < 8 && p.ctrl) { p._t = null; p._wander = now + 600; } p._stx = p.x; p._sty = p.y; p._stChk = now; }
     if (p._wander && now < p._wander) { p.ctrl = { dx: Math.cos(now*0.004 + p.bob), dy: Math.sin(now*0.005 + p.bob*2), until: now + 300 }; return; }
-    var mode = (p.holds.length >= Math.min(cap(p), 6)) ? 'bin' : 'trash';   // 6개만 모아도 버리러 감(활발히 득점)
+    // 기회형 PvP: 옆에 적 창고면 습격, 옆에 짐 든 상대면 밀치기
+    if (now > (p.aiPvp || 0)) {
+      var rw = null, rd = WH_R + 8; if (M.warehouses) for (var wid in M.warehouses) { if (wid === p.id) continue; var w = M.warehouses[wid]; var ow = players[wid]; if (!ow || (ow.bank||0) <= MIN_SAFE_VAULT) continue; var dw = Math.hypot(p.x - w.x, p.y - w.y); if (dw < rd) { rd = dw; rw = w; } }
+      if (rw && p.holds.length < cap(p)) { p.aiPvp = now + 400; raid(p, rw); return; }
+      var opp = null, od = BUMP_R; Object.keys(players).forEach(function (id) { if (id === p.id) return; var o = players[id]; if (!o.holds || !o.holds.length || o.afk || now < (o.iframe||0)) return; var d = Math.hypot(p.x - o.x, p.y - o.y); if (d < od) { od = d; opp = o; } });
+      if (opp && Math.random() < 0.5) { p.aiPvp = now + 700; bump(p); return; }
+    }
+    var mode = (p.holds.length >= Math.min(cap(p), 6)) ? 'home' : 'trash';   // 6개 모으면 내 창고로 귀환(자동 뱅킹)
     var lost = p._t && ((p._t.trash && p._t.trash.held) || (p._t.clump && p._t.clump.hp <= 0));
     if (!p._t || now > (p._tExp || 0) || lost || mode !== p._mode) {
       p._mode = mode; p._tExp = now + 450 + Math.random()*450; p._t = null;
-      if (mode === 'bin') {
-        var want = null; if (p.holds.length) { var cnt = {}; p.holds.forEach(function (h) { cnt[h.cat] = (cnt[h.cat]||0)+1; }); want = Object.keys(cnt).sort(function (a,b){return cnt[b]-cnt[a];})[0]; }
-        var bb = null, bd = 1e9; (M.bins||[]).forEach(function (b) { if (want && b.cat !== want) return; var d = Math.hypot(b.x*W-p.x, b.y*H-p.y); if (d < bd) { bd = d; bb = b; } });
-        if (!bb) (M.bins||[]).forEach(function (b) { var d = Math.hypot(b.x*W-p.x, b.y*H-p.y); if (d < bd) { bd = d; bb = b; } });
-        p._t = bb ? { bin: bb } : null;
+      if (mode === 'home') {
+        var wh = M.warehouses ? M.warehouses[p.id] : null;
+        p._t = wh ? { home: wh } : null;
       } else {
         var best = null, bdist = 1e9;
         M.trash.forEach(function (t) { if (t.held) return; if (t.hidden && !t.revealed) return;
@@ -355,20 +411,20 @@ function TopDown(opts) {
     }
     var tgt = p._t, tx, ty, reach;
     if (!tgt) { p.ctrl = { dx: Math.cos(now*0.001 + p.bob), dy: Math.sin(now*0.0013 + p.bob), until: now + 300 }; return; }  // 배회
-    if (tgt.bin) { tx = tgt.bin.x*W; ty = tgt.bin.y*H; reach = 82; }
+    if (tgt.home) { tx = tgt.home.x; ty = tgt.home.y; reach = 30; }   // 창고 도착=자동 뱅킹(step)
     else if (tgt.clump) { tx = tgt.clump.x; ty = tgt.clump.y; reach = 54; }
     else { tx = tgt.trash.x; ty = tgt.trash.y; reach = 52; }
     var dx = tx - p.x, dy = ty - p.y, dist = Math.hypot(dx, dy) || 1;
     p.ctrl = { dx: dx/dist, dy: dy/dist, until: now + 300 };
-    if (dist < reach && now > (p.aiCool || 0)) {
-      p.aiCool = now + (tgt.bin ? 300 : Math.max(260, (s.cooldown||0.4)*1000));
-      if (s.canSteal && !tgt.bin && Math.random() < 0.25) steal(p); else grab(p);
-      p._tExp = 0;
+    if (!tgt.home && dist < reach && now > (p.aiCool || 0)) {   // 창고는 근처 체류만 하면 자동저장
+      p.aiCool = now + Math.max(260, (s.cooldown||0.4)*1000);
+      grab(p); p._tExp = 0;
     }
   }
   function step(dt, now) {
     var sp = Math.min(W, H) * BASE_SPEED_FRAC;
     Object.keys(players).forEach(function (id) { var p = players[id]; var s = st(p);
+      p.afk = !p.ai && (now - (p.lastInput || now)) > 15000;     // 15초 무입력 → 유령(공격 불가)
       // 게: 수분 게이지 (물 밖이면 마름 → 0이면 기절, 쓰레기 다 흘리고 시작점 복귀)
       if (s.moisture) {
         if (inWater(p)) p.moist = Math.min(100, p.moist + 40*dt);
@@ -380,13 +436,20 @@ function TopDown(opts) {
       if (p._stunned && now >= p.stunUntil) { p._stunned = false; p.x = p.startX; p.y = p.startY; p.moist = 100; }
       if (now < p.stunUntil) { p.moving = false; return; }        // 기절 중 이동 불가
       if (p.ai) aiThink(p, now, s);                               // AI 경쟁 캐릭터: 스스로 줍고 버림
-      // 새는 트인 맵(해변·계곡)에선 날아서 바위/벽 통과
-      var fly = s.fly && OPEN_MAPS[mapKey];
+      // 갈매기: 벽·물 무시 비행(전 맵)
+      var fly = s.fly;
       function block(x, y) { return fly ? false : blockedAt(x, y); }
       if (p.ctrl && now > p.ctrl.until) p.ctrl = null;
       if (p.ctrl) { var dx = p.ctrl.dx, dy = p.ctrl.dy, mag = Math.hypot(dx, dy) || 1; dx /= mag; dy /= mag;
-        var terr = terrainAt(p.x, p.y);
+        var terr = fly ? 'air' : terrainAt(p.x, p.y);
         var tmul = (p.speedByTerrain && p.speedByTerrain[terr] != null) ? p.speedByTerrain[terr] : (p.speedMul || 1);
+        if (p.holds && p.holds.some(function (t) { return t.big; })) tmul *= 0.6;   // 대형 보물 운반 시 둔화
+        if (now < (p.iframe||0)) tmul *= 1.2;                    // 피격 무적 중 이속 보너스(도망)
+        if (now < (p.slowUntil||0)) tmul *= 0.5;                 // 게 집게에 둔화
+        if (now < (p.boostUntil||0)) tmul *= 2.0;               // 부스트 장비
+        if (s.hAccel && Math.abs(dx) > Math.abs(dy)) tmul *= 1.3;  // 게: 가로 이동 가속
+        if (s.homeTurf) { var mwh = M && M.warehouses ? M.warehouses[id] : null; if (mwh && Math.hypot(p.x-mwh.x, p.y-mwh.y) < WH_R*2.4) tmul *= 1.3; }  // 해녀 홈터프
+        if (now < (p.alarmUntil||0)) tmul *= 1.5;                // 경보기: 귀환 가속
         var mv = sp * tmul * dt;
         var nx = p.x + dx*mv; if (inBounds(nx, p.y, 18) && !block(nx, p.y)) p.x = nx;
         var ny = p.y + dy*mv; if (inBounds(p.x, ny, 18) && !block(p.x, ny)) p.y = ny;
@@ -399,7 +462,33 @@ function TopDown(opts) {
       p.mv = (p.mv || 0) + ((p.moving ? 1 : 0) - (p.mv || 0)) * Math.min(1, dt * 10);   // 0..1
       // 쓰레받이: 이동 중 새는 확률 (담은 것 하나 흘림)
       if (p.moving && s.leak && p.holds.length && Math.random() < s.leak*dt*6) { var t = p.holds.pop(); t.held = null; t.x = p.x - p.dir*14; t.y = p.y + 16; say('앗, 흘렸다', p.x, p.y - 46, '#ffd166'); }
+      // 자동 뱅킹: 내 창고 반경 안에서 0.5초 머무르면 손에 든 보물 전부 저장(=점수)
+      if (M && !M.ended && M.warehouses) { var wh = M.warehouses[id];
+        if (wh && Math.hypot(p.x - wh.x, p.y - wh.y) < WH_R) {
+          p.dwell = (p.dwell || 0) + dt;
+          if (p.dwell >= 0.5 && p.holds.length) { var val = 0; p.holds.forEach(function (t) { val += (t.value||1); M.trash = M.trash.filter(function (x) { return x !== t; }); });
+            p.bank = (p.bank || 0) + val; M.score[id] = p.bank; say('+' + val + ' 저장!', p.x, p.y - 48, '#b6ff7a'); burst(p.x, p.y - 20, wh.col); p.holds = []; p.dwell = 0; }
+        } else p.dwell = 0;
+      }
     });
+    // 장비 자동효과: 함정(내 창고 침입자 기절)·경보(적 접근 알림+귀환가속)
+    if (M && !M.ended && M.warehouses) { Object.keys(M.warehouses).forEach(function (wid) {
+      var owner = players[wid]; if (!owner) return; var os = st(owner), wh = M.warehouses[wid];
+      var intruder = null; for (var iid in players) { if (iid === wid) continue; var e = players[iid]; if (e.afk) continue; if (Math.hypot(e.x - wh.x, e.y - wh.y) < WH_R + 6) { intruder = e; break; } }
+      if (!intruder) return;
+      if (os.gearTrap && (owner.trapCharges||0) > 0 && now > (owner.trapCD||0)) { owner.trapCharges--; owner.trapCD = now + 600;
+        intruder.stunUntil = Math.max(intruder.stunUntil||0, now + 2000); intruder.ctrl = null; say('🪤 찰칵!', intruder.x, intruder.y - 46, '#ffd166'); burst(intruder.x, intruder.y, '#ffd166'); }
+      if (os.gearAlarm && now > (owner.alarmCD||0)) { owner.alarmCD = now + 2500; owner.alarmUntil = now + 3000; say('🔔!', wh.x, wh.y - 52, '#ff6b6b'); if (opts.onAlarm) opts.onAlarm(wid); }
+    }); }
+    // 라운드 시간·페이즈·지속 스폰 (0~60 파밍 2s / 60~90 러쉬: 중앙 스폰 절반, 대형 20s)
+    if (M && !M.ended) {
+      M.roundT += dt; M.phase = M.roundT < 60 ? 'farm' : 'rush';
+      var m2 = curMap(), curN = M.trash.filter(function (t) { return !t.held; }).length;
+      M.spawnT += dt; var interval = (M.phase === 'farm') ? 2.0 : 4.0;
+      if (M.spawnT >= interval && curN < (M.capN || 24) * 1.3) { M.spawnT = 0;
+        var cp = centralPos(); M.trash.push(makeTrash(cp.x, cp.y, m2.trashKinds[Math.floor(Math.random()*m2.trashKinds.length)], { drift: true })); }
+      M.bigT -= dt; if (M.bigT <= 0) { M.bigT = 20; var bp = centralPos(); M.trash.push(makeTrash(bp.x, bp.y, 'scrap', { big: true })); say('💎 대형 보물 등장!', bp.x, bp.y - 30, '#ffd23f', 1.6, 26); }
+    }
     // 바람/파도: 안 잡힌 쓰레기가 흘러다녀 줍기 어려워짐 (바다>섬>육지)
     wind.t += dt; var wt = wind.t;
     var wmag = ({ valley: 70, beach: 60, village: 26, gotjawal: 24 })[mapKey] || 30;
@@ -489,15 +578,27 @@ function TopDown(opts) {
     var t = (now - t0)/1000, m = curMap();
     if (GROUND[mapKey] && GROUND[mapKey]._ok) g.drawImage(GROUND[mapKey], 0, 0, W, H); else m.bg(g, W, H, t);
     ambientFX(t);                                               // 파도·바람·물결 등 환경 애니메이션
-    // 분리수거함 (카테고리별)
-    var bins = (M && M.bins) ? M.bins : [];
-    var bw = Math.min(96, (W / (bins.length + 1)) * 0.8);
-    bins.forEach(function (b) { var cc = CAT[b.cat] || CAT.general; g.save(); g.translate(b.x*W, b.y*H);
-      g.fillStyle = 'rgba(0,0,0,.18)'; g.beginPath(); g.ellipse(0, bw*0.34, bw*0.58, bw*0.17, 0, 0, 6.3); g.fill();
-      g.fillStyle = cc.color; g.beginPath(); g.roundRect(-bw/2, -bw*0.34, bw, bw*0.66, 9); g.fill();
-      g.fillStyle = 'rgba(0,0,0,.22)'; g.fillRect(-bw/2-4, -bw*0.46, bw+8, bw*0.14);
-      g.fillStyle = '#fff'; g.font = 'bold '+Math.round(bw*0.34)+'px sans-serif'; g.textAlign = 'center'; g.textBaseline='middle'; g.fillText('♻', 0, 0);
-      g.textBaseline='alphabetic'; g.font = 'bold 15px -apple-system,sans-serif'; g.lineWidth=4; g.strokeStyle='rgba(0,0,0,.5)'; g.strokeText(cc.name, 0, bw*0.5); g.fillStyle='#fff'; g.fillText(cc.name, 0, bw*0.5); g.restore();
+    // 플레이어별 전용 창고(거점): 고유색 + 저장량 + 뱅킹 반경
+    var whs = (M && M.warehouses) ? M.warehouses : {};
+    Object.keys(whs).forEach(function (wid) { var wh = whs[wid]; var p = players[wid]; var amt = p ? (p.bank||0) : 0;
+      g.save(); g.translate(wh.x, wh.y);
+      // 뱅킹 반경(옅은 링)
+      g.strokeStyle = wh.col; g.globalAlpha = 0.28; g.lineWidth = 2; g.setLineDash([6,6]); g.beginPath(); g.arc(0, 0, WH_R, 0, 6.3); g.stroke(); g.setLineDash([]); g.globalAlpha = 1;
+      // 그림자 + 통(고유색) — 15개 이상이면 부풀고 반짝(선두 타겟)
+      var lead = amt >= 15, pulse = lead ? (1 + Math.sin(t*6)*0.06) : 1, bw = 30*pulse;
+      g.fillStyle = 'rgba(0,0,0,.20)'; g.beginPath(); g.ellipse(0, bw*0.5, bw*0.9, bw*0.3, 0, 0, 6.3); g.fill();
+      if (lead) { g.fillStyle = 'rgba(255,235,120,'+(0.25+0.15*Math.sin(t*6))+')'; g.beginPath(); g.arc(0, 0, bw*1.5, 0, 6.3); g.fill(); }
+      g.fillStyle = wh.col; g.beginPath(); g.roundRect(-bw, -bw*0.7, bw*2, bw*1.3, 8); g.fill();
+      g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 3; g.stroke();
+      g.fillStyle = 'rgba(0,0,0,.30)'; g.beginPath(); g.roundRect(-bw-3, -bw*0.95, bw*2+6, bw*0.4, 4); g.fill();   // 지붕
+      // 저장량
+      g.fillStyle = '#fff'; g.font = 'bold '+Math.round(bw*0.85)+'px -apple-system,sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.lineWidth = 4; g.strokeStyle = 'rgba(0,0,0,.55)'; g.strokeText(amt, 0, 2); g.fillText(amt, 0, 2);
+      g.textBaseline = 'alphabetic';
+      // 주인 이름표(작게)
+      if (p && p.nick) { g.font = 'bold 12px -apple-system,sans-serif'; g.fillStyle = '#fff'; g.lineWidth = 3; g.strokeStyle = 'rgba(0,0,0,.5)';
+        var nm = (p.seat?p.seat+'번 ':'') + p.nick; g.strokeText(nm, 0, bw*1.2); g.fillText(nm, 0, bw*1.2); }
+      g.restore();
     });
     // 쓰레기
     if (M) M.trash.forEach(function (tr) { if (tr.held) return;
@@ -515,7 +616,13 @@ function TopDown(opts) {
       }
       g.save(); g.translate(tr.x, tr.y);
       g.fillStyle = 'rgba(0,0,0,.22)'; g.beginPath(); g.ellipse(0, tr.s*0.7, tr.s*0.7, tr.s*0.26, 0, 0, 6.3); g.fill();   // 접지 그림자(가독성)
-      g.rotate(tr.rot); (TRASH[tr.kind]||TRASH.cup).d(g, tr.s); g.restore();
+      if (tr.big) {                                              // 대형 특수 보물: 반짝이는 후광 + 가치 배지
+        g.save(); g.globalAlpha = 0.3 + 0.2*Math.sin(t*4 + tr.ph); g.fillStyle = '#ffe14d'; g.beginPath(); g.arc(0, 0, tr.s*1.5, 0, 6.3); g.fill(); g.restore();
+      }
+      g.save(); g.rotate(tr.rot); (TRASH[tr.kind]||TRASH.cup).d(g, tr.s); g.restore();
+      if (tr.big) { g.fillStyle = '#e63946'; g.beginPath(); g.arc(tr.s*0.9, -tr.s*0.9, 12, 0, 6.3); g.fill();
+        g.fillStyle = '#fff'; g.font = 'bold 14px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('+' + (tr.value||4), tr.s*0.9, -tr.s*0.9); g.textBaseline = 'alphabetic'; }
+      g.restore();
     });
     // 장애물 (y 정렬로 겹침 자연스럽게)
     var obs = curMap().obstacles.slice().sort(function (a, b) { return a.y - b.y; });
@@ -604,7 +711,7 @@ function TopDown(opts) {
   function drawPlayer(p, t) {
     var R = 34;
     var mv = p.mv || 0, gait = p.gait || 0, dir = p.dir || 1, ch = p.char;
-    var swimming = inWater(p), flying = (CHARACTERS_FLY[ch] && OPEN_MAPS[mapKey]);
+    var swimming = inWater(p), flying = !!CHARACTERS_FLY[ch];
     var col = PCOL[((p.seat||1)-1) % PCOL.length];
     // 걸음 기반 모션값 (각 캐릭터 특징에 맞춘 움직임 — 이미지 스프라이트에도 적용)
     var sg = Math.sin(gait), cg = Math.cos(gait), hop = Math.abs(sg);
@@ -634,6 +741,9 @@ function TopDown(opts) {
     var bob = lift;
 
     g.save(); g.translate(p.x, p.y);
+    var pnow = performance.now();
+    if (p.afk) g.globalAlpha = 0.35;                            // AFK 유령
+    else if (pnow < (p.iframe||0)) g.globalAlpha = 0.4 + 0.35*Math.abs(Math.sin(pnow*0.02));   // 피격 무적 깜빡임
     // 접지 그림자 (뜰수록 작고 옅게)
     var shk = 1 - (mv * hop * 0.5);
     g.fillStyle = 'rgba(20,24,33,'+(0.28*shk)+')'; g.beginPath(); g.ellipse(sideSway*0.5, R*0.82, R*0.72*shk, R*0.26*shk, 0, 0, 6.3); g.fill();

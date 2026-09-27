@@ -61,6 +61,11 @@
 </style>
 </head>
 <body>
+<div id="pWait" style="display:none;position:fixed;inset:0;background:#0b1020;z-index:900;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:18px">
+  <div style="font-size:52px">⏳</div>
+  <div id="waitMsg" style="font-size:20px;line-height:1.7"></div>
+  <div style="opacity:.6;font-size:14px">화면은 그대로 두세요. 자동으로 넘어가요.</div>
+</div>
 
 <!-- 1 입장 (번호 자동배정 + 별명) -->
 <div class="page on" id="pEnter">
@@ -92,12 +97,13 @@
 
 <!-- 3 장비 선택 -->
 <div class="page" id="pEquip">
-  <h2>장비 3가지를 골라요</h2>
+  <h2>장비 4가지를 골라요</h2>
   <canvas id="equipPrev" width="240" height="240"></canvas>
   <div id="equipDesc"></div>
   <div class="slot"><div class="lab">🧹 줍는 도구</div><div class="opts" id="slotTool"></div></div>
   <div class="slot"><div class="lab">🗑️ 담는 도구</div><div class="opts" id="slotContainer"></div></div>
   <div class="slot"><div class="lab">👟 신발</div><div class="opts" id="slotFeet"></div></div>
+  <div class="slot"><div class="lab">🛡️ 방어·특기</div><div class="opts" id="slotGear"></div></div>
   <div id="warn"></div>
   <button class="big y" id="equipNext" disabled>준비 완료 ▶</button>
 </div>
@@ -134,6 +140,7 @@
     <button data-d="0,1" style="grid-column:2;grid-row:3">▼</button>
   </div>
   <button id="special">🍢 뺏기!</button>
+  <button id="gearBtn" style="width:100%;border:0;border-radius:14px;padding:12px;font-size:17px;font-weight:800;background:#22c1e6;color:#062a33;display:none;margin-top:6px">🚀 부스트!</button>
   <div class="msg" id="playMsg" style="display:none"></div>
 </div>
 
@@ -169,11 +176,29 @@ function beginConnect(rm){
   GameRT.ready.then(function(rr){
     if(!rr){ document.getElementById('connMsg').textContent='연결 실패 — 방 코드를 확인하고 새로고침해요'; document.getElementById('roomRow2').style.display=urlRoom?'none':''; return; }
     GameRT.dbGet('players/'+cid).then(function(p){          // 이번 라운드 참가 기록
-      if(p && p.nick){ seat=p.seat; nick=p.nick; document.getElementById('connMsg').textContent=''; afterNick(); }   // 재접속: 번호·별명 유지
-      else if(p && p.seat){ seat=p.seat; showNickEntry(); }                                                           // 번호는 받았고 별명만 남음
-      else GameRT.claimSeat().then(function(s){ seat=s; GameRT.dbSet('players/'+cid,{seat:seat,ts:Date.now()}); showNickEntry(); });  // ★번호 먼저 배정
+      if(p && p.nick){ seat=p.seat; nick=p.nick; document.getElementById('connMsg').textContent=''; afterNick(); return; }  // 재접속
+      GameRT.dbGet('game').then(function(g){
+        var ph=(g&&g.phase)||'lobby';
+        if(ph==='clean'||ph==='result'||ph==='setup'){ showWait('running'); return; }   // 게임 진행 중 → 다음 판 대기
+        enterLobby();                                                                   // 로비면 바로(10초과는 enterLobby가 대기 처리)
+      });
     });
   });
+}
+/* 로비 진입: 번호(접속순서) 배정 → 10 초과면 대기, 아니면 별명 */
+function enterLobby(){
+  GameRT.claimSeat().then(function(s){
+    if(s>10){ showWait('full'); return; }                 // 10명 초과 → 다음 판 대기
+    seat=s; GameRT.dbSet('players/'+cid,{seat:seat,ts:Date.now()}); showNickEntry();
+  });
+}
+var waitingForNext=false;
+function showWait(reason){
+  waitingForNext=true;
+  var el=document.getElementById('pWait'); el.style.display='flex';
+  document.getElementById('waitMsg').innerHTML = reason==='full'
+    ? '😅 지금은 <b>10명이 꽉 찼어요!</b><br>다음 판이 시작되면<br>자동으로 대기실로 들어가요.'
+    : '🎮 지금 게임이 <b>진행 중이에요!</b><br>다음 판이 곧 시작돼요.<br>잠깐만 기다리면<br>자동으로 대기실로 들어가요.';
 }
 document.getElementById('connectBtn').onclick=function(){ var rc=(document.getElementById('roomIn').value||'').trim().toUpperCase(); if(!rc){alert('방 코드를 입력해요');return;} beginConnect(rc); };
 document.getElementById('startBtn').onclick=function(){
@@ -215,32 +240,38 @@ function buildEquip(){
   var st=document.getElementById('slotTool');st.innerHTML='';G.TOOL_ORDER.forEach(function(k){st.appendChild(opt('tool',k,G.TOOLS[k]));});
   var sc=document.getElementById('slotContainer');sc.innerHTML='';G.CONTAINER_ORDER.forEach(function(k){sc.appendChild(opt('container',k,G.CONTAINERS[k]));});
   var sf=document.getElementById('slotFeet');sf.innerHTML='';G.FEET_ORDER.forEach(function(k){sf.appendChild(opt('feet',k,G.FEET[k]));});
-  equip={tool:'tongs',container:'basket',feet:'sneakers'}; refreshEquip();
+  var sg=document.getElementById('slotGear');sg.innerHTML='';G.GEAR_ORDER.forEach(function(k){sg.appendChild(opt('gear',k,G.GEAR[k]));});
+  equip={tool:'tongs',container:'basket',feet:'sneakers',gear:'alarm'}; refreshEquip();
 }
 function refreshEquip(){
-  [['slotTool','tool'],['slotContainer','container'],['slotFeet','feet']].forEach(function(p){
+  [['slotTool','tool'],['slotContainer','container'],['slotFeet','feet'],['slotGear','gear']].forEach(function(p){
     document.querySelectorAll('#'+p[0]+' .opt').forEach(function(o){o.classList.toggle('on',equip[p[1]]===o.dataset.k);});
   });
   document.getElementById('equipNext').disabled=false;
   // 미리보기: 캐릭터 이모지 + 장비 이모지
   var pv=document.getElementById('equipPrev');var g=pv.getContext('2d');g.clearRect(0,0,240,240);
   g.font='120px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText((G.CHARACTERS[myChar]||{}).emoji||'🙂',120,96);
-  g.font='40px sans-serif';g.fillText((G.TOOLS[equip.tool]||{}).emoji+' '+(G.CONTAINERS[equip.container]||{}).emoji+' '+(G.FEET[equip.feet]||{}).emoji,120,180);
-  var desc=[];if(equip.tool)desc.push(G.TOOLS[equip.tool].desc);if(equip.container)desc.push(G.CONTAINERS[equip.container].desc);if(equip.feet)desc.push(G.FEET[equip.feet].desc);
+  g.font='36px sans-serif';g.fillText((G.TOOLS[equip.tool]||{}).emoji+(G.CONTAINERS[equip.container]||{}).emoji+(G.FEET[equip.feet]||{}).emoji+(G.GEAR[equip.gear]||{}).emoji,120,180);
+  var desc=[];if(equip.gear)desc.push((G.GEAR[equip.gear]||{}).desc);
   document.getElementById('equipDesc').textContent=desc.join(' · ');
 }
 function statSummary(){
-  var ch=G.CHARACTERS[myChar]||{}, cont=G.CONTAINERS[equip.container]||{}, tool=G.TOOLS[equip.tool]||{};
+  var ch=G.CHARACTERS[myChar]||{}, st=G.finalStats?G.finalStats(myChar,equip,ch.mul?Object.keys(ch.mul)[0]:'village'):{}, tool=G.TOOLS[equip.tool]||{}, gear=G.GEAR[equip.gear]||{};
   var parts=[];
-  parts.push('잠수 '+ch.dive+'초'); parts.push('가방 '+cont.cap+'칸');
+  parts.push('가방 '+(st.capacity||ch.cap||5)+'칸'); if(ch.role)parts.push(ch.role);
+  if(ch.pv==='superArmor') parts.push('💪 한 번 안 뺏김');
+  if(ch.pv==='homeTurf') parts.push('🏠 내 창고서 강함');
+  if(ch.pv==='hAccel') parts.push('↔ 가로로 빠름');
+  if(ch.fly) parts.push('🕊️ 벽·물 비행');
   if(ch.moisture) parts.push('⚠️ 마르면 기절');
-  if(ch.fly) parts.push('트인 곳 비행');
-  if(tool.canSteal) parts.push('작살로 뺏기 가능');
+  if(tool.canSteal) parts.push('작살로 뺏기');
+  if(gear.name) parts.push(gear.emoji+gear.name);
   return parts.join(' · ');
 }
 document.getElementById('equipNext').onclick=function(){
   GameRT.toScreen({type:'creature',id:myId,seat:seat,nick:nick,char:myChar,equip:equip});   // 이미지 없이 선택만 전송
-  document.getElementById('special').classList.toggle('on',equip.tool==='spear');
+  var sp=document.getElementById('special'); sp.style.display='block'; sp.textContent = equip.tool==='spear' ? '🔱 작살로 뺏기!' : '💥 밀치기!';
+  document.getElementById('gearBtn').style.display = (equip.gear==='boost') ? 'block' : 'none';
   show('pPlay');
   var msg=document.getElementById('playMsg');msg.style.display='';
   msg.innerHTML='<b>'+(G.CHARACTERS[myChar].emoji)+' '+seat+'번 '+nick+'</b><br>'+(G.CHARACTERS[myChar].trait||'')+'<br><span style="opacity:.85">'+statSummary()+'</span><br><br>대기실이에요. 곧 시작해요! (혼자여도 60초 뒤 시작)';
@@ -257,20 +288,26 @@ document.querySelectorAll('#pad [data-d]').forEach(function(b){
 });
 document.getElementById('act').addEventListener('pointerdown',function(e){e.preventDefault();this.classList.add('on');GameRT.toScreen({type:'ctrl',id:myId,act:'grab'});});
 document.getElementById('act').addEventListener('pointerup',function(e){e.preventDefault();this.classList.remove('on');});
-document.getElementById('special').addEventListener('pointerdown',function(e){e.preventDefault();GameRT.toScreen({type:'ctrl',id:myId,act:'steal'});});
+document.getElementById('special').addEventListener('pointerdown',function(e){e.preventDefault();this.style.filter='brightness(1.3)';GameRT.toScreen({type:'ctrl',id:myId,act:'bump'});});
+document.getElementById('special').addEventListener('pointerup',function(e){e.preventDefault();this.style.filter='';});
+document.getElementById('gearBtn').addEventListener('pointerdown',function(e){e.preventDefault();this.style.filter='brightness(1.3)';GameRT.toScreen({type:'ctrl',id:myId,act:'gear'});});
+document.getElementById('gearBtn').addEventListener('pointerup',function(e){e.preventDefault();this.style.filter='';});
 
 /* ── 화면 → 폰 ── */
 function onMsg(m){
   if(m.type==='state'||m.type==='phase'){
     var ph=m.phase||'lobby';
+    // 대기 중이던 폰: 로비가 열리면 자동으로 대기실 진입(번호·별명)
+    if(waitingForNext && ph==='lobby'){ waitingForNext=false; document.getElementById('pWait').style.display='none'; enterLobby(); return; }
     // 라운드 초기화 감지: 게임 진행 중이던 폰이 lobby 로 돌아가면 새 라운드 → 다시 접속
     if(joinedRound && ph==='lobby' && window._wasPlaying){ location.reload(); return; }
     if(ph==='clean'||ph==='setup') window._wasPlaying=true;
-    var label={lobby:'대기',setup:'준비',clean:'청소중!',grow:'성장',art:'정크아트',result:'결과'}[ph]||ph;
+    var label={lobby:'대기',setup:'준비',clean:'보물 대작전!',result:'결과'}[ph]||ph;
     document.getElementById('phaseBadge').textContent=label + (m.map&&G.MAPS[m.map]?(' · '+G.MAPS[m.map].emoji+G.MAPS[m.map].name):'');
-    document.getElementById('act').textContent = ph==='art'?'놓기':'줍기';
+    document.getElementById('act').textContent = '줍기';
   }
   if(m.type==='score'&&m.score){ var s=m.score[myId]; if(s!=null) document.getElementById('myScore').textContent=s; }
+  if(m.type==='alarm'&&m.id===myId){ if(navigator.vibrate)navigator.vibrate([80,50,80]); document.body.style.boxShadow='inset 0 0 0 6px #ff5a5a'; setTimeout(function(){document.body.style.boxShadow='';},900); }
   if(m.type==='me'&&m.id===myId){
     if(m.carry!=null){ document.getElementById('carryBadge').textContent='가방 '+m.carry+' / '+m.cap; }
     if(m.moist!=null){ var gg=document.getElementById('gauge');gg.classList.add('on');document.getElementById('gaugeFill').style.width=Math.max(0,m.moist)+'%';document.getElementById('gaugeFill').style.background=m.moist<25?'#ff5a5a':'#3ad'; }
