@@ -345,24 +345,25 @@ function TopDown(opts) {
     p.fireCD = now + 500; p.bank -= 1; M.score[p.id] = p.bank; wh.recoil = now + 160;
     var spd = Math.min(W, H) * 0.62, mz = WH_R + 10, kinds = curMap().trashKinds;
     M.shots.push({ x: wh.x + Math.cos(ang)*mz, y: wh.y + Math.sin(ang)*mz, vx: Math.cos(ang)*spd, vy: Math.sin(ang)*spd,
-      owner: p.id, col: wh.col, kind: kinds[Math.floor(Math.random()*kinds.length)], age: 0, life: 2.0, rot: Math.random()*6.3 });
+      owner: p.id, col: wh.col, kind: kinds[Math.floor(Math.random()*kinds.length)], age: 0, life: 2.6, rot: Math.random()*6.3 });
     p.aimAngle = ang + (Math.random()-0.5)*0.6;                 // 반동: 포신이 틀어짐 → 다시 조준해야 함
     sfx('fire'); say('🎯 발사!', wh.x, wh.y - 46, wh.col);
   }
 
   /* ───────── 창고(거점) & 보물 생성 헬퍼 ───────── */
   var WH_R = 46;                                                // 뱅킹/창고 반경(px)
-  var WH_SLOTS = []; (function () { for (var i = 0; i < 10; i++) { var a = -Math.PI/2 + i*(2*Math.PI/10); WH_SLOTS.push({ ux: 0.5 + Math.cos(a)*0.40, uy: 0.5 + Math.sin(a)*0.40 }); } })();
+  var WH_ANGLES = []; (function () { for (var i = 0; i < 10; i++) WH_ANGLES.push(-Math.PI/2 + i*(2*Math.PI/10)); })();
   function nudgeWalkable(ux, uy) { var x = ux*W, y = uy*H;
     if (!blockedAt(x, y) && terrainAt(x, y) !== 'water') return { x: x, y: y };
     for (var r = 24; r < 240; r += 24) for (var k = 0; k < 8; k++) { var a = k*Math.PI/4, nx = x + Math.cos(a)*r, ny = y + Math.sin(a)*r;
       if (nx > 24 && nx < W-24 && ny > 24 && ny < H-24 && !blockedAt(nx, ny) && terrainAt(nx, ny) !== 'water') return { x: nx, y: ny }; }
     return { x: Math.max(24, Math.min(W-24, x)), y: Math.max(24, Math.min(H-24, y)) };
   }
-  function buildWarehouses() {                                  // 테두리 10방향 대칭, 참여수만큼 균등 활성
+  function buildWarehouses() {                                  // 정원(circle) 대칭 배치 — 서로 사거리 안에 들어 포신이 닿음
     var ids = Object.keys(players).sort(function (a, b) { return (players[a].seat||0) - (players[b].seat||0); });
-    var n = Math.max(1, ids.length), wh = {};
-    ids.forEach(function (id, idx) { var s = WH_SLOTS[Math.floor(idx*10/n) % 10]; var pos = nudgeWalkable(s.ux, s.uy);
+    var n = Math.max(1, ids.length), wh = {}, Rpx = 0.40 * Math.min(W, H);
+    ids.forEach(function (id, idx) { var a = WH_ANGLES[Math.floor(idx*10/n) % 10];
+      var pos = nudgeWalkable((W/2 + Math.cos(a)*Rpx)/W, (H/2 + Math.sin(a)*Rpx)/H);
       wh[id] = { id: id, seat: players[id].seat, x: pos.x, y: pos.y, col: PCOL[((players[id].seat||1)-1) % PCOL.length] }; });
     return wh;
   }
