@@ -225,6 +225,7 @@ if(GameRT.ready&&GameRT.ready.then){ GameRT.ready.then(function(room){
     else if(c.action==='end'){ if(phase==='clean') endClean(); }
     else if(c.action==='reset') resetRound();
     else if(c.action==='setmap') manualMap=c.map||null;
+    else if(c.action==='mapsize'){ E.setMapSize(c.v); publishStatus(); }
     else if(c.action==='auto'){ autoStartOn=!!c.on; publishStatus(); }
   }); }
 }); } else { showRoomQR('LOCAL'); }

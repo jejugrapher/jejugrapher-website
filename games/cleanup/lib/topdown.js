@@ -37,6 +37,12 @@ function TopDown(opts) {
     juice: { c: '#8338ec', d: function (c, s) { c.fillStyle = '#9a5cf0'; c.fillRect(-s*.35, -s*.55, s*.7, s*1.1); c.fillStyle = '#ffd166'; c.fillRect(-s*.2, -s*.5, s*.4, s*.3); c.strokeStyle = '#5f28a8'; c.lineWidth = 2; c.beginPath(); c.moveTo(s*.1, -s*.55); c.lineTo(s*.3, -s*.85); c.stroke(); } }
   };
 
+  /* ───────── 분리수거 카테고리 ───────── */
+  var TRASH_CAT = { cup: 'plastic', bag: 'plastic', bottle: 'glass', can: 'metal', juice: 'paper', snack: 'plastic', leaf: 'general', stick: 'general' };
+  var CAT = { general: { name: '일반', color: '#8a9199', emoji: '🗑️' }, paper: { name: '종이', color: '#1f6feb', emoji: '📄' }, plastic: { name: '플라스틱', color: '#ffd166', emoji: '♳' }, glass: { name: '병', color: '#2f9e44', emoji: '🍾' }, metal: { name: '캔', color: '#ff7a3d', emoji: '🥫' } };
+  /* 종류별 흐름(바람·파도) 계수: 가벼울수록 많이 흘러다님 */
+  var DRIFT = { bag: 1.3, leaf: 1.2, snack: 1.1, cup: 0.9, juice: 0.8, stick: 0.6, bottle: 0.3, can: 0.25 };
+
   /* ───────── 장애물 그리기(정규 크기 r=반지름 픽셀) ───────── */
   var OB = {
     tree: function (c, r) { c.fillStyle = 'rgba(0,0,0,.16)'; c.beginPath(); c.ellipse(0, r*.5, r*.9, r*.35, 0, 0, 6.3); c.fill();
@@ -95,15 +101,19 @@ function TopDown(opts) {
   var mapKey = 'forest', players = {}, trash = [], particles = [], texts = [], M = null;
   var t0 = performance.now(), last = t0, banner = null;
   var BASE_SPEED_FRAC = 0.30;                                   // 화면 높이 기준 초당 이동(×speedMul)
+  var spread = 1.0;                                             // 맵 크기(0.72 작게 ~ 1.18 크게): 배치를 중심 기준 확대/축소
+  var wind = { x: 0, y: 0, t: 0 };                              // 바람/해류 벡터
 
   function curMap() { return MAPS[mapKey] || MAPS.forest; }
-  function px(o) { return { x: o.x * W, y: o.y * H }; }
+  function rx(x) { return Math.max(0.04, Math.min(0.96, 0.5 + (x - 0.5) * spread)); }   // 맵 크기 리매핑
+  function ry(y) { return Math.max(0.06, Math.min(0.96, 0.5 + (y - 0.5) * spread)); }
+  function px(o) { return { x: rx(o.x) * W, y: ry(o.y) * H }; }
 
-  /* 장애물 픽셀 도형 목록 */
+  /* 장애물 픽셀 도형 목록 (맵 크기 반영) */
   function obstaclePx() {
     return curMap().obstacles.map(function (o) {
-      if (o.w != null) return { rect: true, kind: o.kind, x: o.x*W, y: o.y*H, w: o.w*W, h: o.h*H, r: 0 };
-      return { rect: false, kind: o.kind, x: o.x*W, y: o.y*H, r: (o.r||30) };
+      if (o.w != null) return { rect: true, kind: o.kind, x: rx(o.x)*W, y: ry(o.y)*H, w: o.w*W*spread, h: o.h*H*spread, r: 0 };
+      return { rect: false, kind: o.kind, x: rx(o.x)*W, y: ry(o.y)*H, r: (o.r||30) };
     });
   }
   function hitsObstacle(x, y, r, list) {
@@ -133,18 +143,20 @@ function TopDown(opts) {
   function control(id, dx, dy) { var p = players[id]; if (!p) return; if (performance.now() < p.stunUntil) { p.ctrl = null; return; } if (!dx && !dy) { p.ctrl = null; return; } p.ctrl = { dx: dx, dy: dy, until: performance.now() + 600 }; }
   function act(id, a) { var p = players[id]; if (!p) return; if (performance.now() < p.stunUntil) return; if (a === 'grab') grab(p); else if (a === 'steal') steal(p); }
 
-  function nearBin(p) { var bins = curMap().bins.map(px); for (var i = 0; i < bins.length; i++) if (Math.hypot(p.x - bins[i].x, p.y - bins[i].y) < 96) return true; return false; }
-  function deposit(p) {
-    var n = p.holds.length; if (!n) return;
-    p.holds.forEach(function (t) { M.trash = M.trash.filter(function (x) { return x !== t; }); });
-    p.score = (p.score||0) + n; M.score[p.id] = p.score; p.holds = [];
-    say('+' + n, p.x, p.y - 46, '#b6ff7a'); burst(p.x, p.y - 20, '#ffd166');
+  function nearBin(p) { if (!M || !M.bins) return null; for (var i = 0; i < M.bins.length; i++) { var b = M.bins[i]; if (Math.hypot(p.x - b.x*W, p.y - b.y*H) < 90) return b; } return null; }
+  function deposit(p, bin) {
+    var matched = p.holds.filter(function (t) { return t.cat === bin.cat; });
+    var rest = p.holds.filter(function (t) { return t.cat !== bin.cat; });
+    if (!matched.length) { say(CAT[bin.cat].name + '만 넣어요!', p.x, p.y - 46, '#ffb3b3'); return; }
+    matched.forEach(function (t) { M.trash = M.trash.filter(function (x) { return x !== t; }); });
+    p.holds = rest; p.score = (p.score||0) + matched.length; M.score[p.id] = p.score;
+    say('+' + matched.length + ' (' + CAT[bin.cat].name + ')', p.x, p.y - 46, '#b6ff7a'); burst(p.x, p.y - 20, CAT[bin.cat].color);
     if (!M.trash.length) endRound();
   }
   function grab(p) {
     if (!M || M.ended) return;
     var s = st(p);
-    if (nearBin(p) && p.holds.length) { deposit(p); return; }   // 수거함 옆 → 한 번에 비우기
+    var b = nearBin(p); if (b && p.holds.length) { deposit(p, b); return; }   // 분리수거함 옆 → 맞는 종류만 넣기
     if (p.holds.length >= cap(p)) { say('가방이 꽉 찼어! 수거함으로', p.x, p.y - 46, '#ffd166'); return; }
     if (s.pickup === 'area') {                                   // 빗자루: 주변 여러 개(가벼운·안구석)
       var got = 0, R = s.areaR || 130;
@@ -178,18 +190,23 @@ function TopDown(opts) {
   function startRound(key) {
     if (key) mapKey = key;
     var m = curMap(), obs = obstaclePx(), list = [];
-    for (var i = 0; i < m.trashN; i++) {
+    var N = Math.round(m.trashN * spread);
+    for (var i = 0; i < N; i++) {
       var x, y, tries = 0;
-      do { x = W*(0.06 + Math.random()*0.88); y = H*(0.22 + Math.random()*0.72); tries++; }
-      while (tries < 30 && (hitsObstacle(x, y, 20, obs) || y < H*0.2));
+      do { x = W*(0.06 + Math.random()*0.88); y = H*(0.2 + Math.random()*0.74); tries++; }
+      while (tries < 30 && (hitsObstacle(x, y, 20, obs) || y < H*0.18));
       var kind = m.trashKinds[i % m.trashKinds.length];
-      var heavy = (kind === 'can' || kind === 'bottle' || kind === 'juice');            // 무거운 쓰레기: 빗자루로 못 담음
+      var heavy = (kind === 'can' || kind === 'bottle');                                  // 무거운 쓰레기: 빗자루로 못 담음
       var corner = false; for (var k = 0; k < obs.length; k++) { var o = obs[k]; var rr = (o.rect ? Math.max(o.w, o.h)/2 : o.r) + 46; if (Math.hypot(o.x - x, o.y - y) < rr) { corner = true; break; } }
-      list.push({ x: x, y: y, kind: kind, s: 13 + Math.random()*4, rot: Math.random()*6.3, held: null, heavy: heavy, corner: corner });
+      list.push({ x: x, y: y, kind: kind, cat: TRASH_CAT[kind] || 'general', s: 13 + Math.random()*4, rot: Math.random()*6.3, held: null, heavy: heavy, corner: corner, vx: 0, vy: 0, ph: Math.random()*6.3 });
     }
-    M = { trash: list, score: {}, ended: false };
+    // 분리수거함: 이 맵에 나오는 카테고리별로 상단에 배치
+    var catsPresent = []; m.trashKinds.forEach(function (kd) { var c = TRASH_CAT[kd] || 'general'; if (catsPresent.indexOf(c) < 0) catsPresent.push(c); });
+    var bins = catsPresent.map(function (c, i) { return { cat: c, x: (i + 1) / (catsPresent.length + 1), y: 0.09 }; });
+    M = { trash: list, score: {}, ended: false, bins: bins };
+    wind = { x: 0, y: 0, t: 0 };
     Object.keys(players).forEach(function (id) { var p = players[id]; p.holds = []; p.score = 0; p.moist = 100; p.stunUntil = 0;
-      p.startX = W*(0.15 + Math.random()*0.7); p.startY = H*0.9; });
+      p.startX = W*(0.15 + Math.random()*0.7); p.startY = H*0.92; });
     say(m.emoji + ' ' + m.name + '!', W/2, H*0.5, '#ffd166', 2.2, 40);
   }
   function endRound() { if (M) M.ended = true; }
@@ -235,6 +252,18 @@ function TopDown(opts) {
       // 쓰레받이: 이동 중 새는 확률 (담은 것 하나 흘림)
       if (p.moving && s.leak && p.holds.length && Math.random() < s.leak*dt*6) { var t = p.holds.pop(); t.held = null; t.x = p.x - p.dir*14; t.y = p.y + 16; say('앗, 흘렸다', p.x, p.y - 46, '#ffd166'); }
     });
+    // 바람/파도: 안 잡힌 쓰레기가 흘러다녀 줍기 어려워짐 (바다>섬>육지)
+    wind.t += dt; var wt = wind.t;
+    var wmag = ({ sea: 78, island: 42, forest: 24, city: 24, park: 30 })[mapKey] || 26;
+    var gx = Math.cos(wt*0.4)*0.75 + Math.sin(wt*0.9 + 1)*0.3;   // 서서히 방향이 바뀌는 바람
+    var gy = Math.sin(wt*0.55)*0.6 + Math.cos(wt*0.7)*0.2;
+    if (M && !M.ended) M.trash.forEach(function (t) { if (t.held) return; var d = (DRIFT[t.kind] || 0.6) * wmag;
+      var nx = t.x + gx*d*dt + Math.sin(wt*1.4 + t.ph)*0.4;
+      var ny = t.y + gy*d*dt + Math.cos(wt*1.2 + t.ph)*0.4;
+      nx = Math.max(14, Math.min(W-14, nx)); ny = Math.max(H*0.16, Math.min(H-14, ny));
+      if (!hitsObstacle(nx, ny, 12, obsAll)) { t.x = nx; t.y = ny; }
+      t.rot += (0.3 + d*0.004)*dt;
+    });
     for (var i = particles.length-1; i >= 0; i--) { var q = particles[i]; q.age += dt; if (q.age > q.life) { particles.splice(i,1); continue; } q.vy += 400*dt; q.x += q.vx*dt; q.y += q.vy*dt; }
     for (var j = texts.length-1; j >= 0; j--) { texts[j].age += dt; texts[j].y -= 14*dt; if (texts[j].age > texts[j].life) texts.splice(j,1); }
   }
@@ -243,23 +272,25 @@ function TopDown(opts) {
   function draw(now) {
     var t = (now - t0)/1000, m = curMap();
     if (GROUND[mapKey] && GROUND[mapKey]._ok) g.drawImage(GROUND[mapKey], 0, 0, W, H); else m.bg(g, W, H, t);
-    // 수거함
-    m.bins.map(px).forEach(function (b) {
-      g.save(); g.translate(b.x, b.y);
-      g.fillStyle = 'rgba(0,0,0,.18)'; g.beginPath(); g.ellipse(0, 30, 54, 16, 0, 0, 6.3); g.fill();
-      g.fillStyle = '#1f6feb'; g.beginPath(); g.roundRect(-46, -30, 92, 60, 10); g.fill(); g.fillStyle = '#1550b0'; g.fillRect(-52, -40, 104, 12);
-      g.fillStyle = '#fff'; g.font = 'bold 30px sans-serif'; g.textAlign = 'center'; g.fillText('♻', 0, 8);
-      g.font = 'bold 16px sans-serif'; g.fillText('여기에 버려요', 0, 52); g.restore();
+    // 분리수거함 (카테고리별)
+    var bins = (M && M.bins) ? M.bins : [];
+    var bw = Math.min(96, (W / (bins.length + 1)) * 0.8);
+    bins.forEach(function (b) { var cc = CAT[b.cat] || CAT.general; g.save(); g.translate(b.x*W, b.y*H);
+      g.fillStyle = 'rgba(0,0,0,.18)'; g.beginPath(); g.ellipse(0, bw*0.34, bw*0.58, bw*0.17, 0, 0, 6.3); g.fill();
+      g.fillStyle = cc.color; g.beginPath(); g.roundRect(-bw/2, -bw*0.34, bw, bw*0.66, 9); g.fill();
+      g.fillStyle = 'rgba(0,0,0,.22)'; g.fillRect(-bw/2-4, -bw*0.46, bw+8, bw*0.14);
+      g.fillStyle = '#fff'; g.font = 'bold '+Math.round(bw*0.34)+'px sans-serif'; g.textAlign = 'center'; g.textBaseline='middle'; g.fillText('♻', 0, 0);
+      g.textBaseline='alphabetic'; g.font = 'bold 15px -apple-system,sans-serif'; g.lineWidth=4; g.strokeStyle='rgba(0,0,0,.5)'; g.strokeText(cc.name, 0, bw*0.5); g.fillStyle='#fff'; g.fillText(cc.name, 0, bw*0.5); g.restore();
     });
     // 쓰레기
     if (M) M.trash.forEach(function (tr) { if (tr.held) return; g.save(); g.translate(tr.x, tr.y); g.rotate(tr.rot); (TRASH[tr.kind]||TRASH.cup).d(g, tr.s); g.restore(); });
     // 장애물 (y 정렬로 겹침 자연스럽게)
     var obs = curMap().obstacles.slice().sort(function (a, b) { return a.y - b.y; });
     var SWAY = { tree:1, palm:1, bush:1, coral:1 }, HOP = { bear:1, squirrel:1 }, PULSE = { pond:1 };
-    obs.forEach(function (o) { var ox = o.x*W, oy = o.y*H, ph = o.x*13.3 + o.y*7.7;
+    obs.forEach(function (o) { var ox = rx(o.x)*W, oy = ry(o.y)*H, ph = o.x*13.3 + o.y*7.7;
       var sp = SPRITE[o.kind];
       if (sp && sp._ok) {
-        var sz = (o.r != null) ? o.r*2.9 : Math.max(o.w*W, o.h*H)*1.5, ar = sp.height/sp.width, iw = sz, ih = sz*ar;
+        var sz = ((o.r != null) ? o.r*2.9 : Math.max(o.w*W, o.h*H)*1.5) * spread, ar = sp.height/sp.width, iw = sz, ih = sz*ar;
         var baseY = ih*0.38;                                    // 이미지 하단(발밑)
         // 발밑 그림자
         g.save(); g.translate(ox, oy + baseY*0.5); g.fillStyle = 'rgba(0,0,0,.18)'; g.beginPath(); g.ellipse(0, 0, iw*0.30, iw*0.11, 0, 0, 6.3); g.fill(); g.restore();
@@ -312,6 +343,7 @@ function TopDown(opts) {
     players: function () { return players; }, map: function () { return mapKey; },
     positions: function () { var o = {}; Object.keys(players).forEach(function (id){ var p = players[id]; o[id] = { x:+(p.x/W).toFixed(3), y:+(p.y/H).toFixed(3), seat:p.seat, nick:p.nick }; }); return o; },
     clear: clear, say: function (txt, col) { say(txt, W/2, H*0.2, col || '#ffd166', 2, 34); },
+    setMapSize: function (v) { spread = Math.max(0.6, Math.min(1.2, +v || 1)); }, mapSize: function () { return spread; },
     sound: { enable: function () {}, on: false },
     MAPS: MAPS
   };

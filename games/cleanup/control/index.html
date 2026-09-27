@@ -64,6 +64,8 @@
     <div class="toggle"><span>자동 시작</span><div class="sw on" id="autoSw"><i></i></div><span id="autoTxt">켜짐</span></div>
     <h2 style="margin-top:16px">맵 선택</h2>
     <div class="maprow" id="mapRow"></div>
+    <h2 style="margin-top:12px">맵 크기</h2>
+    <div class="maprow" id="sizeRow"></div>
     <button class="btn start" id="startBtn">▶ 지금 시작 (선택한 맵)</button>
     <button class="btn end" id="endBtn">⏹ 청소 강제 종료</button>
     <button class="btn reset" id="resetBtn">↺ 초기화 (새 라운드)</button>
@@ -95,6 +97,10 @@ function begin(room){
     opts.forEach(function(o){var b=document.createElement('button');b.className='mapb'+(o[0]===chosenMap?' on':'');b.textContent=o[1];
       b.onclick=function(){chosenMap=o[0];mr.querySelectorAll('.mapb').forEach(function(x){x.classList.remove('on');});b.classList.add('on');
         GameRT.dbSet('cmd',{action:'setmap',map:chosenMap||null,n:Date.now()});};mr.appendChild(b);});
+    // 맵 크기 버튼
+    var sr=document.getElementById('sizeRow'); sr.innerHTML='';
+    [['작게',0.75],['보통',1.0],['크게',1.15]].forEach(function(o){var b=document.createElement('button');b.className='mapb'+(o[1]===1.0?' on':'');b.textContent=o[0];
+      b.onclick=function(){sr.querySelectorAll('.mapb').forEach(function(x){x.classList.remove('on');});b.classList.add('on');GameRT.dbSet('cmd',{action:'mapsize',v:o[1],n:Date.now()});};sr.appendChild(b);});
     // 상태 구독
     GameRT.onValue('game',function(g){ g=g||{};
       document.getElementById('phaseLbl').textContent={lobby:'대기',clean:'청소중',result:'결과'}[g.phase]||g.phase||'-';
