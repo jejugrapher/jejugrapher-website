@@ -794,8 +794,8 @@ function TopDown(opts) {
     // 접지 그림자 (뜰수록 작고 옅게)
     var shk = (1 - (mv * hop * 0.5)) * (1 - jLift*0.7);
     g.fillStyle = 'rgba(20,24,33,'+(0.28*shk)+')'; g.beginPath(); g.ellipse(sideSway*0.5, R*0.82, R*0.72*shk, R*0.26*shk, 0, 0, 6.3); g.fill();
-    // 캐릭터 고유색 발밑 링 (종류를 색으로도 구분)
-    var ccol = CHAR_COLOR[ch] || col;
+    // 플레이어(개인) 고유색 발밑 링 — 같은 캐릭터라도 사람마다 색이 다름(=내 창고 색과 동일)
+    var ccol = col;
     g.save(); g.globalAlpha = 0.95*shk; g.strokeStyle = ccol; g.lineWidth = 5; g.beginPath(); g.ellipse(sideSway*0.5, R*0.82, R*0.62*shk, R*0.2*shk, 0, 0, 6.3); g.stroke();
     g.globalAlpha = 0.28*shk; g.fillStyle = ccol; g.beginPath(); g.ellipse(sideSway*0.5, R*0.82, R*0.58*shk, R*0.18*shk, 0, 0, 6.3); g.fill(); g.restore();
     // 이동 이펙트: 땅=먼지, 물=물결
@@ -810,7 +810,7 @@ function TopDown(opts) {
     var im = CHARIMG[ch];
     if (!(im && im._ok)) drawLimbs(ch, R, gait, mv, col, flying);
     if (im && im._ok) { var iw = im.width, ih = im.height, s = (R*2.4)/Math.max(iw, ih); g.save(); if (dir < 0) g.scale(-1, 1); g.drawImage(im, -iw*s/2, -ih*s + R*0.9, iw*s, ih*s); g.restore(); }   // 바닥중앙 앵커
-    else { g.fillStyle = CHAR_COLOR[ch] || col; g.beginPath(); g.arc(0, 0, R*0.72, 0, 6.3); g.fill(); g.lineWidth = 3; g.strokeStyle = 'rgba(0,0,0,.35)'; g.stroke();
+    else { g.fillStyle = col; g.beginPath(); g.arc(0, 0, R*0.72, 0, 6.3); g.fill(); g.lineWidth = 3; g.strokeStyle = 'rgba(0,0,0,.35)'; g.stroke();
       g.save(); if (dir < 0) g.scale(-1, 1);
       g.font = (R*0.9)+'px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(CHAR_EMOJI[ch] || '🙂', 0, 1); g.textBaseline = 'alphabetic'; g.restore(); }
     g.restore();
@@ -819,7 +819,7 @@ function TopDown(opts) {
     g.save(); g.translate(p.x, p.y - R*1.15);
     var label = (p.seat ? p.seat + '번 ' : '') + (p.nick || '');
     g.font = 'bold 15px -apple-system,sans-serif'; g.textAlign = 'center';
-    var tw = g.measureText(label).width + 16; g.fillStyle = CHAR_COLOR[ch] || 'rgba(0,0,0,.45)'; g.beginPath(); g.roundRect(-tw/2, -16, tw, 20, 7); g.fill();
+    var tw = g.measureText(label).width + 16; g.fillStyle = col; g.beginPath(); g.roundRect(-tw/2, -16, tw, 20, 7); g.fill();
     g.lineWidth = 2; g.strokeStyle = 'rgba(0,0,0,.4)'; g.stroke();
     g.fillStyle = '#fff'; g.lineWidth = 3; g.strokeStyle = 'rgba(0,0,0,.55)'; g.strokeText(label, 0, -1); g.fillText(label, 0, -1); g.restore();
   }
