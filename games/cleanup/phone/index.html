@@ -147,7 +147,12 @@
     <button id="special" style="flex:1;width:auto;margin-top:0">🍢 뺏기!</button>
     <button id="jumpBtn" style="flex:1;width:auto;border:0;border-radius:14px;padding:14px;font-size:18px;font-weight:800;background:#8bd329;color:#123">🦘 점프!</button>
   </div>
-  <button id="fireBtn" style="width:100%;border:0;border-radius:14px;padding:14px;font-size:19px;font-weight:800;background:#ff6b6b;color:#fff;margin-top:6px">🎯 1등 견제 발사!</button>
+  <div style="display:flex;gap:8px;margin-top:6px;align-items:stretch">
+    <button id="aimL" style="flex:1;border:0;border-radius:14px;padding:14px;font-size:20px;font-weight:800;background:#3a4d86;color:#fff">◀ 포신</button>
+    <button id="fireBtn" style="flex:1.5;border:0;border-radius:14px;padding:14px;font-size:19px;font-weight:800;background:#ff6b6b;color:#fff">🎯 발사!</button>
+    <button id="aimR" style="flex:1;border:0;border-radius:14px;padding:14px;font-size:20px;font-weight:800;background:#3a4d86;color:#fff">포신 ▶</button>
+  </div>
+  <div style="text-align:center;opacity:.6;font-size:12px;margin-top:2px">포신을 돌려 조준 → 발사 (내 창고 보물 1개 소모)</div>
   <button id="gearBtn" style="width:100%;border:0;border-radius:14px;padding:12px;font-size:17px;font-weight:800;background:#22c1e6;color:#062a33;display:none;margin-top:6px">🚀 부스트!</button>
   <div class="msg" id="playMsg" style="display:none"></div>
 </div>
@@ -316,6 +321,16 @@ document.getElementById('jumpBtn').addEventListener('pointerdown',function(e){e.
 document.getElementById('jumpBtn').addEventListener('pointerup',function(e){e.preventDefault();this.style.filter='';});
 document.getElementById('fireBtn').addEventListener('pointerdown',function(e){e.preventDefault();this.style.filter='brightness(1.25)';GameRT.toScreen({type:'ctrl',id:myId,act:'fire'});});
 document.getElementById('fireBtn').addEventListener('pointerup',function(e){e.preventDefault();this.style.filter='';});
+/* 포신 회전: 누르는 동안 계속 회전 */
+var aimTimer=null;
+function aimHold(dir,btn){ btn.style.filter='brightness(1.3)'; if(aimTimer)clearInterval(aimTimer); GameRT.toScreen({type:'ctrl',id:myId,act:dir}); aimTimer=setInterval(function(){ GameRT.toScreen({type:'ctrl',id:myId,act:dir}); },70); }
+function aimRelease(btn){ btn.style.filter=''; if(aimTimer){clearInterval(aimTimer);aimTimer=null;} }
+['aimL','aimR'].forEach(function(idb){ var b=document.getElementById(idb); var dir=idb==='aimL'?'aimL':'aimR';
+  b.addEventListener('pointerdown',function(e){e.preventDefault();aimHold(dir,b);});
+  b.addEventListener('pointerup',function(e){e.preventDefault();aimRelease(b);});
+  b.addEventListener('pointercancel',function(e){e.preventDefault();aimRelease(b);});
+  b.addEventListener('pointerleave',function(e){e.preventDefault();aimRelease(b);});
+});
 document.getElementById('gearBtn').addEventListener('pointerdown',function(e){e.preventDefault();this.style.filter='brightness(1.3)';GameRT.toScreen({type:'ctrl',id:myId,act:'gear'});});
 document.getElementById('gearBtn').addEventListener('pointerup',function(e){e.preventDefault();this.style.filter='';});
 

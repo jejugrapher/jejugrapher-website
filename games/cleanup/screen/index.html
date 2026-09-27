@@ -265,6 +265,8 @@ GameRT.connect('screen',null,function(m){
       else if(m.act==='gear') E.act(m.id,'gear');
       else if(m.act==='jump') E.act(m.id,'jump');
       else if(m.act==='fire') E.act(m.id,'fire');
+      else if(m.act==='aimL') E.act(m.id,'aimL');
+      else if(m.act==='aimR') E.act(m.id,'aimR');
       else E.control(m.id, +m.dx||0, +m.dy||0);
       break;
   }
