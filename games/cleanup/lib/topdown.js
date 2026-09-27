@@ -96,7 +96,7 @@ function TopDown(opts) {
         c.fillStyle = 'rgba(90,120,70,.28)'; [[0.12,0.2,0.18,0.12],[0.8,0.7,0.16,0.12]].forEach(function(g){ c.fillRect(g[0]*w,g[1]*h,g[2]*w,g[3]*h); });  // 밭/잔디
         c.strokeStyle = 'rgba(45,45,50,.5)'; c.lineWidth = 7; c.setLineDash([10,8]);       // 돌담 라인
         c.beginPath(); c.moveTo(0,h*0.5); c.lineTo(w,h*0.5); c.moveTo(w*0.5,0); c.lineTo(w*0.5,h); c.stroke(); c.setLineDash([]); },
-      obstacles: [], water: null, col: 'dark', waterImg: false,      // 돌담=어두운 바위 감지
+      obstacles: [], water: null, col: 'dark', waterImg: false, erodeWall: true,   // 돌담=어두운 바위 감지(두꺼워 통로 침식)
       bins: [ {x:.5, y:.1} ] },
     beach: { name: '제주 해변', emoji: '🏖️', terrain: 'sand', trashKinds: ['bottle', 'bag', 'glass', 'cup'], trashN: 26,
       bg: function (c, w, h, t) { G_bg(c, w, h, ['#e6d3a3', '#d8c088']);                    // 모래
@@ -148,9 +148,14 @@ function TopDown(opts) {
       if (m.col === 'dark' && lum < 52 && sat < 46) rawB[p] = 1;   // 어두운 저채도 = 현무암/돌담
       if (m.waterImg && b > r + 12 && lum > 55) rawW[p] = 1;       // 청록/파랑 + 밝음 = 물
     }
-    if (m.col === 'dark') {                                     // 얇은 돌담 1px 팽창
+    if (m.col === 'dark') {
       var cells = new Uint8Array(gw*gh);
-      for (var y=0;y<gh;y++) for (var x=0;x<gw;x++){ var q=y*gw+x; var on=rawB[q]||(x>0&&rawB[q-1])||(x<gw-1&&rawB[q+1])||(y>0&&rawB[q-gw])||(y<gh-1&&rawB[q+gw]); cells[q]=on?1:0; }
+      if (m.erodeWall) {                                       // 두꺼운 돌담: 1겹 침식 → 통로 넓혀 갇힘 방지
+        for (var ey=0;ey<gh;ey++) for (var ex=0;ex<gw;ex++){ var eq=ey*gw+ex;
+          var solid = rawB[eq] && (ex>0&&rawB[eq-1]) && (ex<gw-1&&rawB[eq+1]) && (ey>0&&rawB[eq-gw]) && (ey<gh-1&&rawB[eq+gw]); cells[eq]=solid?1:0; }
+      } else {                                                 // 얇은 바위: 1px 팽창(확실히)
+        for (var y=0;y<gh;y++) for (var x=0;x<gw;x++){ var q=y*gw+x; var on=rawB[q]||(x>0&&rawB[q-1])||(x<gw-1&&rawB[q+1])||(y>0&&rawB[q-gw])||(y<gh-1&&rawB[q+gw]); cells[q]=on?1:0; }
+      }
       BLOCK = { gw: gw, gh: gh, cells: cells };
     }
     if (m.waterImg) {
@@ -210,7 +215,10 @@ function TopDown(opts) {
   function st(p) { return p.stats || { capacity: 15, pickup: 'single', areaR: 0, canHeavy: true, canCorner: true, canSteal: false, cooldown: 0.4, collect: 1, leak: 0, skewerLoss: 0.3 }; }
   function cap(p) { return st(p).capacity || 15; }
   function control(id, dx, dy) { var p = players[id]; if (!p) return; p.lastInput = performance.now(); if (performance.now() < p.stunUntil) { p.ctrl = null; return; } if (!dx && !dy) { p.ctrl = null; return; } p.ctrl = { dx: dx, dy: dy, until: performance.now() + 600 }; }
-  function act(id, a) { var p = players[id]; if (!p) return; p.lastInput = performance.now(); if (performance.now() < p.stunUntil) return; if (a === 'grab') grab(p); else if (a === 'bump' || a === 'steal') bump(p); else if (a === 'gear') useGear(p); }
+  function act(id, a) { var p = players[id]; if (!p) return; p.lastInput = performance.now(); if (performance.now() < p.stunUntil) return; if (a === 'grab') grab(p); else if (a === 'bump' || a === 'steal') bump(p); else if (a === 'gear') useGear(p); else if (a === 'jump') jump(p); }
+  var JUMP_DUR = 520, JUMP_CD = 1300;
+  function jump(p) { var now = performance.now(); if (now < (p.jumpCD||0) || now < p.stunUntil) return;   // 담·함정 뛰어넘기(잠깐 벽 통과 + 높이 점프)
+    p.jumpCD = now + JUMP_CD; p.jumpUntil = now + JUMP_DUR; p.act = now; sfx('jump'); }
   function useGear(p) { var s = st(p), now = performance.now();
     if (s.gearBoost) { if (now < (p.boostCD||0)) return; p.boostCD = now + 10000; p.boostUntil = now + 1500; p.act = now; say('슝! 🚀', p.x, p.y - 46, '#7ae1ff'); burst(p.x, p.y, '#7ae1ff'); }
   }
@@ -408,6 +416,8 @@ function TopDown(opts) {
       case 'stun':  tone(220, 0.26, 'sine', 0.3, 80); break;
       case 'start': tone(523, 0.11, 'sine', 0.32); tone(659, 0.11, 'sine', 0.32, null, 0.12); tone(880, 0.2, 'sine', 0.34, null, 0.24); break;
       case 'block': tone(520, 0.12, 'sine', 0.28, 700); break;                            // 방어됨
+      case 'jump':  tone(300, 0.16, 'sine', 0.3, 780); break;                             // 폴짝
+      case 'land':  tone(220, 0.08, 'square', 0.22, 140); break;
     }
   }
 
@@ -419,7 +429,7 @@ function TopDown(opts) {
     if (!M || M.ended) { p.ctrl = null; return; }
     // 벽에 낀 경우 감지 → 목표 버리고 잠깐 배회
     if (p._stx == null) { p._stx = p.x; p._sty = p.y; p._stChk = now; }
-    if (now - p._stChk > 700) { if (Math.hypot(p.x - p._stx, p.y - p._sty) < 8 && p.ctrl) { p._t = null; p._wander = now + 600; } p._stx = p.x; p._sty = p.y; p._stChk = now; }
+    if (now - p._stChk > 700) { if (Math.hypot(p.x - p._stx, p.y - p._sty) < 8 && p.ctrl) { p._t = null; p._wander = now + 600; jump(p); } p._stx = p.x; p._sty = p.y; p._stChk = now; }  // 막히면 점프로 탈출
     if (p._wander && now < p._wander) { p.ctrl = { dx: Math.cos(now*0.004 + p.bob), dy: Math.sin(now*0.005 + p.bob*2), until: now + 300 }; return; }
     // 기회형 PvP: 옆에 적 창고면 습격, 옆에 짐 든 상대면 밀치기
     if (now > (p.aiPvp || 0)) {
@@ -471,8 +481,8 @@ function TopDown(opts) {
       if (now < p.stunUntil) { p.moving = false; return; }        // 기절 중 이동 불가
       if (p.ai) aiThink(p, now, s);                               // AI 경쟁 캐릭터: 스스로 줍고 버림
       // 갈매기: 벽·물 무시 비행(전 맵)
-      var fly = s.fly;
-      function block(x, y) { return fly ? false : blockedAt(x, y); }
+      var fly = s.fly, jumping = now < (p.jumpUntil||0);
+      function block(x, y) { return (fly || jumping) ? false : blockedAt(x, y); }   // 점프 중엔 담·바위 통과
       if (p.ctrl && now > p.ctrl.until) p.ctrl = null;
       if (p.ctrl) { var dx = p.ctrl.dx, dy = p.ctrl.dy, mag = Math.hypot(dx, dy) || 1; dx /= mag; dy /= mag;
         var terr = fly ? 'air' : terrainAt(p.x, p.y);
@@ -481,6 +491,7 @@ function TopDown(opts) {
         if (now < (p.iframe||0)) tmul *= 1.2;                    // 피격 무적 중 이속 보너스(도망)
         if (now < (p.slowUntil||0)) tmul *= 0.5;                 // 게 집게에 둔화
         if (now < (p.boostUntil||0)) tmul *= 2.0;               // 부스트 장비
+        if (jumping) tmul *= 1.5;                                // 점프 도약(담 넘기 쉽게)
         if (s.hAccel && Math.abs(dx) > Math.abs(dy)) tmul *= 1.3;  // 게: 가로 이동 가속
         if (s.homeTurf) { var mwh = M && M.warehouses ? M.warehouses[id] : null; if (mwh && Math.hypot(p.x-mwh.x, p.y-mwh.y) < WH_R*2.4) tmul *= 1.3; }  // 해녀 홈터프
         if (now < (p.alarmUntil||0)) tmul *= 1.5;                // 경보기: 귀환 가속
@@ -776,17 +787,18 @@ function TopDown(opts) {
 
     g.save(); g.translate(p.x, p.y);
     var pnow = performance.now();
+    var jLift = (pnow < (p.jumpUntil||0)) ? Math.sin((1 - (p.jumpUntil - pnow)/JUMP_DUR)*Math.PI) : 0;   // 점프 도약 높이
     if (p.afk) g.globalAlpha = 0.35;                            // AFK 유령
     else if (pnow < (p.iframe||0)) g.globalAlpha = 0.4 + 0.35*Math.abs(Math.sin(pnow*0.02));   // 피격 무적 깜빡임
     // 접지 그림자 (뜰수록 작고 옅게)
-    var shk = 1 - (mv * hop * 0.5);
+    var shk = (1 - (mv * hop * 0.5)) * (1 - jLift*0.7);
     g.fillStyle = 'rgba(20,24,33,'+(0.28*shk)+')'; g.beginPath(); g.ellipse(sideSway*0.5, R*0.82, R*0.72*shk, R*0.26*shk, 0, 0, 6.3); g.fill();
     // 이동 이펙트: 땅=먼지, 물=물결
     if (mv > 0.35 && hop < 0.25) {
       if (swimming) { g.strokeStyle = 'rgba(255,255,255,.5)'; g.lineWidth = 2; for (var w=0;w<2;w++){ g.beginPath(); g.ellipse(0, R*0.7, R*(0.5+w*0.28), R*(0.18+w*0.1), 0, 0, 6.3); g.stroke(); } }
       else if (Math.random() < 0.25) particles.push({ x: p.x - dir*R*0.4, y: p.y + R*0.7, vx: -dir*30*Math.random(), vy: -20-Math.random()*30, life: .4, age: 0, s: 3, col: 'rgba(150,140,120,.6)' });
     }
-    g.translate(sideSway, bob);
+    g.translate(sideSway, bob - jLift*52);                      // 점프 시 크게 도약
     g.rotate(lean);
     g.scale(squashX, squashY);
     // 다리/지느러미 (걸음 위상에 맞춰 교차) — 벡터 캐릭터에만

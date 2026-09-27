@@ -256,6 +256,7 @@ GameRT.connect('screen',null,function(m){
       if(m.act==='grab') E.act(m.id,'grab');
       else if(m.act==='bump'||m.act==='steal') E.act(m.id,'bump');
       else if(m.act==='gear') E.act(m.id,'gear');
+      else if(m.act==='jump') E.act(m.id,'jump');
       else E.control(m.id, +m.dx||0, +m.dy||0);
       break;
   }
