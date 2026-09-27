@@ -192,6 +192,20 @@ function enterLobby(){
     seat=s; GameRT.dbSet('players/'+cid,{seat:seat,ts:Date.now()}); showNickEntry();
   });
 }
+/* 새 라운드 자동 재참가: 리로드/재입력 없이 같은 별명·캐릭터로 대기실 복귀 */
+function rejoinNextRound(){
+  if(!myChar||!nick){ enterLobby(); return; }
+  GameRT.claimSeat().then(function(s){
+    if(s>10){ showWait('full'); return; }                      // 다음 판이 이미 꽉 참
+    seat=s;
+    GameRT.dbUpdate('players/'+cid,{seat:seat,nick:nick,char:myChar,equip:equip,ts:Date.now()});
+    var mb=document.getElementById('meBadge'); if(mb) mb.textContent=seat+'번 '+nick;
+    GameRT.toScreen({type:'join',seat:seat,nick:nick,id:cid});
+    GameRT.toScreen({type:'creature',id:cid,seat:seat,nick:nick,char:myChar,equip:equip});
+    show('pPlay');
+    var msg=document.getElementById('playMsg'); if(msg){ msg.style.display=''; msg.innerHTML='🎮 <b>'+seat+'번 '+nick+'</b><br>다음 판을 기다리는 중… 곧 시작해요!'; }
+  });
+}
 var waitingForNext=false;
 function showWait(reason){
   waitingForNext=true;
@@ -297,10 +311,10 @@ document.getElementById('gearBtn').addEventListener('pointerup',function(e){e.pr
 function onMsg(m){
   if(m.type==='state'||m.type==='phase'){
     var ph=m.phase||'lobby';
-    // 대기 중이던 폰: 로비가 열리면 자동으로 대기실 진입(번호·별명)
-    if(waitingForNext && ph==='lobby'){ waitingForNext=false; document.getElementById('pWait').style.display='none'; enterLobby(); return; }
-    // 라운드 초기화 감지: 게임 진행 중이던 폰이 lobby 로 돌아가면 새 라운드 → 다시 접속
-    if(joinedRound && ph==='lobby' && window._wasPlaying){ location.reload(); return; }
+    // 대기 중이던 폰: 로비가 열리면 자동 진입(캐릭터 있으면 같은 신분 재참가, 없으면 신규)
+    if(waitingForNext && ph==='lobby'){ waitingForNext=false; document.getElementById('pWait').style.display='none'; if(myChar) rejoinNextRound(); else enterLobby(); return; }
+    // 이전 판을 뛴 폰: 새 라운드(lobby)면 리로드 없이 같은 별명·캐릭터로 자동 재참가
+    if(joinedRound && ph==='lobby' && window._wasPlaying){ window._wasPlaying=false; rejoinNextRound(); return; }
     if(ph==='clean'||ph==='setup') window._wasPlaying=true;
     var label={lobby:'대기',setup:'준비',clean:'보물 대작전!',result:'결과'}[ph]||ph;
     document.getElementById('phaseBadge').textContent=label + (m.map&&G.MAPS[m.map]?(' · '+G.MAPS[m.map].emoji+G.MAPS[m.map].name):'');

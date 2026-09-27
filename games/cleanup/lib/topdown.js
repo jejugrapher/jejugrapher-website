@@ -233,7 +233,7 @@ function TopDown(opts) {
     if (best.hp <= 0) {
       M.trash = M.trash.filter(function (x) { return x !== best; });
       best.kinds.forEach(function (kd, i) { var a = i/best.kinds.length*6.28; var t = { x: best.x + Math.cos(a)*30, y: best.y + Math.sin(a)*30, kind: kd, cat: TRASH_CAT[kd]||'general', value:1, big:false, s: 13+Math.random()*3, rot: Math.random()*6.3, held: null, heavy:(kd==='can'||kd==='bottle'||kd==='glass'||kd==='scrap'), corner:false, stuck:false, hidden:false, revealed:true, drift:true, ph: Math.random()*6.3 }; M.trash.push(t); });
-      say('분리 완료!', best.x, best.y - 40, '#b6ff7a'); burst(best.x, best.y, '#ffd166');
+      say('분리 완료!', best.x, best.y - 40, '#b6ff7a'); burst(best.x, best.y, '#ffd166'); sfx('break');
     } else { say('한 번 더! (' + best.hp + ')', best.x, best.y - 40, '#ffd166'); }
     return true;
   }
@@ -249,12 +249,12 @@ function TopDown(opts) {
       var got = 0, R = s.areaR || 130;
       M.trash.forEach(function (t) { if (!ok(t) || p.holds.length >= cap(p)) return; if (t.heavy || t.corner) return;
         if (Math.hypot(t.x - p.x, t.y - p.y) < R) { t.held = p.id; p.holds.push(t); got++; } });
-      say(got ? '쓸었다! +' + got : '가벼운 쓰레기만 쓸려요', p.x, p.y - 46, got ? '#fff' : '#ffd166');
+      say(got ? '쓸었다! +' + got : '가벼운 쓰레기만 쓸려요', p.x, p.y - 46, got ? '#fff' : '#ffd166'); if (got) sfx('pick');
     } else {                                                     // 집게/꼬챙이: 하나
       var best = null, bd = 66;
       M.trash.forEach(function (t) { if (!ok(t)) return; if (!s.canHeavy && t.heavy) return; if (!s.canCorner && t.corner) return;
         var d = Math.hypot(t.x - p.x, t.y - p.y); if (d < bd) { bd = d; best = t; } });
-      if (best) { best.held = p.id; p.holds.push(best); say('주웠다!', p.x, p.y - 46, '#fff'); }
+      if (best) { best.held = p.id; p.holds.push(best); say('주웠다!', p.x, p.y - 46, '#fff'); sfx(best.big ? 'big' : 'pick'); }
       else say(s.canCorner ? '가까이에 쓰레기가 없어' : '구석/무거운 건 못 집어', p.x, p.y - 46, '#ffd166');
     }
   }
@@ -276,7 +276,7 @@ function TopDown(opts) {
     if (p._lastVic === vic.id && now - (p._lastVicT||0) < DR_WINDOW) { say('다른 친구를 찾아보자!', p.x, p.y - 46, '#8ee'); return; }  // 연속타격 무효
     p._lastVic = vic.id; p._lastVicT = now;
     var vs = st(vic);
-    if (vs.superArmor && now >= (vic.armorCD||0)) { vic.armorCD = now + 10000; vic.iframe = now + 800; say('끄떡없다! 💪', vic.x, vic.y - 46, '#8ee'); return; }  // 물개 슈퍼아머
+    if (vs.superArmor && now >= (vic.armorCD||0)) { vic.armorCD = now + 10000; vic.iframe = now + 800; say('끄떡없다! 💪', vic.x, vic.y - 46, '#8ee'); sfx('block'); return; }  // 물개 슈퍼아머
     var n = vic.holds.length, drop = Math.min(Math.ceil(n*0.5), 3) - (vs.dropResist||0); if (drop < 0) drop = 0;
     var got = 0;
     for (var i = 0; i < drop; i++) { var t = vic.holds.pop(); if (!t) break; t.held = null;
@@ -285,7 +285,7 @@ function TopDown(opts) {
     vic.iframe = now + IFRAME; vic.dwell = 0;
     if (p.char === 'crab') vic.slowUntil = now + 3000;           // 게: 명중 시 상대 둔화
     say(got ? '뺏었다! +' + got : (drop ? '삐용!' : '밀쳤다!'), p.x, p.y - 46, got ? '#ff7ab6' : '#fff');
-    say('😜', p.x, p.y - 54, '#ff7ab6'); if (drop) burst(vic.x, vic.y, '#fff');
+    say('😜', p.x, p.y - 54, '#ff7ab6'); if (drop) burst(vic.x, vic.y, '#fff'); sfx(got ? 'steal' : 'bump');
   }
   // 창고 습격: 적 창고에서 1개 → 내 손. 앞 5개 보호, 선두/러쉬면 딜레이 반감, 자물쇠 +2s.
   function raid(p, wh) {
@@ -298,7 +298,7 @@ function TopDown(opts) {
     p.raidCool = now + delay; p.act = now; p.actSteal = true;
     owner.bank -= 1; M.score[wh.id] = owner.bank;
     var t = makeTrash(p.x, p.y, 'cup', {}); t.held = p.id; p.holds.push(t);
-    say('새치기! +1', p.x, p.y - 46, '#ff7ab6'); say('앗 내 창고!', wh.x, wh.y - 46, '#ffb3b3'); burst(wh.x, wh.y, wh.col);
+    say('새치기! +1', p.x, p.y - 46, '#ff7ab6'); say('앗 내 창고!', wh.x, wh.y - 46, '#ffb3b3'); burst(wh.x, wh.y, wh.col); sfx('raid');
   }
 
   /* ───────── 창고(거점) & 보물 생성 헬퍼 ───────── */
@@ -363,7 +363,7 @@ function TopDown(opts) {
       p.armorCD = 0; p.boostCD = 0; p.boostUntil = 0; p.alarmUntil = 0; p.alarmCD = 0; p.trapCharges = 2; p.trapCD = 0;
       var wh = warehouses[id]; var sp0 = wh ? { x: wh.x, y: wh.y } : nudgeWalkable(0.5, 0.85);
       p.x = sp0.x; p.y = sp0.y; p.startX = sp0.x; p.startY = sp0.y; });
-    say(m.emoji + ' ' + m.name + '!', W/2, H*0.5, '#ffd166', 2.2, 40);
+    say(m.emoji + ' ' + m.name + '!', W/2, H*0.5, '#ffd166', 2.2, 40); sfx('start');
   }
   function endRound() { if (!M) return; M.ended = true;
     // 미저장분: 손에 든 보물 가치의 50%(올림) 최종 인정
@@ -376,6 +376,40 @@ function TopDown(opts) {
   /* ───────── 이펙트 ───────── */
   function burst(x, y, col) { for (var i = 0; i < 10; i++) particles.push({ x: x, y: y, vx: (Math.random()-.5)*180, vy: -40 - Math.random()*160, life: .7, age: 0, s: 4, col: col }); }
   function say(txt, x, y, col, life, size) { texts.push({ txt: txt, x: x, y: y, age: 0, life: life||1.2, col: col||'#fff', size: size||22 }); }
+
+  /* ───────── 사운드 (WebAudio SFX) ───────── */
+  var AC = null, masterGain = null, sfxMuted = false;
+  function soundEnable() {
+    try { if (!AC) { AC = new (window.AudioContext || window.webkitAudioContext)(); masterGain = AC.createGain(); masterGain.gain.value = 0.4; masterGain.connect(AC.destination); }
+      if (AC.state === 'suspended') AC.resume(); } catch (e) {}
+  }
+  function tone(freq, dur, type, vol, slideTo, delay) {
+    if (!AC || sfxMuted) return; var t0 = AC.currentTime + (delay || 0);
+    var o = AC.createOscillator(), g = AC.createGain(); o.type = type || 'sine'; o.frequency.setValueAtTime(freq, t0);
+    if (slideTo) o.frequency.exponentialRampToValueAtTime(Math.max(1, slideTo), t0 + dur);
+    g.gain.setValueAtTime(vol || 0.3, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+    o.connect(g); g.connect(masterGain); o.start(t0); o.stop(t0 + dur + 0.03);
+  }
+  var _sfxLast = {};
+  function sfx(name) {
+    if (!AC || sfxMuted) return;
+    var now = AC.currentTime, gap = (name === 'pick' || name === 'bump' || name === 'raid') ? 0.09 : 0.05;
+    if (now - (_sfxLast[name] || 0) < gap) return;             // 같은 소리 연타 방지(AI 다수 대비)
+    _sfxLast[name] = now;
+    switch (name) {
+      case 'pick':  tone(620, 0.07, 'square', 0.22, 950); break;                         // 콕
+      case 'bank':  tone(523, 0.09, 'sine', 0.3); tone(784, 0.11, 'sine', 0.3, null, 0.07); tone(1046, 0.14, 'sine', 0.32, null, 0.15); break;  // 저장! 상승
+      case 'bump':  tone(200, 0.14, 'sawtooth', 0.34, 70); break;                         // 삐용
+      case 'steal': tone(440, 0.09, 'triangle', 0.3, 660); tone(880, 0.1, 'triangle', 0.28, null, 0.08); break;
+      case 'raid':  tone(360, 0.1, 'triangle', 0.3, 260); break;
+      case 'big':   tone(880, 0.09, 'sine', 0.3); tone(1320, 0.16, 'sine', 0.32, null, 0.09); break;   // 반짝
+      case 'break': tone(300, 0.09, 'square', 0.24, 150); tone(200, 0.1, 'square', 0.2, null, 0.06); break;
+      case 'alarm': tone(900, 0.1, 'square', 0.32); tone(680, 0.12, 'square', 0.32, null, 0.12); break;
+      case 'stun':  tone(220, 0.26, 'sine', 0.3, 80); break;
+      case 'start': tone(523, 0.11, 'sine', 0.32); tone(659, 0.11, 'sine', 0.32, null, 0.12); tone(880, 0.2, 'sine', 0.34, null, 0.24); break;
+      case 'block': tone(520, 0.12, 'sine', 0.28, 700); break;                            // 방어됨
+    }
+  }
 
   /* ───────── 업데이트 ───────── */
   var OPEN_MAPS = { beach: 1, valley: 1 };                       // 갈매기가 날 수 있는 트인 맵(숲·마을은 걷기)
@@ -431,7 +465,7 @@ function TopDown(opts) {
         else p.moist = Math.max(0, p.moist - 12*dt);
         if (p.moist <= 0 && now >= p.stunUntil && !p._stunned) { p._stunned = true; p.stunUntil = now + 3000;
           (p.holds||[]).forEach(function (t) { t.held = null; t.x = p.x + (Math.random()-.5)*50; t.y = p.y + (Math.random()-.5)*50; }); p.holds = [];
-          say('😵 말라서 기절!', p.x, p.y - 46, '#ffb3b3'); }
+          say('😵 말라서 기절!', p.x, p.y - 46, '#ffb3b3'); sfx('stun'); }
       }
       if (p._stunned && now >= p.stunUntil) { p._stunned = false; p.x = p.startX; p.y = p.startY; p.moist = 100; }
       if (now < p.stunUntil) { p.moving = false; return; }        // 기절 중 이동 불가
@@ -467,7 +501,7 @@ function TopDown(opts) {
         if (wh && Math.hypot(p.x - wh.x, p.y - wh.y) < WH_R) {
           p.dwell = (p.dwell || 0) + dt;
           if (p.dwell >= 0.5 && p.holds.length) { var val = 0; p.holds.forEach(function (t) { val += (t.value||1); M.trash = M.trash.filter(function (x) { return x !== t; }); });
-            p.bank = (p.bank || 0) + val; M.score[id] = p.bank; say('+' + val + ' 저장!', p.x, p.y - 48, '#b6ff7a'); burst(p.x, p.y - 20, wh.col); p.holds = []; p.dwell = 0; }
+            p.bank = (p.bank || 0) + val; M.score[id] = p.bank; say('+' + val + ' 저장!', p.x, p.y - 48, '#b6ff7a'); burst(p.x, p.y - 20, wh.col); p.holds = []; p.dwell = 0; sfx('bank'); }
         } else p.dwell = 0;
       }
     });
@@ -477,8 +511,8 @@ function TopDown(opts) {
       var intruder = null; for (var iid in players) { if (iid === wid) continue; var e = players[iid]; if (e.afk) continue; if (Math.hypot(e.x - wh.x, e.y - wh.y) < WH_R + 6) { intruder = e; break; } }
       if (!intruder) return;
       if (os.gearTrap && (owner.trapCharges||0) > 0 && now > (owner.trapCD||0)) { owner.trapCharges--; owner.trapCD = now + 600;
-        intruder.stunUntil = Math.max(intruder.stunUntil||0, now + 2000); intruder.ctrl = null; say('🪤 찰칵!', intruder.x, intruder.y - 46, '#ffd166'); burst(intruder.x, intruder.y, '#ffd166'); }
-      if (os.gearAlarm && now > (owner.alarmCD||0)) { owner.alarmCD = now + 2500; owner.alarmUntil = now + 3000; say('🔔!', wh.x, wh.y - 52, '#ff6b6b'); if (opts.onAlarm) opts.onAlarm(wid); }
+        intruder.stunUntil = Math.max(intruder.stunUntil||0, now + 2000); intruder.ctrl = null; say('🪤 찰칵!', intruder.x, intruder.y - 46, '#ffd166'); burst(intruder.x, intruder.y, '#ffd166'); sfx('stun'); }
+      if (os.gearAlarm && now > (owner.alarmCD||0)) { owner.alarmCD = now + 2500; owner.alarmUntil = now + 3000; say('🔔!', wh.x, wh.y - 52, '#ff6b6b'); sfx('alarm'); if (opts.onAlarm) opts.onAlarm(wid); }
     }); }
     // 라운드 시간·페이즈·지속 스폰 (0~60 파밍 2s / 60~90 러쉬: 중앙 스폰 절반, 대형 20s)
     if (M && !M.ended) {
@@ -487,7 +521,7 @@ function TopDown(opts) {
       M.spawnT += dt; var interval = (M.phase === 'farm') ? 2.0 : 4.0;
       if (M.spawnT >= interval && curN < (M.capN || 24) * 1.3) { M.spawnT = 0;
         var cp = centralPos(); M.trash.push(makeTrash(cp.x, cp.y, m2.trashKinds[Math.floor(Math.random()*m2.trashKinds.length)], { drift: true })); }
-      M.bigT -= dt; if (M.bigT <= 0) { M.bigT = 20; var bp = centralPos(); M.trash.push(makeTrash(bp.x, bp.y, 'scrap', { big: true })); say('💎 대형 보물 등장!', bp.x, bp.y - 30, '#ffd23f', 1.6, 26); }
+      M.bigT -= dt; if (M.bigT <= 0) { M.bigT = 20; var bp = centralPos(); M.trash.push(makeTrash(bp.x, bp.y, 'scrap', { big: true })); say('💎 대형 보물 등장!', bp.x, bp.y - 30, '#ffd23f', 1.6, 26); sfx('big'); }
     }
     // 바람/파도: 안 잡힌 쓰레기가 흘러다녀 줍기 어려워짐 (바다>섬>육지)
     wind.t += dt; var wt = wind.t;
@@ -785,7 +819,7 @@ function TopDown(opts) {
     positions: function () { var o = {}; Object.keys(players).forEach(function (id){ var p = players[id]; o[id] = { x:+(p.x/W).toFixed(3), y:+(p.y/H).toFixed(3), seat:p.seat, nick:p.nick }; }); return o; },
     clear: clear, say: function (txt, col) { say(txt, W/2, H*0.2, col || '#ffd166', 2, 34); },
     setMapSize: function (v) { spread = Math.max(0.6, Math.min(1.2, +v || 1)); }, mapSize: function () { return spread; },
-    sound: { enable: function () {}, on: false },
+    sound: { enable: soundEnable, sfx: sfx, mute: function (v) { sfxMuted = !!v; }, on: true },
     MAPS: MAPS
   };
 }
