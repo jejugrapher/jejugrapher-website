@@ -332,6 +332,8 @@ function TopDown(opts) {
   }
   /* 현재 1등(최다 저장, 0 초과) id — 견제 목표 표시용 */
   function leaderId() { var a = rankAsc(); if (!a.length) return null; var top = a[a.length-1]; return top.b > 0 ? top.id : null; }
+  /* 확률 랜덤 탈취량: 0~maxN, richness(0~1) 높을수록 큰 수가 나올 확률↑ */
+  function weightedSteal(maxN, richness) { if (maxN <= 0) return 0; var r = Math.max(0, Math.min(1, richness||0)); var exp = 1/(1 + r*1.7); return Math.round(maxN * Math.pow(Math.random(), exp)); }
   /* 포신 수동 회전 */
   function aimTurret(p, dir) { p.aimAngle = (p.aimAngle == null ? -Math.PI/2 : p.aimAngle) + dir*0.14; }
   /* 터렛 발사 — 포신 방향(수동 조준)으로 내 창고 보물 1개 발사. 맞으면 상대 보물 떨어뜨림/창고 튕김 */
@@ -607,17 +609,21 @@ function TopDown(opts) {
       if (M.spawnT >= interval && curN < (M.capN || 24) * 1.3) { M.spawnT = 0;
         var cp = centralPos(); M.trash.push(makeTrash(cp.x, cp.y, m2.trashKinds[Math.floor(Math.random()*m2.trashKinds.length)], { drift: true })); }
       M.bigT -= dt; if (M.bigT <= 0) { M.bigT = 20; var bp = centralPos(); M.trash.push(makeTrash(bp.x, bp.y, 'scrap', { big: true })); say('💎 대형 보물 등장!', bp.x, bp.y - 30, '#ffd23f', 1.6, 26); sfx('big'); }
-      // 발사체(터렛): 아무 상대나 명중 가능(수동 조준). 명중=상대 보물 떨어뜨림/창고 튕김. 빗나가면 바닥에 떨어져 재수집
+      // 발사체(터렛): 명중 시 상대 쓰레기를 확률 랜덤 탈취 → 내 창고로. 부유할수록 많이 뺏을 확률↑. 빗나가면 바닥에 떨어짐
       if (M.shots.length) for (var si = M.shots.length-1; si >= 0; si--) { var sh = M.shots[si]; sh.age += dt; sh.x += sh.vx*dt; sh.y += sh.vy*dt; sh.rot += 9*dt;
         var owner = players[sh.owner], hit = false;
         for (var hid in players) { if (hid === sh.owner) continue; var o = players[hid]; if (o.afk || now < (o.iframe||0)) continue; if (owner && protectedTarget(owner, o)) continue;
-          if (Math.hypot(o.x - sh.x, o.y - sh.y) < 30) { var n = o.holds.length, drop = Math.min(Math.ceil(n*0.5), 3), dk2 = null;
-            for (var d3 = 0; d3 < drop; d3++) { var t3 = o.holds.pop(); if (!t3) break; t3.held = null; if (!dk2) dk2 = t3.kind; t3.x = o.x + (Math.random()-.5)*46; t3.y = o.y + (Math.random()-.5)*46; }
-            o.iframe = now + 1000; say(drop ? '명중! 떨어뜨림' : '명중!', o.x, o.y - 46, '#ffb3b3'); burst(o.x, o.y, sh.col); sfx('bump'); if (dk2) sfxTrash(dk2, false); hit = true; break; } }
+          if (Math.hypot(o.x - sh.x, o.y - sh.y) < 30) {            // 캐릭터 명중
+            if (now < (o.jumpUntil||0)) { say('점프 회피! 🦘', o.x, o.y - 46, '#8ee'); hit = true; break; }           // 점프 중이면 발사체 회피
+            if (o.char === 'gull' && Math.random() < 0.6) { say('휙~ 날아 피함!', o.x, o.y - 46, '#8ee'); hit = true; break; }  // 갈매기: 날아서 자동 회피(점프 불필요)
+            var maxC = Math.min(10, o.holds.length), gotC = weightedSteal(maxC, Math.min(1, (o.bank||0)/15));         // 0~보유량(최대10) 탈취
+            if (gotC > 0) { for (var d3 = 0; d3 < gotC; d3++) o.holds.pop(); if (owner) { owner.bank = (owner.bank||0) + gotC; M.score[sh.owner] = owner.bank; } }
+            o.iframe = now + 1000; say(gotC ? '뺏었다! +' + gotC : '아쉽! 0개', o.x, o.y - 46, gotC ? '#ff7ab6' : '#8ee'); burst(o.x, o.y, sh.col); sfx(gotC ? 'steal' : 'block'); hit = true; break; } }
         if (!hit && M.warehouses) for (var twid in M.warehouses) { if (twid === sh.owner) continue; var tw2 = M.warehouses[twid]; var tow = players[twid]; if (!tow) continue; if (owner && protectedTarget(owner, tow)) continue;
-          if (Math.hypot(tw2.x - sh.x, tw2.y - sh.y) < WH_R) {
-            if ((tow.bank||0) > MIN_SAFE_VAULT) { tow.bank -= 1; M.score[twid] = tow.bank; M.trash.push(makeTrash(tw2.x + (Math.random()-.5)*50, tw2.y + 34 + Math.random()*18, sh.kind, { drift: true })); say('창고 명중! 튕겨나옴', tw2.x, tw2.y - 46, '#ff7ab6'); }
-            else say('금고 보호!', tw2.x, tw2.y - 46, '#8ee'); burst(tw2.x, tw2.y, sh.col); sfx('raid'); hit = true; break; } }
+          if (Math.hypot(tw2.x - sh.x, tw2.y - sh.y) < WH_R) {      // 창고 명중: 0~5 탈취(앞 5개 보호)
+            var availW = Math.max(0, (tow.bank||0) - MIN_SAFE_VAULT), gotW = weightedSteal(Math.min(5, availW), Math.min(1, (tow.bank||0)/15));
+            if (gotW > 0) { tow.bank -= gotW; M.score[twid] = tow.bank; if (owner) { owner.bank = (owner.bank||0) + gotW; M.score[sh.owner] = owner.bank; } say('창고 명중! ' + gotW + '개 뺏어옴', tw2.x, tw2.y - 46, '#ff7ab6'); }
+            else say('금고 보호!', tw2.x, tw2.y - 46, '#8ee'); burst(tw2.x, tw2.y, sh.col); sfx(gotW ? 'raid' : 'block'); hit = true; break; } }
         var oob = sh.x < 8 || sh.x > W-8 || sh.y < 8 || sh.y > H-8;
         if (hit || sh.age >= sh.life || oob) { if (!hit) M.trash.push(makeTrash(Math.max(14, Math.min(W-14, sh.x)), Math.max(H*0.14, Math.min(H-14, sh.y)), sh.kind, { drift: true })); M.shots.splice(si, 1); }
       }

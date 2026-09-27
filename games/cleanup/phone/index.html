@@ -299,6 +299,7 @@ document.getElementById('equipNext').onclick=function(){
   GameRT.toScreen({type:'creature',id:myId,seat:seat,nick:nick,char:myChar,equip:equip});   // 이미지 없이 선택만 전송
   var sp=document.getElementById('special'); sp.style.display='block'; sp.textContent = equip.tool==='spear' ? '🔱 작살로 뺏기!' : '💥 밀치기!';
   document.getElementById('gearBtn').style.display = (equip.gear==='boost') ? 'block' : 'none';
+  document.getElementById('jumpBtn').style.display = (myChar==='gull') ? 'none' : 'block';   // 갈매기는 날아서 회피 → 점프 불필요
   show('pPlay');
   var msg=document.getElementById('playMsg');msg.style.display='';
   msg.innerHTML='<b>'+(G.CHARACTERS[myChar].emoji)+' '+seat+'번 '+nick+'</b><br>'+(G.CHARACTERS[myChar].trait||'')+'<br><span style="opacity:.85">'+statSummary()+'</span><br><br>대기실이에요. 곧 시작해요! (혼자여도 60초 뒤 시작)';
