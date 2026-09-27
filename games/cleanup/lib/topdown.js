@@ -346,6 +346,7 @@ function TopDown(opts) {
     var spd = Math.min(W, H) * 0.62, mz = WH_R + 10, kinds = curMap().trashKinds;
     M.shots.push({ x: wh.x + Math.cos(ang)*mz, y: wh.y + Math.sin(ang)*mz, vx: Math.cos(ang)*spd, vy: Math.sin(ang)*spd,
       owner: p.id, col: wh.col, kind: kinds[Math.floor(Math.random()*kinds.length)], age: 0, life: 2.0, rot: Math.random()*6.3 });
+    p.aimAngle = ang + (Math.random()-0.5)*0.6;                 // 반동: 포신이 틀어짐 → 다시 조준해야 함
     sfx('fire'); say('🎯 발사!', wh.x, wh.y - 46, wh.col);
   }
 
@@ -409,6 +410,7 @@ function TopDown(opts) {
     Object.keys(players).forEach(function (id) { var p = players[id]; p.holds = []; p.bank = 0; p.score = 0; p.dwell = 0; p.moist = 100; p.stunUntil = 0;
       p.iframe = 0; p.slowUntil = 0; p.afk = false; p.lastInput = performance.now(); p._lastVic = null; p.hits = 0;
       p.armorCD = 0; p.boostCD = 0; p.boostUntil = 0; p.alarmUntil = 0; p.alarmCD = 0; p.trapCharges = 2; p.trapCD = 0;
+      p.counterUntil = 0; p.counterTarget = null; p.fireCD = 0; p.jumpUntil = 0;
       var wh = warehouses[id];
       var sp0 = nudgeWalkable(0.5, 0.85);
       if (wh) { var ox = W/2 - wh.x, oy = H/2 - wh.y, dd = Math.hypot(ox, oy) || 1; sp0 = { x: wh.x + ox/dd*(WH_R+22), y: wh.y + oy/dd*(WH_R+22) }; p.aimAngle = Math.atan2(oy, ox); }   // 창고 앞 + 포신 기본 중앙조준
@@ -616,14 +618,21 @@ function TopDown(opts) {
           if (Math.hypot(o.x - sh.x, o.y - sh.y) < 30) {            // 캐릭터 명중
             if (now < (o.jumpUntil||0)) { say('점프 회피! 🦘', o.x, o.y - 46, '#8ee'); hit = true; break; }           // 점프 중이면 발사체 회피
             if (o.char === 'gull' && Math.random() < 0.6) { say('휙~ 날아 피함!', o.x, o.y - 46, '#8ee'); hit = true; break; }  // 갈매기: 날아서 자동 회피(점프 불필요)
-            var maxC = Math.min(10, o.holds.length), gotC = weightedSteal(maxC, Math.min(1, (o.bank||0)/15));         // 0~보유량(최대10) 탈취
+            var cnt = owner && owner.counterUntil > now && owner.counterTarget === hid;        // 반격: 나를 쏜 상대를 되받아침 → 2배
+            var maxC = Math.min(10, o.holds.length), gotC = Math.min(o.holds.length, weightedSteal(maxC, Math.min(1, (o.bank||0)/15)) * (cnt ? 2 : 1));   // 0~보유량(최대10) 탈취
             if (gotC > 0) { for (var d3 = 0; d3 < gotC; d3++) o.holds.pop(); if (owner) { owner.bank = (owner.bank||0) + gotC; M.score[sh.owner] = owner.bank; } }
+            if (cnt) { owner.counterUntil = 0; say('반격 성공! 2배! 💥', o.x, o.y - 62, '#ffd23f', 1.4, 26); }
+            o.counterTarget = sh.owner; o.counterUntil = now + 4000;                          // 당한 사람은 4초간 되받아치기 가능
             o.iframe = now + 1000; say(gotC ? '뺏었다! +' + gotC : '아쉽! 0개', o.x, o.y - 46, gotC ? '#ff7ab6' : '#8ee'); burst(o.x, o.y, sh.col); sfx(gotC ? 'steal' : 'block'); hit = true; break; } }
         if (!hit && M.warehouses) for (var twid in M.warehouses) { if (twid === sh.owner) continue; var tw2 = M.warehouses[twid]; var tow = players[twid]; if (!tow) continue; if (owner && protectedTarget(owner, tow)) continue;
           if (Math.hypot(tw2.x - sh.x, tw2.y - sh.y) < WH_R) {      // 창고 명중: 0~5 탈취(앞 5개 보호)
-            var availW = Math.max(0, (tow.bank||0) - MIN_SAFE_VAULT), gotW = weightedSteal(Math.min(5, availW), Math.min(1, (tow.bank||0)/15));
-            if (gotW > 0) { tow.bank -= gotW; M.score[twid] = tow.bank; if (owner) { owner.bank = (owner.bank||0) + gotW; M.score[sh.owner] = owner.bank; } say('창고 명중! ' + gotW + '개 뺏어옴', tw2.x, tw2.y - 46, '#ff7ab6'); }
-            else say('금고 보호!', tw2.x, tw2.y - 46, '#8ee'); burst(tw2.x, tw2.y, sh.col); sfx(gotW ? 'raid' : 'block'); hit = true; break; } }
+            var cntW = owner && owner.counterUntil > now && owner.counterTarget === twid;      // 반격 2배
+            var availW = Math.max(0, (tow.bank||0) - MIN_SAFE_VAULT), gotW = Math.min(availW, weightedSteal(Math.min(5, availW), Math.min(1, (tow.bank||0)/15)) * (cntW ? 2 : 1));
+            if (gotW > 0) { tow.bank -= gotW; M.score[twid] = tow.bank; if (owner) { owner.bank = (owner.bank||0) + gotW; M.score[sh.owner] = owner.bank; } say('창고 명중! ' + gotW + '개 뺏어옴' + (cntW ? ' (반격 2배!)' : ''), tw2.x, tw2.y - 46, '#ff7ab6'); }
+            else say('금고 보호!', tw2.x, tw2.y - 46, '#8ee');
+            if (cntW) owner.counterUntil = 0;
+            tow.counterTarget = sh.owner; tow.counterUntil = now + 4000;                        // 창고 털린 사람도 되받아치기 가능
+            burst(tw2.x, tw2.y, sh.col); sfx(gotW ? 'raid' : 'block'); hit = true; break; } }
         var oob = sh.x < 8 || sh.x > W-8 || sh.y < 8 || sh.y > H-8;
         if (hit || sh.age >= sh.life || oob) { if (!hit) M.trash.push(makeTrash(Math.max(14, Math.min(W-14, sh.x)), Math.max(H*0.14, Math.min(H-14, sh.y)), sh.kind, { drift: true })); M.shots.splice(si, 1); }
       }
