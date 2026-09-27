@@ -39,6 +39,13 @@
 </style>
 </head>
 <body>
+<div id="pwGate" style="position:fixed;inset:0;background:#03132b;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:20px;color:#fff;font-family:-apple-system,'Apple SD Gothic Neo',sans-serif">
+  <div style="font-size:30px;font-weight:900">🔒 청소 대작전</div>
+  <div style="opacity:.75;font-size:18px">비밀번호를 입력하세요</div>
+  <input id="pwIn" type="password" inputmode="numeric" autocomplete="off" placeholder="비밀번호" style="font-size:26px;padding:14px 18px;border-radius:14px;border:3px solid #3a4d86;background:#0b2350;color:#fff;text-align:center;letter-spacing:5px;width:min(300px,80vw)">
+  <button id="pwBtn" style="font-size:20px;padding:14px 40px;border:0;border-radius:14px;background:#00c2a8;color:#04231e;font-weight:800">열기</button>
+  <div id="pwWarn" style="color:#ff9f9f;height:20px;font-size:16px"></div>
+</div>
 <canvas id="c"></canvas>
 
 <div id="banner"><div id="phaseName"></div><div id="timer"></div></div>
@@ -257,6 +264,7 @@ GameRT.connect('screen',null,function(m){
       else if(m.act==='bump'||m.act==='steal') E.act(m.id,'bump');
       else if(m.act==='gear') E.act(m.id,'gear');
       else if(m.act==='jump') E.act(m.id,'jump');
+      else if(m.act==='fire') E.act(m.id,'fire');
       else E.control(m.id, +m.dx||0, +m.dy||0);
       break;
   }
@@ -275,6 +283,16 @@ if(GameRT.ready&&GameRT.ready.then){ GameRT.ready.then(function(room){
     else if(c.action==='auto'){ autoStartOn=!!c.on; publishStatus(); }
   }); }
 }); } else { showRoomQR('LOCAL'); }
+
+/* ───────── 비밀번호 잠금(1234567) ───────── */
+var SCREEN_PW='1234567';
+(function(){
+  function tryPw(){ var v=document.getElementById('pwIn').value; if(v===SCREEN_PW){ try{sessionStorage.setItem('cg_screen_ok','1');}catch(e){} document.getElementById('pwGate').style.display='none'; } else { document.getElementById('pwWarn').textContent='비밀번호가 틀렸어요'; document.getElementById('pwIn').value=''; document.getElementById('pwIn').focus(); } }
+  document.getElementById('pwBtn').onclick=tryPw;
+  document.getElementById('pwIn').addEventListener('keydown',function(e){ if(e.key==='Enter'){e.preventDefault();tryPw();} });
+  var ok=false; try{ok=sessionStorage.getItem('cg_screen_ok')==='1';}catch(e){}
+  if(ok){ document.getElementById('pwGate').style.display='none'; } else { document.getElementById('pwIn').focus(); }
+})();
 
 /* ───────── 시작 게이트 + 진행 키 ───────── */
 var gate=document.getElementById('gate');
