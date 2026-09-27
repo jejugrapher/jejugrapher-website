@@ -255,10 +255,22 @@ function TopDown(opts) {
     if (M) M.trash.forEach(function (tr) { if (tr.held) return; g.save(); g.translate(tr.x, tr.y); g.rotate(tr.rot); (TRASH[tr.kind]||TRASH.cup).d(g, tr.s); g.restore(); });
     // 장애물 (y 정렬로 겹침 자연스럽게)
     var obs = curMap().obstacles.slice().sort(function (a, b) { return a.y - b.y; });
-    obs.forEach(function (o) { g.save(); g.translate(o.x*W, o.y*H);
+    var SWAY = { tree:1, palm:1, bush:1, coral:1 }, HOP = { bear:1, squirrel:1 }, PULSE = { pond:1 };
+    obs.forEach(function (o) { var ox = o.x*W, oy = o.y*H, ph = o.x*13.3 + o.y*7.7;
       var sp = SPRITE[o.kind];
-      if (sp && sp._ok) { var sz = (o.r != null) ? o.r*2.9 : Math.max(o.w*W, o.h*H)*1.4; var ar = sp.height/sp.width; g.drawImage(sp, -sz/2, -sz*ar*0.62, sz, sz*ar); }
-      else if (o.w != null) (OB[o.kind]||OB.building)(g, o.w*W, o.h*H); else (OB[o.kind]||OB.rock)(g, o.r||30); g.restore(); });
+      if (sp && sp._ok) {
+        var sz = (o.r != null) ? o.r*2.9 : Math.max(o.w*W, o.h*H)*1.5, ar = sp.height/sp.width, iw = sz, ih = sz*ar;
+        var baseY = ih*0.38;                                    // 이미지 하단(발밑)
+        // 발밑 그림자
+        g.save(); g.translate(ox, oy + baseY*0.5); g.fillStyle = 'rgba(0,0,0,.18)'; g.beginPath(); g.ellipse(0, 0, iw*0.30, iw*0.11, 0, 0, 6.3); g.fill(); g.restore();
+        g.save(); g.translate(ox, oy);
+        if (SWAY[o.kind]) { g.translate(0, baseY); g.rotate(Math.sin(t*1.4 + ph)*0.05); g.translate(0, -baseY); }   // 밑동 기준 흔들
+        else if (HOP[o.kind]) { var hop = Math.abs(Math.sin(t*3 + ph)); g.translate(0, -hop*10); var sq = 1 + Math.sin(t*6 + ph)*0.05; g.scale(1/Math.sqrt(sq), sq); }  // 콩콩
+        else if (PULSE[o.kind]) { var p2 = 1 + Math.sin(t*2 + ph)*0.02; g.scale(p2, p2); }
+        g.drawImage(sp, -iw/2, -ih*0.62, iw, ih); g.restore();
+      }
+      else { g.save(); g.translate(ox, oy); if (o.w != null) (OB[o.kind]||OB.building)(g, o.w*W, o.h*H); else (OB[o.kind]||OB.rock)(g, o.r||30); g.restore(); }
+    });
     // 플레이어 (y 정렬)
     var ps = Object.keys(players).map(function (k){return players[k];}).sort(function (a,b){return a.y-b.y;});
     ps.forEach(function (p) { drawPlayer(p, t); });
