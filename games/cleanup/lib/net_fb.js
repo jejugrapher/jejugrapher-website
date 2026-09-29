@@ -13,7 +13,7 @@
     appId: "1:648614543804:web:7a64e55ad22b9debb2abb9"
   };
   var db = null, base = null, room = '', role = 'phone', seat = '', myId = '';
-  var listeners = [], actN = {}, lastAct = {}, seenJoin = {}, seenImg = {};
+  var listeners = [], actN = {}, ctrlN = {}, lastAct = {}, seenJoin = {}, seenImg = {};
   var readyRes, ready = new Promise(function (r) { readyRes = r; });
 
   function loadScript(src) { return new Promise(function (res, rej) { var s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
@@ -78,7 +78,7 @@
       else if (t === 'creature') base.child('players/' + msg.id).update({ seat: msg.seat, nick: msg.nick, char: msg.char, equip: msg.equip || null, ts: TS() });
       else if (t === 'ctrl') {
         if (msg.act) base.child('act/' + msg.id).set({ act: msg.act, n: (actN[msg.id] = (actN[msg.id] || 0) + 1), ts: TS() });
-        else base.child('ctrl/' + msg.id).set({ dx: msg.dx || 0, dy: msg.dy || 0 });
+        else base.child('ctrl/' + msg.id).set({ dx: msg.dx || 0, dy: msg.dy || 0, n: (ctrlN[msg.id] = (ctrlN[msg.id] || 0) + 1) });   // n=매 전송 고유값 → 같은 방향 유지(홀드) 중에도 child_changed 발생, 화면이 입력을 계속 갱신(0.6s 만료 방지)
       }
     } else if (to === 'phones') {
       if (t === 'phase') base.child('game').update({ phase: msg.phase, map: msg.map || null, ts: TS() });
@@ -102,14 +102,16 @@
   function claimSeat() {
     return dbTx('seq', function (n) { return (n || 0) + 1; }).then(function (r) { return r.value; });
   }
-  /* 별명 중복 방지(영구): registry/<별명키> 를 내 cid 로만 선점. 점수는 보존 */
-  function claimNick(nick) {
+  /* 별명 소유권(영구): registry/<별명키> 를 별명 비밀번호(pinHash)로 잠금. 점수는 보존.
+     - 처음 만든 별명은 그때의 pinHash 로 잠기고, 이후엔 같은 pinHash 를 넣어야 재사용(=본인 증명).
+     - pinHash 가 틀리면 취소(reason 'wrongpin'). 나중에 "그 1등이 나"임을 이 비밀번호로 증명. */
+  function claimNick(nick, pinHash) {
     var key = nickKey(nick);
     if (!key) return Promise.resolve({ ok: false, reason: 'empty' });
     return dbTx('registry/' + key, function (cur) {
-      if (cur && cur.cid && cur.cid !== myId) return;      // 다른 사람이 이미 쓰는 별명 → 취소
-      return { nick: String(nick).trim(), cid: myId, score: (cur && cur.score) || 0, ts: Date.now() };
-    }).then(function (r) { return { ok: !!r.committed, key: key, reason: r.committed ? '' : 'taken' }; });
+      if (cur && cur.pinHash && cur.pinHash !== pinHash) return;   // 이미 비밀번호 걸린 별명인데 비번 불일치 → 취소
+      return { nick: String(nick).trim(), cid: myId, pinHash: (cur && cur.pinHash) || pinHash || null, score: (cur && cur.score) || 0, ts: Date.now() };
+    }).then(function (r) { return { ok: !!r.committed, key: key, reason: r.committed ? '' : (pinHash ? 'wrongpin' : 'taken') }; });
   }
 
   var GameRT = {

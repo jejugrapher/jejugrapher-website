@@ -81,6 +81,8 @@
     <p class="sub">별명을 정해요 · 다른 친구와 겹치면 안 돼요</p>
     <input id="nick" placeholder="별명을 써요" maxlength="8">
     <div class="chips" id="nickChips"></div>
+    <input id="nickPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="🔒 별명 비밀번호 (숫자 4자리)" style="margin-top:8px;letter-spacing:6px">
+    <p class="sub" style="font-size:13px;opacity:.8;margin:6px 2px 0;text-align:center">나중에 <b>같은 별명으로 이어서</b> 하고, 내가 <b>1등이면 그 별명이 내 것</b>임을 증명할 때 필요해요. 꼭 기억하세요!</p>
     <div id="nickWarn" style="color:#ff8a8a;text-align:center;min-height:20px"></div>
     <button class="big y" id="startBtn">시작하기 ▶</button>
   </div>
@@ -177,6 +179,7 @@ function showNickEntry(){
   document.getElementById('nickRow').style.display='';
   document.getElementById('seatBig').textContent=seat+'번';
   var saved=localStorage.getItem('cg_nick'); if(saved) document.getElementById('nick').value=saved;
+  var savedPin=localStorage.getItem('cg_pin'); if(savedPin) document.getElementById('nickPin').value=savedPin;   // 같은 기기면 비밀번호도 자동 채움(이어하기 편하게)
 }
 function beginConnect(rm){
   document.getElementById('roomRow2').style.display='none';
@@ -228,13 +231,32 @@ function showWait(reason){
     : '🎮 지금 게임이 <b>진행 중이에요!</b><br>다음 판이 곧 시작돼요.<br>잠깐만 기다리면<br>자동으로 대기실로 들어가요.';
 }
 document.getElementById('connectBtn').onclick=function(){ var rc=(document.getElementById('roomIn').value||'').trim().toUpperCase(); if(!rc){alert('방 코드를 입력해요');return;} beginConnect(rc); };
+/* 별명 비밀번호 → 해시(평문 저장 안 함). 별명키로 소금 처리. crypto 없으면 간단 해시 폴백 */
+function hashPin(nk,pin){
+  var raw='cg1|'+GameRT.nickKey(nk)+'|'+pin;
+  try{
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw)).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf),function(b){return ('0'+b.toString(16)).slice(-2);}).join('').slice(0,16);
+    });
+  }catch(e){
+    var h=5381; for(var i=0;i<raw.length;i++){ h=((h<<5)+h+raw.charCodeAt(i))>>>0; }
+    return Promise.resolve(('00000000'+h.toString(16)).slice(-8));
+  }
+}
 document.getElementById('startBtn').onclick=function(){
   var v=document.getElementById('nick').value.trim();
+  var pin=(document.getElementById('nickPin').value||'').trim();
   if(!v){ document.getElementById('nickWarn').textContent='별명을 써요'; return; }
+  if(!/^[0-9]{4}$/.test(pin)){ document.getElementById('nickWarn').textContent='🔒 별명 비밀번호를 숫자 4자리로 정해요'; return; }
   document.getElementById('nickWarn').textContent='확인 중…';
-  GameRT.claimNick(v).then(function(r){
-    if(!r.ok){ document.getElementById('nickWarn').textContent='😅 이미 있는 별명이에요. 다른 별명으로!'; return; }
-    nick=v; localStorage.setItem('cg_nick',nick);
+  hashPin(v,pin).then(function(ph){ return GameRT.claimNick(v,ph); }).then(function(r){
+    if(!r.ok){
+      document.getElementById('nickWarn').textContent = (r.reason==='wrongpin')
+        ? '🔒 이 별명은 비밀번호가 달라요. 본인이면 정확히, 아니면 다른 별명으로!'
+        : '😅 이미 있는 별명이에요. 다른 별명으로!';
+      return;
+    }
+    nick=v; try{localStorage.setItem('cg_nick',nick); localStorage.setItem('cg_pin',pin);}catch(e){}
     GameRT.dbUpdate('players/'+cid,{seat:seat,nick:nick});
     afterNick();
   });
@@ -310,9 +332,11 @@ var pressDir=null, sendTimer=null;
 function startSend(){ if(sendTimer)return; sendTimer=setInterval(function(){ if(pressDir) GameRT.toScreen({type:'ctrl',id:myId,dx:pressDir[0],dy:pressDir[1]}); },100); }
 document.querySelectorAll('#pad [data-d]').forEach(function(b){
   var d=b.dataset.d.split(',').map(Number);
-  var on=function(e){e.preventDefault();pressDir=d;b.classList.add('on');GameRT.toScreen({type:'ctrl',id:myId,dx:d[0],dy:d[1]});startSend();};
+  var on=function(e){e.preventDefault();try{b.setPointerCapture(e.pointerId);}catch(_){}  // 손가락이 버튼 밖으로 살짝 밀려도 계속 홀드
+    pressDir=d;b.classList.add('on');GameRT.toScreen({type:'ctrl',id:myId,dx:d[0],dy:d[1]});startSend();};
   var off=function(e){e.preventDefault();pressDir=null;b.classList.remove('on');GameRT.toScreen({type:'ctrl',id:myId,dx:0,dy:0});};
-  b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointercancel',off);b.addEventListener('pointerleave',off);
+  // pointerleave 는 제외(홀드 중 손가락 미세이동에 멈춤 방지). 캡처 덕분에 pointerup 은 이 버튼에서 확실히 발생
+  b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointercancel',off);
 });
 /* 줍기는 자동 — 별도 버튼 없음 */
 document.getElementById('special').addEventListener('pointerdown',function(e){e.preventDefault();this.style.filter='brightness(1.3)';GameRT.toScreen({type:'ctrl',id:myId,act:'bump'});});
