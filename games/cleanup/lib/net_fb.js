@@ -13,7 +13,7 @@
     appId: "1:648614543804:web:7a64e55ad22b9debb2abb9"
   };
   var db = null, base = null, room = '', role = 'phone', seat = '', myId = '';
-  var listeners = [], actN = {}, ctrlN = {}, lastAct = {}, seenJoin = {}, seenImg = {};
+  var listeners = [], actN = {}, lastAct = {}, seenJoin = {}, seenImg = {};
   var readyRes, ready = new Promise(function (r) { readyRes = r; });
 
   function loadScript(src) { return new Promise(function (res, rej) { var s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
@@ -78,7 +78,7 @@
       else if (t === 'creature') base.child('players/' + msg.id).update({ seat: msg.seat, nick: msg.nick, char: msg.char, equip: msg.equip || null, ts: TS() });
       else if (t === 'ctrl') {
         if (msg.act) base.child('act/' + msg.id).set({ act: msg.act, n: (actN[msg.id] = (actN[msg.id] || 0) + 1), ts: TS() });
-        else base.child('ctrl/' + msg.id).set({ dx: msg.dx || 0, dy: msg.dy || 0, n: (ctrlN[msg.id] = (ctrlN[msg.id] || 0) + 1) });   // n=매 전송 고유값 → 같은 방향 유지(홀드) 중에도 child_changed 발생, 화면이 입력을 계속 갱신(0.6s 만료 방지)
+        else base.child('ctrl/' + msg.id).set({ dx: msg.dx || 0, dy: msg.dy || 0 });
       }
     } else if (to === 'phones') {
       if (t === 'phase') base.child('game').update({ phase: msg.phase, map: msg.map || null, ts: TS() });
