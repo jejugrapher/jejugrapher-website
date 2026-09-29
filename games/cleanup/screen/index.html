@@ -19,6 +19,13 @@
   #lobby .u{font-size:22px;font-family:monospace;opacity:.75;margin-top:14px;}
   #roster{display:flex;flex-wrap:wrap;gap:10px;max-width:520px;margin-top:20px;}
   #roster .p{background:rgba(255,255,255,.15);border-radius:12px;padding:8px 14px;font-size:20px;}
+  /* 상단 누적순위 TOP5 (대기/게임 화면 항상 표시) */
+  #topRank{position:fixed;top:0;left:0;right:0;display:flex;gap:10px;align-items:center;justify-content:center;padding:8px 12px;z-index:11;pointer-events:none;flex-wrap:wrap;}
+  #topRank .lbl{font-size:16px;font-weight:800;opacity:.8;letter-spacing:1px;align-self:center;margin-right:2px;text-shadow:0 2px 6px #000;}
+  #topRank .tr{background:rgba(0,10,30,.62);border:1px solid rgba(255,209,102,.35);border-radius:999px;padding:5px 15px;font-size:20px;font-weight:700;text-shadow:0 2px 6px #000;white-space:nowrap;}
+  #topRank .tr .m{margin-right:5px;} #topRank .tr b{color:#ffd166;margin-left:7px;}
+  #topRank .tr:nth-child(2){font-size:24px;border-color:#ffd166;background:rgba(40,30,0,.6);}
+  #topRank .empty{opacity:.45;font-size:16px;}
   /* 상단 배너 */
   #banner{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:14px 24px;z-index:8;pointer-events:none;}
   #phaseName{font-size:30px;font-weight:800;text-shadow:0 2px 8px #000;}
@@ -48,6 +55,7 @@
 </div>
 <canvas id="c"></canvas>
 
+<div id="topRank"></div>
 <div id="banner"><div id="phaseName"></div><div id="timer"></div></div>
 <div id="scores"><h3>🧹 청소 점수</h3><div id="scoreList"></div></div>
 
@@ -106,7 +114,7 @@ var phase='lobby';           // lobby clean result
 var players={};              // id -> {seat,nick,char,equip, hasCreature}
 var curMap='village';        // 시작 시 랜덤 또는 지정
 var manualMap=null;          // 컨트롤에서 맵 지정 시
-var cleanSeconds=90, timeLeft=0, clockTimer=null;
+var cleanSeconds=120, timeLeft=0, clockTimer=null;
 var MIN_START=1;             // 한 명만 들어와도 카운트다운 시작(혼자여도 60초 후 시작)
 var MAX_N=10;                // 이 인원 차면 즉시 시작 (상한, 최대 10명 동시 체험)
 var AI_FILL=5;              // 사람이 이 수 이하면 AI 캐릭터로 채워 함께 경쟁
@@ -205,6 +213,17 @@ function loadLeaderboard(){
     document.getElementById('leaderboard').innerHTML=rows.map(function(r,i){return '<div class="row" style="display:flex;justify-content:space-between;padding:4px 10px">'+'<span>'+(i+1)+'. '+r.nick+'</span><b style="color:#ffd166">'+r.score+'</b></div>';}).join('')||'<div style="text-align:center;opacity:.6">아직 점수가 없어요</div>';
   });
 }
+/* 상단 누적순위 TOP5 (대기/게임 화면 항상 표시) */
+function renderTopRank(reg){
+  var el=document.getElementById('topRank'); if(!el)return;
+  reg=reg||{};
+  var rows=Object.keys(reg).map(function(k){var r=reg[k];return {nick:r.nick,score:r.score||0};})
+    .filter(function(r){return r.nick;}).sort(function(a,b){return b.score-a.score;}).slice(0,5);
+  var medals=['🥇','🥈','🥉','4️⃣','5️⃣'];
+  el.innerHTML='<span class="lbl">⭐ 누적 TOP5</span>'+(rows.length
+    ? rows.map(function(r,i){return '<span class="tr"><span class="m">'+medals[i]+'</span>'+r.nick+'<b>'+r.score+'</b></span>';}).join('')
+    : '<span class="empty">아직 누적 점수가 없어요</span>');
+}
 function resetRound(){
   if(resetTimer){clearTimeout(resetTimer);resetTimer=null;}
   cancelCountdown();
@@ -212,7 +231,7 @@ function resetRound(){
   if(GameRT.dbSet){ ['players','ctrl','act','me','score'].forEach(function(k){GameRT.dbSet(k,null);}); GameRT.dbSet('seq',0); }
   setPhase('lobby'); publishStatus();
 }
-function publishStatus(){ if(GameRT.dbUpdate) GameRT.dbUpdate('game',{phase:phase,map:curMap,count:readyCount(),need:MAX_N,max:MAX_N,cd:cdLeft,autoStartOn:autoStartOn}); }
+function publishStatus(){ if(GameRT.dbUpdate) GameRT.dbUpdate('game',{phase:phase,map:curMap,count:readyCount(),need:MAX_N,max:MAX_N,cd:cdLeft,autoStartOn:autoStartOn,speed:(E.speedScale?E.speedScale():1),time:cleanSeconds}); }
 function checkAutoStart(){
   if(phase!=='lobby'){ publishStatus(); return; }
   var n=readyCount();
@@ -276,6 +295,7 @@ var lastCmd=0;
 if(GameRT.ready&&GameRT.ready.then){ GameRT.ready.then(function(room){
   showRoomQR(room);
   publishStatus();
+  if(GameRT.onValue){ GameRT.onValue('registry', renderTopRank); }
   if(GameRT.onValue){ GameRT.onValue('cmd', function(c){
     if(!c||!c.n||c.n===lastCmd) return; lastCmd=c.n;
     if(c.action==='start') startGame(c.map||null);
@@ -283,9 +303,11 @@ if(GameRT.ready&&GameRT.ready.then){ GameRT.ready.then(function(room){
     else if(c.action==='reset') resetRound();
     else if(c.action==='setmap') manualMap=c.map||null;
     else if(c.action==='mapsize'){ E.setMapSize(c.v); publishStatus(); }
+    else if(c.action==='speed'){ E.setSpeedScale(c.v); publishStatus(); }
+    else if(c.action==='time'){ cleanSeconds=Math.max(30,Math.min(600,+c.v||120)); publishStatus(); }
     else if(c.action==='auto'){ autoStartOn=!!c.on; publishStatus(); }
   }); }
-}); } else { showRoomQR('LOCAL'); }
+}); } else { showRoomQR('LOCAL'); renderTopRank({}); }
 
 /* ───────── 비밀번호 잠금(1234567) ───────── */
 var SCREEN_PW='1234567';

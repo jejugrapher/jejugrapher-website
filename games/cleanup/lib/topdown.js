@@ -22,7 +22,7 @@ function TopDown(opts) {
   function loadAssets() {
     ['village', 'beach', 'valley', 'gotjawal'].forEach(function (k) { loadImg(ASSET_BASE + 'maps/' + k + '.jpg', GROUND, k); });
     ['house', 'wall', 'dolharbang', 'tangerine', 'rock', 'basalt', 'tree', 'fern', 'buoy', 'deer'].forEach(function (k) { loadImg(ASSET_BASE + 'obstacles/' + k + '.png', SPRITE, k); });
-    ['seal', 'crab', 'pony', 'gull', 'haenyeo'].forEach(function (k) { loadImg(ASSET_BASE + 'chars/' + k + '.png', CHARIMG, k); });
+    ['seal', 'crab', 'pony', 'gull', 'haenyeo', 'carrot', 'turtle'].forEach(function (k) { loadImg(ASSET_BASE + 'chars/' + k + '.png', CHARIMG, k); });
   }
   loadAssets();
 
@@ -122,6 +122,7 @@ function TopDown(opts) {
   var mapKey = 'gotjawal', players = {}, trash = [], particles = [], texts = [], M = null;
   var t0 = performance.now(), last = t0, banner = null;
   var BASE_SPEED_FRAC = 0.10;                                   // 화면 높이 기준 초당 이동(×speedMul) — 캐릭터 이동속도(느리게)
+  var speedScale = 1.0;                                         // 현장 조절용 속도 배율(컨트롤 화면)
   var spread = 1.0;                                             // 맵 크기(0.72 작게 ~ 1.18 크게): 배치를 중심 기준 확대/축소
   var wind = { x: 0, y: 0, t: 0 };                              // 바람/해류 벡터
 
@@ -205,7 +206,7 @@ function TopDown(opts) {
     if (!p) { p = players[id] = { id: id, x: W*(0.2 + Math.random()*0.6), y: H*0.86, dir: 1, holds: [], score: 0, ctrl: null, bob: Math.random()*6, moist: 100, stunUntil: 0, cool: 0 }; p.startX = p.x; p.startY = p.y; }
     p.nick = meta.nick || p.nick || ''; p.seat = meta.seat || p.seat; p.char = meta.char || p.char;
     p.img = meta.img || p.img; p.speedMul = meta.speedMul != null ? meta.speedMul : (p.speedMul || 1);
-    p.gaitHz = ({ seal: 6, crab: 13, pony: 12, gull: 15, haenyeo: 7 })[p.char] || 10;   // 캐릭터별 걸음 속도
+    p.gaitHz = ({ seal: 6, crab: 13, pony: 12, gull: 15, haenyeo: 7, carrot: 10, turtle: 4 })[p.char] || 10;   // 캐릭터별 걸음 속도
     if (meta.ai != null) p.ai = !!meta.ai;                        // AI 경쟁 캐릭터 여부
     if (opts.onCount) opts.onCount(Object.keys(players).length);
     return p;
@@ -544,7 +545,7 @@ function TopDown(opts) {
     if (!tgt.home && dist < reach) p._tExp = 0;                 // 도착=자동 줍기(autoPickup)가 처리 → 다음 목표
   }
   function step(dt, now) {
-    var sp = Math.min(W, H) * BASE_SPEED_FRAC;
+    var sp = Math.min(W, H) * BASE_SPEED_FRAC * speedScale;
     Object.keys(players).forEach(function (id) { var p = players[id]; var s = st(p);
       p.afk = !p.ai && (now - (p.lastInput || now)) > 15000;     // 15초 무입력 → 유령(공격 불가)
       // 게: 수분 게이지 (물 밖이면 마름 → 0이면 기절, 쓰레기 다 흘리고 시작점 복귀)
@@ -841,7 +842,7 @@ function TopDown(opts) {
     particles.forEach(function (q) { g.globalAlpha = Math.max(0, 1 - q.age/q.life); g.fillStyle = q.col; g.beginPath(); g.arc(q.x, q.y, q.s, 0, 6.3); g.fill(); }); g.globalAlpha = 1;
     texts.forEach(function (tx) { g.globalAlpha = Math.max(0, 1 - tx.age/tx.life); g.fillStyle = tx.col; g.font = 'bold ' + tx.size + 'px -apple-system,sans-serif'; g.textAlign = 'center'; g.lineWidth = 4; g.strokeStyle = 'rgba(0,0,0,.5)'; g.strokeText(tx.txt, tx.x, tx.y); g.fillText(tx.txt, tx.x, tx.y); }); g.globalAlpha = 1;
   }
-  var CHAR_EMOJI = { seal:'🦭', crab:'🦀', pony:'🐎', gull:'🐦', haenyeo:'🧜' };
+  var CHAR_EMOJI = { seal:'🦭', crab:'🦀', pony:'🐎', gull:'🐦', haenyeo:'🧜', carrot:'🥕', turtle:'🐢' };
   var CHAR_COLOR = { seal:'#3d8bff', crab:'#ff5636', pony:'#e8912b', gull:'#ffd21f', haenyeo:'#12c4b0' };   // 캐릭터 고유색(파랑·빨강·주황·노랑·청록)
   var CHARACTERS_FLY = { gull: true };
   var PCOL = ['#ff4fa3','#22c1e6','#8bd329','#ff9f1c','#a06bff','#ff6b6b','#2ee6b6','#ffd23f','#6b8cff','#ff7ab6','#7ae1ff','#c0f24e','#ffb14e','#d06bff','#ff8f8f'];
@@ -915,6 +916,14 @@ function TopDown(opts) {
       lift = -Math.abs(sg)*6*mv; sideSway = cg*3*mv;
       lean = sg*0.11*mv + dir*mv*0.05 + breathe*0.02*(1-mv);
       squashY = 1 + breathe*0.04*(1-mv);
+    } else if (ch === 'carrot') {                               // 당근: 통통 튀는 껑충 + 좌우 흔들
+      lift = -hop*13*mv + breathe*1.0*(1-mv); sideSway = sg*6*mv;
+      squashX = 1 + (1-hop)*0.13*mv; squashY = 1 + hop*0.15*mv - (1-hop)*0.09*mv;
+      lean = sg*0.08*mv + dir*mv*0.10;
+    } else if (ch === 'turtle') {                               // 바다거북: 느릿느릿 좌우 노젓기 + 등껍질 숨쉬기
+      lift = -Math.abs(sg)*3*mv; sideSway = cg*5*mv;
+      lean = sg*0.07*mv + dir*mv*0.04 + breathe*0.03*(1-mv);
+      squashY = 1 + breathe*0.05*(1-mv); squashX = 1 - breathe*0.02*(1-mv);
     } else { lift = -hop*10*mv + breathe*1.2*(1-mv); squashX = 1+(1-hop)*0.10*mv; squashY = 1+hop*0.10*mv; lean = dir*mv*0.12; }
     var bob = lift;
 
@@ -969,6 +978,7 @@ function TopDown(opts) {
     positions: function () { var o = {}; Object.keys(players).forEach(function (id){ var p = players[id]; o[id] = { x:+(p.x/W).toFixed(3), y:+(p.y/H).toFixed(3), seat:p.seat, nick:p.nick }; }); return o; },
     clear: clear, say: function (txt, col) { say(txt, W/2, H*0.2, col || '#ffd166', 2, 34); },
     setMapSize: function (v) { spread = Math.max(0.6, Math.min(1.2, +v || 1)); }, mapSize: function () { return spread; },
+    setSpeedScale: function (v) { speedScale = Math.max(0.4, Math.min(2.5, +v || 1)); }, speedScale: function () { return speedScale; },
     sound: { enable: soundEnable, sfx: sfx, fanfare: fanfare, mute: function (v) { sfxMuted = !!v; }, on: true },
     MAPS: MAPS
   };

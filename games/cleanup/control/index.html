@@ -73,6 +73,10 @@
     <div class="maprow" id="mapRow"></div>
     <h2 style="margin-top:12px">맵 크기</h2>
     <div class="maprow" id="sizeRow"></div>
+    <h2 style="margin-top:12px">캐릭터 속도 <span id="spdLbl" style="color:#ffd166;font-size:15px"></span></h2>
+    <div class="maprow" id="speedRow"></div>
+    <h2 style="margin-top:12px">게임 시간 <span id="timeLbl" style="color:#ffd166;font-size:15px"></span></h2>
+    <div class="maprow" id="timeRow"></div>
     <button class="btn start" id="startBtn">▶ 지금 시작 (선택한 맵)</button>
     <button class="btn end" id="endBtn">⏹ 청소 강제 종료</button>
     <button class="btn reset" id="resetBtn">↺ 초기화 (새 라운드)</button>
@@ -108,8 +112,20 @@ function begin(room){
     var sr=document.getElementById('sizeRow'); sr.innerHTML='';
     [['작게',0.75],['보통',1.0],['크게',1.15]].forEach(function(o){var b=document.createElement('button');b.className='mapb'+(o[1]===1.0?' on':'');b.textContent=o[0];
       b.onclick=function(){sr.querySelectorAll('.mapb').forEach(function(x){x.classList.remove('on');});b.classList.add('on');GameRT.dbSet('cmd',{action:'mapsize',v:o[1],n:Date.now()});};sr.appendChild(b);});
+    // 캐릭터 속도 배율 버튼
+    var spr=document.getElementById('speedRow'); spr.innerHTML='';
+    [['0.5x',0.5],['0.75x',0.75],['보통',1.0],['1.25x',1.25],['1.5x',1.5],['2x',2.0]].forEach(function(o){var b=document.createElement('button');b.className='mapb'+(o[1]===1.0?' on':'');b.textContent=o[0];b.dataset.v=o[1];
+      b.onclick=function(){spr.querySelectorAll('.mapb').forEach(function(x){x.classList.remove('on');});b.classList.add('on');GameRT.dbSet('cmd',{action:'speed',v:o[1],n:Date.now()});};spr.appendChild(b);});
+    // 게임 시간(초) 버튼
+    var tmr=document.getElementById('timeRow'); tmr.innerHTML='';
+    [60,90,120,180,240].forEach(function(v){var b=document.createElement('button');b.className='mapb'+(v===120?' on':'');b.textContent=v+'초';b.dataset.v=v;
+      b.onclick=function(){tmr.querySelectorAll('.mapb').forEach(function(x){x.classList.remove('on');});b.classList.add('on');GameRT.dbSet('cmd',{action:'time',v:v,n:Date.now()});};tmr.appendChild(b);});
     // 상태 구독
     GameRT.onValue('game',function(g){ g=g||{};
+      if(typeof g.speed==='number'){ var sl=document.getElementById('spdLbl'); if(sl) sl.textContent='('+g.speed+'x)';
+        spr.querySelectorAll('.mapb').forEach(function(x){ x.classList.toggle('on', Math.abs((+x.dataset.v)-g.speed)<0.001); }); }
+      if(typeof g.time==='number'){ var tl=document.getElementById('timeLbl'); if(tl) tl.textContent='('+g.time+'초)';
+        tmr.querySelectorAll('.mapb').forEach(function(x){ x.classList.toggle('on', (+x.dataset.v)===g.time); }); }
       document.getElementById('phaseLbl').textContent={lobby:'대기',clean:'청소중',result:'결과'}[g.phase]||g.phase||'-';
       document.getElementById('cnt').textContent=g.count||0;
       document.getElementById('need').textContent=g.need||10;

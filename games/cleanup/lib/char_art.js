@@ -59,6 +59,25 @@
       c.beginPath(); c.moveTo(-38, 60); c.lineTo(-58, 74); c.moveTo(-30, 64); c.lineTo(-46, 82); c.stroke(); // 꼬리깃
       c.beginPath(); c.moveTo(-8, 66); c.lineTo(-8, 84); c.moveTo(12, 66); c.lineTo(12, 84); c.stroke();     // 다리
       eye(c, 8, -38);
+    },
+    carrot: function (c) {                                  // 🥕 구좌당근
+      c.beginPath(); c.moveTo(-34, -18); c.quadraticCurveTo(-40, 40, 0, 84); c.quadraticCurveTo(40, 40, 34, -18); c.closePath(); c.stroke();  // 뿌리 몸통
+      c.beginPath(); c.moveTo(-28, 8); c.lineTo(28, 8); c.moveTo(-22, 34); c.lineTo(22, 34); c.moveTo(-14, 58); c.lineTo(14, 58); c.stroke(); // 결
+      c.beginPath(); c.moveTo(0, -18); c.lineTo(0, -70); c.stroke();                       // 잎 줄기
+      c.beginPath(); c.moveTo(0, -40); c.lineTo(-30, -74); c.moveTo(0, -30); c.lineTo(30, -70); c.moveTo(0, -52); c.lineTo(-14, -84); c.moveTo(0, -52); c.lineTo(14, -84); c.stroke(); // 잎
+      eye(c, -12, -2, 4); eye(c, 12, -2, 4);
+      c.beginPath(); c.arc(0, 14, 10, 0.15, Math.PI-0.15); c.stroke();                     // 미소
+    },
+    turtle: function (c) {                                  // 🐢 세화바다거북
+      c.beginPath(); c.ellipse(0, 12, 56, 44, 0, 0, 6.3); c.stroke();                      // 등껍질
+      c.beginPath(); c.ellipse(0, 12, 34, 26, 0, 0, 6.3); c.stroke();                      // 등판 무늬
+      c.beginPath(); c.moveTo(0, -14); c.lineTo(0, 38); c.moveTo(-30, 4); c.lineTo(30, 4); c.moveTo(-24, 26); c.lineTo(24, 26); c.stroke(); // 등딱지 육각결
+      c.beginPath(); c.arc(0, -40, 20, 0, 6.3); c.stroke();                                // 머리
+      eye(c, -8, -44); eye(c, 8, -44);
+      c.beginPath(); c.ellipse(-52, -6, 18, 11, -0.5, 0, 6.3); c.stroke();                 // 앞지느러미 왼
+      c.beginPath(); c.ellipse(52, -6, 18, 11, 0.5, 0, 6.3); c.stroke();                   // 앞지느러미 오
+      c.beginPath(); c.ellipse(-36, 46, 13, 9, -0.6, 0, 6.3); c.stroke();                  // 뒷발 왼
+      c.beginPath(); c.ellipse(36, 46, 13, 9, 0.6, 0, 6.3); c.stroke();                    // 뒷발 오
     }
   };
 

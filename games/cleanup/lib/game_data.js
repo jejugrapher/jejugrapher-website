@@ -23,9 +23,13 @@
     crab:    { name: '게',     emoji: '🦀', cat: 'crawler', dive: 20, cap: 5, pv: 'hAccel', moisture: true, role: '견제(둔화)', trait: '부딪히면 상대를 느리게! 가로로 빨라요. 몸이 마르면 기절',
                mul: { water: 1.4, sand: 1.6, forest: 1.0, village: 1.0, air: 1.0 } },
     haenyeo: { name: '해녀',   emoji: '🧜', cat: 'person',  dive: 25, cap: 5, pv: 'homeTurf',  role: '수비', trait: '내 창고 근처에선 빠르고 강해요! 지킬 때 최고',
-               mul: { water: 1.2, sand: 1.0, forest: 1.0, village: 1.0, air: 1.0 } }
+               mul: { water: 1.2, sand: 1.0, forest: 1.0, village: 1.0, air: 1.0 } },
+    carrot:  { name: '구좌당근', emoji: '🥕', cat: 'plant',  dive: 8,  cap: 7, pv: 'dash',       role: '수집(육상)', trait: '구좌 흙에서 쑥쑥! 땅에서 빠르고 많이 담아요. 물은 느려요',
+               mul: { water: 0.6, sand: 1.3, forest: 1.2, village: 1.4, air: 0.7 } },
+    turtle:  { name: '세화바다거북', emoji: '🐢', cat: 'whale', dive: 40, cap: 9, pv: 'superArmor', role: '대량 운반(해상)', trait: '세화 앞바다 튼튼한 등껍질! 바다에서 최고, 아주 많이 담고 한 번은 안 뺏겨요. 땅에선 느려요',
+               mul: { water: 1.7, sand: 0.6, forest: 0.5, village: 0.5, air: 0.5 } }
   };
-  var CHAR_ORDER = ['seal', 'crab', 'pony', 'gull', 'haenyeo'];
+  var CHAR_ORDER = ['seal', 'crab', 'pony', 'gull', 'haenyeo', 'carrot', 'turtle'];
 
   /* 장비 슬롯 A: 줍는 도구 */
   var TOOLS = {
