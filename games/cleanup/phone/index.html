@@ -310,9 +310,11 @@ var pressDir=null, sendTimer=null;
 function startSend(){ if(sendTimer)return; sendTimer=setInterval(function(){ if(pressDir) GameRT.toScreen({type:'ctrl',id:myId,dx:pressDir[0],dy:pressDir[1]}); },100); }
 document.querySelectorAll('#pad [data-d]').forEach(function(b){
   var d=b.dataset.d.split(',').map(Number);
-  var on=function(e){e.preventDefault();pressDir=d;b.classList.add('on');GameRT.toScreen({type:'ctrl',id:myId,dx:d[0],dy:d[1]});startSend();};
+  var on=function(e){e.preventDefault();try{b.setPointerCapture(e.pointerId);}catch(_){}  // 손가락이 버튼 밖으로 살짝 밀려도 계속 홀드
+    pressDir=d;b.classList.add('on');GameRT.toScreen({type:'ctrl',id:myId,dx:d[0],dy:d[1]});startSend();};
   var off=function(e){e.preventDefault();pressDir=null;b.classList.remove('on');GameRT.toScreen({type:'ctrl',id:myId,dx:0,dy:0});};
-  b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointercancel',off);b.addEventListener('pointerleave',off);
+  // pointerleave 는 제외(홀드 중 손가락 미세이동에 멈춤 방지). 캡처 덕분에 pointerup 은 이 버튼에서 확실히 발생
+  b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointercancel',off);
 });
 /* 줍기는 자동 — 별도 버튼 없음 */
 document.getElementById('special').addEventListener('pointerdown',function(e){e.preventDefault();this.style.filter='brightness(1.3)';GameRT.toScreen({type:'ctrl',id:myId,act:'bump'});});
