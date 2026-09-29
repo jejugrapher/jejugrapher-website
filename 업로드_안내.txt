@@ -1,0 +1,24 @@
+[깃허브 업로드용 파일 모음 — 청소게임]
+
+이 폴더 안의 games/cleanup/ 폴더가 깃허브에 올라가는 전부입니다.
+저장소: github.com/jejugrapher/jejugrapher-website  (= jejugrapher.com)
+올라가는 위치: 저장소 루트의  games/cleanup/  (경로 그대로)
+라이브 주소: https://jejugrapher.com/games/cleanup/
+
+▶ 업로드하는 파일 (총 26개, 이 목록이 전부):
+  games/cleanup/index.html            ← 진입(대형화면으로 이동)
+  games/cleanup/screen/index.html     ← 대형화면(진행자)
+  games/cleanup/control/index.html    ← 컨트롤 화면(진행자 PC)
+  games/cleanup/phone/index.html      ← 참가자 폰
+  games/cleanup/lib/topdown.js        ← 게임 엔진
+  games/cleanup/lib/game_data.js      ← 캐릭터·장비·맵 데이터
+  games/cleanup/lib/char_art.js       ← 캐릭터 도안
+  games/cleanup/lib/net_fb.js         ← 파이어베이스 통신(실서비스)
+  games/cleanup/lib/game_rt.js        ← 로컬 통신(대안)
+  games/cleanup/assets/...            ← 맵/캐릭터/오브젝트 이미지 17개
+
+▶ 올리지 않는 것 (프로젝트 폴더에만 두는 작업물):
+  docs/, download/, _대화로그/, README_기획_*, server.py, ._로 시작하는 파일 등
+
+* 이 폴더는 배포 시점(2026-09-29, 커밋 4e11811) 저장소 내용과 동일하게 맞춰둔 것입니다.
+* 평소 배포는 제가 바뀐 파일만 골라 저장소에 직접 push 합니다(이 폴더는 "무엇이 올라가는지" 확인용).
