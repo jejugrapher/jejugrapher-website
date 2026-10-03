@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>화순곶자왈 사운드워킹 | 제주그래퍼</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* 별밤사진관 회차 페이지와 같은 짜임 — 색만 숲(곶자왈) 쪽으로 */
+:root{
+  --sky:#0F2418; --deep:#08160E; --panel:#163322; --cloud:#EEF5EC;
+  --glow:#C9F2B6; --glow-2:#7BCB8E; --amber:#F2C86B; --mute:#9DB8A4;
+  --line:rgba(201,242,182,.18); --ok:#9BE7B5; --err:#FF9A8F;
+  --serif:"Gowun Batang","Noto Serif KR","Apple SD Gothic Neo",serif;
+  --pen:"Nanum Pen Script","Gowun Batang",cursive;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;background:var(--deep)}
+body{background:var(--sky);color:var(--cloud);font:1rem/1.8 var(--serif);word-break:keep-all;overflow-wrap:break-word}
+img{display:block;max-width:100%}
+a{color:var(--glow)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+.wrap{width:min(1180px,100% - 2rem);margin-inline:auto}
+.pen{font-family:var(--pen);font-weight:400;color:#F7FFF3;text-shadow:0 0 8px rgba(201,242,182,.6),0 0 22px rgba(123,203,142,.45)}
+
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.2rem;color:var(--deep);background:var(--glow);text-decoration:none;font-weight:700;border:0;cursor:pointer;box-shadow:0 0 14px rgba(123,203,142,.35)}
+.btn:hover{background:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:transparent;color:var(--cloud);border:1px solid var(--line);box-shadow:none;font-weight:400}
+.btn.ghost:hover{border-color:var(--glow);color:var(--glow)}
+.btn.sm{padding:.45rem .8rem;font-size:.88rem}
+
+/* 잠금 화면 */
+.gate{min-height:100svh;display:grid;place-items:center;padding:2rem 1rem;background:radial-gradient(110% 80% at 50% 0%,#1f4a2e 0%,var(--sky) 50%,var(--deep) 100%)}
+.gate-box{width:min(440px,100%);text-align:center}
+.gate-box .pen{font-size:clamp(3rem,11vw,4.6rem);line-height:1.05}
+.gate-box p{color:var(--mute);margin:.9rem 0 1.6rem}
+.gate form{display:flex;gap:.5rem}
+.gate input{flex:1;min-width:0;background:rgba(8,22,14,.7);border:1px solid var(--line);padding:.75rem 1rem;font:500 1.15rem var(--mono);letter-spacing:.14em;text-align:center;color:var(--cloud)}
+.gate input::placeholder{letter-spacing:.06em;color:#6c8a74}
+.gate .err{color:var(--err);min-height:1.8em;margin-top:.8rem;font-size:.95rem}
+.gate small{display:block;color:#7d9a85;margin-top:1.4rem;font-size:.85rem}
+
+/* 머리말 */
+.top{padding:clamp(3rem,8vw,5.5rem) 0 2.5rem;background:radial-gradient(110% 90% at 70% 0%,#24502f 0%,var(--sky) 55%);border-bottom:1px solid var(--line)}
+.back{font-size:.9rem;color:var(--mute);text-decoration:none}
+.back:hover{color:var(--glow)}
+.top-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:2rem 3rem;align-items:end;margin-top:1.4rem}
+.top h1{font-size:clamp(3.2rem,9vw,5.6rem);line-height:1}
+.lede{margin-top:1rem;max-width:32em}
+.log{font:400 .82rem/2 var(--mono);color:var(--mute);border-left:1px solid var(--line);padding-left:1.1rem}
+.log b{color:var(--cloud);font-weight:500}
+.acts{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.6rem}
+
+section{padding:clamp(2.6rem,6vw,4.2rem) 0}
+h2{font-family:var(--pen);font-weight:400;font-size:clamp(2.3rem,5.5vw,3.2rem);line-height:1.05;color:#F7FFF3;text-shadow:0 0 10px rgba(123,203,142,.45);margin-bottom:.9rem}
+.sub{color:var(--mute);max-width:40em;margin-bottom:1.4rem}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.2rem}
+.how div{border-top:1px solid var(--line);padding-top:.9rem}
+.how b{display:block}
+.how p{color:#D3E2D5;font-size:.95rem}
+
+.player{position:relative;aspect-ratio:16/9;background:var(--deep);border:1px solid var(--line)}
+.player button{position:absolute;inset:0;border:0;padding:0;cursor:pointer;background:none}
+.player img{width:100%;height:100%;object-fit:cover}
+.play{position:absolute;left:50%;top:50%;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;background:rgba(8,22,14,.7);border:1px solid var(--glow)}
+.play::after{content:"";position:absolute;left:31px;top:23px;border-left:21px solid var(--glow);border-top:15px solid transparent;border-bottom:15px solid transparent}
+.player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+.tools{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(15,36,24,.94);backdrop-filter:blur(8px);border-block:1px solid var(--line);padding-block:.7rem}
+.tools .wrap{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;justify-content:space-between}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{border:1px solid var(--line);background:transparent;padding:.25rem .8rem;font-size:.88rem;cursor:pointer;color:var(--mute)}
+.chip[aria-pressed="true"]{background:var(--glow);color:var(--deep);border-color:var(--glow)}
+.chip .c{font:500 .72rem var(--mono);opacity:.7;margin-left:.3rem}
+.pick{display:flex;gap:.4rem;align-items:center}
+
+.grp{padding-top:1.6rem}
+.grp h3{font-family:var(--pen);font-weight:400;font-size:2rem;color:#F7FFF3;line-height:1.1;display:flex;gap:.8rem;align-items:baseline;flex-wrap:wrap}
+.grp h3 small{font:400 .8rem var(--mono);color:var(--mute)}
+.grp h3 button{font:400 .82rem var(--serif);background:none;border:1px solid var(--line);color:var(--mute);padding:.1rem .6rem;cursor:pointer}
+.grp h3 button:hover{color:var(--glow);border-color:var(--glow)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem .9rem;padding-block:1rem .5rem}
+.card{display:grid;gap:.4rem}
+.shot{position:relative;aspect-ratio:3/2;overflow:hidden;background:var(--deep);cursor:zoom-in;border:0;padding:0;width:100%}
+.shot img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease,filter .5s ease}
+.shot img.v{object-position:50% 22%}
+.shot:hover img{transform:scale(1.035);filter:brightness(1.08)}
+.tag{position:absolute;top:.45rem;left:.45rem;font:500 .7rem/1 var(--mono);background:rgba(8,22,14,.8);border:1px solid var(--line);padding:.32rem .42rem}
+.sel{position:absolute;top:.4rem;right:.4rem;width:34px;height:34px;border:1.5px solid rgba(255,255,255,.85);background:rgba(8,22,14,.45);cursor:pointer;display:grid;place-items:center;color:transparent;font-weight:700}
+.card.on .sel{background:var(--amber);border-color:var(--amber);color:var(--deep)}
+.card.on .shot{outline:3px solid var(--amber);outline-offset:-3px}
+.meta{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;font:400 .8rem var(--mono);color:#86a28d}
+.meta .no{font:500 .92rem var(--mono);color:var(--cloud)}
+.meta a{color:var(--mute);text-decoration:none}
+.meta a:hover{color:var(--glow)}
+
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:8;background:rgba(8,22,14,.97);border-top:1px solid var(--amber);padding:.7rem 0 max(.7rem,env(safe-area-inset-bottom,0px))}
+.bar .wrap{display:flex;gap:.6rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.bar .n{font:500 1rem var(--mono)}
+.bar .n b{color:var(--amber);font-size:1.2rem}
+.bar .row{display:flex;gap:.4rem;flex-wrap:wrap}
+
+footer{padding:2.5rem 0 6rem;border-top:1px solid var(--line);color:var(--mute);font-size:.85rem;margin-top:3rem}
+footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+
+dialog{border:0;padding:0;background:transparent;color:var(--cloud)}
+dialog::backdrop{background:rgba(4,12,7,.94)}
+#viewer{max-width:100vw;max-height:100vh;width:100vw;height:100vh;margin:0}
+.vw{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:max(.8rem,env(safe-area-inset-top,0px)) 1rem max(1rem,env(safe-area-inset-bottom,0px))}
+.vw-top{display:flex;justify-content:space-between;align-items:center;gap:.6rem}
+.vw-top .t{font:500 .9rem var(--mono)}
+.vw-img{position:relative;display:flex;align-items:center;justify-content:center;min-height:0}
+.vw-img img{max-width:100%;max-height:100%;object-fit:contain}
+.nav,.x{background:rgba(8,22,14,.6);border:1px solid var(--line);color:var(--cloud);width:46px;height:46px;cursor:pointer;font-size:1.4rem}
+.nav:hover,.x:hover{border-color:var(--glow);color:var(--glow)}
+.nav{position:absolute;top:50%;margin-top:-23px}
+.nav.prev{left:.25rem}.nav.next{right:.25rem}
+.vw-bot{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;padding-top:.8rem}
+#vwPick[aria-pressed="true"]{background:var(--amber);color:var(--deep);border-color:var(--amber)}
+
+.dlg{width:min(560px,100vw - 2rem);max-height:calc(100vh - 2rem);margin:auto}
+.sheet{background:var(--sky);border:1px solid var(--line);padding:1.5rem;overflow:auto;max-height:calc(100vh - 2rem)}
+.sheet h3{font-family:var(--pen);font-weight:400;font-size:2.3rem;line-height:1;color:#F7FFF3}
+.sheet .sub{margin:.5rem 0 1rem;font-size:.95rem}
+.thumbs{display:flex;gap:.3rem;overflow-x:auto;padding-bottom:.4rem;margin-bottom:1rem}
+.thumbs img{width:72px;height:48px;object-fit:cover;flex:none;background:var(--deep)}
+.dl-list{display:grid;gap:.3rem;max-height:40vh;overflow:auto;margin:.8rem 0;font:400 .85rem var(--mono)}
+.dl-list a{color:var(--cloud);text-decoration:none;border-bottom:1px solid var(--line);padding:.3rem 0;display:flex;justify-content:space-between}
+.dl-list a:hover{color:var(--glow)}
+.dl-list a.done::after{content:"받음";color:var(--ok)}
+form.rq{display:grid;gap:1rem}
+label{display:grid;gap:.35rem;font-size:.88rem;color:var(--mute)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}
+.rq input[type=text],.rq textarea{width:100%;background:var(--deep);border:1px solid var(--line);padding:.6rem .75rem;color:var(--cloud);font-size:1rem}
+.rq textarea{min-height:90px;resize:vertical}
+.rq textarea.nos{min-height:56px;font:400 .9rem var(--mono)}
+.kinds{display:flex;flex-wrap:wrap;gap:.4rem}
+.kinds label{display:block}
+.kinds input{position:absolute;opacity:0;pointer-events:none}
+.kinds span{display:inline-block;border:1px solid var(--line);padding:.3rem .8rem;font-size:.9rem;color:var(--cloud);cursor:pointer}
+.kinds input:checked+span{background:var(--glow);border-color:var(--glow);color:var(--deep);font-weight:700}
+.kinds input:focus-visible+span{outline:2px solid var(--amber);outline-offset:2px}
+.agree{display:flex;gap:.5rem;align-items:flex-start;font-size:.88rem}
+.agree input{margin-top:.35rem}
+.hp{position:absolute;left:-9999px}
+.msg{font-size:.93rem;min-height:1.4em}
+.msg.ok{color:var(--ok)}.msg.err{color:var(--err)}
+.foot{display:flex;justify-content:flex-end;gap:.5rem;flex-wrap:wrap}
+.done{text-align:center;padding:1.8rem .5rem}
+.done .pen{font-size:2.6rem;display:block;line-height:1.1;margin-bottom:.5rem}
+
+@media (max-width:860px){
+  .top-grid,.how{grid-template-columns:minmax(0,1fr)}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem .6rem}
+  .two{grid-template-columns:minmax(0,1fr)}
+  .nav{top:auto;bottom:-3.4rem;margin:0}
+  .nav.prev{left:calc(50% - 56px)}.nav.next{right:calc(50% - 56px)}
+  .vw-bot{padding-top:3.8rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gate-box">
+    <div class="pen">화순곶자왈<br>사운드워킹</div>
+    <p>이 사진은 그날 함께 걸은 분들만 볼 수 있어요.<br>참여한 날짜 여섯 자리를 입력해 주세요.</p>
+    <form id="gateForm" autocomplete="off">
+      <input id="pw" inputmode="numeric" maxlength="10" placeholder="예) 250101" aria-label="참여한 날짜 여섯 자리" required>
+      <button class="btn" type="submit">열기</button>
+    </form>
+    <div class="err" id="gateErr" role="alert"></div>
+    <small>날짜를 모르시면 안내받은 문자나 카카오톡 메시지를 확인해 주세요.</small>
+  </div>
+</div>
+
+<div id="app" hidden>
+<header class="top">
+  <div class="wrap">
+    <a class="back" href="/">← 제주그래퍼</a>
+    <div class="top-grid">
+      <div>
+        <h1 class="pen">화순곶자왈 사운드워킹</h1>
+        <p class="lede">헤드셋을 쓰고, 마이크를 하늘로 들고, 숲의 소리를 따라 두 시간을 걸었습니다. 그날 함께한 얼굴들을 크게 보고, 마음에 드는 사진을 골라 받고, 원본이 필요하면 알려 주세요.</p>
+        <div class="acts">
+          <a class="btn ghost" href="#photos">사진 고르기</a>
+          <a class="btn ghost" href="#video" id="toVideo">영상 보기</a>
+          <a class="btn ghost" id="allDrive" href="#" target="_blank" rel="noopener">전체 폴더 열기 (구글 드라이브)</a>
+        </div>
+      </div>
+      <p class="log">
+        <b>2026. 10. 3 (토)</b> 10:11 – 11:51<br>
+        화순곶자왈 생태탐방숲길 · 안덕면 화순리<br>
+        2026 생태관광주간 · 운영 ㈜더사운드벙커<br>
+        Sony A1 · ZV-E1<br>
+        <b id="countLine"></b>
+      </p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="video" hidden>
+    <div class="wrap">
+      <h2>그날 숲의 소리</h2>
+      <p class="sub">걷고, 듣고, 녹음한 시간을 음악과 숲의 소리로 엮은 영상입니다.</p>
+      <div class="player" id="player">
+        <button type="button" id="playBtn" aria-label="화순곶자왈 사운드워킹 영상 재생">
+          <img id="ytThumb" alt="" loading="lazy">
+          <span class="play" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-bottom:1.5rem">
+    <div class="wrap">
+      <h2>사진 받는 법</h2>
+      <div class="how">
+        <div><b>골라서 받기</b><p>사진 오른쪽 위 네모를 눌러 여러 장을 고른 뒤, 아래에 뜨는 <b style="display:inline">받기</b>를 누르세요. 한 장씩 받을 때는 사진을 크게 열어 받기를 누르면 됩니다.</p></div>
+        <div><b>원본이 필요하면</b><p>여기서 받는 사진은 휴대폰·SNS에 알맞은 크기(긴 변 1200px)입니다. 인화나 큰 화면용 원본은 사진을 고른 뒤 <b style="display:inline">원본 요청</b>을 보내 주세요. 준비되면 연락드려요.</p></div>
+        <div><b>내리고 싶은 사진</b><p>공개되길 원하지 않는 사진이 있으면 골라서 원본 요청 창에서 <b style="display:inline">사진 내려 주세요</b>를 선택해 보내 주세요. 확인하는 대로 내리겠습니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="tools" id="photos">
+    <div class="wrap">
+      <div class="chips" id="chips" role="group" aria-label="시간대로 거르기"></div>
+      <div class="pick">
+        <button class="btn ghost sm" type="button" id="pickAll">보이는 사진 모두 고르기</button>
+      </div>
+    </div>
+  </div>
+  <div class="wrap" id="groups"></div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 JEJUGRAPHER · 2026.10.03 화순곶자왈 사운드워킹</span>
+    <span>요청 때 사진 번호를 알려 주시면 더 빨리 찾아 드려요</span>
+  </div>
+</footer>
+</div>
+
+<div class="bar" id="bar" hidden>
+  <div class="wrap">
+    <span class="n"><b id="selN">0</b>장 골랐어요</span>
+    <div class="row">
+      <button class="btn sm" type="button" id="barDl">받기</button>
+      <button class="btn ghost sm" type="button" id="barReq">원본 요청</button>
+      <button class="btn ghost sm" type="button" id="barClear">고른 것 지우기</button>
+    </div>
+  </div>
+</div>
+
+<dialog id="viewer" aria-label="사진 크게 보기">
+  <div class="vw">
+    <div class="vw-top">
+      <span class="t" id="vwTitle"></span>
+      <button class="x" type="button" id="vwClose" aria-label="닫기">×</button>
+    </div>
+    <div class="vw-img">
+      <img id="vwImg" alt="">
+      <button class="nav prev" type="button" id="vwPrev" aria-label="이전 사진">‹</button>
+      <button class="nav next" type="button" id="vwNext" aria-label="다음 사진">›</button>
+    </div>
+    <div class="vw-bot">
+      <button class="btn ghost sm" type="button" id="vwPick" aria-pressed="false">고르기</button>
+      <a class="btn sm" id="vwDown" target="_blank" rel="noopener">이 사진 받기</a>
+      <button class="btn ghost sm" type="button" id="vwReq">원본 요청</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="dl" class="dlg" aria-label="고른 사진 받기">
+  <div class="sheet">
+    <h3>고른 사진 받기</h3>
+    <p class="sub" id="dlSub"></p>
+    <div class="foot" style="justify-content:flex-start">
+      <button class="btn sm" type="button" id="dlAll">모두 받기</button>
+      <button class="btn ghost sm" type="button" id="dlClose">닫기</button>
+    </div>
+    <p class="msg" id="dlMsg" role="status"></p>
+    <div class="dl-list" id="dlList"></div>
+    <p class="sub" style="font-size:.85rem;margin:0">휴대폰에서 한꺼번에 받기가 막히면 목록의 번호를 하나씩 눌러 주세요. 많이 받으실 때는 <a id="dlFolder" target="_blank" rel="noopener">드라이브 폴더</a>에서 받으셔도 됩니다.</p>
+  </div>
+</dialog>
+
+<dialog id="req" class="dlg" aria-label="원본 요청">
+  <div class="sheet">
+    <div id="reqForm">
+      <h3>원본 요청</h3>
+      <p class="sub">고른 사진 번호가 아래에 들어가 있어요. 원본(고해상도)을 드라이브에 올리고 남겨 주신 연락처로 알려 드립니다.</p>
+      <div class="thumbs" id="rqThumbs"></div>
+      <form class="rq" id="form" novalidate>
+        <label for="f_nos">사진 번호 (쉼표로 구분, 고쳐 써도 돼요)
+          <textarea class="nos" id="f_nos"></textarea>
+        </label>
+        <div>
+          <div style="font-size:.88rem;color:var(--mute);margin-bottom:.4rem">어떤 요청인가요?</div>
+          <div class="kinds">
+            <label for="k1"><input type="radio" name="kind" id="k1" value="원본(고해상도)" checked><span>원본(고해상도)</span></label>
+            <label for="k2"><input type="radio" name="kind" id="k2" value="밝기·색감"><span>밝기·색감</span></label>
+            <label for="k3"><input type="radio" name="kind" id="k3" value="사진 내려 주세요"><span>사진 내려 주세요</span></label>
+            <label for="k4"><input type="radio" name="kind" id="k4" value="기타"><span>기타</span></label>
+          </div>
+        </div>
+        <label for="f_msg">남길 말 (선택)
+          <textarea id="f_msg" placeholder="예) 액자로 뽑고 싶어요. / 아이 얼굴이 나온 사진은 내려 주세요."></textarea>
+        </label>
+        <div class="two">
+          <label for="f_name">이름<input type="text" id="f_name" autocomplete="name" placeholder="예) 김OO"></label>
+          <label for="f_contact">연락처 (휴대폰 또는 이메일)<input type="text" id="f_contact" autocomplete="tel" placeholder="원본이 준비되면 알려 드려요"></label>
+        </div>
+        <label class="hp" aria-hidden="true">웹사이트<input type="text" id="f_web" tabindex="-1" autocomplete="off"></label>
+        <label class="agree" for="f_agree"><input type="checkbox" id="f_agree"> 이름과 연락처는 이 사진의 안내에만 쓰고, 안내가 끝나면 지웁니다.</label>
+        <p class="msg" id="rqMsg" role="status"></p>
+        <div class="foot">
+          <button class="btn ghost sm" type="button" id="rqCancel">닫기</button>
+          <button class="btn sm" type="submit" id="rqSend">요청 보내기</button>
+        </div>
+      </form>
+    </div>
+    <div class="done" id="reqDone" hidden>
+      <span class="pen">요청을 받았어요</span>
+      <p style="color:var(--mute);margin-bottom:1.2rem">준비되면 남겨 주신 연락처로 알려 드릴게요.</p>
+      <button class="btn ghost sm" type="button" id="doneClose">닫기</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* ── 설정 (build_gallery.py가 채움) ─────────────── */
+const SESSION = "261003";
+const PW_HASH = "16a91ac4f9939a7b8c712a123aff4a691e5d59fd0429b91c79c9a7ebadcd7292";            // sha256("byeolbam-pw:" + 날짜 6자리)
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbwYW8zN_7UyGnbeYpf3A5hSeSp4GVTc3N3Rj3c28WgnOiAZHVDuovvn4WvN5zHE6_WV/exec";       // 구글 Apps Script 웹 앱 (별밤사진관과 같은 창구)
+const YT = "Gi_NvWsjuMM";
+const DRIVE_FOLDER = "https://drive.google.com/drive/folders/1O2i-EtJBt4HGP2kg8qt6U5Y2lRpm9myX";
+const PHOTOS = [{"n":"7210","t":"10:11","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7211","t":"10:11","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"2408","t":"10:11","cam":"A1","s":"모여서 귀 기울이기","v":0},{"n":"2409","t":"10:11","cam":"A1","s":"모여서 귀 기울이기","v":0},{"n":"7212","t":"10:14","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7213","t":"10:14","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7214","t":"10:14","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7215","t":"10:14","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7216","t":"10:14","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7217","t":"10:14","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7218","t":"10:14","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7219","t":"10:14","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7220","t":"10:14","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"2414","t":"10:14","cam":"A1","s":"모여서 귀 기울이기","v":0},{"n":"7221","t":"10:14","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"2418","t":"10:14","cam":"A1","s":"모여서 귀 기울이기","v":0},{"n":"2419","t":"10:14","cam":"A1","s":"모여서 귀 기울이기","v":0},{"n":"2420","t":"10:14","cam":"A1","s":"모여서 귀 기울이기","v":0},{"n":"2421","t":"10:15","cam":"A1","s":"모여서 귀 기울이기","v":0},{"n":"7222","t":"10:16","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7223","t":"10:16","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7224","t":"10:16","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7225","t":"10:16","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7226","t":"10:16","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7227","t":"10:16","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7228","t":"10:16","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7229","t":"10:16","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7230","t":"10:16","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7231","t":"10:16","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7232","t":"10:16","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"7233","t":"10:16","cam":"ZV-E1","s":"모여서 귀 기울이기","v":0},{"n":"2422","t":"10:19","cam":"A1","s":"모여서 귀 기울이기","v":0},{"n":"2423","t":"10:19","cam":"A1","s":"모여서 귀 기울이기","v":0},{"n":"2424","t":"10:20","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2425","t":"10:20","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2426","t":"10:20","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2427","t":"10:22","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2428","t":"10:22","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2429","t":"10:22","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2430","t":"10:22","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2431","t":"10:22","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2432","t":"10:22","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2433","t":"10:22","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2434","t":"10:22","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2435","t":"10:22","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2436","t":"10:22","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2437","t":"10:23","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"7234","t":"10:23","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7235","t":"10:23","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7236","t":"10:23","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7237","t":"10:23","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7238","t":"10:23","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"2440","t":"10:25","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2441","t":"10:25","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2442","t":"10:25","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2443","t":"10:25","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2444","t":"10:25","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"7239","t":"10:28","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7240","t":"10:28","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7241","t":"10:28","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7242","t":"10:28","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7243","t":"10:28","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7244","t":"10:28","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7245","t":"10:28","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7246","t":"10:28","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7247","t":"10:28","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7248","t":"10:28","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7249","t":"10:28","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7250","t":"10:28","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"2445","t":"10:34","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2446","t":"10:34","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2447","t":"10:34","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2450","t":"10:34","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2451","t":"10:34","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2452","t":"10:34","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2453","t":"10:34","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"7251","t":"10:34","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7252","t":"10:34","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7253","t":"10:34","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7254","t":"10:34","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7255","t":"10:34","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7256","t":"10:34","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"2454","t":"10:36","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2455","t":"10:36","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2456","t":"10:36","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2457","t":"10:36","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"7257","t":"10:37","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7258","t":"10:37","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7259","t":"10:37","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7260","t":"10:37","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7261","t":"10:37","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7262","t":"10:37","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7263","t":"10:37","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7264","t":"10:37","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7265","t":"10:37","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7266","t":"10:37","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"2468","t":"10:39","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2469","t":"10:39","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"7267","t":"10:41","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7268","t":"10:41","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7269","t":"10:41","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7270","t":"10:41","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"7271","t":"10:41","cam":"ZV-E1","s":"헤드셋을 쓰고","v":0},{"n":"2478","t":"10:42","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2479","t":"10:42","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2480","t":"10:42","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2481","t":"10:42","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2482","t":"10:42","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2483","t":"10:42","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2484","t":"10:42","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2485","t":"10:42","cam":"A1","s":"헤드셋을 쓰고","v":0},{"n":"2486","t":"10:43","cam":"A1","s":"소리를 따라 걷기","v":0},{"n":"2487","t":"10:43","cam":"A1","s":"소리를 따라 걷기","v":0},{"n":"7272","t":"10:44","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7273","t":"10:44","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7274","t":"10:44","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7275","t":"10:46","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7276","t":"10:46","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7277","t":"10:46","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7278","t":"10:46","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7279","t":"10:46","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7280","t":"10:46","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7281","t":"10:46","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7282","t":"10:46","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7283","t":"10:47","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7284","t":"10:47","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7285","t":"10:47","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7286","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7287","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7288","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7289","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7290","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7291","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7292","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7293","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7294","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7295","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7296","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7297","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7298","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7299","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7300","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7301","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7302","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7303","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7304","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7305","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7306","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7307","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7308","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7309","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7310","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7311","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7312","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7313","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7314","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7315","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7316","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7317","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7318","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7319","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7320","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7321","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7322","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7323","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7324","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7325","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7326","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7327","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7328","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7329","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7330","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7331","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7332","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7333","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7334","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7335","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7336","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7337","t":"10:48","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"2490","t":"10:48","cam":"A1","s":"소리를 따라 걷기","v":0},{"n":"7338","t":"10:49","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7339","t":"10:49","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7340","t":"10:49","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7341","t":"10:49","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7342","t":"10:49","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7343","t":"10:49","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7344","t":"10:49","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7345","t":"10:49","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7346","t":"10:49","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7347","t":"10:49","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7348","t":"10:49","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7349","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7350","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7351","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7352","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7353","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7354","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7355","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7356","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7357","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7358","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7359","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7360","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7361","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7362","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7363","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7364","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7365","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7366","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7367","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7368","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7369","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7370","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7371","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7372","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7373","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7374","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7375","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7376","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7377","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7378","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7379","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7380","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7381","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7382","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7383","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7384","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7385","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7386","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7387","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7388","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7389","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7390","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7391","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7392","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7393","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7394","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7395","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7396","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7397","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7398","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7399","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7400","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7401","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7402","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7403","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7404","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7405","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7406","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7407","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7408","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7409","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7410","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7411","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7412","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7413","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7414","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7415","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7416","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7417","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7418","t":"10:50","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7419","t":"10:51","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7420","t":"10:51","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7421","t":"10:51","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7422","t":"10:51","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7423","t":"10:52","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7424","t":"10:52","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7425","t":"10:52","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7426","t":"10:52","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7427","t":"10:52","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7428","t":"10:52","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7429","t":"10:52","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7430","t":"10:52","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"2491","t":"10:53","cam":"A1","s":"소리를 따라 걷기","v":0},{"n":"2492","t":"10:53","cam":"A1","s":"소리를 따라 걷기","v":0},{"n":"7431","t":"10:53","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7432","t":"10:53","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7433","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7434","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7435","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7436","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7437","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7438","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7439","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7440","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7441","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7442","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7443","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7444","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7445","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7446","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7447","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7448","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7449","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7450","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7451","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7452","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7453","t":"10:54","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"2493","t":"10:55","cam":"A1","s":"소리를 따라 걷기","v":0},{"n":"2494","t":"10:55","cam":"A1","s":"소리를 따라 걷기","v":0},{"n":"2495","t":"10:55","cam":"A1","s":"소리를 따라 걷기","v":0},{"n":"2496","t":"10:55","cam":"A1","s":"소리를 따라 걷기","v":0},{"n":"7454","t":"10:59","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7455","t":"10:59","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7456","t":"10:59","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7457","t":"10:59","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7458","t":"10:59","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7459","t":"10:59","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7460","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7461","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7462","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7463","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7464","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7465","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7466","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7467","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7468","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7469","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7470","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7471","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7472","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7473","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7474","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7475","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7476","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7477","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7478","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7479","t":"11:00","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7480","t":"11:01","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7481","t":"11:01","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7482","t":"11:01","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7483","t":"11:01","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7484","t":"11:01","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7485","t":"11:01","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7486","t":"11:05","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7487","t":"11:05","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7488","t":"11:05","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7489","t":"11:05","cam":"ZV-E1","s":"소리를 따라 걷기","v":0},{"n":"7490","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7491","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7492","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7493","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7494","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7495","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7496","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7497","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7498","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7499","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7500","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7501","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7502","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7503","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7504","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7505","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7506","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7507","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7508","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7509","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7510","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7511","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7512","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7513","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7514","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7515","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7516","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7517","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7518","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7519","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7520","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7521","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7522","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7523","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7524","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7525","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7526","t":"11:12","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7527","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7528","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7529","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7530","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7531","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7532","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7533","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7534","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7535","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7536","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7537","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7538","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7539","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7540","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7541","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7542","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7543","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7544","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7545","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7546","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7547","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7548","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7549","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7550","t":"11:13","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7551","t":"11:15","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7552","t":"11:15","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7553","t":"11:15","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7554","t":"11:15","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7555","t":"11:15","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7556","t":"11:15","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7557","t":"11:15","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7558","t":"11:15","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7559","t":"11:15","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7560","t":"11:15","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7561","t":"11:15","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7562","t":"11:15","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7563","t":"11:15","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7564","t":"11:15","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"2497","t":"11:23","cam":"A1","s":"숲길의 얼굴들","v":0},{"n":"2508","t":"11:23","cam":"A1","s":"숲길의 얼굴들","v":0},{"n":"2509","t":"11:23","cam":"A1","s":"숲길의 얼굴들","v":0},{"n":"2518","t":"11:23","cam":"A1","s":"숲길의 얼굴들","v":0},{"n":"2519","t":"11:23","cam":"A1","s":"숲길의 얼굴들","v":0},{"n":"2520","t":"11:23","cam":"A1","s":"숲길의 얼굴들","v":0},{"n":"2521","t":"11:23","cam":"A1","s":"숲길의 얼굴들","v":0},{"n":"2522","t":"11:23","cam":"A1","s":"숲길의 얼굴들","v":0},{"n":"2523","t":"11:23","cam":"A1","s":"숲길의 얼굴들","v":0},{"n":"2524","t":"11:23","cam":"A1","s":"숲길의 얼굴들","v":0},{"n":"2525","t":"11:23","cam":"A1","s":"숲길의 얼굴들","v":0},{"n":"2526","t":"11:23","cam":"A1","s":"숲길의 얼굴들","v":0},{"n":"2527","t":"11:23","cam":"A1","s":"숲길의 얼굴들","v":0},{"n":"7565","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7566","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7567","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7568","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7569","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7570","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7571","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7572","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7573","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7574","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7575","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7576","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7577","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7578","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7579","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7580","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7581","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7582","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7583","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7584","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7585","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7586","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7587","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7588","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7589","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7590","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7591","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7592","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7593","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7594","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7595","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7596","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7597","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7598","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7599","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7600","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7601","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7602","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7603","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7604","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7605","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7606","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7607","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7608","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7609","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7610","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7611","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7612","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7613","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7614","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7615","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7616","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7617","t":"11:25","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7618","t":"11:26","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7619","t":"11:26","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7620","t":"11:26","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7621","t":"11:26","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7622","t":"11:27","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7623","t":"11:27","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7624","t":"11:27","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7625","t":"11:27","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7626","t":"11:27","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7627","t":"11:27","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7628","t":"11:27","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7629","t":"11:27","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7630","t":"11:27","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7631","t":"11:27","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7632","t":"11:28","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7633","t":"11:28","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7634","t":"11:28","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7635","t":"11:28","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7636","t":"11:28","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7637","t":"11:28","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7638","t":"11:28","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7639","t":"11:28","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7640","t":"11:28","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7641","t":"11:28","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7642","t":"11:28","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7643","t":"11:28","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7644","t":"11:28","cam":"ZV-E1","s":"숲길의 얼굴들","v":0},{"n":"7645","t":"11:31","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7646","t":"11:31","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7647","t":"11:31","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7648","t":"11:31","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7649","t":"11:31","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7650","t":"11:31","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7651","t":"11:31","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"2530","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2531","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2532","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2533","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2534","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2535","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2536","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2537","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2540","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2541","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2542","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2543","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2544","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2545","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2546","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2547","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2548","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2550","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2551","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2552","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2553","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2554","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2555","t":"11:35","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2556","t":"11:36","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2557","t":"11:36","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2560","t":"11:37","cam":"A1","s":"다시 들어 보기","v":0},{"n":"7652","t":"11:38","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7653","t":"11:38","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7654","t":"11:38","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7655","t":"11:38","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7656","t":"11:38","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7657","t":"11:38","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7658","t":"11:38","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7659","t":"11:38","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"2568","t":"11:39","cam":"A1","s":"다시 들어 보기","v":0},{"n":"2569","t":"11:39","cam":"A1","s":"다시 들어 보기","v":0},{"n":"7660","t":"11:44","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7661","t":"11:44","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7662","t":"11:44","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7663","t":"11:44","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7664","t":"11:44","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7665","t":"11:44","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7666","t":"11:44","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7667","t":"11:44","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"7668","t":"11:44","cam":"ZV-E1","s":"다시 들어 보기","v":0},{"n":"2574","t":"11:48","cam":"A1","s":"초지와 산방산","v":0},{"n":"2578","t":"11:48","cam":"A1","s":"초지와 산방산","v":0},{"n":"2579","t":"11:48","cam":"A1","s":"초지와 산방산","v":0},{"n":"2580","t":"11:48","cam":"A1","s":"초지와 산방산","v":0},{"n":"2581","t":"11:48","cam":"A1","s":"초지와 산방산","v":0},{"n":"2582","t":"11:48","cam":"A1","s":"초지와 산방산","v":0},{"n":"2583","t":"11:50","cam":"A1","s":"초지와 산방산","v":0},{"n":"2584","t":"11:50","cam":"A1","s":"초지와 산방산","v":0},{"n":"2585","t":"11:50","cam":"A1","s":"초지와 산방산","v":0},{"n":"2586","t":"11:50","cam":"A1","s":"초지와 산방산","v":0},{"n":"7669","t":"11:50","cam":"ZV-E1","s":"초지와 산방산","v":0},{"n":"2587","t":"11:50","cam":"A1","s":"초지와 산방산","v":0},{"n":"7670","t":"11:50","cam":"ZV-E1","s":"초지와 산방산","v":0},{"n":"7671","t":"11:50","cam":"ZV-E1","s":"초지와 산방산","v":0},{"n":"7672","t":"11:50","cam":"ZV-E1","s":"초지와 산방산","v":0},{"n":"2590","t":"11:50","cam":"A1","s":"초지와 산방산","v":0},{"n":"7673","t":"11:50","cam":"ZV-E1","s":"초지와 산방산","v":0},{"n":"7674","t":"11:50","cam":"ZV-E1","s":"초지와 산방산","v":0},{"n":"2591","t":"11:50","cam":"A1","s":"초지와 산방산","v":0},{"n":"2592","t":"11:50","cam":"A1","s":"초지와 산방산","v":0},{"n":"7675","t":"11:50","cam":"ZV-E1","s":"초지와 산방산","v":0},{"n":"2593","t":"11:50","cam":"A1","s":"초지와 산방산","v":0},{"n":"2594","t":"11:50","cam":"A1","s":"초지와 산방산","v":0},{"n":"2595","t":"11:50","cam":"A1","s":"초지와 산방산","v":0},{"n":"2596","t":"11:50","cam":"A1","s":"초지와 산방산","v":0},{"n":"7676","t":"11:50","cam":"ZV-E1","s":"초지와 산방산","v":0},{"n":"2597","t":"11:50","cam":"A1","s":"초지와 산방산","v":0},{"n":"7677","t":"11:50","cam":"ZV-E1","s":"초지와 산방산","v":0},{"n":"7678","t":"11:50","cam":"ZV-E1","s":"초지와 산방산","v":0},{"n":"7679","t":"11:50","cam":"ZV-E1","s":"초지와 산방산","v":0},{"n":"2602","t":"11:50","cam":"A1","s":"초지와 산방산","v":0},{"n":"2608","t":"11:51","cam":"A1","s":"초지와 산방산","v":0},{"n":"2609","t":"11:51","cam":"A1","s":"초지와 산방산","v":0},{"n":"2616","t":"11:51","cam":"A1","s":"초지와 산방산","v":0},{"n":"2618","t":"11:51","cam":"A1","s":"초지와 산방산","v":0},{"n":"2619","t":"11:51","cam":"A1","s":"초지와 산방산","v":0},{"n":"2620","t":"11:51","cam":"A1","s":"초지와 산방산","v":0},{"n":"2621","t":"11:51","cam":"A1","s":"초지와 산방산","v":0},{"n":"2622","t":"11:51","cam":"A1","s":"초지와 산방산","v":0},{"n":"2623","t":"11:51","cam":"A1","s":"초지와 산방산","v":0},{"n":"2624","t":"11:51","cam":"A1","s":"초지와 산방산","v":0},{"n":"2625","t":"11:51","cam":"A1","s":"초지와 산방산","v":0}];             // [{n,t,cam,s,v}]  v=1 세로 사진
+const IDS = {"7210":"1hPJ3xRThtdT3xZmWfXcvd48m3zrynRHu","7211":"1ko9R2lSellx31efSzyYAiTj9gQ7goEVr","2408":"1o4Yjd8aYa3SPI6VtWxYXAN7dnGNk031I","2409":"1or1128x_yFPQIwP7kEYOH5FDhPPqvJXc","7212":"1QJ7Lk_GANLGphxgNMVMPrnr88wHVU-t4","7213":"1SQbqnhKmM6Y7tqvfJQyIC3JIJzrolRKX","7214":"1RDG9Pah9hZ5TAKuJcVws-gXdc9pGZ_kl","7215":"1PBtit75ZtzjibNJf0oQvzeZInnaDsFWO","7216":"1uZVLb6ua_E87KQRlFVLgQbPg9WxmJQVz","7217":"17KJ-Tb39J0yVcfZOdO0RIb_Iz6NaxEMP","7218":"16b1lZoY7sd53euzvgSuet0dmgGJUT6aJ","7219":"1xFwvAhhylRZy-aibq39Azhoo0UYuAu7Y","7220":"1_s32FesaV_Su_XZSMOsUNpPxncdcacol","2414":"12pKGAwTpMJmurDtFG0HTZCDTR08FjAY0","7221":"1NhgyUYBZNSro9kq1beZasqevr-rkhfde","2418":"1Gmcp9LyGCukJpvx1R0Mvhqv3EE23i3my","2419":"1XGas8qxF6TPR7k5jo8zN0k9ph9aJ92Hh","2420":"1pPDCSx26yUiWzkS0qdKkWg_Nji96GrOL","2421":"1zcarBpVivwQ6fDuPSWbLrpX7jbaVpx2o","7222":"1CgnwNNSz403r7EecUsH3CN8TXRTy1YYp","7223":"1WdHJgmZfqO8mSOhlNJptXoXLh24DABus","7224":"1MEGtZvHNWrUChhnr2NrDOQ8EUWC8uNw0","7225":"1ZqUcYVc-fcjZYhu61XSDd3zpDhx3N3Yp","7226":"1TVblBePDmdrly_XLX3xwIWF9wMUYrzf9","7227":"1BlRau9RpBG4onyfictuTvTfVdOAZmqmn","7228":"1Ipie8ZEI8g44wNIGFn1H0krU5cLy9OSd","7229":"16zcxwYpuqI-dcTp9Io7HbicWfjXw3JL5","7230":"1Kf_zlwHeIubqwsKVrZnbEG8YlWnt7q0-","7231":"19YfEVmvtUBzU6NT9hzDL9DqaJS-do-Da","7232":"1WvCo3TexjxeORpuHpFzraH9hdrjeg4tx","7233":"1-u7YyVM-PesgPnT3Gt-kJWnGqZbfpGyW","2422":"1lSV0VO_Vn6UYmK3VbpPdd8RUiVlO6VOn","2423":"1Y3PCb4FRKRmPNo6tGoq3pq-QpJl6P0sa","2424":"1O7vSgqxohNh30txgMN8Oypq9N33X59f9","2425":"16KdQSjoyERhZmuEibo5YnzwZhCnYqEfp","2426":"1Ca20Mn3jbUlu13406YK-JzyAO8oZeCtn","2427":"1vnu67iUAlRKX00JaptMTRiT_77RBg7Ka","2428":"1oytUeCvvjulOmr8YYrzi2M9CMLjtvbIh","2429":"1k20QqfDjYv47RpR8lR8GHhMglyBxK4jn","2430":"1_CHhBHYMLk9ee7dWEJMFKZG91MzC-ORI","2431":"1VYbrSmHSSN2poT8CIcre311MJAYtxKOJ","2432":"1FXd8uq1SHFY3sL4P3eOUbRYe_-gv1ck9","2433":"1pw12tiL8JKjRuGIEhUfxI9mqsH_lxDi1","2434":"15A6JQmbPLEhT1NE4PUXbi7Yj9rfS7vtY","2435":"1pi-P_ajod9yg99aMkYpEWyVsR2isR4Kx","2436":"16vzL1fhJYTZ7i6VhakrZfN4pi8kSyOzo","2437":"1LQXZBy3d9vhsXQi6PfKmjtxKAicmTS1v","7234":"19HEwUHGlvqOnjtUdNz9LFzbi_1BI1i_U","7235":"1l-GuhaWHJ-ERckd17Y7QZJmdpc87kmNE","7236":"1d7TlxIhjZAhQp6eg5D8f2ZEbpxjGj0zq","7237":"1bgqjm660jhg927BqNSbXRp-k5Hn_v27v","7238":"1cK2EVDsj1DNV0DOcsT-nxF8agG8riEXt","2440":"1G6VaZTjHJkFml5bgA-6b1a4h4mWtj2Lr","2441":"1NlAMQuNpZnFrUWlbIIUxfmmzz0qZKnfo","2442":"1mWVcWTaL4dQbUnpmCqzjk2k-45WCy5pB","2443":"1dpSF6F0J_qQxlcHUXzhIRQCGZ9Rpguwf","2444":"1xzFpyvos9XHLUibaeIHD6J3u04yEtdnC","7239":"1UXGi4IwgoMV3E3Si2alC4s2-tNkKNbDx","7240":"1p02-2AM-yWN4_MisjCcpM0EA7oLjMdt8","7241":"1lhEtWrI3lhONaG7Il03zBJaqHVwUX7ae","7242":"1FpI2baYTDnNkc8tpSJlejwL6R7o0T3cJ","7243":"1WeoN-p7enoE7oab2VFA99CaKaa2lV7vm","7244":"11GCGgogKvPk1lAci50IdS26m-z7MwRko","7245":"1z9afC6PGJufcb2kQ4lblhhMbnLb172I0","7246":"1TZMKHFBeTWRnfUZWkTgaSMjD7y6dGioV","7247":"1KHv8XPXmFrVU4XFQMOga3FDgxt6fE8ka","7248":"1Y6him1IKBOtV0Jj9G5u7q7-8pnz8OTVF","7249":"1KB_AhuryH1ojrblv63C4bfHA59aCnqGm","7250":"1-ufvHp0UVZ_akdRHGFTDQzhqLEEXUftD","2445":"1geWUDLjrWRnZSD64bwI4PfIrOBwG2E0d","2446":"1ev-tXNDLK5w4thk0vBvz-OS5C66Zg1Pd","2447":"1MzNAUuchxHX_G1clan0rdYH8vyw_gxR-","2450":"1TZzo5gk4MqK7aN0HRBy76JDHp8wScgCi","2451":"1RH0a7LfpIUN0jU2jHJ6ReFStIYS6D-2G","2452":"1B3zw0C4HWgRXRlhSSG7xlMnuCOxnwDeu","2453":"1GcJvM91ZSMwrD8Wnh-mZp2cRPJH9wD3G","7251":"12ZHWytfxtDMa0v-jI2ElJA8A2K9odyjL","7252":"15EjIp204jRBrwOU4w-3yksOCt4MSdQJY","7253":"1IcdTXhV5im5u_2HIdcHy7gzn7G08Tehz","7254":"1ZTs6-F0pR3qu6cxFqkpGRGVxq9SgZFky","7255":"1nH13YHon47_n8zwmSw9xiv8r8UroowPW","7256":"13eo7C5htgzSX15f5ERGMUIJWP6MAIP1V","2454":"1wtrp16h5RJsruvd6_XJAStBAQ0ytm7Nx","2455":"1yJdIiB2NuTCbrbxLIvqnnaQPqVEC7ZyN","2456":"1u5pTCOJbWmzoKdgS1h0z58sz01briFGd","2457":"1yzOU3uWA1kdpAXIzU-rX_s7N5kUkOSbO","7257":"1Ddr7jKvRUZsGFmoHKBFZxS8S4F28isIw","7258":"1WrEqzPo2EWAMXePCJSNbQKT6_3GteOZi","7259":"1USB8xQCQH3oKvaXlLJ4cE1olycW5XcmU","7260":"1v-6KATQB6WRWpGpgbN_DKQMSQTzoxq_H","7261":"1dkOhKWCFLBpKdaUyaLOE-Uy-Oz1479Ix","7262":"1N2Xe_sD3ZieE-6rQmsg4GOaP4mjHtcON","7263":"1_O3o--zEeMyouaKOfqMgxgKMOi5sEIyM","7264":"1ak56nA4mjqBzb9XKXaNn7xj4SRfni5Wc","7265":"1CzY0sCjsjPY47_jTQthPIs8W-Zehfkj3","7266":"1LVoyj5dMqdIAqFsXw2H7CgiMQ4yvA1np","2468":"1xZ7z532Ku-b9RFKFaze-n2zE17oeRNMO","2469":"1TMKQFnHmZTGKdgkZ2GWi57-E4fCVRJdf","7267":"1tu5T74WR6Jq2QRGEXdFyBto9i1FSvc5P","7268":"1DCbZpPTLC6wxlTUWoFr57DsSEAL1kU96","7269":"1nvfMJTyMVlzA6OW7uFS4368HoXIX6Km_","7270":"1ENjnmTcBihDjTrlvrlDgGamAAnr5hZhJ","7271":"1A-UwY9HFmxVbj98QdHFgR3DWPF5z-H5-","2478":"1A2rqLCaPl1Cin5NnD1fk1gZsev8jK2fP","2479":"18itPvh1-j1FZ1i0HiEBUtdFVYRW196i1","2480":"1vKhAFsm1VnadYCWy2P0Y9CRG9_08Mh80","2481":"1_mkyS62nBT44IAoUn24v4YWWIDOTKhAk","2482":"1Cy23I5k7JWskyIUsBRWN_BLgdXQ9lcJF","2483":"1yefmYkdrZvMMJJT2q766J4Id0TOmnt-z","2484":"1eglD12gCLlUbsapzOfyHgK-xvFGOCkUV","2485":"1IKjUH7cWSLzhci6bE5wf_ZHA_8M32hBz","2486":"1KS8_iB2ZoPzmyjmlMjKE3GYnOBRP5hRT","2487":"11F42TeMiMjyj_td-ofz74lEwafBklIBI","7272":"1_lwBld8X-R5MQkAJToDt28pSf95REhPk","7273":"1zt7edgoxQoFPAPdEVSpu9FqMo2OqFfYE","7274":"1j3OFpn21TVg0g2olYFmqUyBZvqtaZIxL","7275":"1Beyho8aprWWae3a1cH7Tkf6sDptkty_3","7276":"1JQC5zGdms-bLVJ9ijR05TSDRSmViEM4_","7277":"19Zia97q3Z-0xrqInkNY4TuciUBKGahe4","7278":"12SnohlQ4lTk6ZgS1RW7DVQ5X9sZJY9vl","7279":"1_r6ZHdzWnZXpgmhAo5WBrZipxd_VFQDU","7280":"19-UMSi8VF1oaUsQLcNI0-SP7l0HN4fg_","7281":"1DRoXKibMay9S3YZ2fl1A42YZ5JSVMeRw","7282":"1yZEjhUfH8lWGbfdwNDy2QjT32Bs_hLv4","7283":"1fOoXS1i8we2UniN3F2EITS_f_UyA0fCy","7284":"11y3JF0qpF1F8m_ys6plXcm1BJpTqhiuX","7285":"1mII3xFb_3yMCUgGH-GHyB52m7Moaf4FJ","7286":"1CTdUNyKiYmbgtgMEKxjxWlzaQDT1uWN7","7287":"1_DC-JZC1-FBzxeFG96FPBkgdH-o7lLpq","7288":"10w6orG6znD7fZ1cGnaqLEnsZybuD30ID","7289":"1QUTfAdwkw5LHJzD36iBJyqEM9NEc6ck1","7290":"1Fo5xExgkFrIFuj6hyUsC6k1i7rjSGU7W","7291":"1d_BkdzrF6UXJ2xo43gGg4Dbk4aRpiqXA","7292":"1iA14FyiiGBPXiyzzOFeF1iefsOebrpMz","7293":"1yWQF-0ATB85DDDs2N2QeWnM2vIj7upBB","7294":"1ugIq9ziE-F3fjQCvYCcScY3LwIu_52Ny","7295":"10t4Kh4U7pySRZDNWgxRR9slLO7fjrpI4","7296":"1148pwl1S3J4en4szweiQYUo0GI602Vj-","7297":"1VGrkfs71TNjhSxUdxgCuzgJSaX2akVY6","7298":"1D7tVckW9jm64yP7KnMHlVx0x2rjgtgqz","7299":"1lOICl5GOnoEXzU9ikbZCl6hA__3zx446","7300":"1YNJlTUcCz_B3jm7RXh8HKxuwa0LuatnO","7301":"1eNUHc4ZZB-ZMiLdOWFNDvbGwTHu_6u6r","7302":"1xOLBqoNsKJEkq_gof8Ie2XqgKmzMAICy","7303":"1Dy6K4P3LPQAoewLUfuaJZeFpmlMc4Yro","7304":"1L7RkTJWKimm0sm9wL9hlnmJ8mmYZsDF7","7305":"1UMbKmAWUq-17a6aQKyb3vcdglZ418LNh","7306":"1Kc8sVHQKj5QqwkWGBe4Yv-XaXFDu2CKp","7307":"1ssC_wFmm8mk5QTHp7ymLvfDaa8n_w9qG","7308":"1meMPtJtscRWowzp_JWkjuVTlQ4wXCgiU","7309":"1k0Vp7MnoYOzZSsA0YmZp7NtrEb_rIXUU","7310":"1W1IsWTDR8iD4-ZNmK_Og2ebPZfCY5bzD","7311":"14923rkblh2VF6YgcP7z_0Tq5VUyhNsFJ","7312":"1-iqkeClRul8LOC5jpsMwydMo0CBZjzi0","7313":"1unDlc6nIrFCjRMj2GpfjwAgoHCQPRi6o","7314":"158QB7xfedRw9QFP-cLPRTnqdUZqAv3ln","7315":"18DUFrAbHNwj3C7_z92eCuL54QFyVV2Fa","7316":"1EtA7qtIi0Z3NTcPAuDkFbBOYgpYDsxEV","7317":"1HzSV0DkPh2F6XC2HgdeqbPJ-7Sm63zE_","7318":"1wXAvnFC-5AyWkS94ws8UX-3aA6NhAaRS","7319":"1f_ZE1c_saTsVCpEmKaMUlrBSQN1wwsQI","7320":"1NjjGDVuXXK3CRKgWZSZauet9NWo9LaGW","7321":"1nmHopZ7luEzBHmPLs7XNuXc-F0LSqS_H","7322":"19bMITrIY-MyKndc2i0for9-zxEKC9PN7","7323":"19s42eXmwHMggf9amZ3wxZGqzWCG9_WoB","7324":"1M9YJFaVirrMGVzvMrT1ua0-F8ZqTE1gA","7325":"1fWmkKOpI358RJpYO7mupMn8N2WeWx2sL","7326":"1BSPWOjgjmRdMSxKymTl5oFPQu0LoeNmp","7327":"1Bu44_PuvVw_4lLwwKef99LDwytuy5jb3","7328":"1GmlvjF_r0_oI3aFOSHyciEY5yC-yUQrd","7329":"15UL4hacrzLmcxd8L1N7cpCw7nJtD2k5z","7330":"16qnPdVKr1JJf8Zf43uVxNdbzez5Fx5OI","7331":"1Xwa5A1bc_s6Jnhn0xm1o5Zb9jYPBVJuL","7332":"1Z2Pp7PsJgAl6diNPZa6CkGK5YrAJax5Y","7333":"1jBzmRIQs94ng1Fe2SpnF5FhjGbrdPVlK","7334":"1Sxf_FojBbDR2kae1HBoV6ZEp6xqfr7xa","7335":"1RI0HNBOR_sXjp44mUtcpqtBVX1qtzigT","7336":"1RIQBs5jQMAUaeJiY44_cLXcucfOzmSCf","7337":"1LvZZhtGBm-g_8jbuY3ocuAuQWB0RuNh2","2490":"1TbvvlwM1ZjYpg37VSUdCq0HLYuSe-ZN4","7338":"1neHyaPrEq-boV2tSUID6ynwtIq_erjFU","7339":"1V1z9Hei9lmZdQDNRZV6hOk5npcfbjLle","7340":"1KzGn5uGGnhLFkFd0D1RAyl-FwvbOMNym","7341":"1omvzA5EGtSoqKxy0xcnvMnld3uh1noLm","7342":"1VJbdkx06ULIMGWyC6yfOp1d-WSZ9L6XY","7343":"1rV-5Sv3zUE-rJhR5BlI8SnnW8A7LkVs3","7344":"1UH2DRed2yDD4G1nZ-hVMNoVZZxscq4qA","7345":"18Mf0bEOSW_F5dl3A6ZZrhqc6o0yd_FWt","7346":"13Nz4yZ-hJ1-8JvcBf3ZnzOcaKAl5span","7347":"1fLvlLnA1CUxa9laTj36gCElW_blmbtsk","7348":"12gfsX3kST7dwf5Q3QaPaFg2r3FumCzge","7349":"1KQICTka9qoJwN1GZbYYG7-0cmkTE1kAY","7350":"1JVskGeFtI9m7giNE6sdlPG6q6hfYzcv4","7351":"14UXR7u69I_77xFecmBDAd3QwxmPi6bKE","7352":"1XtLZ8pktsK9F7onFDALVI3JFoehUGilU","7353":"1Li9DwjXjzrrv8hJuN5os2mmrk5Hvp3eh","7354":"1QX7A_hN2uxrZj8hykvmHE2xUlToHI_Iq","7355":"1Tl42xg5db9dvHuNInbi4U05LFF3BH4V9","7356":"1Nb4ISfKl2cyTLyi7sxMYaKiakFZ0N25j","7357":"11cL_2X3D_Q3aBrDvr2kID3IFDqAp1az8","7358":"1l1AYv4yGZ9S0j0cqdK8ghWF43nQzl4E1","7359":"1LVb5eQ6eBRRiGlgp8yh5jlA7gBAwuqtc","7360":"13tQhmMwU0TXjWg0ZJpv-1iZbn9c7rYcm","7361":"1R4RxxxgP0ZMI82TfipvCcXE1y0luno85","7362":"1H4ZIM5gFjUU1Vi_47VXbcyo4F-icMLTh","7363":"1Ih3LFrvC5AiX5xq9Ijj59fZ7FUYDllle","7364":"1R3cXJlI0XKyZgydsmr1TCaFWMWvalvXE","7365":"1CggFlIQRoBC8YtnbGBcPMF5YCp32MK2d","7366":"1f4_k31KgQy2stmiLbgOSWtPTv_rXCuvG","7367":"1CT-DJ91Tha7Lnw4R7ps2hyufycuI2NyW","7368":"1-JIh7aclzGZ67hCcihGbYBFTmKF6i92L","7369":"1MInRRtKZh9gDQ89rFijsOXWVvra8EE7P","7370":"1EhC48oK-6JoT4gaV5httle9dsEAZsnxl","7371":"11SDKHb9EmrPUV7nHj5nC-Xt_iBPGdaqE","7372":"1CR8zNTTBzH7RcFKqu1igMQF8FKUqU6Vh","7373":"1OBsJ7Ztw_aOKDmFKx4rFavgliqVj8Gg6","7374":"1Ts7LKYu0M4USIJOz6K_qAkjK7nGBWzWr","7375":"1d1h0L4Bb6i69JyD58NOnTAVPB8h4-PQv","7376":"1jMRknrR53ZjG6o47GWiW3sdoDLUxuJlb","7377":"18iePtLh9ej8xnS6qb_qFlcNSB-UpcpYL","7378":"1uumbDOmXuzt1GWo0tdGie3DiGGYNF85f","7379":"1wU1xZ8T1W71CvrXj03i6mFISDGohM27i","7380":"1sfOXfxmt_OyRlvKSc3qxiV7sUXDSiMLK","7381":"1XeHKNCsmIY0rQhTyP1Gvjoi6lJPt6WtW","7382":"14FjuwhauFiWwgtI7NJSlgWldAcNxOggJ","7383":"1GXmCGT2TAlpXS6jWXGufFErjG5I8ONww","7384":"1Ds1JY5rkKeFaaMysy34L05nPFsblfoq1","7385":"1Zt6mx18nEppyioiYqcdFUXcTqE_Lvmft","7386":"1vlqH4EtN26DAKSCYyoC8kMkSq4oZkti8","7387":"1yvvUFhBjxJVtmXWZSxwOmNk7tSh_OF5z","7388":"1NkfWkQN75oXvzMqfCNpGwzHlETJfst5S","7389":"1Os8tBMw-5sX3cf58Nh9hekutTgfB2Grd","7390":"1X_OsjkwSKd3j7pdf9o81nCKHwTEnylnv","7391":"1gef91W3yTFBaXGwlfwYo5wUhHH6MzU4d","7392":"1bvYv5vaT2bMw-X8Rk0GTB2L7D-bEaOs3","7393":"1R_cWvjLEG1fx9kGNlUU9MHLiRU3SMLam","7394":"1Nn3YZVmO4NNRjkMxSxT-OWLpSaHhbPOq","7395":"1ddEqzT5eIyGS1HlE0aMiCANnqyA1-GCw","7396":"1PcGFEigFWUW-m3D3Qh4e7zMCUh9BnefD","7397":"1stMWZQ7r6Sv5s-8YpMq4U6fC8szoXs6e","7398":"1Qp9ro0AlEf0-Gta92LSFRumwEuFy4mOU","7399":"1KrAZ4p7t7aM9FUGVLVlkmtd1Ub99j4lu","7400":"1yumI5LRQEFMTxBOhQ3ALiHJO8AH_GH3U","7401":"1ilu5ajAzgRSZYrk1Bzf5j-Rrb-Mj4D9C","7402":"167y2phIwSkca6_Lnii4U0i799ogp_DOO","7403":"1iuVOb6W-Pkmbk1Zws0yMLXWKYzomK5_a","7404":"1mZ0H39GUbrAa5_phwD1tYjcwva-zFzTB","7405":"1z-QpZYhr90gRPWELiwUt2ICDEE9FfdRO","7406":"15eBlb-1mV0VHbDidEvLCdKnFUnLWdIZ9","7407":"1jkYYUzP4gYoMFhRVtug-pccD1K9YvtFW","7408":"1fh_YyUzwKmsa50xcxY9kSYN03PKNRswV","7409":"16uH8oOoW-mGSYaku9tWyAM7_qls2fE6p","7410":"1eMsyJom9ROOjIXhhSgxJqCcUOr_86uq9","7411":"1KWUKcYFGt8yTGli9Yu-50b44tOaqjuq8","7412":"1x0wpWYOqERioiBisFbzyYb_Rl_H7fVai","7413":"1stElSwz-7_-l8PiQTqKrlyxeCHg7vYMY","7414":"1Rr2y5RBEo5FxsUO4tG2V3oBjis8hvDch","7415":"19ZPrHKl5__bbew6e84AbtQEj2sH7mkoi","7416":"1-EsECoPoogvoxurodwnI_byZcHWcu77l","7417":"11WIhlD2PkC33Auz7RGbkv7nn2D_kU2EK","7418":"1syOp2T19WFqbPt6j8q4Gl-FBIgk4XTH-","7419":"12WdAMte5W4ClbCldjJIHfBcdrFR1PDQL","7420":"17R69g1HXJbqJOSj93lFV-rC7-yCgEjZd","7421":"1aWnB0jvdLXqp-7E1uTMtmldGqqMZxzoZ","7422":"1CH2i0wxR9oZzU0eywiQYuHLbR4kzMJ1a","7423":"1M69zI00B28ojghL1lIbRE6m0Gds8Rrpo","7424":"1eYp55cj2AE37lPHAsLjVs_vgLUWXSs5a","7425":"1lpWomALvb1y4s8c0WxuhbwjNd06G15AW","7426":"1RUhLrZe-FyP5gW2tlzcMpuDeWWEWcuNL","7427":"14Oh28go65hicqIeA7fVR-J-TjhOVBCWv","7428":"1s-7BpcmW1SzqOSwZZtznt_-J0HxyKyXx","7429":"1-Vtw8IU5o8-OFpLWCss9CHKbZaFk10ql","7430":"1rt08tJtqwIOPVk-XZD1NFyYo8Qrx46W-","2491":"1GO6du-0mSBIvhy7FFPxLD_xS_8zXFnjB","2492":"1GeDzUZXhEqk_ZuqJU-ijwt-Wj7_j29fi","7431":"11sK3CRyuB2dptJeSngspNvy7PrFZhfSF","7432":"1q4Xo62AI5uwKzs24XbgFEgXwaq_fCEfY","7433":"1npRyabQlNQkocYVmbLEmbyhwCUAdE63H","7434":"1iuZnA1WkuZO7joaDjcQHad9ChGrSzJDb","7435":"1T5aVQCZt2oHiNty5CYGhEGMwI4d37kn9","7436":"14iWZZxm--o_tHK1nakbO0nJhsNGCy6zE","7437":"1hxvjkPmPBumqo3rUXLXAk5VAHOgmAum3","7438":"1h8sUfI8EhbRlOBvnmmMn_2w9jgqoQZNS","7439":"19zUy67CkVnglaqDENuXI2YwgDURBUbts","7440":"1tFinN9C0Dbs-IB0L1qyVUrH4b5xhEbSg","7441":"1hL5_RyuCsEi5T8BBwpmpeyUWBcs-q31W","7442":"1yn-motw075Af5XyuKH2J0rJtDVh18Nb5","7443":"1JgM_u3hUf-C79BSPpxOGZOTxCyBBCWsJ","7444":"1XQru3SKkIOTDvTyk9B0BONTUh7bQphZz","7445":"1YPL2A5Ds88BMZEWmT5C4ehvi4H4pHq85","7446":"1HZjb3q67EepQuO0eEeaNq2s4CZzw72gV","7447":"1QMBmePUKI5PBWHxo0Kt72RLXs1XWIGvv","7448":"1sxNwDpeIgUrGd1-sDaIdHxFljC7Iiwur","7449":"1lOibJdMDXiz03TvrStvuNackmTAnLYno","7450":"18k0mRq2QTrDyg9aMIr8GNy4j1J5YbJVC","7451":"1vRiTJQKU4olBThCLA4mGdWHKgs10WK3F","7452":"1lwEgulFzV1LsACjraFIFyZ7cjh-F5cm5","7453":"1LbiB2RKuglGkPsMv8X9gC63iTHZFwQRr","2493":"1scIkjEt_0p4Km0jKpTENn89zPuMrI7Fj","2494":"1KH__xE-csl91VKr9SIMC-uDpSTsnB9kz","2495":"1AyTbxV00CN10Ri-_476T3nJHBnP5ZGOG","2496":"1_62iH00XL69YZBxuvCh5bj9mao-pmBJo","7454":"1QZ2TI0pOt2lMNlQfC0dAgEMReqFl7wEz","7455":"14NWjv3Rlzk2kVQlmza796BIYvv1e5rDb","7456":"1bEi00HM4NFiax0Fwo3hWo7FulYZadMDu","7457":"1MKajgUlnhhYcInBChJ49ilZJCcGD9Ah5","7458":"1p4WeOHB4-fni0jnw5FyQUu84-ykNYLOe","7459":"1Y6Cdvxi9ybQ-5y5a-uCeyh9XimdRlioP","7460":"1sHknNKl3CFMSL8da_YkMbfoOeM1sr6rS","7461":"1pRc0OKeboxlLAXSYSEADUTOgyFoZ_SDB","7462":"1t-5vKfTUVhZpXr_amhSO3nerwT4WmIZ1","7463":"1CwCeDgA0a3jc0uwn4GZvni243Bb1xG9Z","7464":"1mH323qfcAwFrGCN1EuTfvPJPl1-YzAwK","7465":"1vhlZny95_TfqdIYTN1u_r7PS8QxijQum","7466":"1oRyrpidTu0WQvO8cE0wBQz1qbYpQ-65o","7467":"18PTNyx2UWBvCZIfxFlE_4_pQAXWPT2CH","7468":"1q3m65uvac9MFG35nkwZO4q_wazKLe14K","7469":"1L0VASua_1MUNRsZT26qqVRIMjm2sTASh","7470":"1GDWAkp44qy_COHOkOaeD5ibCfNnXh16I","7471":"1iKn51gLOQPoBx6ps0lzB1hTKD8-MQKkg","7472":"1VEgnhPU25__TgT2H-otfyFOVWVDOrusJ","7473":"1iCKsUZ6PJpS8Cujw_DQF8GyeMcDsBhQ1","7474":"1zrUzMcx7wtqs3NbrjCjpkxVXOAdAvfWv","7475":"1Kkp2Im7YuM21e-eDAUvuhQk434Z88954","7476":"1d0gRYKMxG2DgDEr3dH_iPK7-dBa9Y_kV","7477":"1R80NrujDYBS7nPKhHQWaAuLm6_kwvbDu","7478":"1xb7MfcjuoVcFOZSGpfrVncquqtTrjj1n","7479":"1_VUoTBlc1xPSECUWE7nDkC3xKRPuh16i","7480":"1hiEFu7QWSq1dX-8VpK7SDbWXmKa5Gctl","7481":"1u5oSMXDaC0_bZNpVxQxUXZpRr4rkKIvg","7482":"1JiyKUxxtG4cWRHk5jx9GWT4_75b37-HD","7483":"1QYtmBa_r9EmpVFEdvGzS5XztPsINlkCi","7484":"11K4VsYwrid1Ok-rIq4mIZm8yR-fapBpP","7485":"1Vf9ZIcgZCNTpLF1GJglclGeA_bQKHMwT","7486":"1gv3hdGBXvC3zpOBV6xpjOEzEOLyCMK_r","7487":"1NIqBVjZAH8V0WlK2G3ACXU52YvSR7LMC","7488":"1axkkw1GbjPlftYFoc4w3CWMfPdGZTwAc","7489":"179W7rti0b3D1Ab4h9QUkhzWhBtuHucPF","7490":"1Go83g7glTZV6d6Zzx5ZMvVYOxo4QPCA3","7491":"15mltJ88du0yDcSLANyfWu3xu8bBr_8E6","7492":"1CyTKAocvuBmFyK-z1IoM9KgZiJ0EiY-H","7493":"1PZcrsN8jWkqoD_YNL52xy8fqWG80gOTa","7494":"1iDBLaogkVQQBt3R3FMl4-N7qBEE_0uY2","7495":"1apsOVE9IsrF1Hn-dHJB2iLbvIVKGj-1k","7496":"1n0eZWNyjS8Pk2pwpKHsbx8T_KHM5UyMs","7497":"1R6JFPkxUkPumguIHa6lktNFtyOshsVMg","7498":"1nC6WFS5TcknOQyrEP7o5KcoIZBLp4IZB","7499":"1dkaT-fPGHy1D2JYSx1Bf82LNp-jlpriD","7500":"1_HGICbR2Tu_cSQbEIA8dL5MB3EVwSuWP","7501":"1scFO3otmqLDnmtpI3C2DW-YFI6Ud8-vl","7502":"1FIfm5NnxzYBHsd4qVL2aZY-Q2rdzT9ME","7503":"1pMip5XfgX_jC3-tzMhLTmBjhaPjAjRzb","7504":"12B3VjcZZZePjowUN27lS5Jy9VBRvsyRP","7505":"1ooUr_lV4mm2Ebrw7Tq9lrEUw-apHTKRW","7506":"197du4VKL1VpO7MXljCwapqcLAKV84YAc","7507":"1Bde5Qr71BHIEbSMCkDjrIvCd8GIr7er6","7508":"1C9yqKFJw1v0wTnhX0dK4v8ptZLjWMEo4","7509":"1FpHyJF44ABsIkYfPWXs_vOJiGTseuOfq","7510":"1gxAMS8g4QhnxI4NfWw6jkgBskW3PcwMU","7511":"1inOI4RxH75ZhDx_Rb6D3k5jXoxZ9uhGf","7512":"1nFeKwZmUXmsEGw2Jcnfs4AubQaHl8Wjb","7513":"1zt_bC1qdaWrw02tDMxZ9kpBDUYvSn78b","7514":"1hcNxg7Cum-k6qTDinzsVjewDJWV7aK5J","7515":"1axsw3hUPXqoqtjxZnTARKIrPby2aLRAb","7516":"1d0EjK3PiqnmsgzkSZECYuWIkrHLZlR8F","7517":"1wQA1cTRUH9yQO7x2WASebdU8r0UUKEDG","7518":"1e1iBttHmUFmm-883-KtiMUb0hly0apjE","7519":"1Jq3qbjNp0hAKhEp0G1nBOyK_JrpPQG-4","7520":"1xWpxa1-lnSTJAGLVB2lWcRPDsX-69a3O","7521":"1c2eBEZ_dDVkc-baqwBZbetTznkh2Gu1N","7522":"1Q6YdcTRvqHxTJHEPdyoPv8NDRY45rz5G","7523":"1E1NFrt23XRpjQ9EOiQld25OwFS1ba-9s","7524":"1uBa5aT5wek1oWxDmej2OwtBClxyCGqsW","7525":"1BZBwj4Xfs5PhB5DCdwyWLQJTkrUZtKB7","7526":"1M3nRHiyYYgdbWHO_pKG96l38tRTgthUS","7527":"1-kjLcFs1Gi3X-_HukQS3Y2OPlpEoBt2k","7528":"1K3QWNGtL5Pwe_oRkfIdNX_pKi3ahs98B","7529":"1WIw4qkAjqPBlWXL-H3rQGgB30aJGJ5TG","7530":"17fjldwY8xs7T0jC7_Vg5pMugXV-7iKO5","7531":"18oElSOXMB8JZ66-3ABRW14-7slpXs8Ti","7532":"16xhihj5X3acdKpbtmZuJB6oYbWaQVJvd","7533":"1MgJjsQNih6sr8OOPecLxtlJPRi8BaBYv","7534":"1xvl0XUPoaoG8vKVm9vnY_v4-1C1iYwHy","7535":"1Yr9qV3oCZxL2NOqyBALG35B87zHYlYvH","7536":"1gn3gPJGmh2ylG3_8SXWdTl0N86s8ctSd","7537":"1hqjD-C2KS5bHMFmNZoadnhxUvbYw4Bs2","7538":"1tRK98BaxN3ghVDbaqGIuR_-RmV547vJ2","7539":"1EAEqpQnP--ThKVNIoQlf_ymH3e91w7hY","7540":"1zBVuj3flBK2qtCUIkgDhEkVyXx5JMQ6B","7541":"19rE8QAN2KTzhtcEEPvBClEAxLz8CqXyh","7542":"1u1TfWH1zF7hhZQDXhuJ4gK0yq5i_OWhb","7543":"1tsiHWWGt89p48oZIuy_z3nRztFhbD_-J","7544":"1wK631z6DMFnT2ia9Ky1SLxlnFerdfFW4","7545":"1qWmVag0w8GeKxehi729aQzI36rrMmIoB","7546":"1RR3RzDfyPBtVOZ4DgJYS8a1Uz0Nte722","7547":"1wRfQ8Ok4HQwNABEfhPu45KXHEnPla4By","7548":"1xNjdUmMlYXt7lKivx5UijHPqqGL7xDGY","7549":"17a63jBGi4zhlDN22VyjM_zGQ4hcr-jxx","7550":"1WYSiPBfH5kzn6xUmnJbXqZ6K3QLonNQ4","7551":"1X5RRtfsYC_gaDXuPhKvQNbDYYscTh3d7","7552":"1Y0Ik-pao1TqIrK5YtcCFSaBaN9pAkiIq","7553":"1jiJA3mkeHGXsiKkbBJ1GA1VGXKvY_fH9","7554":"17PxrC7fMVlTflCoygj8ipY7C1Et9m3_F","7555":"1Zld5uLXiJ7rkEAs_GD77LjQZJjUv1T3I","7556":"1lqcysogMeDPliHzRF2cakKl-ua-xvgly","7557":"1qXT1i2-mi8Lo_ZBjDXyyy3JgSR0g03jQ","7558":"1veVn0rZxWRFEQcxoWJKQPlHjQVaYDNBX","7559":"1Bfwaj0E0pvZ88mJRbTIoygOqfzYj3OKV","7560":"1chuW94RAx6BVYxtF4jwnuRQL35Q2cxp4","7561":"1ootu8agNz9SFGEUg_NRQewxdnggguK0C","7562":"1jtg1XrlKwMWFwdSwk7IOc7GRbQ_MXVx_","7563":"1OFGn2uqXvRsadbJIWtZpMOjpSjYxiT_c","7564":"1jNn-MDjr-plEHAlS8rovH3xHUHmKJEu4","2497":"10VsXl3rzgvN23vJZQBHh9Xfnz5LXDb9f","2508":"16fBz5lk8iJSwFFm2vYSUWdRTu2LvumoP","2509":"1bi_KKXEQMQc2wTmqd6bJMv2T9UY-OSsn","2518":"1xZC9ZF4AX5c-S_-n7ntju5982wYdAHJd","2519":"19pPEUIFPG131yO7aSjYwRXMI2b98sT2Z","2520":"11Nc2Gh9TlOZal73HoX5mZlmo2mtzo74H","2521":"1ju0JIhT14kV81JKSHs0k0kisn6WUDnxD","2522":"1rClcEj4wCa28m4_vbSKTuj9oHLH83Yft","2523":"1R4WUy2EjD0R1mgQMl8Ds19XxwR6cxJWE","2524":"1shVk0yhFAcPbhAFClvQ_7fMp8u0i-cA4","2525":"11qIw79yqyYUsSiqIdGWfNCrhGJsnB-qz","2526":"1MFhcRyEccO05fgrtTTSBU-Bo96qP6D9K","2527":"1hOc7nQNiGwSn28102PFDOYtkRXCA_YT0","7565":"1AOoH3eh8ZJAXbAm4UqEtmP6XtOC7EFBB","7566":"1UDqEyb-V5z_cl9J-gUB58VonQ8lZfece","7567":"16OGPIfjlWIgmrF9Iec6kPYCPhVzB07ba","7568":"1s6FNcxTOSrK6llIwIPOf_GPTdFYerxvE","7569":"1lsRmfdkFkO0KLHAncQgp-wZm8WUwrKvG","7570":"16m5tcwTMK_vp_dVRKOvbxu6Sf3UZbqSD","7571":"1XYEnHuD7q-iM8ncVY0vQsCXgUkDOgoU1","7572":"14nTxJRlEGzkVV58hPsjyKd0_uLrUakUM","7573":"1esmTTrImVyY46_lqT5gU4pPHRj2Fslgm","7574":"1pzg1XRU1GOPU7En-ms8aHHY24Bbv6ywf","7575":"1pM3gprpwmjftYtgK2ey32IlpoAY9plEJ","7576":"12lSGYtXSmJbA20t0kduGF3ba_rBWzHYB","7577":"1zjc66ZCxcYlQBvRDgj35Sw4TF0EuHhwW","7578":"1JWrb6BsT5TTjRPA9ygO8zQ52CvfgniSZ","7579":"170OgEe1B1unmM1_ghkENvihTFTLBn-ZH","7580":"1luWULCLdXwSBwE0nRkYg-_6xCAE_B3r7","7581":"18KeN9Z5XznOoju3jLEtvEs00WO9HIeVZ","7582":"1PSfRZfHtaCrG6UOB2aBo7H7tJ-lHl1K0","7583":"1Uk9nlbtXPHVuLa2eeyAzxJVYuylR0IM3","7584":"1-zMZNKrr9U7LPe4ktppqWRTMuZDVT65l","7585":"1oFbTjWD8ur9VyXX-aksyofs4_UPxFxD4","7586":"1yl31daPkCFf1yJh20-cNmsFOEqqjMBTH","7587":"1SaFl-qyXeqT7_fjMlonwoV2h7_Laf7h9","7588":"1gT47LkojPku3DQlu-Zto97LsVucVTskq","7589":"1JYgiSpoz1isrJNs9OZOr1KQ-nVmw2BuC","7590":"190tSXsunOaOfbRu_3cxGU6jfrEcIcLL8","7591":"1esG34-BrTLpyfZ7g3YAuIlDsgpcjBoHG","7592":"11B5Xdo5gF3YQyw97HRnyqzRnkLcd7NX2","7593":"1tGQEJDK5OrZ5xC2_RceSUnoh8yhHX-ZO","7594":"16wELCxznF6bZqBPGMzxxXz4i_UdeaIrO","7595":"1jA04-NFPBpt3rVdk-VjaaK6knoUEzT9M","7596":"1WL97X42366NuVDXydKaqoRisyG1Y8s_6","7597":"1-YUAPTaJKfIwuyP-r6i-HCqs9jT_jZjo","7598":"1HfRRwh8QB3lp79srgCOd9Qq_f0uZVjLr","7599":"1poGgUnOVVuWR8895ydbG3MQcCYPJYZE7","7600":"1p-CCP9s2f7125cxsGdVD5jQECRUuoeVv","7601":"1VkFncnaE7GCii9Ck4AHsLhLXKLYK-tSh","7602":"1B1tKhZKoN7pyw6VFEt4P1lty3tQ5B56u","7603":"1j2bk2rebLY181Z5VMMKaONducuEYYE9u","7604":"1_ol_6xYHcVhOKHFVwj5Xcy_1KTNJQ0PL","7605":"1ttud1AoVlKsgLzxhI6wIxiKOb_sc-zd1","7606":"1PHNXqNzkbaHRajugEHhWWC0eMYzQn98j","7607":"17G0cCulZ6xM7oIY0bEr7EuFaCnNujUDw","7608":"1gdqzHkL_0pd3Wag16CxgLAgZc4PHSdLW","7609":"1MF14WjN-t9-Mn7LDIWdL5SGd-626UQxx","7610":"1Bv9c2TJs135lEiYeTG-H1AljQSkjdo7W","7611":"1PJTqff1ziO_fhGuzA3e_ksJrR8M_UW7Y","7612":"14JxpiYIWl09ipKu3GiXrGug19NQs6Fag","7613":"1XDP6tmTTciyz2HXBPY_okfdv3S8hoQ1H","7614":"1_zGtYd5otW_VI3lYLJDwqF-dBGG3lTHn","7615":"1C6DU9JgS4oZOwnHDVlk9D8Xv9C6pbIex","7616":"1qIxJgnBDJXyWVr5ApMRRakAivoHo-2Vy","7617":"1GhnZvCiStHbSXVdCbqweLqGIdsNkRMXn","7618":"19Dr7m7PXCZy0rT8v6fKmCWxLT2PPeYA3","7619":"12sOjTJAoOiltFAa-JTqQfeY6Xi4ByTcm","7620":"12iBEcLKHOTys9_8lJ4NP6DDeIYAGrXKr","7621":"1JjNFSeKA15WrPqhTdaodwfte8uJt2sHU","7622":"12Ir6eno4T1oDugO-DJ_i_AWoYfX1L6hS","7623":"1h4B--Uui9gGX2NyeKkgwgc0MA-Mvh6fO","7624":"1NWLV_t-c-hFmczLyqz6FPLSXkYeX-j78","7625":"1lKrcOoDNtXO00N7xWStAZFeOZ2meZWG5","7626":"18W7SwS47MHp8Garo1t_zq_HZ6667Vi_c","7627":"1muHMxMRGpiJKLfKqF87BOaT08Uq8gG-E","7628":"1ru7Tn6mxpdWgwYt_abhzVLa5a7TS_cBI","7629":"1YEZU5yIAtLHGAAHCY3eIceQfdkUTN-V7","7630":"17Wny6Yq4B4OCrFAvKwONnFlOLx0moumo","7631":"1S-LhKLNdLbn8T1To_U7heEar7uPnxiJ-","7632":"1vzmRwDz-LjqkQqJYO-0tkIFMQWc7IUFd","7633":"17-QXjeFVSt_T96bTRfngy4eqYkwfqABT","7634":"1Z_NUoF0PLWyCUmL9JSV0BH1beA9xlpkp","7635":"14rv-8PdgG58-n2l2A-4I_X1nKKF7e3Cp","7636":"1caDoHF3TD2SjZTClRXRIVG-KYVjxKVa9","7637":"1DaLp6qGj5IxOfq265E47aqEp2WW_V5ZX","7638":"1L3IBcbfZDg874mJbkA9eYZgGQGdW5HIF","7639":"1CrKBkyekr60IL1JFiAyYHz0cZVRolrim","7640":"1QCiD5U3jB2H1ODFLtb8s3DkMNv8ZRhNF","7641":"1_7O8j67yBv4LFYWtVgOmveFJGeMqMbGb","7642":"1l8Xb90ulAjtz_tKDZeSs9Vc1L2mSRpm7","7643":"1PkXj7vvP45gVTxV_gwSTg9EmO2oxSZ_m","7644":"1mUZufJSb5yHcpsAg3yAi38O7O8WzRB2y","7645":"1qU0QO7QxNUzwlUqPB6iOAXEBwa_dUiYg","7646":"1ydwfhqNn99RQ4T-ccsmfzCOMIPEanyfz","7647":"1VSx3hK9j7SNEtN9gkLjzvpklAwkbtr6q","7648":"1ug2zxzh8uSm8ijhq6wsPw6ohNDxjE1JJ","7649":"1mbprFjzoGhXLagVYBq_6HrV9xFNGxpEo","7650":"1juuWJucesFIslVq5MTlQ1P5aTtWzp1Ee","7651":"1y54-iT98jPMZObnwIQOORgvcn9Jc7QDl","2530":"13H7beLaC7sJWcHyHEWm2QLIZHUPGPe9u","2531":"1-PbTyY9tgvkX77Qc5E2lYuWhgmwDfGgN","2532":"1Sn8I_ULlbHbg5T_mVz0-ntYYZ7wkJc9H","2533":"15Ok0SOCMVSnTZHYutxAFWo-HWkdfGwxM","2534":"1XZU4GBoT28htfrjcue07IlT7MOFdW_Nw","2535":"1SzI4PqKpV06AuAh3RdHTLEO4jA-8MtXH","2536":"1JYpI7JqKIgB36Ut1gSN5uKPnuQw950QB","2537":"1BD2CozDnj2rSxgdOT0Ee-3P4d01rc5j7","2540":"1SxWB4HkLXA8j4ZPU8-ibJyUzx2k3NLEf","2541":"1mYizZKvysEL9U2I3uV72dF_dRcvQL5aG","2542":"1hbC8O9yaIUEgMl55KXpmI6DA7CQ1i-eX","2543":"1QmtGbo0s18n-oFsO3Q3i4zk2NQThKHyY","2544":"1GNyPTMSGl5VEmdb0FCNHYdTJYEXx6N9N","2545":"1ThjFQ7v2Veo_nO7Db8gS3LLTnoAu1Bue","2546":"1IHYtKZ93jrANEYKlDUARLzgLF6b3OUXx","2547":"1F5nf8uzEx3jZOKCk_G33ju8FnVKq1QSx","2548":"1H3Wy2IyB36w51scSIyXZWczQDEuS7hlZ","2550":"1A2lQoXtP0G35SxeVidsIeKk_Cjihnnc8","2551":"1E96Pb3-XlG0Cq6k7CwnABtFmX0XKv9iR","2552":"1vkh9BRhgo0-VBi22umj_FeDcQg3IBmyD","2553":"1sgd3SRhYVwi0pVLDpyW-_dx3mgIGcg1K","2554":"1HVzgDJNXfMiWHOkp1DrFOB7n_XBMn1PO","2555":"1wEnRc9fTnhfiHrByzbV-6dbGWKMhmwdJ","2556":"1goLvOAOwbWzVpGaLW3CxdDSTBuKve6VQ","2557":"1gfd2hLIWo8HQWMc2nPyTJA1B60VMMjjd","2560":"1cYqNFlLznT2ZpjRmcOoWwOxpiYEZg_bC","7652":"1pSfcgiExupEVmQ-4zW4awsa-MOGuXBeV","7653":"1-_LXTMTw1RUkCMp-JepA-Z2mGmx5DPfJ","7654":"1IybL1AeMY6bQrTkwqJxQdSQfYnZfYpuS","7655":"1Sm2DOl07-MIEPdLhp19s3DCvlEjCaPvt","7656":"1ZZQ3rWYo9tvoqNCpPa02AjKU3cHlCTQk","7657":"1Lzo6PNPvrgdsoWGvBnMQsjMJloYI4AWC","7658":"1czB7h1WrrvnTGQbo3LPBsiJw_fW_D9cp","7659":"1pc-FJWSUuBvEdVO4s0azkKs-CQyABjcV","2568":"1gvbjE7Duwei_YShq1_N9GYKq75J8Dg-g","2569":"1lLuoVRCGURUNPfp5YdKA-iY3XFPPSjm0","7660":"1Jf2-0FGxpNqK0K3XqHZGkgicXyFht3OO","7661":"1Sd5n87NfNGqUWeDi8Y-rx9B_gqaxbhWZ","7662":"1SbJqPnlB67-WAMppqGR8ndtn3zF0TMd5","7663":"1lPeWS13QTlm7_YhZ3s0l19aE5IIpCqjU","7664":"15uwfqzPo1JP6HEg-fBpOUuyoZA33aDuF","7665":"1hhlDTiMfHgIimPhQkgB-1VimysvsBxwp","7666":"1EXOI-TGoPj5MuwtHkp_cWyN4jRJvznqZ","7667":"1L9gOpADowzEDBmeapw2-EFyIXZaVYN3W","7668":"1E0s-k4Gy8Ju0kmr4-sN-bTMiQ8oYwOKv","2574":"1xMmh_i1TRG52GYVR0M-9Wj35-BQlVfql","2578":"11XttE5Of5TWromaKNG99w6Sv-NzpBoTv","2579":"18lF79niZ_ciGmGfe_76uvgh8OHkSOJjx","2580":"1rdOXP45ex2k8Z6ABU9-4fmkN6tdvjC8t","2581":"11LPkmh8sAJthxqpv2WXvDoB21w4lFf4y","2582":"14tTKxJlsr0XwZ_CMnyrEwkRRnhhkfc3B","2583":"16lcAd1NcffaCpL-6HuQntwJpD1FkOi5D","2584":"1rSIlWJk4LD0gU2FXVBrE5fl0UMgIdVui","2585":"1NMcSpDH9VTAhJBzZuz5OpgQp4-HJv-4R","2586":"1czAeY7agGwcrErquoz2UBaRimN1zDuua","7669":"1WfVhVz3WZUc5fp9HggJ1niw2437CjwR5","2587":"1AuO_HYoIew7Y0_0ygf9YADIaA-TkSSRj","7670":"12m1CizbUav1_VBcF3kLDfrzTHjfiXDIT","7671":"1opmwwFAfFNdtWPMvHfNWLCoki7k2MxQJ","7672":"1l6Y243Kko8c_IckuSdEaysrHqdY8AUCS","2590":"15eRWehyoLaZw4QrTtIO9yv0W-gJLCc6K","7673":"1astyp5oEA2f8bxm9WdiZErJxuPCzJ35e","7674":"1aitUUQXyeQbgMyS6yWHG6AWPZJb-RGgL","2591":"1vgy2e194q-iCtb_6KtZsSYFLs06ouvdW","2592":"1ZLT7D-_sgUBD8QTTEtVhXa11hG7NysDv","7675":"1dOTdBbU_GpD247vp7uoE1GElrFHVc0Ym","2593":"1dBDgQ9NXl3K4R-1MhW-4Oe3csiXBJ0jV","2594":"1TvfDlKS3BMBV9iM8FZjy6hvz5IsnV9HT","2595":"1mm0Vyg9jrCU9K_Ue706ftvhezunc3sTU","2596":"1ydeuR10cNghk8vvbYnfy68wMMQISMyGO","7676":"1Nck2-F4Jo5gmeWMKW_MhG7W0WSt1DqQ0","2597":"1zRwtVICQMv-zxNlolQzyhxntKamT15GJ","7677":"12H6Hrslqd2JZJK3ugyut7TTEhLqzQAaq","7678":"1k2bCFvKuYN0w6VIApaR4C5bNdbZjxnmx","7679":"1TB3bIar31Srgj68Inx50H5GNkYocTppm","2602":"1kkP0NuVxuRzvwQ22bnuqysgloQr9D8mq","2608":"1K3jSXDpEfHlLmnZFRxLXeOJ4vQFJ9-i8","2609":"1IZ3kBBeC9edzZTnl14W3hzit98t9WMqM","2616":"1aGakvswKRfXFBpRt4mwZKdeZED7HOW0U","2618":"1vgEjSClSbMOn6UI5XQFR_ZcWW5jZ64AZ","2619":"12nNyxLERKFRCaOVvrnLeVTau34XKhgMM","2620":"13BQkFasBAG79_do_U8N4QWWSor1qAyk3","2621":"1jZ0m7vZ2r2KNpXeNhRtglNibMsZiJZer","2622":"1-os1lMlZtpgKCjvS4SE_QGLF2K_iAEPD","2623":"1UXc_U1pgJNazPdPUbW0i9z_jW0jxO1C3","2624":"1pTO_14hqoQFFV5bUNHYdbUxTZf68feFx","2625":"1LT6te6r_UjrogrSD4GStJRrQVKSHje4P"};                   // {"2468":"드라이브 파일 ID"}
+const SECTS = ["모여서 귀 기울이기", "헤드셋을 쓰고", "소리를 따라 걷기", "숲길의 얼굴들", "다시 들어 보기", "초지와 산방산"];
+
+const $ = s => document.querySelector(s);
+const KEY = "jejugrapher-open-" + SESSION;
+
+/* ── 날짜 잠금 ───────────────────────────────── */
+const normDate = v => { const d = String(v).replace(/\D/g, ""); return d.length === 8 ? d.slice(2) : d; };
+async function sha(s) {
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
+}
+function unlock() { $("#gate").hidden = true; $("#app").hidden = false; start(); }
+$("#gateForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  if ((await sha("byeolbam-pw:" + normDate($("#pw").value))) === PW_HASH) {
+    try { sessionStorage.setItem(KEY, "1"); } catch (err) {}
+    $("#gateErr").textContent = ""; unlock();
+  } else {
+    $("#gateErr").textContent = "날짜가 맞지 않아요. 참여한 날의 연도 끝 두 자리·월·일을 입력해 주세요.";
+    $("#pw").select();
+  }
+});
+
+/* ── 사진첩 ─────────────────────────────────── */
+const img = (n, w) => `https://drive.google.com/thumbnail?id=${IDS[n]}&sz=w${w}`;
+const dl = n => `https://drive.google.com/uc?export=download&id=${IDS[n]}`;
+const byN = Object.fromEntries(PHOTOS.map(p => [p.n, p]));
+const SEL_KEY = "jejugrapher-sel-" + SESSION;
+const state = { filter: "전체", list: PHOTOS, idx: 0, sel: new Set() };
+try { JSON.parse(localStorage.getItem(SEL_KEY) || "[]").forEach(n => byN[n] && state.sel.add(n)); } catch (e) {}
+
+function start() {
+  $("#allDrive").href = DRIVE_FOLDER; $("#dlFolder").href = DRIVE_FOLDER;
+  $("#countLine").textContent = `사진 ${PHOTOS.length}장`;
+  if (YT) {
+    $("#video").hidden = false;
+    $("#ytThumb").onerror = () => { $("#ytThumb").onerror = null; $("#ytThumb").src = `https://i.ytimg.com/vi/${YT}/hqdefault.jpg`; };
+    $("#ytThumb").src = "cover.jpg";   // 페이지와 함께 올리는 썸네일
+  } else $("#toVideo").hidden = true;
+  const cnt = PHOTOS.reduce((m, p) => (m[p.s] = (m[p.s] || 0) + 1, m), {});
+  $("#chips").innerHTML = ["전체", ...SECTS.filter(s => cnt[s])].map(l =>
+    `<button type="button" class="chip" data-l="${l}" aria-pressed="${l === "전체"}">${l}<span class="c">${l === "전체" ? PHOTOS.length : cnt[l]}</span></button>`).join("");
+  render(); syncBar();
+}
+$("#chips").addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if (!b) return;
+  state.filter = b.dataset.l;
+  document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c === b));
+  render(); $("#photos").scrollIntoView({ behavior: "smooth" });
+});
+function card(p, i) {
+  const on = state.sel.has(p.n);
+  return `<article class="card${on ? " on" : ""}" data-n="${p.n}">
+    <button class="shot" type="button" data-i="${i}" aria-label="사진 ${p.n} 크게 보기">
+      <img class="${p.v ? "v" : ""}" src="${img(p.n, 480)}" alt="사진 ${p.n}, ${p.s}, ${p.t}" loading="lazy" referrerpolicy="no-referrer">
+      <span class="tag">No. ${p.n}</span>
+    </button>
+    <button class="sel" type="button" data-sel="${p.n}" aria-pressed="${on}" aria-label="사진 ${p.n} 고르기">✓</button>
+    <div class="meta"><span><span class="no">${p.n}</span> · ${p.t}</span><a href="${dl(p.n)}" target="_blank" rel="noopener">받기</a></div>
+  </article>`;
+}
+function render() {
+  state.list = state.filter === "전체" ? PHOTOS : PHOTOS.filter(p => p.s === state.filter);
+  const groups = SECTS.map(s => [s, state.list.map((p, i) => [p, i]).filter(([p]) => p.s === s)]).filter(g => g[1].length);
+  $("#groups").innerHTML = groups.map(([s, ps]) => `
+    <div class="grp"><h3>${s}<small>${ps[0][0].t} – ${ps[ps.length - 1][0].t} · ${ps.length}장</small><button type="button" data-gsel="${s}">이 묶음 고르기</button></h3>
+    <div class="grid">${ps.map(([p, i]) => card(p, i)).join("")}</div></div>`).join("");
+  // 카드 위에 고르기 버튼이 겹치도록 위치 지정
+  document.querySelectorAll(".card").forEach(c => c.style.position = "relative");
+}
+function toggle(n, force) {
+  const on = force === undefined ? !state.sel.has(n) : force;
+  on ? state.sel.add(n) : state.sel.delete(n);
+  const c = document.querySelector(`.card[data-n="${n}"]`);
+  if (c) { c.classList.toggle("on", on); c.querySelector(".sel").setAttribute("aria-pressed", on); }
+  syncBar();
+}
+function syncBar() {
+  $("#bar").hidden = state.sel.size === 0; $("#selN").textContent = state.sel.size;
+  try { localStorage.setItem(SEL_KEY, JSON.stringify([...state.sel])); } catch (e) {}
+}
+$("#groups").addEventListener("click", e => {
+  const s = e.target.closest("[data-sel]"); if (s) return toggle(s.dataset.sel);
+  const g = e.target.closest("[data-gsel]"); if (g) { state.list.filter(p => p.s === g.dataset.gsel).forEach(p => toggle(p.n, true)); return; }
+  const sh = e.target.closest(".shot"); if (sh) openViewer(+sh.dataset.i);
+});
+$("#pickAll").onclick = () => state.list.forEach(p => toggle(p.n, true));
+$("#barClear").onclick = () => [...state.sel].forEach(n => toggle(n, false));
+const selList = () => PHOTOS.filter(p => state.sel.has(p.n)).map(p => p.n);
+
+/* 크게 보기 */
+const viewer = $("#viewer");
+function openViewer(i) { state.idx = i; showV(); viewer.showModal(); }
+function showV() {
+  const p = state.list[state.idx];
+  $("#vwImg").src = img(p.n, 2000); $("#vwImg").alt = `사진 ${p.n}`;
+  $("#vwTitle").textContent = `No. ${p.n} · ${p.t} · ${p.s}`;
+  $("#vwDown").href = dl(p.n);
+  $("#vwPick").setAttribute("aria-pressed", state.sel.has(p.n));
+  $("#vwPick").textContent = state.sel.has(p.n) ? "고름 ✓" : "고르기";
+}
+const step = d => { state.idx = (state.idx + d + state.list.length) % state.list.length; showV(); };
+$("#vwPrev").onclick = () => step(-1); $("#vwNext").onclick = () => step(1);
+$("#vwClose").onclick = () => viewer.close();
+$("#vwPick").onclick = () => { toggle(state.list[state.idx].n); showV(); };
+$("#vwReq").onclick = () => { const n = state.list[state.idx].n; viewer.close(); openReq([n]); };
+viewer.addEventListener("keydown", e => { if (e.key === "ArrowLeft") step(-1); if (e.key === "ArrowRight") step(1); if (e.key === " ") { e.preventDefault(); $("#vwPick").click(); } });
+viewer.addEventListener("click", e => { if (e.target === viewer || e.target.classList.contains("vw-img")) viewer.close(); });
+let tx = null;
+viewer.addEventListener("touchstart", e => tx = e.touches[0].clientX, { passive: true });
+viewer.addEventListener("touchend", e => { if (tx === null) return; const d = e.changedTouches[0].clientX - tx; if (Math.abs(d) > 50) step(d < 0 ? 1 : -1); tx = null; });
+
+/* 고른 사진 받기: 숨은 iframe으로 차례로 받기 (막히면 목록에서 하나씩) */
+const dlg = $("#dl");
+$("#barDl").onclick = () => {
+  const ns = selList();
+  $("#dlSub").textContent = `${ns.length}장을 받습니다. 사진마다 파일이 하나씩 내려받아져요.`;
+  $("#dlList").innerHTML = ns.map(n => `<a href="${dl(n)}" target="_blank" rel="noopener" data-n="${n}"><span>No. ${n} · ${byN[n].t}</span></a>`).join("");
+  $("#dlMsg").textContent = ""; dlg.showModal();
+};
+$("#dlList").addEventListener("click", e => { const a = e.target.closest("a"); if (a) a.classList.add("done"); });
+$("#dlAll").onclick = async () => {
+  const links = [...document.querySelectorAll("#dlList a")]; $("#dlAll").disabled = true;
+  for (let i = 0; i < links.length; i++) {
+    $("#dlMsg").className = "msg"; $("#dlMsg").textContent = `받는 중… ${i + 1} / ${links.length}`;
+    const f = document.createElement("iframe"); f.hidden = true; f.src = links[i].href; document.body.appendChild(f);
+    setTimeout(() => f.remove(), 60000); links[i].classList.add("done");
+    await new Promise(r => setTimeout(r, 900));
+  }
+  $("#dlMsg").className = "msg ok"; $("#dlMsg").textContent = "다 보냈어요. 받은 파일 폴더를 확인해 주세요.";
+  $("#dlAll").disabled = false;
+};
+$("#dlClose").onclick = () => dlg.close();
+dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+
+/* 원본 요청 */
+const req = $("#req");
+function openReq(ns) {
+  $("#reqForm").hidden = false; $("#reqDone").hidden = true; $("#rqMsg").textContent = ""; $("#rqMsg").className = "msg";
+  $("#f_nos").value = ns.join(", ");
+  $("#rqThumbs").innerHTML = ns.slice(0, 40).map(n => `<img src="${img(n, 160)}" alt="사진 ${n}" referrerpolicy="no-referrer">`).join("");
+  try { const d = JSON.parse(localStorage.getItem("jejugrapher-who") || "{}"); if (d.name) $("#f_name").value = d.name; if (d.contact) $("#f_contact").value = d.contact; } catch (e) {}
+  req.showModal();
+}
+$("#barReq").onclick = () => openReq(selList());
+$("#rqCancel").onclick = () => req.close(); $("#doneClose").onclick = () => req.close();
+req.addEventListener("click", e => { if (e.target === req) req.close(); });
+$("#form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const msg = $("#rqMsg");
+  const nos = $("#f_nos").value.split(/[^0-9]+/).filter(n => byN[n]);
+  const data = {
+    session: SESSION, photo: nos.join(","), version: "사운드워킹",
+    kind: (document.querySelector('input[name="kind"]:checked') || {}).value || "",
+    message: `[${nos.length}장] ` + $("#f_msg").value.trim(), name: $("#f_name").value.trim(), contact: $("#f_contact").value.trim(),
+    website: $("#f_web").value
+  };
+  if (!nos.length) { msg.className = "msg err"; msg.textContent = "사진 번호를 하나 이상 넣어 주세요."; $("#f_nos").focus(); return; }
+  if (!data.contact) { msg.className = "msg err"; msg.textContent = "원본을 보내 드릴 연락처를 남겨 주세요."; $("#f_contact").focus(); return; }
+  if (!$("#f_agree").checked) { msg.className = "msg err"; msg.textContent = "연락처를 남기시려면 안내 문구에 동의해 주세요."; return; }
+  try { localStorage.setItem("jejugrapher-who", JSON.stringify({ name: data.name, contact: data.contact })); } catch (err) {}
+  $("#rqSend").disabled = true; msg.className = "msg"; msg.textContent = "보내는 중…";
+  try {
+    await fetch(ENDPOINT, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) });
+    $("#form").reset(); $("#reqForm").hidden = true; $("#reqDone").hidden = false;
+  } catch (err) {
+    msg.className = "msg err"; msg.textContent = "보내지 못했어요. 인터넷 연결을 확인한 뒤 다시 눌러 주세요.";
+  } finally { $("#rqSend").disabled = false; }
+});
+
+/* 영상 */
+$("#playBtn").addEventListener("click", () => {
+  const f = document.createElement("iframe");
+  f.src = `https://www.youtube-nocookie.com/embed/${YT}?autoplay=1&rel=0`;
+  f.title = "화순곶자왈 사운드워킹 영상";
+  f.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+  f.allowFullscreen = true;
+  $("#player").replaceChildren(f);
+});
+
+(function () {
+  let ok = false;
+  try { ok = sessionStorage.getItem(KEY) === "1"; } catch (e) {}
+  if (ok) return unlock();
+  $("#pw").focus();
+})();
+</script>
+</body>
+</html>

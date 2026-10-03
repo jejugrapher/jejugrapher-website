@@ -1,22 +1,15 @@
-jejugrapher-website 저장소에 올릴 파일 (2026-09-28)
+jejugrapher-website 저장소에 올릴 파일 (2026-10-03)
 
 올리는 방법
 1. https://github.com/jejugrapher/jejugrapher-website 접속
 2. Add file → Upload files
-3. 이 폴더 안의 byeolbam.html 과 byeolbam 폴더를 통째로 끌어다 놓기
-   (이 안내 파일 '읽어주세요.txt'는 올리지 마세요)
+3. 이 폴더 안의 sound 폴더를 통째로 끌어다 놓기 (index.html 과 cover.jpg 영상 썸네일이 함께 들어 있어요) ('읽어주세요.txt'는 올리지 마세요)
 4. Commit changes
 
-파일별 내용
-- byeolbam.html
-    별밤사진관 페이지. '우리 사진 받기'에 회차 2개(제대별밤·서머셋의 별밤)가 보입니다.
-- byeolbam/g/9e899fe154fb/index.html
-    서머셋의 별밤 회차 (2026.09.18). 비밀번호 260918.
-    이번 변경: 마지막 커플 회차 6장면(2263·2266·2268·2270·2272·2274, 사진 12장)을 뺐습니다. 45 → 39장면.
-- byeolbam/g/cde4005cf528/index.html
-    제대별밤 회차 (2026.09.22). 비밀번호 260922. 19장면, 유튜브 가로·쇼츠 연결.
-
 올린 뒤 확인할 주소
-- https://jejugrapher.com/byeolbam.html
-- https://jejugrapher.com/byeolbam/g/9e899fe154fb/   (비밀번호 260918)
-- https://jejugrapher.com/byeolbam/g/cde4005cf528/   (비밀번호 260922)
+- https://jejugrapher.com/sound/g/5a1d0c3e7b29/   (비밀번호 261003, 영상 보기 = youtu.be/Gi_NvWsjuMM)
+
+참고
+- 사진은 구글 드라이브 폴더(1O2i-EtJBt4HGP2kg8qt6U5Y2lRpm9myX)의 파일을 그대로 보여 줍니다(긴 변 1200px).
+- 원본 요청은 별밤사진관과 같은 Apps Script 창구로 들어갑니다 (session=261003, version=사운드워킹).
+- 드라이브에 사진을 더 올리면 build_gallery.py를 다시 돌려 index.html을 새로 만들어 올리세요.
