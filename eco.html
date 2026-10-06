@@ -80,6 +80,16 @@ a.pc:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(31,58,95
 .pc .has span.on{border-color:var(--moss);color:var(--forest)}
 .pc .go{margin-top:.55rem;font-weight:500;color:var(--terra);font-size:.92rem}
 
+.pc .ph{display:block;border:0;padding:0;width:100%;cursor:pointer}
+.playic{position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;background:rgba(201,123,91,.94);color:#fff;display:grid;place-items:center;font-size:1.3rem;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.pc .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:12px}
+.pc .act{flex:1;min-width:130px;text-align:center;font:500 .92rem var(--sans);padding:.65em 1em;cursor:pointer}
+.pc .act.play{background:var(--terra);color:#fff;border:0}
+.pc .act.play:hover{background:#b56a4c}
+.pc .act.lock{border:1px solid var(--navy);color:var(--navy);background:#fff}
+.pc .act.lock:hover{background:var(--navy);color:#fff}
+#yt{border:0;padding:0;background:transparent;width:min(960px,94vw)}
+#yt::backdrop{background:rgba(20,24,30,.86)}
 .note{background:var(--forest);color:#EFEADF}
 .note .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2rem 4rem}
 .note h2{font-size:clamp(1.5rem,3vw,2rem);line-height:1.4;color:#FBF7EE}
@@ -118,7 +128,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
   <div class="wrap">
     <div class="eyebrow">2026 생태관광주간 제주 · 체험 및 평가단</div>
     <h1>곶자왈·오름·습지에서<br>함께한 시간을 나눕니다</h1>
-    <p>제주그래퍼가 기록한 생태관광 프로그램의 사진과 영상입니다. 참여한 프로그램을 누르고, 그날 날짜 여섯 자리를 넣으면 사진을 보고 받을 수 있어요.</p>
+    <p>제주그래퍼가 기록한 생태관광 프로그램의 사진과 영상입니다. 기록 영상은 누구나 바로 볼 수 있고, 사진첩은 안내받은 비밀번호로 열립니다.</p>
   </div>
 </header>
 
@@ -129,8 +139,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
       <h2>사진 받는 법</h2>
     </div>
     <ol>
-      <li><b>프로그램 고르기</b><p>아래 목록에서 참여한 프로그램을 누르세요. 사진이 올라온 프로그램에는 「사진 공개」 표시가 붙어 있어요.</p></li>
-      <li><b>날짜 여섯 자리 넣기</b><p>참여한 날의 연도 끝 두 자리·월·일입니다. 예) 2026년 10월 5일 → <b style="display:inline;font:500 1rem var(--mono)">261005</b></p></li>
+      <li><b>기록 영상 보기</b><p>프로그램 카드의 ▶ 버튼을 누르면 기록 영상이 바로 재생됩니다. 비밀번호가 필요 없어요.</p></li>
+      <li><b>🔒 사진첩은 비밀번호로</b><p>비밀번호는 참여하신 분께 문자·카카오톡으로 따로 안내해 드렸어요.</p></li>
       <li><b>골라서 받기 · 원본 요청</b><p>마음에 드는 사진을 골라 한꺼번에 받고, 인화용 원본이나 내리고 싶은 사진이 있으면 페이지에서 바로 알려 주세요.</p></li>
     </ol>
   </div>
@@ -139,7 +149,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 <section id="pilot">
   <div class="wrap">
     <div class="shead">
-      <div class="snum">PILOT · 10.05 – 10.07</div>
+      <div class="snum">PILOT PROGRAMS</div>
       <h2>체험 및 평가단 시범프로그램</h2>
       <p>「곶자왈·오름·습지의 감각적 재발견, ‘제주다운 생태관광’ 프로그램 개발」 — 평가단과 함께 평대·저지·호근·하례·선흘을 걸었습니다.</p>
     </div>
@@ -150,7 +160,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 <section id="week" style="background:var(--paper);border-top:1px solid var(--line)">
   <div class="wrap">
     <div class="shead">
-      <div class="snum">ECO WEEK · 10.03 – 10.09</div>
+      <div class="snum">ECO WEEK</div>
       <h2>2026 생태관광주간 행사</h2>
       <p>「제주, 나만의 계절이 되다」 — 생태관광주간 프로그램 가운데 제주그래퍼가 기록한 행사입니다. 프로그램 안내는 <a href="https://jejuecotourism.com/" target="_blank" rel="noopener" style="color:var(--terra);border-bottom:1px solid">jejuecotourism.com</a>에서 볼 수 있어요.</p>
     </div>
@@ -162,7 +172,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
   <div class="wrap">
     <h2>사진 속 얼굴이 마음에 걸리면<br>바로 알려 주세요</h2>
     <div>
-      <p>사진첩은 그날 함께한 분들만 열 수 있도록 날짜로 잠가 두었습니다. 공개되길 원하지 않는 사진은 사진첩의 「원본 요청 → 사진 내려 주세요」로 보내 주시면 확인하는 대로 내립니다.</p>
+      <p>사진첩은 함께한 분들만 열 수 있도록 비밀번호로 잠가 두었습니다. 공개되길 원하지 않는 사진은 사진첩의 「원본 요청 → 사진 내려 주세요」로 보내 주시면 확인하는 대로 내립니다.</p>
       <p style="margin-top:.8rem">단체 기록 영상·보도용 사진이 필요하신 기관·마을 담당자께서는 <a href="inquiry.html">문의</a>로 연락 주세요.</p>
     </div>
   </div>
@@ -170,38 +180,43 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 
 <footer>
   <div class="wrap">
-    <span>© 2026 JEJUGRAPHER · 제주그래퍼 전현석</span>
+    <span>© 2026 JEJUGRAPHER · 제작 <a href="index.html" style="font-weight:500;color:var(--navy);text-decoration:underline;text-underline-offset:3px">제주그래퍼</a></span>
     <span>주최·주관 제주생태관광협회 · 제주생태관광지원센터</span>
   </div>
 </footer>
 
+<dialog id="yt" aria-label="기록 영상">
+  <div style="position:relative;aspect-ratio:16/9;background:#000"><iframe id="ytf" title="기록 영상" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe></div>
+  <button type="button" id="ytx" style="margin-top:10px;float:right;background:#fff;border:1px solid var(--line);padding:.45em 1.1em;font:500 .9rem var(--sans);cursor:pointer">닫기</button>
+</dialog>
 <script>
-/* 프로그램 목록 — 사진첩을 올릴 때마다 여기만 고칩니다.
-   url: 사진첩 주소(없으면 준비 중), img: 카드 사진, has: [사진, 영상] 공개 여부 */
+/* 행사사진 목록 — 날짜는 사진첩 비밀번호라 표시하지 않습니다.
+   url: 사진첩(비밀번호), yt: 유튜브 기록 영상(바로 재생), img: 카드 사진 */
 const PILOT = [
-  { d:"10.05 (월)", t:"숨, 평대", s:"평대의 향을 담은 — 인헤일러 · 순비기 향낭 만들기", w:"평대 돝오름 ~ 평대리생태체험장 · 구좌읍 평대리", url:"eco/g/9a0a9d467758/", img:"eco/g/9a0a9d467758/cover.jpg", has:[1,0] },
-  { d:"10.05 (월)", t:"빛이 숲을 떠나는 시간", s:"해 질 녘 저지곶자왈", w:"저지곶자왈 · 한경면 저지리", url:"eco/g/409184708a11/", img:"eco/g/409184708a11/cover.jpg", has:[1,0] },
-  { d:"10.06 (화)", t:"다시, 대나무", s:"오영희 장인의 호근", w:"호근동 복지회관 ~ 하논 ~ 치유의 숲 · 서귀포시 호근동", url:"", img:"", has:[0,0] },
-  { d:"10.06 (화)", t:"하례리 보물찾기", s:"고살리숲 — 밧줄놀이 · 숲속 보물찾기 · 해먹", w:"고살리숲 · 남원읍 하례리", url:"", img:"", has:[0,0] },
-  { d:"10.07 (수)", t:"동백동산 기후탐사대 · 오감열기 프로젝트", s:"탄소 흡수원 찾기 · 동백동산에서 오감 찾기", w:"동백동산 일대 · 조천읍 선흘리", url:"", img:"", has:[0,0] },
+  { t:"숨, 평대", s:"바다를 품은 순비기 향낭 · 평대의 향을 담은 AROMATIC THERAPY INHALER", w:"평대 돝오름 ~ 평대리생태체험장 · 구좌읍 평대리", url:"eco/g/9a0a9d467758/", yt:"xWmK9Opii3w", img:"eco/g/9a0a9d467758/cover.jpg" },
+  { t:"빛이 숲을 떠나는 시간", s:"해 질 녘 저지곶자왈", w:"저지곶자왈 · 한경면 저지리", url:"eco/g/409184708a11/", yt:"Na_Yx3Be0CY", img:"eco/g/409184708a11/cover.jpg" },
+  { t:"다시, 대나무 · 미로숲길에서 쉬멍, 맛있게 차롱", s:"오영희 장인의 호근", w:"호근동 · 서귀포시", url:"", img:"" },
+  { t:"하례리 보물찾기", s:"고살리숲 — 밧줄놀이 · 숲속 보물찾기", w:"고살리숲 · 남원읍 하례리", url:"", img:"" },
+  { t:"동백동산 기후탐사대 · 오감찾기 프로젝트", s:"탄소 흡수원 찾기 · 동백동산에서 오감 찾기", w:"동백동산 · 조천읍 선흘리", url:"", img:"" },
 ];
 const WEEK = [
-  { d:"10.03 (토)", t:"화순곶자왈 사운드워킹", s:"헤드셋을 쓰고 숲의 소리를 따라 걷기 · ㈜더사운드벙커", w:"화순곶자왈 생태탐방숲길 · 안덕면 화순리", url:"sound/g/5a1d0c3e7b29/", img:"sound/g/5a1d0c3e7b29/cover.jpg", has:[1,1] },
-  { d:"10.04 (일)", t:"이성권과 함께하는 제주나무이야기", s:"동백동산 곶자왈과 습지의 나무 이야기 · (주)평화여행자", w:"동백동산습지센터 · 조천읍 선흘리", url:"", img:"", has:[0,0] },
+  { t:"화순곶자왈 사운드워킹", s:"헤드셋을 쓰고 숲의 소리를 따라 걷기 · ㈜더사운드벙커", w:"화순곶자왈 생태탐방숲길 · 안덕면 화순리", url:"sound/g/5a1d0c3e7b29/", yt:"Gi_NvWsjuMM", img:"sound/g/5a1d0c3e7b29/cover.jpg" },
+  { t:"이성권과 함께하는 제주나무이야기", s:"동백동산 곶자왈과 습지의 나무 이야기 · (주)평화여행자", w:"동백동산습지센터 · 조천읍 선흘리", url:"", yt:"I6uVG54iCM8", img:"eco/tree_cover.jpg" },
 ];
-function cards(list){
-  const days=[...new Set(list.map(p=>p.d))];
-  return days.map(d=>`<div class="day"><h3>${d}</h3><div class="cards">${list.filter(p=>p.d===d).map(p=>{
-    const open=!!p.url, tag=open?"a":"div";
-    return `<${tag} class="pc"${open?` href="${p.url}"`:""}>
-      <div class="ph">${p.img?`<img src="${p.img}" alt="" loading="lazy">`:`<span class="none">${open?"":"사진 준비 중"}</span>`}
-        <span class="badge${open?"":" wait"}">${open?"사진 공개":"준비 중"}</span></div>
-      <div class="bd"><span class="when">${p.d}</span><h4>${p.t}</h4><span class="sub">${p.s}</span><span class="where">${p.w}</span>
-        <div class="has"><span class="${p.has[0]?"on":""}">사진${p.has[0]?"":" 준비 중"}</span><span class="${p.has[1]?"on":""}">영상${p.has[1]?"":" 준비 중"}</span></div>
-        ${open?`<span class="go">사진첩 열기 →</span>`:""}</div></${tag}>`;}).join("")}</div></div>`).join("");
-}
-document.getElementById("pilotList").innerHTML=cards(PILOT);
-document.getElementById("weekList").innerHTML=cards(WEEK);
+function card(p){const o=!!p.url, v=!!p.yt;
+  const img=p.img?`<img src="${p.img}" alt="" loading="lazy">`:`<span class="none">사진 준비 중</span>`;
+  const badge=`<span class="badge${o||v?"":" wait"}">${v&&o?"영상 · 사진":(v?"영상 공개":(o?"사진 공개":"준비 중"))}</span>`;
+  const ph=v?`<button type="button" class="ph" data-yt="${p.yt}" aria-label="${p.t} 기록 영상 보기">${img}<span class="playic" aria-hidden="true">▶</span>${badge}</button>`
+            :(o?`<a class="ph" href="${p.url}">${img}${badge}</a>`:`<div class="ph">${img}${badge}</div>`);
+  const acts=(v?`<button type="button" class="act play" data-yt="${p.yt}">▶ 기록 영상 보기</button>`:"")+(o?`<a class="act lock" href="${p.url}">🔒 사진첩 열기</a>`:"");
+  return `<div class="pc">${ph}<div class="bd"><h4>${p.t}</h4><span class="sub">${p.s}</span><span class="where">${p.w}</span>
+    ${acts?`<div class="acts">${acts}</div>`:`<div class="has"><span>사진 준비 중</span><span>영상 준비 중</span></div>`}</div></div>`;}
+document.getElementById("pilotList").innerHTML=`<div class="cards">${PILOT.map(card).join("")}</div>`;
+document.getElementById("weekList").innerHTML=`<div class="cards">${WEEK.map(card).join("")}</div>`;
+const yt=document.getElementById("yt"), ytf=document.getElementById("ytf");
+document.addEventListener("click",e=>{const b=e.target.closest("[data-yt]"); if(!b) return; ytf.src=`https://www.youtube-nocookie.com/embed/${b.dataset.yt}?autoplay=1&rel=0`; yt.showModal();});
+const ytClose=()=>{ytf.src=""; yt.close();};
+document.getElementById("ytx").onclick=ytClose; yt.addEventListener("click",e=>{if(e.target===yt) ytClose();}); yt.addEventListener("close",()=>{ytf.src="";});
 </script>
 </body>
 </html>

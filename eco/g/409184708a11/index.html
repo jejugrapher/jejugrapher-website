@@ -37,7 +37,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .btn.sm{padding:.45rem .8rem;font-size:.88rem}
 
 /* 잠금 화면 */
-.gate{min-height:100svh;display:grid;place-items:center;padding:2rem 1rem;background:radial-gradient(110% 80% at 50% 0%,#1f4a2e 0%,var(--sky) 50%,var(--deep) 100%)}
+.gate{min-height:auto;display:grid;place-items:center;padding:clamp(2.6rem,7vw,4.4rem) 1rem;border-top:1px solid var(--line);background:radial-gradient(110% 80% at 50% 0%,#1f4a2e 0%,var(--sky) 50%,var(--deep) 100%)}
 .gate-box{width:min(440px,100%);text-align:center}
 .gate-box .pen{font-size:clamp(3rem,11vw,4.6rem);line-height:1.05}
 .gate-box p{color:var(--mute);margin:.9rem 0 1.6rem}
@@ -169,20 +169,7 @@ label{display:grid;gap:.35rem;font-size:.88rem;color:var(--mute)}
 </head>
 <body>
 
-<div class="gate" id="gate">
-  <div class="gate-box">
-    <div class="pen">빛이 숲을<br>떠나는 시간</div>
-    <p>이 사진은 그날 함께한 분들만 볼 수 있어요.<br>참여한 날짜 여섯 자리를 입력해 주세요.</p>
-    <form id="gateForm" autocomplete="off">
-      <input id="pw" inputmode="numeric" maxlength="10" placeholder="예) 250101" aria-label="참여한 날짜 여섯 자리" required>
-      <button class="btn" type="submit">열기</button>
-    </form>
-    <div class="err" id="gateErr" role="alert"></div>
-    <small>날짜를 모르시면 안내받은 문자나 카카오톡 메시지를 확인해 주세요.</small>
-  </div>
-</div>
-
-<div id="app" hidden>
+<div id="app">
 <header class="top">
   <div class="wrap">
     <a class="back" href="/eco.html">← 행사사진 · 제주그래퍼</a>
@@ -191,16 +178,15 @@ label{display:grid;gap:.35rem;font-size:.88rem;color:var(--mute)}
         <h1 class="pen">빛이 숲을 떠나는 시간</h1>
         <p class="lede">해가 기우는 저지곶자왈을 걸으며 궤와 숨골, 오래된 나무 아래에서 숲의 빛이 바뀌는 시간을 보냈습니다. 밤에는 빛으로 그림을 그렸어요. 마음에 드는 사진을 골라 받고, 원본이 필요하면 알려 주세요.</p>
         <div class="acts">
-          <a class="btn ghost" href="#photos">사진 고르기</a>
+          <a class="btn ghost" href="#gate" id="toPhotos">사진첩 열기 🔒</a>
           <a class="btn ghost" href="#video" id="toVideo">영상 보기</a>
-          <a class="btn ghost" id="allDrive" href="#" target="_blank" rel="noopener">전체 폴더 열기 (구글 드라이브)</a>
+          <a class="btn ghost" id="allDrive" href="#" target="_blank" rel="noopener" hidden>전체 폴더 열기 (구글 드라이브)</a>
         </div>
       </div>
       <p class="log">
-        <b>2026. 10. 5 (월)</b> 16:17 – 20:05<br>
+        <b>촬영</b> 16:17 – 20:05<br>
         저지곶자왈 · 한경면 저지리<br>
         2026 제주생태관광 체험 및 평가단 시범프로그램<br>
-        Sony A1 · Galaxy S25<br>
         <b id="countLine"></b>
       </p>
     </div>
@@ -221,6 +207,19 @@ label{display:grid;gap:.35rem;font-size:.88rem;color:var(--mute)}
     </div>
   </section>
 
+<section class="gate" id="gate">
+  <div class="gate-box">
+    <div class="pen" style="font-size:clamp(2.4rem,8vw,3.4rem)">사진첩 열기</div>
+    <p>🔒 사진첩은 그날 함께한 분들만 볼 수 있어요.<br>안내받은 비밀번호 여섯 자리를 입력해 주세요.</p>
+    <form id="gateForm" autocomplete="off">
+      <input id="pw" inputmode="numeric" maxlength="10" placeholder="숫자 여섯 자리" aria-label="비밀번호 여섯 자리" required>
+      <button class="btn" type="submit">열기</button>
+    </form>
+    <div class="err" id="gateErr" role="alert"></div>
+    <small>비밀번호는 문자나 카카오톡으로 안내해 드렸어요.</small>
+  </div>
+</section>
+  <div id="photoArea" hidden>
   <section style="padding-bottom:1.5rem">
     <div class="wrap">
       <h2>사진 받는 법</h2>
@@ -241,11 +240,13 @@ label{display:grid;gap:.35rem;font-size:.88rem;color:var(--mute)}
     </div>
   </div>
   <div class="wrap" id="groups"></div>
+  </div>
 </main>
 
 <footer>
   <div class="wrap">
-    <span>© 2026 JEJUGRAPHER · 2026.10.05 저지곶자왈 — 빛이 숲을 떠나는 시간</span>
+    <span>© 2026 JEJUGRAPHER · 빛이 숲을 떠나는 시간 — 저지곶자왈</span>
+    <span>제작 : <a href="https://jejugrapher.com/" target="_blank" rel="noopener" style="color:var(--glow);font-weight:700;text-decoration:underline;text-underline-offset:3px">제주그래퍼</a></span>
     <span>요청 때 사진 번호를 알려 주시면 더 빨리 찾아 드려요</span>
   </div>
 </footer>
@@ -340,10 +341,10 @@ label{display:grid;gap:.35rem;font-size:.88rem;color:var(--mute)}
 
 <script>
 /* ── 설정 (build_gallery.py가 채움) ─────────────── */
-const SESSION = "261005-jeoji";
+const SESSION = "eco-jeoji";
 const PW_HASH = "0ee25214993efa72d5c7df3b97bd66a93a4c10b177d2997b303dfcd9e2d4cde1";            // sha256("byeolbam-pw:" + 날짜 6자리)
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbwYW8zN_7UyGnbeYpf3A5hSeSp4GVTc3N3Rj3c28WgnOiAZHVDuovvn4WvN5zHE6_WV/exec";       // 구글 Apps Script 웹 앱 (별밤사진관과 같은 창구)
-const YT = "";
+const YT = "Na_Yx3Be0CY";
 const DRIVE_FOLDER = "https://drive.google.com/drive/folders/1xPNSJIeoKlJE99NwDLxRO848GtJAUEfn";
 const PHOTOS = [{"n":"001","t":"16:17","cam":"S25","s":"숲에 들기 전","v":0},{"n":"002","t":"16:17","cam":"S25","s":"숲에 들기 전","v":0},{"n":"003","t":"16:17","cam":"S25","s":"숲에 들기 전","v":0},{"n":"004","t":"16:18","cam":"S25","s":"숲에 들기 전","v":0},{"n":"005","t":"16:18","cam":"S25","s":"숲에 들기 전","v":0},{"n":"006","t":"16:18","cam":"S25","s":"숲에 들기 전","v":0},{"n":"007","t":"16:18","cam":"S25","s":"숲에 들기 전","v":0},{"n":"008","t":"16:19","cam":"S25","s":"숲에 들기 전","v":0},{"n":"009","t":"16:20","cam":"S25","s":"숲에 들기 전","v":0},{"n":"010","t":"16:22","cam":"S25","s":"숲에 들기 전","v":0},{"n":"011","t":"16:22","cam":"S25","s":"숲에 들기 전","v":0},{"n":"012","t":"16:22","cam":"S25","s":"숲에 들기 전","v":0},{"n":"013","t":"16:23","cam":"S25","s":"숲에 들기 전","v":0},{"n":"014","t":"16:52","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"015","t":"16:52","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"016","t":"17:00","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"017","t":"17:00","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"018","t":"17:00","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"019","t":"17:04","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"020","t":"17:04","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"021","t":"17:04","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"022","t":"17:04","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"023","t":"17:04","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"024","t":"17:04","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"025","t":"17:04","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"026","t":"17:05","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"027","t":"17:05","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"028","t":"17:05","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"029","t":"17:05","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"030","t":"17:05","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"031","t":"17:05","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"032","t":"17:05","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"033","t":"17:07","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"034","t":"17:07","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"035","t":"17:07","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"036","t":"17:07","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"037","t":"17:07","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"038","t":"17:07","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"039","t":"17:07","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"040","t":"17:09","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"041","t":"17:13","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"042","t":"17:13","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"043","t":"17:13","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"044","t":"17:13","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"045","t":"17:14","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"046","t":"17:14","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"047","t":"17:14","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"048","t":"17:14","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"049","t":"17:15","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"050","t":"17:16","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"051","t":"17:16","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"052","t":"17:16","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"053","t":"17:16","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"054","t":"17:16","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"055","t":"17:17","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"056","t":"17:17","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"057","t":"17:17","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"058","t":"17:17","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"059","t":"17:17","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"060","t":"17:17","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"061","t":"17:18","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"062","t":"17:18","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"063","t":"17:18","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"064","t":"17:20","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"065","t":"17:20","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"066","t":"17:20","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"067","t":"17:20","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"068","t":"17:20","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"069","t":"17:20","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"070","t":"17:23","cam":"A1","s":"저지곶자왈 숲길","v":1},{"n":"071","t":"17:23","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"072","t":"17:23","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"073","t":"17:23","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"074","t":"17:24","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"075","t":"17:25","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"076","t":"17:25","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"077","t":"17:26","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"078","t":"17:26","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"079","t":"17:26","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"080","t":"17:27","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"081","t":"17:27","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"082","t":"17:28","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"083","t":"17:28","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"084","t":"17:28","cam":"A1","s":"저지곶자왈 숲길","v":0},{"n":"085","t":"17:31","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"086","t":"17:32","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"087","t":"17:32","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"088","t":"17:32","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"089","t":"17:33","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"090","t":"17:33","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"091","t":"17:33","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"092","t":"17:33","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"093","t":"17:33","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"094","t":"17:33","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"095","t":"17:33","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"096","t":"17:33","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"097","t":"17:34","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"098","t":"17:34","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"099","t":"17:34","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"100","t":"17:34","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"101","t":"17:35","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"102","t":"17:35","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"103","t":"17:35","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"104","t":"17:35","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"105","t":"17:36","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"106","t":"17:38","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"107","t":"17:42","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"108","t":"17:46","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"109","t":"17:50","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"110","t":"17:51","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"111","t":"17:51","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"112","t":"17:51","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"113","t":"17:51","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"114","t":"17:54","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"115","t":"17:54","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"116","t":"17:55","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"117","t":"17:55","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"118","t":"17:55","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"119","t":"17:55","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"120","t":"17:55","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"121","t":"17:55","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"122","t":"17:57","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"123","t":"18:00","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"124","t":"18:00","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"125","t":"18:00","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"126","t":"18:00","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"127","t":"18:00","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"128","t":"18:00","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"129","t":"18:03","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"130","t":"18:03","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"131","t":"18:03","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"132","t":"18:05","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"133","t":"18:05","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"134","t":"18:05","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"135","t":"18:05","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"136","t":"18:05","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"137","t":"18:06","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"138","t":"18:06","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"139","t":"18:06","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"140","t":"18:06","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"141","t":"18:07","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"142","t":"18:07","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"143","t":"18:07","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"144","t":"18:07","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"145","t":"18:08","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"146","t":"18:08","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"147","t":"18:08","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"148","t":"18:08","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"149","t":"18:08","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"150","t":"18:09","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"151","t":"18:09","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"152","t":"18:09","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"153","t":"18:09","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"154","t":"18:09","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"155","t":"18:09","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"156","t":"18:09","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"157","t":"18:09","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"158","t":"18:09","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"159","t":"18:09","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"160","t":"18:10","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"161","t":"18:10","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"162","t":"18:10","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"163","t":"18:10","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"164","t":"18:10","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"165","t":"18:10","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"166","t":"18:11","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"167","t":"18:11","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"168","t":"18:11","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"169","t":"18:11","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"170","t":"18:11","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"171","t":"18:11","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"172","t":"18:11","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"173","t":"18:11","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"174","t":"18:11","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"175","t":"18:11","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"176","t":"18:11","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"177","t":"18:12","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"178","t":"18:12","cam":"A1","s":"빛이 숲을 떠나는 시간","v":1},{"n":"179","t":"18:12","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"180","t":"18:12","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"181","t":"18:13","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"182","t":"18:13","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"183","t":"18:19","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"184","t":"18:26","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"185","t":"18:26","cam":"A1","s":"빛이 숲을 떠나는 시간","v":0},{"n":"186","t":"19:23","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"187","t":"19:24","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"188","t":"19:25","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"189","t":"19:26","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"190","t":"19:28","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"191","t":"19:31","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"192","t":"19:33","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"193","t":"19:34","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"194","t":"19:35","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"195","t":"19:36","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"196","t":"19:38","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"197","t":"19:39","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"198","t":"19:40","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"199","t":"19:42","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"201","t":"19:51","cam":"S25","s":"밤, 빛으로 그린 그림","v":0},{"n":"202","t":"20:03","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"203","t":"20:04","cam":"A1","s":"밤, 빛으로 그린 그림","v":0},{"n":"204","t":"20:05","cam":"A1","s":"밤, 빛으로 그린 그림","v":0}];             // [{n,t,cam,s,v}]  v=1 세로 사진
 const IDS = {"001":"18gNBYBt0S75YXn5qnmil40FFZWgvdfhS","002":"10nFSjGr4Hku950oCAZMz9hqkeTL2PjH0","003":"1v3M5MjY1HejBnsyy5gOpbsCTj0y-oy6P","004":"1UiPsVRGaPU9anLs4c1jUtDC3Xqm6-b-O","005":"1h4zrB9tvstxUY5d3RiDMwDp-siQeXMRZ","006":"1-sXt-ms0SCU-IFkqVy8Gz1GMco1bbhwp","007":"13BVzbMas_dOPY3yBtG1IOaIHI3dzYqWS","008":"1MokQ9VmJLvg6EPAhyPZTQeh1cIMf91JI","009":"1IW9rRjb19qWwNuVrEn7Dbc2Vw9kQbLEc","010":"1vPKCZ-5aPl4He6sKluQlDUw5OaepCEm_","011":"1RFDPo4Z9V7oe7efHw0ltcWzsfe-LP3HT","012":"18JjUT7iCSc4GGyTE6y_DoaB2Kuly3f6S","013":"1XyNQ9lRmZU31DrmMdqCwAXjXaaFxOe3k","014":"1vLhMe2DtBcaf7xrVC5hqs2z8nBrMaeML","015":"1YJwrbXfsydrnGnrgnjDxekNog3Y1r752","016":"1Mcdh-dmgAGXLbJkVQTgJH2RgabOwehlD","017":"1P2Dm7laCEFBltMkbdWgRbFYWXfXMOyx5","018":"1X_zq1wxJB_NsJL-A5B-n32buh5d6nEPs","019":"1-fsjlJYhkuwdHZuFNv6GH85xnDTlTmC7","020":"1ZmUMm6e9qoFCcpPNDaYtIob-E3w0USzJ","021":"1v3MCAtJNz40ZIlkp-8aW3V9YWfTj517V","022":"1MV-9tf_M3JAu6H-6oce0KRTOVHVx3rup","023":"1fAkbDPdA9keBLQoEYX-bcUEcK19iX13M","024":"1m4WdBHqRmreuqgQZC0l2tjv-NJCYKKWD","025":"1cNMj1fW2-JopdhGi4lUCLqM6784IaZkd","026":"1ctogizeg2A6xqkWL0-adITATOQTgcTBB","027":"1l66tMK3XHMZQzgKKoFedsNbynJQvjT8B","028":"1k5dA9hTLvf6mX4D_wtDJWCowcxYdfK_d","029":"14o0oyqnR9zoUE5DtlXYvgE2AVjHKIigi","030":"1R5BGltNRmsWjMKA_aFMEvvB97K4Xiws7","031":"1BJnhbYrmgXCbm6KFkey6LdHdUFt-4-y2","032":"1HRSGVEgyab-HsYG2cOm8TLXV8NtbIl54","033":"1nHMcOw3l-5IBo6hkZ4m0j-AvUQcqpe5-","034":"1qKvN3zYNJS94AOslW12xd5mBWCme-myd","035":"17cfF9ULucFh44E-fS_pk0cFKb6lqYwmT","036":"11ptM9naguMnIOfVOxjOqXu__5kmQ2GVX","037":"190gVjKZR_zzkO-4tDvZhRP7fY5ZTZd6_","038":"18eGVyiKzfJ3BVT5QhyrKtHakUUU7Ne1l","039":"1m6bEC28PbPOFWTuXUlDi5OqAjBqEwBKo","040":"1uLssCKcdQIIVD7QNh0Lcr8xnvWTv2DKU","041":"1GceZ3kVw3jsdwc9JIYKUCjwUnc7GQFq9","042":"1ruvj8dfWtKamwdHytPJMdR77yrEO0hra","043":"1TfL1aeohKyMFFwBhSv4kcbTxWMrkCzx8","044":"1oMTwyDMPHOwgYg5XvVC_yNHTnypSepMQ","045":"1hRzET2eyrKBLB4DH6xjdfJqIYBT4p4nB","046":"1zlUOFapUg7eGy_xI4CTFat2oCuAOJnd1","047":"1OoMZ3O70Tv4jCewFA3SV8RBrtXVuZgkN","048":"1J871QDc2qgQWHcf-L0vzLjP1iCf81MYU","049":"1vfAMVH-s5Gv3UnBE-h4P0SdHpIimOcRl","050":"1g78J1bwy36EdbevmTUK1b4J_q2HYpXwt","051":"1_px2F58afJXRbbDxKMD6fhxXAvzZCpGe","052":"1U7IawMsoQ5hdgFMLTc1jusg5gNXzC7M2","053":"1GNaxoQI6hoWQJ_Ra68FWu2wOY_RnTKxh","054":"125Rkpp_X5BMorEm439qDlpZcQNYNU3OK","055":"16c-8tS40OUFS9cAR1L-8B1rZB7sIst3U","056":"1SOA1F7A1Mgm4rv3lvbpsdjJojUst4dPe","057":"10w0y2tqBonx7HV-gN1v67ku8FYBovAuB","058":"1CKyGmIRg3hAQxiA5P3m6KIhJYti4UK46","059":"1_1t7LIB_zMdpnUdBMWedhcvReCLEtOd-","060":"1y60P1nXMgKpbpUB6o8c3E8RKthWCS-dS","061":"1Suo6d_QogIvhDI9qOBL7nzSkYLV3sfCu","062":"1l8ku0WkueHfmhGYLHlrOVXVwNOi84KgX","063":"15lYHr11gfByxQyVEM3UngAisXl5XTDYB","064":"173_diifYDznhpW2Ao3ghRCDJ8wv2CL4l","065":"1XYs-kmQU_AlmTgwS4WPwSEKSGyFvFpaA","066":"1lt92zmPbb1C8XLNcPMRxo8wZcKCuz5zd","067":"1gufbZyF9-iJald89Mq7rvjzw_qvxdEFQ","068":"1RimkeAtfGxXB7LcSP0vppFaKRgdxk9uc","069":"18ZXqOldrror3m_55jygK6WqhjOvGLkuk","070":"1zXtMsEdOz6iL3df4dDvV1TTqXppgsgWj","071":"1RqFU4ITqDSrw9jJ8Co9JwXSFso58mP2T","072":"19lVhzjwTdnH0_WdY3Hu_xQ2bf9YCY6Df","073":"1ykBPp5PtE4WUJQW4U5Iuu1LaH6Bjuw_4","074":"1zqfby5uqtMpjC63t8vWly22KVXZSQcNj","075":"1hlkU4TpOsY2FITKpYGWg7lXsYTT5VqKl","076":"1UHG7BAqXB7nIvcGH0rtTQbaYRf5_M1kq","077":"1vMgav1oBUhobfWJ5CdIbZPqpssG_isxf","078":"1xv7xufRb1ZbCy5VbpWTlmzLo94ijDVjG","079":"1wHAO1RmPKWMkq_QIl9V9VZik1PWXJqK8","080":"1_JBEjpj7G0HwMw507CPLRp_onR42ftuk","081":"1nfICKTOwFDNy00AcqAUCKUTxfavESbwd","082":"1iBAdxaC5OKKZ6fZ4PlG_MHAMfIpBmxJI","083":"1raNaBMcH9sb09aKkTccShlJWOvgxuoV9","084":"1Zs_QMF20WHvEOC-S0PlSEAUrkW6tDEyk","085":"1SKziyZHr4cTbipRCn_2JqCZgt3NDD1hF","086":"1AqFcIlUNvSOgQ-OvLf75Y2UoT3J57mtq","087":"1YDJBOweHPQYqYdNpv2j4fW_Hc_iEtRs7","088":"1urJmQlFATPokBF0pcRVgzhppUS46Tkm4","089":"1I6qNpMlcJWMNl6TmcApfyFax_h_P4G_7","090":"1bL-0oJUmNpC_nYap1Ty-nM13vqn6y7tc","091":"1DdL11hdHOrTxR6vhYCbGCZWh9etbD-JS","092":"1BfTQp-O3o9dgsC9U0xDA4YnX2OLWuWqJ","093":"1-MBJ1SONqqwhHEehw9xvLJ9Q44mx8VZJ","094":"1Jv4I_NOHd8Zyvq8KvDHSAC3WdqaHFxTP","095":"1YKapU7I50SmKojLb9fANGirmkMjlTrBS","096":"1ehimJZVW8plEENqqNUjwkeol22UVIcI-","097":"1lGMsh2rlFy7fgfctXjbkqdtwaDnB6buC","098":"1RVCz5iGQAyrMITeIjgIiq5sxKBMrM-0L","099":"1jsYN9KpzUcAwe4Vz3IAVzXxYzenv5gJK","100":"10YNqbOoFpU2P9Iq9i4nrUdnTbZTnMCOu","101":"1eJDrPWNpM6twLsXXuAidZlT_hUJ0Seo4","102":"1TAcg4LSUGOctWO6Z7sd89kIZMApXQI5g","103":"12BNU_qS6vqKzcYFpj3IVqYTlMb3C71rS","104":"1Q53Lfo_CCgvhp9Hsu30l0-Xyg50M6Hw7","105":"1Cnmy4LpaOMX5V09AS1CQB7MMaKwQcps3","106":"1Z7rXdgxvmKuFs2m7K66f8T16Og36i9qz","107":"1U4Cn35ChPF1Sgc74m0Ldd5-YBnakJv3c","108":"1HtARCmsItfEndziGEJb_IVVX8Nt1Eyks","109":"1421Spc1ZUX25YrDeAO75NuzbZpwgt8OV","110":"1BFcs5lPNcMiZdjzxAmPw1mIgbtyNFTNu","111":"1SFwiEbJGxji9FJj-yVljstvEsZU3AhgQ","112":"1lF_LyQv5Uup7z9rx4nR4cGB8h3fJMTK9","113":"1bww9HWfcwPZlk9aq92mPv_fQSfPjHtiY","114":"1MJn2uefjZv6GmziKUuIp-j0jekLc_wzB","115":"1tJ0VtD0mmc1TIgH4qiSW_pcB72pfaWwE","116":"1H7VuPuArPXHD5Zb2pT8IAvx7sh-0uVW3","117":"1tVQCqP8OS1-svb0XitvflUahSWA5OnPI","118":"11qCKRLgtVI6zmwd8b7x_ExfPuuVNM51W","119":"1QykXCmadGAV8X70yrdQLKwFu1Waktu9H","120":"17-Pi7_XFRKaYhmTmZqtc4f1EkDl38r5R","121":"1FtHIOL-SBefikT3vh9gkdlo-xk2PKErf","122":"194lA8foxz9sMDh9Jy5D3lWBzui0D0ckj","123":"1hkZcyFwiL1ddhktnsKHYgydeCsSi11l6","124":"1Np3oWRjMYXOStMF07yOHFk-v_WKTubqB","125":"1tBnyGfAPAe4pIORTLVmkdjvTbKRckSl0","126":"1rkkpjGUsh9fReJ4QBC96lXExXPU5HjGS","127":"1eBphlf3D0cjN9kwPhGNmGrlJh4y1-aBP","128":"1Kzg0_LUDMZYVTMZ99XfPBXCRQ9eiqgBm","129":"1akpSMukD8m5YaaTOu2aygsO8kugLOZ6I","130":"1YqEWs4rY-sPXNtb_tWmY4oOvanPKA7qI","131":"1pMKj9YbUMPbfG-bME-XgMgK5-2BEdiUm","132":"12-XbOIrs1b5Wz26dKSK-HvCzBXvCEa8O","133":"1hazdyFOUo37iBjZ0hJ2LY49I0rtRc08A","134":"1A8esBkYukshHOEgM-Y48BuiC-vBcjwn3","135":"1H5mxQB5j2NGJd-Kz3gX0RSaa4FK6E_Mq","136":"1y8nzQZ7OX5RwfP-GaZ7uUgINsXpRvmjO","137":"1-AiTt7ondBJJ8r7r6h-3Vv7-kAII8wQv","138":"1Xct9q9SKMuRm8a9VpoEN54WOZGerWGHo","139":"1zpyqRRWYBgBp1Gw0tSuoeBOoB2DzQ7uQ","140":"1oV4WaeGHkJEFlmUKlDC-xVWVIFiBeho9","141":"1zyUyMolsR1h5lRDJNCh2khYImWIuda8d","142":"1sWsdA1OkqMU6fyt0Un5VgCkCT5f9wLVl","143":"1FtzLUXeZH_7syxqGap0ysbsT3WPzcaXz","144":"1brsZeCnX3govIBVbCYii_BC9JzcFGtM0","145":"1Vtr1C_gq9HIsC-NMMK_Q-_gDPn0Q8Fd7","146":"1D1Smm4BrBpttTN0nPj2CULIAGoyCCZOz","147":"1q81DxtZzLV0K5zQzVgQUs-bLcSdJKHhx","148":"1dMwu-GUKHZWM3KlAdJL8SNTxQc_AqVz3","149":"1HCBY_u2m1c96M6ZZyT5d4sjCAEnk4rHO","150":"15q8jALiG1pmcvi2Co7N1-bURAnma7bYc","151":"1XYUOClKsKe7BUHzJW3OAHnxshhzCOBuq","152":"1Rp0W2IXy8iAcX--n46tvXSGJmInCkVxY","153":"1RdXTNZl_HXpRuhzbMnA5gaDdqzp5NVyt","154":"1mhaOQvvgt5aZYg5vTrcCo5zK-WqGJAXE","155":"1XmkTE47G6n4kypqEKguEH4Lk9TcBVo44","156":"1vSIi7s5udAV6Ch2Cmgicuvsc_0DeghtB","157":"1YeXgEOjLHD2T0Clm1_tEXUaMU5ze4_sv","158":"1-DSNtnq6dowvIMGRdvAZboeV6mtWXxSA","159":"1VX_BYUqM9MSVNi-8hEGBdW8tg8xfo8yn","160":"1ukNaHPPFrGM07TIkWhpLybWvzBTihcW_","161":"1KLZpRPTe1_KQmHWMFwW-1FLTrSIoILeB","162":"1vvZ0SFmzFSTj-Ph04xsPO3QlxX_CsUF0","163":"1BD4LFkplbwKksAZHXddxkefeXcR0uWY8","164":"1LEcaFfLGVcAcY4H9t0Szb7qJMXvHgFP9","165":"1rSos22U_D5n-5bMPPZPBae26hczlaMma","166":"17i-11hAUQq6g1MFlU-VseZ4vij-mmfGp","167":"1RyWSJgOfQGIc8BWp-Eff6A9k7NcLEXmI","168":"1rVaRosJX7W7WHpX1l70fIG4-gkgXAAOs","169":"1kiAi7AayzLxawoYjjDvgqBEJFMaE317I","170":"1yqAvQy5C2lABeqVlZypUSmhNn2RaZsYm","171":"1GLblRo7uwJqvBbizcP5MOTdWYpnsxB7J","172":"13IluiuPI9DIyNSqA5ncjmV0Tdb-TQMcj","173":"17D-ZwBzdfOaTWIj-ZSYgxwLUBjGpJePB","174":"1ztfwry3WARaQP9yOU4zcJojtQzcu-ICi","175":"1virECMreNqEPa8G01eSO7_uFU1Y0Vi-V","176":"1sfZiS9IxKg9OjwKyL752RqlABGD4eHww","177":"1_DNGKFVCZjjLqAsWWaTwxvbBKUnFsblk","178":"1pNPkwvuPlBHApGNXBA52Pp0Y3Xpoehk_","179":"17LR6NQU9FhoW3Zr5ANw6lFlp8y0zYa2W","180":"1zlnTywnQ4Lh-ObpPInGhwRI4uiajJtUc","181":"1FKfL3U1RDdpOH-UhQh06bT-iSz8byq7r","182":"1i3f4NKtUdVxsdx5wV0o4MES7o0GguaTD","183":"1RdrM0cMBSa-WrCGfcknw3jJ-YWq85UKQ","184":"1KrtiYwjcZwROnnFOyacCwRw16MgSl5h9","185":"16Eun3VNdVZpbWuotE0YmOcm7XUnu1CHN","186":"1aShGDmFovcNHaBE7vbbaqfZhYNsj1wlK","187":"1W6ycOrfnRrGDIm9HhJ9zEOdISvFJl6kC","188":"1GNiOPOU7LJtfZZaR0tzJjPKUkWyXJyWd","189":"1kyh0FgHVCUJJGW6AjoH4Png96d1N_SJr","190":"1jht_kLjr5V5KxX8BquhoxQnUYZKWAo0_","191":"1QXjTcHsroWrul-JeZpAqUVhToG_OHfLu","192":"10UsKesaps8vur0MDsKj2jhyvbLNaApdf","193":"1aX2i2ef0jZ5k-vZtw-ymHBi7N7UvRcY3","194":"1MYEUvETeDWuJsBZkAGfH1Dc62hbpOmRK","195":"1jhZ6bDIYmuU37MZvx2ztgH7uVqhNh9UW","196":"18s_HPFs9p_HQKA8vZyLIOnCs3wNgrnr8","197":"19F298yXGAQicE8zAvxGHKfBdlT2RsvhM","198":"1yjfTmzQ49_Qhf2X5r-zVjwMl48-4TeNN","199":"1dybGeWpIYITuvJ6oc8csbuNq51GP_AgW","201":"1kLtyx3JdN7jmPgWOtVB7UBnpzSf3rLs8","202":"1MhM1FtF_jyVQ3jIjsyAC_flo2yV6VpEu","203":"1m0VkMgXC4RhMIGaiDuM_po3StcVjcleP","204":"1ET5vD8IjEx0Y8PqOUQ_NyLH8bms4DRNG"};                   // {"2468":"드라이브 파일 ID"}
@@ -360,14 +361,15 @@ async function sha(s) {
   const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
   return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
 }
-function unlock() { $("#gate").hidden = true; $("#app").hidden = false; start(); }
+function unlock() { $("#gate").hidden = true; $("#photoArea").hidden = false; $("#allDrive").hidden = false;
+  $("#toPhotos").textContent = "사진 고르기"; $("#toPhotos").href = "#photos"; start(); }
 $("#gateForm").addEventListener("submit", async e => {
   e.preventDefault();
   if ((await sha("byeolbam-pw:" + normDate($("#pw").value))) === PW_HASH) {
     try { sessionStorage.setItem(KEY, "1"); } catch (err) {}
     $("#gateErr").textContent = ""; unlock();
   } else {
-    $("#gateErr").textContent = "날짜가 맞지 않아요. 참여한 날의 연도 끝 두 자리·월·일을 입력해 주세요.";
+    $("#gateErr").textContent = "비밀번호가 맞지 않아요. 안내받은 여섯 자리를 다시 확인해 주세요.";
     $("#pw").select();
   }
 });
@@ -381,8 +383,7 @@ const SEL_KEY = "jejugrapher-sel-" + SESSION;
 const state = { filter: "전체", list: PHOTOS, idx: 0, sel: new Set() };
 try { JSON.parse(localStorage.getItem(SEL_KEY) || "[]").forEach(n => byN[n] && state.sel.add(n)); } catch (e) {}
 
-function start() {
-  $("#allDrive").href = DRIVE_FOLDER; $("#dlFolder").href = DRIVE_FOLDER;
+function initVideo() {
   $("#countLine").textContent = `사진 ${PHOTOS.length}장`;
   if (YT) {
     $("#video").hidden = false;
@@ -392,6 +393,11 @@ function start() {
     $("#video").hidden = false; $("#player").hidden = true;
   } else $("#toVideo").hidden = true;
   if (VIDEO_DL) { $("#vidDl").hidden = false; $("#vidDl").href = VIDEO_DL; }
+}
+initVideo();
+function start() {
+  $("#allDrive").href = DRIVE_FOLDER; $("#dlFolder").href = DRIVE_FOLDER;
+  
   const cnt = PHOTOS.reduce((m, p) => (m[p.s] = (m[p.s] || 0) + 1, m), {});
   $("#chips").innerHTML = ["전체", ...SECTS.filter(s => cnt[s])].map(l =>
     `<button type="button" class="chip" data-l="${l}" aria-pressed="${l === "전체"}">${l}<span class="c">${l === "전체" ? PHOTOS.length : cnt[l]}</span></button>`).join("");
@@ -537,7 +543,6 @@ $("#playBtn").addEventListener("click", () => {
   let ok = false;
   try { ok = sessionStorage.getItem(KEY) === "1"; } catch (e) {}
   if (ok) return unlock();
-  $("#pw").focus();
 })();
 </script>
 </body>

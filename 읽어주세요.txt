@@ -1,17 +1,20 @@
-jejugrapher-website 저장소에 올릴 파일 (2026-10-06)  —  새 탭 「행사사진」
+jejugrapher.com (저장소 jejugrapher/jejugrapher-website) 에 올릴 파일 — 「행사사진」 새 방식 (2026-10-06)
 
 올리는 방법
-1. https://github.com/jejugrapher/jejugrapher-website 접속
-2. Add file → Upload files
-3. 이 폴더 안의 것들을 통째로 끌어다 놓기:  eco.html · index.html · eco 폴더
-   ('읽어주세요.txt'는 올리지 마세요)
-   - index.html 은 메뉴에 「행사사진」 한 줄만 추가한 것 (나머지는 현재 사이트와 동일)
-4. Commit changes
+1. https://github.com/jejugrapher/jejugrapher-website → Add file → Upload files
+2. 이 폴더 안의 eco.html · eco 폴더 · sound 폴더를 끌어다 놓기 ('읽어주세요.txt'는 제외)
+   - 같은 이름 파일은 덮어씁니다 (10/6에 올린 첫 버전을 바꿈)
+   - index.html 은 이미 「행사사진」 메뉴가 올라가 있어 다시 올릴 필요 없음
+3. Commit changes
 
-올린 뒤 주소
-- 행사사진 탭:        https://jejugrapher.com/eco.html
-- 숨, 평대 사진첩:     https://jejugrapher.com/eco/g/9a0a9d467758/    (비밀번호 261005)
-- 빛이 숲을 떠나는 시간: https://jejugrapher.com/eco/g/409184708a11/    (비밀번호 261005)
+바뀐 것 (jejuecotourism.com 「현장 기록」과 같은 방식, 디자인은 제주그래퍼 사이트)
+- 기록 영상은 누구나 바로 재생 (카드 ▶ · 사진첩 페이지 상단), 사진첩만 비밀번호로 잠금
+- 「체험 및 평가단 시범프로그램」과 「2026 생태관광주간 행사」(화순 사운드워킹 · 제주나무이야기) 구분
+- 날짜 표시 모두 제거 (비밀번호가 참여 날짜라서)
+- 화순 사운드워킹 사진첩은 기존 주소(sound/g/5a1d0c3e7b29) 그대로 새 방식으로 교체 → 유튜브 설명의 링크가 계속 작동
 
-사진은 구글 드라이브 forClaude/261005_* 폴더의 파일을 그대로 보여 줍니다.
-드라이브에 사진을 더 올리면 Claude에게 알려 주세요 → 파일 ID를 다시 읽어 index.html 을 새로 만들어 드립니다.
+주소
+- https://jejugrapher.com/eco.html
+- 숨, 평대 https://jejugrapher.com/eco/g/9a0a9d467758/
+- 빛이 숲을 떠나는 시간 https://jejugrapher.com/eco/g/409184708a11/
+- 화순곶자왈 사운드워킹 https://jejugrapher.com/sound/g/5a1d0c3e7b29/
