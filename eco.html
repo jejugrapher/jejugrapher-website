@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>행사사진 | 2026 제주 생태관광 기록 | JEJUGRAPHER</title>
+<meta name="description" content="2026 생태관광주간 제주 · 체험 및 평가단 시범프로그램의 사진과 영상을 참여자에게 나누는 곳입니다. 참여한 프로그램을 고르고 날짜를 입력하면 사진을 받을 수 있어요.">
+<meta property="og:title" content="행사사진 | 2026 제주 생태관광 기록">
+<meta property="og:description" content="곶자왈·오름·습지에서 함께한 시간을 사진과 영상으로 나눕니다.">
+<meta property="og:image" content="https://jejugrapher.com/eco/cover.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* 제주그래퍼 본 사이트(크림·남색·흙빛)에 숲 초록을 더한 색 */
+:root{
+  --bg:#F8F4EC; --paper:#FFFDF8; --navy:#1F3A5F; --terra:#C97B5B; --ink:#2C2825; --line:#E3DCCE;
+  --forest:#24452F; --moss:#5E7B4F; --mute:#6E675E; --soft:#EEE7D9;
+  --serif:"Gowun Batang","Noto Serif KR",serif; --sans:"IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font:400 1rem/1.75 var(--sans);background:var(--bg);color:var(--ink);word-break:keep-all;overflow-wrap:break-word}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+h1,h2,h3{font-family:var(--serif);font-weight:700}
+:focus-visible{outline:2px solid var(--terra);outline-offset:3px}
+.wrap{width:min(1180px,100% - 2rem);margin-inline:auto}
+
+nav{position:sticky;top:0;z-index:20;background:rgba(248,244,236,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
+.navin{height:64px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.logo{font-family:var(--serif);font-weight:700;font-size:19px;letter-spacing:2px;color:var(--navy)}
+.menu{display:flex;gap:22px;font-size:14px}
+.menu a:hover{color:var(--terra)}
+.menu a[aria-current]{color:var(--terra);font-weight:500}
+
+/* 머리 */
+.hero{position:relative;isolation:isolate;min-height:min(78svh,720px);display:flex;align-items:flex-end;color:#FBF8F1;overflow:hidden;background:var(--forest)}
+.hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(20,34,24,.15) 0%,rgba(20,34,24,.05) 35%,rgba(20,34,24,.78) 100%)}
+.hero .wrap{padding:6rem 0 3.2rem}
+.eyebrow{font:500 .82rem/1.6 var(--mono);letter-spacing:.18em;color:#E9D9B8}
+.hero h1{font-size:clamp(2.3rem,6.4vw,4.2rem);line-height:1.22;margin:.7rem 0 1rem;text-shadow:0 2px 24px rgba(0,0,0,.35)}
+.hero p{max-width:36em;font-size:clamp(1rem,1.9vw,1.12rem);color:#F1ECE1;text-shadow:0 1px 14px rgba(0,0,0,.4)}
+
+section{padding:clamp(3.5rem,8vw,6rem) 0}
+.shead{display:grid;grid-template-columns:minmax(0,15rem) minmax(0,1fr);gap:.6rem 3rem;align-items:baseline;margin-bottom:2rem}
+.snum{font:500 .8rem var(--mono);letter-spacing:.12em;color:var(--terra)}
+.shead h2{font-size:clamp(1.6rem,3.6vw,2.3rem);line-height:1.35;color:var(--navy)}
+.shead p{grid-column:2;color:var(--mute);max-width:40em}
+
+/* 받는 법 */
+.how{background:var(--paper);border-block:1px solid var(--line)}
+.how ol{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1.2rem,3vw,2.6rem);counter-reset:s}
+.how li{counter-increment:s;border-top:2px solid var(--forest);padding-top:1rem}
+.how li::before{content:"0" counter(s);display:block;font:500 .85rem var(--mono);color:var(--terra);margin-bottom:.3rem}
+.how b{display:block;font-family:var(--serif);font-size:1.15rem;color:var(--forest);margin-bottom:.25rem}
+.how li p{color:var(--mute);font-size:.96rem}
+
+/* 프로그램 카드 */
+.day{margin-top:2.6rem}
+.day:first-of-type{margin-top:0}
+.day h3{font:500 .95rem var(--mono);color:var(--forest);display:flex;gap:.8rem;align-items:center;margin-bottom:1rem}
+.day h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.4rem}
+.pc{display:grid;grid-template-rows:auto 1fr;background:var(--paper);border:1px solid var(--line);transition:transform .25s ease,box-shadow .25s ease}
+a.pc:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(31,58,95,.45)}
+.pc .ph{position:relative;aspect-ratio:16/10;background:var(--soft);overflow:hidden}
+.pc .ph img{width:100%;height:100%;object-fit:cover}
+.pc .ph .none{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);color:#A69C8B;font-size:1.05rem;background:repeating-linear-gradient(135deg,var(--soft) 0 14px,#E8E0D0 14px 28px)}
+.badge{position:absolute;top:.7rem;left:.7rem;font:500 .74rem/1 var(--mono);padding:.42rem .55rem;background:var(--forest);color:#F4EFE4}
+.badge.wait{background:#FFFDF8;color:var(--mute);border:1px solid var(--line)}
+.pc .bd{padding:1.1rem 1.2rem 1.25rem;display:flex;flex-direction:column;gap:.35rem}
+.pc .when{font:400 .8rem var(--mono);color:var(--terra)}
+.pc h4{font-family:var(--serif);font-size:1.3rem;line-height:1.35;color:var(--navy)}
+.pc .sub{color:var(--forest);font-size:.95rem}
+.pc .where{color:var(--mute);font-size:.9rem}
+.pc .has{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:auto;padding-top:.7rem}
+.pc .has span{font-size:.78rem;border:1px solid var(--line);padding:.12rem .5rem;color:var(--mute)}
+.pc .has span.on{border-color:var(--moss);color:var(--forest)}
+.pc .go{margin-top:.55rem;font-weight:500;color:var(--terra);font-size:.92rem}
+
+.note{background:var(--forest);color:#EFEADF}
+.note .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2rem 4rem}
+.note h2{font-size:clamp(1.5rem,3vw,2rem);line-height:1.4;color:#FBF7EE}
+.note p{color:#D9D4C6}
+.note a{color:#F2D6A2;border-bottom:1px solid rgba(242,214,162,.4)}
+
+footer{padding:2.4rem 0 3rem;border-top:1px solid var(--line);color:var(--mute);font-size:.85rem}
+footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+
+@media (max-width:860px){
+  .menu{display:none}
+  .shead,.note .wrap{grid-template-columns:minmax(0,1fr)}
+  .shead p{grid-column:1}
+  .how ol{grid-template-columns:minmax(0,1fr)}
+  .cards{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap navin">
+    <a class="logo" href="index.html">JEJUGRAPHER</a>
+    <div class="menu">
+      <a href="index.html#filming">촬영</a>
+      <a href="index.html#editing">편집</a>
+      <a href="byeolbam.html">별밤사진관</a>
+      <a href="eco.html" aria-current="page">행사사진</a>
+      <a href="inquiry.html">문의</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <img src="eco/cover.jpg" alt="저지곶자왈 숲길을 함께 걷는 참여자들">
+  <div class="wrap">
+    <div class="eyebrow">2026 생태관광주간 제주 · 체험 및 평가단</div>
+    <h1>곶자왈·오름·습지에서<br>함께한 시간을 나눕니다</h1>
+    <p>제주그래퍼가 기록한 생태관광 프로그램의 사진과 영상입니다. 참여한 프로그램을 누르고, 그날 날짜 여섯 자리를 넣으면 사진을 보고 받을 수 있어요.</p>
+  </div>
+</header>
+
+<section class="how">
+  <div class="wrap">
+    <div class="shead">
+      <div class="snum">HOW TO</div>
+      <h2>사진 받는 법</h2>
+    </div>
+    <ol>
+      <li><b>프로그램 고르기</b><p>아래 목록에서 참여한 프로그램을 누르세요. 사진이 올라온 프로그램에는 「사진 공개」 표시가 붙어 있어요.</p></li>
+      <li><b>날짜 여섯 자리 넣기</b><p>참여한 날의 연도 끝 두 자리·월·일입니다. 예) 2026년 10월 5일 → <b style="display:inline;font:500 1rem var(--mono)">261005</b></p></li>
+      <li><b>골라서 받기 · 원본 요청</b><p>마음에 드는 사진을 골라 한꺼번에 받고, 인화용 원본이나 내리고 싶은 사진이 있으면 페이지에서 바로 알려 주세요.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="pilot">
+  <div class="wrap">
+    <div class="shead">
+      <div class="snum">PILOT · 10.05 – 10.07</div>
+      <h2>체험 및 평가단 시범프로그램</h2>
+      <p>「곶자왈·오름·습지의 감각적 재발견, ‘제주다운 생태관광’ 프로그램 개발」 — 평가단과 함께 평대·저지·호근·하례·선흘을 걸었습니다.</p>
+    </div>
+    <div id="pilotList"></div>
+  </div>
+</section>
+
+<section id="week" style="background:var(--paper);border-top:1px solid var(--line)">
+  <div class="wrap">
+    <div class="shead">
+      <div class="snum">ECO WEEK · 10.03 – 10.09</div>
+      <h2>2026 생태관광주간 행사</h2>
+      <p>「제주, 나만의 계절이 되다」 — 생태관광주간 프로그램 가운데 제주그래퍼가 기록한 행사입니다. 프로그램 안내는 <a href="https://jejuecotourism.com/" target="_blank" rel="noopener" style="color:var(--terra);border-bottom:1px solid">jejuecotourism.com</a>에서 볼 수 있어요.</p>
+    </div>
+    <div id="weekList"></div>
+  </div>
+</section>
+
+<section class="note">
+  <div class="wrap">
+    <h2>사진 속 얼굴이 마음에 걸리면<br>바로 알려 주세요</h2>
+    <div>
+      <p>사진첩은 그날 함께한 분들만 열 수 있도록 날짜로 잠가 두었습니다. 공개되길 원하지 않는 사진은 사진첩의 「원본 요청 → 사진 내려 주세요」로 보내 주시면 확인하는 대로 내립니다.</p>
+      <p style="margin-top:.8rem">단체 기록 영상·보도용 사진이 필요하신 기관·마을 담당자께서는 <a href="inquiry.html">문의</a>로 연락 주세요.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 JEJUGRAPHER · 제주그래퍼 전현석</span>
+    <span>주최·주관 제주생태관광협회 · 제주생태관광지원센터</span>
+  </div>
+</footer>
+
+<script>
+/* 프로그램 목록 — 사진첩을 올릴 때마다 여기만 고칩니다.
+   url: 사진첩 주소(없으면 준비 중), img: 카드 사진, has: [사진, 영상] 공개 여부 */
+const PILOT = [
+  { d:"10.05 (월)", t:"숨, 평대", s:"평대의 향을 담은 — 인헤일러 · 순비기 향낭 만들기", w:"평대 돝오름 ~ 평대리생태체험장 · 구좌읍 평대리", url:"eco/g/9a0a9d467758/", img:"eco/g/9a0a9d467758/cover.jpg", has:[1,0] },
+  { d:"10.05 (월)", t:"빛이 숲을 떠나는 시간", s:"해 질 녘 저지곶자왈", w:"저지곶자왈 · 한경면 저지리", url:"eco/g/409184708a11/", img:"eco/g/409184708a11/cover.jpg", has:[1,0] },
+  { d:"10.06 (화)", t:"다시, 대나무", s:"오영희 장인의 호근", w:"호근동 복지회관 ~ 하논 ~ 치유의 숲 · 서귀포시 호근동", url:"", img:"", has:[0,0] },
+  { d:"10.06 (화)", t:"하례리 보물찾기", s:"고살리숲 — 밧줄놀이 · 숲속 보물찾기 · 해먹", w:"고살리숲 · 남원읍 하례리", url:"", img:"", has:[0,0] },
+  { d:"10.07 (수)", t:"동백동산 기후탐사대 · 오감열기 프로젝트", s:"탄소 흡수원 찾기 · 동백동산에서 오감 찾기", w:"동백동산 일대 · 조천읍 선흘리", url:"", img:"", has:[0,0] },
+];
+const WEEK = [
+  { d:"10.03 (토)", t:"화순곶자왈 사운드워킹", s:"헤드셋을 쓰고 숲의 소리를 따라 걷기 · ㈜더사운드벙커", w:"화순곶자왈 생태탐방숲길 · 안덕면 화순리", url:"sound/g/5a1d0c3e7b29/", img:"sound/g/5a1d0c3e7b29/cover.jpg", has:[1,1] },
+  { d:"10.04 (일)", t:"이성권과 함께하는 제주나무이야기", s:"동백동산 곶자왈과 습지의 나무 이야기 · (주)평화여행자", w:"동백동산습지센터 · 조천읍 선흘리", url:"", img:"", has:[0,0] },
+];
+function cards(list){
+  const days=[...new Set(list.map(p=>p.d))];
+  return days.map(d=>`<div class="day"><h3>${d}</h3><div class="cards">${list.filter(p=>p.d===d).map(p=>{
+    const open=!!p.url, tag=open?"a":"div";
+    return `<${tag} class="pc"${open?` href="${p.url}"`:""}>
+      <div class="ph">${p.img?`<img src="${p.img}" alt="" loading="lazy">`:`<span class="none">${open?"":"사진 준비 중"}</span>`}
+        <span class="badge${open?"":" wait"}">${open?"사진 공개":"준비 중"}</span></div>
+      <div class="bd"><span class="when">${p.d}</span><h4>${p.t}</h4><span class="sub">${p.s}</span><span class="where">${p.w}</span>
+        <div class="has"><span class="${p.has[0]?"on":""}">사진${p.has[0]?"":" 준비 중"}</span><span class="${p.has[1]?"on":""}">영상${p.has[1]?"":" 준비 중"}</span></div>
+        ${open?`<span class="go">사진첩 열기 →</span>`:""}</div></${tag}>`;}).join("")}</div></div>`).join("");
+}
+document.getElementById("pilotList").innerHTML=cards(PILOT);
+document.getElementById("weekList").innerHTML=cards(WEEK);
+</script>
+</body>
+</html>
