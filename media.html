@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>영상 · 사진 보기 | JEJUGRAPHER 제주그래퍼</title>
+<meta name="description" content="제주그래퍼가 촬영·제작한 영상과 사진을 한곳에서 — 생태관광·행사 기록, 드론·FPV, 360° VR, 별밤·야간 사진, AI 영상·음악 채널.">
+<meta property="og:title" content="영상 · 사진 보기 | 제주그래퍼">
+<meta property="og:description" content="생태관광·행사 기록, 드론·FPV, 360° VR, 별밤, AI 영상 — 제주그래퍼의 모든 채널.">
+<meta property="og:image" content="https://jejugrapher.com/eco/cover.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* 제주그래퍼 본 사이트(크림·남색·흙빛)에 숲 초록을 더한 색 */
+:root{
+  --bg:#F8F4EC; --paper:#FFFDF8; --navy:#1F3A5F; --terra:#C97B5B; --ink:#2C2825; --line:#E3DCCE;
+  --forest:#24452F; --moss:#5E7B4F; --mute:#6E675E; --soft:#EEE7D9;
+  --serif:"Gowun Batang","Noto Serif KR",serif; --sans:"IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font:400 1rem/1.75 var(--sans);background:var(--bg);color:var(--ink);word-break:keep-all;overflow-wrap:break-word}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+h1,h2,h3{font-family:var(--serif);font-weight:700}
+:focus-visible{outline:2px solid var(--terra);outline-offset:3px}
+.wrap{width:min(1180px,100% - 2rem);margin-inline:auto}
+
+nav{position:sticky;top:0;z-index:20;background:rgba(248,244,236,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
+.navin{height:64px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.logo{font-family:var(--serif);font-weight:700;font-size:19px;letter-spacing:2px;color:var(--navy)}
+.menu{display:flex;gap:22px;font-size:14px}
+.menu a:hover{color:var(--terra)}
+.menu a[aria-current]{color:var(--terra);font-weight:500}
+
+/* 머리 */
+.hero{position:relative;isolation:isolate;min-height:min(78svh,720px);display:flex;align-items:flex-end;color:#FBF8F1;overflow:hidden;background:var(--forest)}
+.hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(20,34,24,.15) 0%,rgba(20,34,24,.05) 35%,rgba(20,34,24,.78) 100%)}
+.hero .wrap{padding:6rem 0 3.2rem}
+.eyebrow{font:500 .82rem/1.6 var(--mono);letter-spacing:.18em;color:#E9D9B8}
+.hero h1{font-size:clamp(2.3rem,6.4vw,4.2rem);line-height:1.22;margin:.7rem 0 1rem;text-shadow:0 2px 24px rgba(0,0,0,.35)}
+.hero p{max-width:36em;font-size:clamp(1rem,1.9vw,1.12rem);color:#F1ECE1;text-shadow:0 1px 14px rgba(0,0,0,.4)}
+
+section{padding:clamp(3.5rem,8vw,6rem) 0}
+.shead{display:grid;grid-template-columns:minmax(0,15rem) minmax(0,1fr);gap:.6rem 3rem;align-items:baseline;margin-bottom:2rem}
+.snum{font:500 .8rem var(--mono);letter-spacing:.12em;color:var(--terra)}
+.shead h2{font-size:clamp(1.6rem,3.6vw,2.3rem);line-height:1.35;color:var(--navy)}
+.shead p{grid-column:2;color:var(--mute);max-width:40em}
+
+/* 받는 법 */
+.how{background:var(--paper);border-block:1px solid var(--line)}
+.how ol{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1.2rem,3vw,2.6rem);counter-reset:s}
+.how li{counter-increment:s;border-top:2px solid var(--forest);padding-top:1rem}
+.how li::before{content:"0" counter(s);display:block;font:500 .85rem var(--mono);color:var(--terra);margin-bottom:.3rem}
+.how b{display:block;font-family:var(--serif);font-size:1.15rem;color:var(--forest);margin-bottom:.25rem}
+.how li p{color:var(--mute);font-size:.96rem}
+
+/* 프로그램 카드 */
+.day{margin-top:2.6rem}
+.day:first-of-type{margin-top:0}
+.day h3{font:500 .95rem var(--mono);color:var(--forest);display:flex;gap:.8rem;align-items:center;margin-bottom:1rem}
+.day h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.4rem}
+.pc{display:grid;grid-template-rows:auto 1fr;background:var(--paper);border:1px solid var(--line);transition:transform .25s ease,box-shadow .25s ease}
+a.pc:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(31,58,95,.45)}
+.pc .ph{position:relative;aspect-ratio:16/10;background:var(--soft);overflow:hidden}
+.pc .ph img{width:100%;height:100%;object-fit:cover}
+.pc .ph .none{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);color:#A69C8B;font-size:1.05rem;background:repeating-linear-gradient(135deg,var(--soft) 0 14px,#E8E0D0 14px 28px)}
+.badge{position:absolute;top:.7rem;left:.7rem;font:500 .74rem/1 var(--mono);padding:.42rem .55rem;background:var(--forest);color:#F4EFE4}
+.badge.wait{background:#FFFDF8;color:var(--mute);border:1px solid var(--line)}
+.pc .bd{padding:1.1rem 1.2rem 1.25rem;display:flex;flex-direction:column;gap:.35rem}
+.pc .when{font:400 .8rem var(--mono);color:var(--terra)}
+.pc h4{font-family:var(--serif);font-size:1.3rem;line-height:1.35;color:var(--navy)}
+.pc .sub{color:var(--forest);font-size:.95rem}
+.pc .where{color:var(--mute);font-size:.9rem}
+.pc .has{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:auto;padding-top:.7rem}
+.pc .has span{font-size:.78rem;border:1px solid var(--line);padding:.12rem .5rem;color:var(--mute)}
+.pc .has span.on{border-color:var(--moss);color:var(--forest)}
+.pc .go{margin-top:.55rem;font-weight:500;color:var(--terra);font-size:.92rem}
+
+.pc .ph{display:block;border:0;padding:0;width:100%;cursor:pointer}
+.playic{position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;background:rgba(201,123,91,.94);color:#fff;display:grid;place-items:center;font-size:1.3rem;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.pc .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:12px}
+.pc .act{flex:1;min-width:130px;text-align:center;font:500 .92rem var(--sans);padding:.65em 1em;cursor:pointer}
+.pc .act.play{background:var(--terra);color:#fff;border:0}
+.pc .act.play:hover{background:#b56a4c}
+.pc .act.lock{border:1px solid var(--navy);color:var(--navy);background:#fff}
+.pc .act.lock:hover{background:var(--navy);color:#fff}
+#yt{border:0;padding:0;background:transparent;width:min(960px,94vw)}
+#yt::backdrop{background:rgba(20,24,30,.86)}
+.note{background:var(--forest);color:#EFEADF}
+.note .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2rem 4rem}
+.note h2{font-size:clamp(1.5rem,3vw,2rem);line-height:1.4;color:#FBF7EE}
+.note p{color:#D9D4C6}
+.note a{color:#F2D6A2;border-bottom:1px solid rgba(242,214,162,.4)}
+
+footer{padding:2.4rem 0 3rem;border-top:1px solid var(--line);color:var(--mute);font-size:.85rem}
+footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+
+@media (max-width:860px){
+  .shead,.note .wrap{grid-template-columns:minmax(0,1fr)}
+  .shead p{grid-column:1}
+  .how ol{grid-template-columns:minmax(0,1fr)}
+  .cards{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* 휴대폰: ☰ 메뉴 버튼 → 누르면 메뉴 목록이 아래로 펼쳐짐 (모든 메뉴를 한눈에, 크게 눌러지게) */
+.mtog{display:none}
+@media (max-width:860px){
+  html{scroll-padding-top:76px}
+  .mtog{display:inline-flex;align-items:center;gap:6px;height:42px;padding:0 16px;border:1px solid rgba(26,43,74,.25);border-radius:999px;background:#fff;color:#1A2B4A;font:500 15px/1 inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .mtog[aria-expanded="true"]{background:#1A2B4A;color:#fff}
+  .menu{display:none!important;position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:0!important;background:#F8F4EC;border-bottom:1px solid rgba(0,0,0,.1);box-shadow:0 14px 28px rgba(0,0,0,.12);padding:4px 0 10px;max-height:calc(100vh - 64px);max-height:calc(100dvh - 64px);overflow-y:auto;font-size:16px!important}
+  .menu.open{display:flex!important}
+  .menu a{display:block;padding:15px 24px;border-top:1px solid rgba(0,0,0,.07);font-size:16px}
+  .menu a:first-child{border-top:0}
+}
+
+/* 기록 영상 창: 화면 한가운데, 뒤는 어둡게, 닫기는 영상 위 오른쪽 */
+#yt{margin:auto!important;border:0;padding:0;background:transparent;width:min(960px,calc(100vw - 24px));max-width:none;overflow:visible}
+#yt::backdrop{background:rgba(10,12,14,.88)}
+#yt .ytbar{display:flex;justify-content:flex-end;margin-bottom:10px}
+#yt #ytx{float:none!important;margin:0!important;min-height:44px;padding:.5em 1.3em!important;font-weight:700;border-radius:999px;background:#fff;border:0;cursor:pointer;color:#222}
+
+/* 영상·사진 보기 */
+.tabs{position:sticky;top:64px;z-index:15;background:rgba(248,244,236,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
+.tabs .wrap{display:flex;flex-wrap:wrap;gap:.45rem;padding:.7rem 0}
+.tabs a{font:500 .9rem var(--sans);padding:.5em 1em;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--navy);white-space:nowrap}
+.tabs a:hover,.tabs a.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.grp{scroll-margin-top:130px}
+.grp+.grp{border-top:1px solid var(--line)}
+.grp:nth-of-type(even){background:var(--paper)}
+.ch{margin-top:2.2rem}
+.ch:first-of-type{margin-top:0}
+.ch header{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:1rem;align-items:center;margin-bottom:1rem}
+.ch .av{width:64px;height:64px;border-radius:50%;object-fit:cover;background:var(--soft)}
+.ch h3{font-size:1.25rem;color:var(--navy);line-height:1.35}
+.ch .hd{font:400 .8rem var(--mono);color:var(--terra)}
+.ch header p{color:var(--mute);font-size:.92rem;margin-top:.15rem}
+.ch .sub{font:500 .88rem var(--sans);border:1px solid var(--navy);color:var(--navy);padding:.5em 1em;white-space:nowrap}
+.ch .sub:hover{background:var(--navy);color:#fff}
+.vg{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+.vt{display:grid;gap:.45rem;text-align:left;background:none;border:0;padding:0;cursor:pointer;font:inherit;color:inherit}
+.vt .th{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--soft)}
+.vt .th img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+.vt:hover .th img{transform:scale(1.04)}
+.vt .th i{position:absolute;top:.5rem;left:.5rem;font:500 .7rem/1 var(--mono);font-style:normal;background:#E8443A;color:#fff;padding:.3rem .45rem}
+.vt .pl{position:absolute;right:.5rem;bottom:.5rem;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;display:grid;place-items:center;font-size:.8rem}
+.vt b{font-weight:500;font-size:.93rem;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.empty{color:var(--mute);font-size:.92rem;border:1px dashed var(--line);padding:1rem}
+.sub2{font:500 .95rem var(--mono);color:var(--forest);display:flex;gap:.8rem;align-items:center;margin:2.6rem 0 1rem}
+.sub2::after{content:"";flex:1;height:1px;background:var(--line)}
+.more{display:inline-block;margin-top:1.4rem;font-weight:500;color:var(--terra);border-bottom:1px solid}
+@media (max-width:860px){
+  .shead{grid-template-columns:minmax(0,1fr)}.shead p{grid-column:1}
+  .ch header{grid-template-columns:52px minmax(0,1fr)}.ch .av{width:52px;height:52px}
+  .ch .sub{grid-column:1/-1;justify-self:start}
+  .vg{grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}
+  .vt b{font-size:.86rem}
+  .tabs{top:64px}
+  .tabs .wrap{gap:.35rem}.tabs a{font-size:.84rem;padding:.45em .85em}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap navin">
+    <a class="logo" href="index.html">JEJUGRAPHER</a>
+    <button class="mtog" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="siteMenu">☰ 메뉴</button>
+    <div class="menu" id="siteMenu">
+      <a href="spatial/index.html">공간데이터</a>
+      <a href="index.html#filming">영상 제작</a>
+      <a href="index.html#web">웹·체험 제작</a>
+      <a href="aiclass.html">AI 강의</a>
+      <a href="byeolbam.html">별밤사진관</a>
+      <a href="media.html" aria-current="page">영상·사진 보기</a>
+      <a href="https://jajumap.com" target="_blank" rel="noopener">제주맵 ↗</a>
+      <a href="inquiry.html">문의</a>
+    </div>
+  </div>
+</nav>
+<header class="hero">
+  <img src="eco/cover.jpg" alt="저지곶자왈 숲길을 함께 걷는 사람들">
+  <div class="wrap">
+    <div class="eyebrow">JEJUGRAPHER · VIDEO &amp; PHOTO</div>
+    <h1>제주그래퍼의<br>영상과 사진</h1>
+    <p>숲과 바다, 하늘과 밤하늘에서 찍고 만든 것들을 한곳에 모았습니다. 생태관광·행사 기록, 드론·FPV, 360° VR, 별밤 사진, AI로 만든 영상과 음악까지 — 카드를 누르면 바로 재생됩니다.</p>
+  </div>
+</header>
+<nav class="tabs" aria-label="영상·사진 분류"><div class="wrap"><a href="#eco">생태관광 · 행사 기록</a><a href="#drone">드론 · FPV</a><a href="#vr">360° VR</a><a href="#night">별밤 · 야간 사진</a><a href="#ai">AI 영상 · 음악</a></div></nav>
+<main>
+<section class="grp" id="eco"><div class="wrap"><div class="shead"><div class="snum">ECO · EVENTS</div><h2>생태관광 · 행사 기록</h2><p>제주의 숲·오름·습지·바다에서 열린 생태관광과 행사를 기록합니다. 기록 영상은 바로 볼 수 있고, 사진첩은 함께한 분들께 안내한 비밀번호로 열립니다.</p></div><div class="sub2">2026 생태관광 체험 및 평가단 시범프로그램</div><div class="cards"><div class="pc"><button type="button" class="ph" data-yt="xWmK9Opii3w" aria-label="숨, 평대 기록 영상 보기"><img src="eco/g/9a0a9d467758/cover.jpg" alt="" loading="lazy"><span class="playic" aria-hidden="true">▶</span><span class="badge">영상 · 사진</span></button><div class="bd"><h4>숨, 평대</h4><span class="sub">바다를 품은 순비기 향낭 · 평대의 향을 담은 AROMATIC THERAPY INHALER</span><span class="where">평대 돝오름 ~ 평대리생태체험장 · 구좌읍 평대리</span><div class="acts"><button type="button" class="act play" data-yt="xWmK9Opii3w">▶ 기록 영상 보기</button><a class="act lock" href="eco/g/9a0a9d467758/">🔒 사진첩 열기</a></div></div></div><div class="pc"><button type="button" class="ph" data-yt="Na_Yx3Be0CY" aria-label="빛이 숲을 떠나는 시간 기록 영상 보기"><img src="eco/g/409184708a11/cover.jpg" alt="" loading="lazy"><span class="playic" aria-hidden="true">▶</span><span class="badge">영상 · 사진</span></button><div class="bd"><h4>빛이 숲을 떠나는 시간</h4><span class="sub">해 질 녘 저지곶자왈</span><span class="where">저지곶자왈 · 한경면 저지리</span><div class="acts"><button type="button" class="act play" data-yt="Na_Yx3Be0CY">▶ 기록 영상 보기</button><a class="act lock" href="eco/g/409184708a11/">🔒 사진첩 열기</a></div></div></div><div class="pc"><button type="button" class="ph" data-yt="gg6-9TWov0g" aria-label="다시, 대나무 · 미로숲길에서 쉬멍, 맛있게 차롱 기록 영상 보기"><img src="eco/g/c211db604c81/cover.jpg" alt="" loading="lazy"><span class="playic" aria-hidden="true">▶</span><span class="badge">영상 · 사진</span></button><div class="bd"><h4>다시, 대나무 · 미로숲길에서 쉬멍, 맛있게 차롱</h4><span class="sub">오영희 장인의 호근</span><span class="where">호근동 마을회관 · 하논 · 서귀포 치유의숲</span><div class="acts"><button type="button" class="act play" data-yt="gg6-9TWov0g">▶ 기록 영상 보기</button><a class="act lock" href="eco/g/c211db604c81/">🔒 사진첩 열기</a></div></div></div><div class="pc"><button type="button" class="ph" data-yt="RWKi5WYQKMY" aria-label="하례리 보물찾기 기록 영상 보기"><img src="eco/g/4fee7759275a/cover.jpg" alt="" loading="lazy"><span class="playic" aria-hidden="true">▶</span><span class="badge">영상 · 사진</span></button><div class="bd"><h4>하례리 보물찾기</h4><span class="sub">고살리숲 — 밧줄놀이 · 숲속 보물찾기</span><span class="where">고살리숲 · 남원읍 하례리</span><div class="acts"><button type="button" class="act play" data-yt="RWKi5WYQKMY">▶ 기록 영상 보기</button><a class="act lock" href="eco/g/4fee7759275a/">🔒 사진첩 열기</a></div></div></div><div class="pc"><a class="ph" href="eco/g/204c499ab3c1/"><img src="eco/g/204c499ab3c1/cover.jpg" alt="" loading="lazy"><span class="badge">사진 공개</span></a><div class="bd"><h4>동백동산 오감찾기 프로젝트</h4><span class="sub">손으로 · 코로 · 귀로 · 눈으로 만나는 람사르습지 곶자왈</span><span class="where">동백동산 · 조천읍 선흘리</span><div class="acts"><a class="act lock" href="eco/g/204c499ab3c1/">🔒 사진첩 열기</a></div></div></div></div><div class="sub2">2026 생태관광주간 행사</div><div class="cards"><div class="pc"><button type="button" class="ph" data-yt="Gi_NvWsjuMM" aria-label="화순곶자왈 사운드워킹 기록 영상 보기"><img src="sound/g/5a1d0c3e7b29/cover.jpg" alt="" loading="lazy"><span class="playic" aria-hidden="true">▶</span><span class="badge">영상 · 사진</span></button><div class="bd"><h4>화순곶자왈 사운드워킹</h4><span class="sub">헤드셋을 쓰고 숲의 소리를 따라 걷기 · ㈜더사운드벙커</span><span class="where">화순곶자왈 생태탐방숲길 · 안덕면 화순리</span><div class="acts"><button type="button" class="act play" data-yt="Gi_NvWsjuMM">▶ 기록 영상 보기</button><a class="act lock" href="sound/g/5a1d0c3e7b29/">🔒 사진첩 열기</a></div></div></div><div class="pc"><button type="button" class="ph" data-yt="I6uVG54iCM8" aria-label="이성권과 함께하는 제주나무이야기 기록 영상 보기"><img src="eco/tree_cover.jpg" alt="" loading="lazy"><span class="playic" aria-hidden="true">▶</span><span class="badge">영상 공개</span></button><div class="bd"><h4>이성권과 함께하는 제주나무이야기</h4><span class="sub">동백동산 곶자왈과 습지의 나무 이야기 · (주)평화여행자</span><span class="where">동백동산습지센터 · 조천읍 선흘리</span><div class="acts"><button type="button" class="act play" data-yt="I6uVG54iCM8">▶ 기록 영상 보기</button></div></div></div></div><div class="sub2">유튜브 채널</div><article class="ch"><header><img class="av" src="https://yt3.googleusercontent.com/YjNBcyALqq5QmTYJW6EjD2nMfg0MjhG89_sJ_w7mlhHLnZ8r59jIp3fIsi8g5t4lMKXgixUDLw=s900-c-k-c0x00ffffff-no-rj" alt="" loading="lazy" referrerpolicy="no-referrer"><div><h3>AIRAmedia</h3><span class="hd">@jejugrapher</span><p>제주사는 사람입니다.</p></div><a class="sub" href="https://www.youtube.com/@jejugrapher?sub_confirmation=1" target="_blank" rel="noopener">채널 보기 ↗</a></header>
+  <div class="vg"><button type="button" class="vt" data-yt="RWKi5WYQKMY"><span class="th"><img src="https://i.ytimg.com/vi/RWKi5WYQKMY/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>하례리 보물찾기 — 고살리숲 | 2026 제주생태관광 시범프로그램</b></button><button type="button" class="vt" data-yt="Gi_NvWsjuMM"><span class="th"><img src="https://i.ytimg.com/vi/Gi_NvWsjuMM/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>화순곶자왈 사운드워킹 | 귀로 만나는 숲, 함께 걸은 날의 영상</b></button><button type="button" class="vt" data-yt="Na_Yx3Be0CY"><span class="th"><img src="https://i.ytimg.com/vi/Na_Yx3Be0CY/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>빛이 숲을 떠나는 시간 — 해 질 녘 저지곶자왈 | 2026 제주생태관광 체험 및 평가단 시범프로그램</b></button><button type="button" class="vt" data-yt="gg6-9TWov0g"><span class="th"><img src="https://i.ytimg.com/vi/gg6-9TWov0g/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>다시, 대나무 — 오영희 장인의 호근 | 2026 제주생태관광 시범프로그램</b></button><button type="button" class="vt" data-yt="xWmK9Opii3w"><span class="th"><img src="https://i.ytimg.com/vi/xWmK9Opii3w/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>숨, 평대 — 바다를 품은 순비기 향낭 · 평대의 향을 담은 AROMATIC THERAPY INHALER | 2026 제주생태관광 시범프로그램</b></button><button type="button" class="vt" data-yt="I6uVG54iCM8"><span class="th"><img src="https://i.ytimg.com/vi/I6uVG54iCM8/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>이성권과 함께하는 제주나무이야기 | 동백동산 곶자왈과 습지의 나무 이야기</b></button><button type="button" class="vt" data-yt="cEi1x5BqTTs"><span class="th"><img src="https://i.ytimg.com/vi/cEi1x5BqTTs/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>노래로 걷는 저지곶자왈 「빛이 숲을 떠나는 시간」 | 다섯 지점 미리 보기</b></button><button type="button" class="vt" data-yt="RS9GA7t2GTo"><span class="th"><img src="https://i.ytimg.com/vi/RS9GA7t2GTo/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>저지곶자왈 「빛이 숲을 떠나는 시간」 | 다섯 지점으로 미리 걷는 숲</b></button></div></article></div></section>
+<section class="grp" id="drone"><div class="wrap"><div class="shead"><div class="snum">DRONE · FPV</div><h2>드론 · FPV</h2><p>시네마틱 드론과 FPV로 제주의 바다·하늘·오름·동굴을 날아다니며 찍습니다.</p></div><article class="ch"><header><img class="av" src="https://yt3.googleusercontent.com/jLJRQXZc8NNLZk-rR_gZOpw3e0xjhGfjR4g-dIDa8kEISoXLba9J52M9VZrn8RE0ZPDdy0sliw=s900-c-k-c0x00ffffff-no-rj" alt="" loading="lazy" referrerpolicy="no-referrer"><div><h3>FPV Drones: Pushing the Edge of Image</h3><span class="hd">@jeju-fpv</span><p>FPV 드론의 이미지 품질을 극한으로 밀어붙이는 채널입니다. 최신 FPV 드론 기술로 선명도, 디테일, 색감의 한계에 도전합니다. 특히, 인간의 눈이 가진 넓은 다이내믹 레인지(HDR)를 카메라에 구현하기 위해 노력</p></div><a class="sub" href="https://www.youtube.com/@jeju-fpv?sub_confirmation=1" target="_blank" rel="noopener">채널 보기 ↗</a></header>
+  <div class="vg"><button type="button" class="vt" data-yt="twj7m3-R7sY"><span class="th"><img src="https://i.ytimg.com/vi/twj7m3-R7sY/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>Flying an FPV drone through a dark lava tube in Jeju | DJI Avata 2 4K</b></button><button type="button" class="vt" data-yt="LX8zIQtKPEw"><span class="th"><img src="https://i.ytimg.com/vi/LX8zIQtKPEw/mqdefault.jpg" alt="" loading="lazy"><i>Shorts</i><span class="pl" aria-hidden="true">▶</span></span><b>빛 한 줄기 없는 지하벙커, 드론 조명만으로 날았다 🔦 #FPV #동굴탐사</b></button><button type="button" class="vt" data-yt="Ce0P-hy9mBQ"><span class="th"><img src="https://i.ytimg.com/vi/Ce0P-hy9mBQ/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>빛이 없는 곳을 날다 — 조명 드론으로 일제 진지동굴·지하벙커 탐사 테스트 | DJI Avata 2</b></button><button type="button" class="vt" data-yt="bJ5nHBG95HU"><span class="th"><img src="https://i.ytimg.com/vi/bJ5nHBG95HU/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>태풍전야의 사계바다 | 제주 FPV 시네마틱 | DJI Avata 2</b></button><button type="button" class="vt" data-yt="FUUw_VkhY6k"><span class="th"><img src="https://i.ytimg.com/vi/FUUw_VkhY6k/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>구름을 뚫고 만나는 순간 | 제주 용눈이오름 FPV 시네마틱 [DJI Avata 2]</b></button><button type="button" class="vt" data-yt="cpsmritu2Mk"><span class="th"><img src="https://i.ytimg.com/vi/cpsmritu2Mk/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>🎵 바람의 섬으로 | 제주 비양도를 노래한 디지털 선율 | AI와 함께 그린 하늘의 시</b></button><button type="button" class="vt" data-yt="JCu17RoL2xo"><span class="th"><img src="https://i.ytimg.com/vi/JCu17RoL2xo/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>[DJI Avata 2 : 제주 월정리 해변] AI 향상 기술로 포착한 미세먼지 낀 흐린 날의 제주 월정리 해변</b></button><button type="button" class="vt" data-yt="9ZI7EgtZHqA"><span class="th"><img src="https://i.ytimg.com/vi/9ZI7EgtZHqA/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>[dji avata 2 / hdr hlg] 기존 Avata 2 영상을 뛰어넘는 최고 화질로 담아낸 에메랄드 빛 바다 &#x27;제주 삼양 검은 모래 해변&#x27;</b></button></div></article></div></section>
+<section class="grp" id="vr"><div class="wrap"><div class="shead"><div class="snum">360° VR · 8K</div><h2>360° VR</h2><p>8K 360° VR로 담은 제주. 화면을 돌려 보면 그 자리에 서 있는 것처럼 느껴집니다.</p></div><article class="ch"><header><img class="av" src="https://yt3.googleusercontent.com/1ur8LPWeg-kmEXLZdTlBi5SCQuwcwwlzeGnlKShcuSS9YeIYTpZ1qrg4lVDugE3Ir0BuLRxfJxA=s900-c-k-c0x00ffffff-no-rj" alt="" loading="lazy" referrerpolicy="no-referrer"><div><h3>제주 360VR | 8K 실감 영상</h3><span class="hd">@360VRjeju</span><p>제주의 바람, 바다, 한라산—</p></div><a class="sub" href="https://www.youtube.com/@360VRjeju?sub_confirmation=1" target="_blank" rel="noopener">채널 보기 ↗</a></header>
+  <div class="vg"><button type="button" class="vt" data-yt="0fo0VJ-UfPg"><span class="th"><img src="https://i.ytimg.com/vi/0fo0VJ-UfPg/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>제주 해녀박물관 하늘에서 🌊 8K 360 VR 항공영상 | 유네스코 해녀문화·하도리</b></button><button type="button" class="vt" data-yt="Tcx6INUUB4E"><span class="th"><img src="https://i.ytimg.com/vi/Tcx6INUUB4E/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>제주 하루 한 바퀴 🚗 360° VR 드라이브 | 함덕·1100고지·중문·사려니숲 [Insta360 X5]</b></button><button type="button" class="vt" data-yt="MeDE5tZcCZc"><span class="th"><img src="https://i.ytimg.com/vi/MeDE5tZcCZc/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>Inside Manjanggul Lava Tube in 360° VR with a Live Cave Map | 제주 만장굴 — 세계자연유산 지하 1km</b></button><button type="button" class="vt" data-yt="NiLFq7hBvoY"><span class="th"><img src="https://i.ytimg.com/vi/NiLFq7hBvoY/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>[8K 360° VR] 제주 숲길 드라이브 — 선흘에서 사려니숲을 지나 첨단까지 25분 | Jeju Forest Drive</b></button><button type="button" class="vt" data-yt="P-kW2ob24jU"><span class="th"><img src="https://i.ytimg.com/vi/P-kW2ob24jU/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>Jeju UNESCO Village Road in 8K 360° VR | 제주 선흘2리 — 세계자연유산센터에서 선인동까지</b></button><button type="button" class="vt" data-yt="769UqClb0SA"><span class="th"><img src="https://i.ytimg.com/vi/769UqClb0SA/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>[8K 360° VR] 제주 해안도로 드라이브 — 종달리에서 김녕까지, 해맞이해안로 38분 | Jeju Coastal Road Drive</b></button><button type="button" class="vt" data-yt="Tzp9C7IER7E"><span class="th"><img src="https://i.ytimg.com/vi/Tzp9C7IER7E/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>김녕성세기해변 8K 360 VR | 극강 화질·극강 색감 | DJI AVATA 360</b></button><button type="button" class="vt" data-yt="IG3LuH9EKPg"><span class="th"><img src="https://i.ytimg.com/vi/IG3LuH9EKPg/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>제주 안덕계곡 협곡 저공 비행 | 8K 360 VR | DJI AVATA 360</b></button></div></article></div></section>
+<section class="grp" id="night"><div class="wrap"><div class="shead"><div class="snum">NIGHT · LIGHT PAINTING</div><h2>별밤 · 야간 사진</h2><p>별이 빛나는 밤하늘과 빛으로 그린 그림 — 별밤사진관과 야간 촬영 기록입니다.</p></div><article class="ch"><header><img class="av" src="https://yt3.googleusercontent.com/iSQpeNQ5NkE6sM7sX-zF5oL9fXqt6jD_WdPELggw7gstoZqhKiUTng6DS_fNHBqIkeIA3TJ8zQ=s900-c-k-c0x00ffffff-no-rj" alt="" loading="lazy" referrerpolicy="no-referrer"><div><h3>Starry night</h3><span class="hd">@starrynight2167</span><p>별이 빛나는 밤하늘,</p></div><a class="sub" href="https://www.youtube.com/@starrynight2167?sub_confirmation=1" target="_blank" rel="noopener">채널 보기 ↗</a></header>
+  <div class="vg"><button type="button" class="vt" data-yt="lmaqrivaCsU"><span class="th"><img src="https://i.ytimg.com/vi/lmaqrivaCsU/mqdefault.jpg" alt="" loading="lazy"><i>Shorts</i><span class="pl" aria-hidden="true">▶</span></span><b>2. 빛으로 그린 단체사진, 이렇게 찍습니다 #Shorts</b></button><button type="button" class="vt" data-yt="ctPgEH3gfV8"><span class="th"><img src="https://i.ytimg.com/vi/ctPgEH3gfV8/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>2. 빛으로 그린 우리들의 밤 — 별밤사진관 × 두리함께 | 제주대 잔디광장</b></button><button type="button" class="vt" data-yt="xZCKSK3S1CA"><span class="th"><img src="https://i.ytimg.com/vi/xZCKSK3S1CA/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>아름다운 밤</b></button><button type="button" class="vt" data-yt="TjKgAU2mJhM"><span class="th"><img src="https://i.ytimg.com/vi/TjKgAU2mJhM/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>제주의 밤 많은 추억을 만들어 왔어요.앞으로도 더 많은 추억을 남겨 볼게요.</b></button><button type="button" class="vt" data-yt="HIgqsv_vnxk"><span class="th"><img src="https://i.ytimg.com/vi/HIgqsv_vnxk/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>그거 아세요? 제주의 밤하늘엔 하트 별자리가 있어요!!!효과준 사진은 보기 편하라고 한거지맘 원본 사진에서도 하트 별자리를 찾을 수 있을거에요!!!</b></button><button type="button" class="vt" data-yt="NrnB3zh-YIE"><span class="th"><img src="https://i.ytimg.com/vi/NrnB3zh-YIE/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>아름다운 제주의 밤 추억 만들기</b></button><button type="button" class="vt" data-yt="Tiec1vPpZoY"><span class="th"><img src="https://i.ytimg.com/vi/Tiec1vPpZoY/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>아름다운 제주의 밤을 별밤사진관에서</b></button><button type="button" class="vt" data-yt="07KfRvr4dQU"><span class="th"><img src="https://i.ytimg.com/vi/07KfRvr4dQU/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>제주의 밤 아름다운 추억 남기기</b></button></div></article><article class="ch"><header><img class="av" src="https://yt3.googleusercontent.com/ytc/AIdro_mHc6KVwpP-dvIntrb9rqhKAcfJJb95iGMNQRIpudC0B-AZ=s900-c-k-c0x00ffffff-no-rj" alt="" loading="lazy" referrerpolicy="no-referrer"><div><h3>제주그래퍼</h3><span class="hd">@TheWhipia</span><p>Korean photographer.</p></div><a class="sub" href="https://www.youtube.com/@TheWhipia?sub_confirmation=1" target="_blank" rel="noopener">채널 보기 ↗</a></header>
+  <div class="vg"><button type="button" class="vt" data-yt="ZTBZ0LIq-MY"><span class="th"><img src="https://i.ytimg.com/vi/ZTBZ0LIq-MY/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>새벽녘의 함덕 비오는 아침</b></button><button type="button" class="vt" data-yt="f2FCwoKxtW4"><span class="th"><img src="https://i.ytimg.com/vi/f2FCwoKxtW4/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>[제주인생사진] 새별오름에서의 별밤사진관</b></button><button type="button" class="vt" data-yt="uoJ7hFiVOOg"><span class="th"><img src="https://i.ytimg.com/vi/uoJ7hFiVOOg/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>제주항공360VR - drone360vr - 제주 드라마2015 리조트</b></button><button type="button" class="vt" data-yt="RFnXrPe20Sc"><span class="th"><img src="https://i.ytimg.com/vi/RFnXrPe20Sc/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>곽지해수욕장에 위치한 리조트 &#x27;드라마2015&#x27;에서 영상 촬영했습니다.</b></button><button type="button" class="vt" data-yt="fXWZI72ipQA"><span class="th"><img src="https://i.ytimg.com/vi/fXWZI72ipQA/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>제주 1100로 드라이브 4k 360 VR</b></button><button type="button" class="vt" data-yt="GwvSHINNDo0"><span class="th"><img src="https://i.ytimg.com/vi/GwvSHINNDo0/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>제주의 밤 빛나는 별과 함께한 별밤사진관</b></button><button type="button" class="vt" data-yt="nyXB_9_wKdc"><span class="th"><img src="https://i.ytimg.com/vi/nyXB_9_wKdc/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>Autumn in JEJU. Aerial 360 VR video</b></button><button type="button" class="vt" data-yt="2RvYP0irbjM"><span class="th"><img src="https://i.ytimg.com/vi/2RvYP0irbjM/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>아름다운제주 360 VR 한담, 곽지, 중문</b></button></div></article><a class="more" href="byeolbam.html">별밤사진관 — 체험 안내와 회차별 사진 보기 →</a></div></section>
+<section class="grp" id="ai"><div class="wrap"><div class="shead"><div class="snum">AI FILMS · MUSIC</div><h2>AI 영상 · 음악</h2><p>AI를 도구 삼아 만든 뮤직비디오, 숏폼, 아이들을 위한 자장가와 동화, 시네마틱 다큐멘터리입니다.</p></div><article class="ch"><header><img class="av" src="https://yt3.googleusercontent.com/08SBI6nVijkrhXXzAdccXqTbLlwrbrR-wULtokC_pQShQwrQVFo0jjntlWKE3gjXHHMeYZhM=s900-c-k-c0x00ffffff-no-rj" alt="" loading="lazy" referrerpolicy="no-referrer"><div><h3>AIRA-music</h3><span class="hd">@AIRA-musica</span><p>🎬 AIRA-music | 당신의 하루를 위로하는 AI 감성 뮤직비디오</p></div><a class="sub" href="https://www.youtube.com/@AIRA-musica?sub_confirmation=1" target="_blank" rel="noopener">채널 보기 ↗</a></header>
+  <div class="vg"><button type="button" class="vt" data-yt="sMDBREF6Y8w"><span class="th"><img src="https://i.ytimg.com/vi/sMDBREF6Y8w/mqdefault.jpg" alt="" loading="lazy"><i>Shorts</i><span class="pl" aria-hidden="true">▶</span></span><b>AI한테 제주 유채꽃밭 그려달라고 했더니 🎨 #AI뮤비비하인드 #제주 #shorts</b></button><button type="button" class="vt" data-yt="b7_emJLmOdw"><span class="th"><img src="https://i.ytimg.com/vi/b7_emJLmOdw/mqdefault.jpg" alt="" loading="lazy"><i>Shorts</i><span class="pl" aria-hidden="true">▶</span></span><b>빈손으로 제주 낭만 전부 긁어버림 💛 #AI뮤직비디오 #제주여행 #쇼츠</b></button><button type="button" class="vt" data-yt="DYLxfoVOq00"><span class="th"><img src="https://i.ytimg.com/vi/DYLxfoVOq00/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>💛 빈손으로 다시 낭만을 채우는 제주 여행 | &quot;일시불의 낭만&quot; AI 감성 Pop MV</b></button><button type="button" class="vt" data-yt="zFXiE3u7jg0"><span class="th"><img src="https://i.ytimg.com/vi/zFXiE3u7jg0/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>三月里平凡的一天 — 전현석 | 玩偶服MV | AI音乐视频</b></button><button type="button" class="vt" data-yt="7XSsjAhzie8"><span class="th"><img src="https://i.ytimg.com/vi/7XSsjAhzie8/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>なんでもない三月のある日 — 전현석 | 着ぐるみMV | AIミュージックビデオ</b></button><button type="button" class="vt" data-yt="Fd8vXN91uio"><span class="th"><img src="https://i.ytimg.com/vi/Fd8vXN91uio/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>Nothing Special, Just March — Jeon Hyunseok | Monkey Mascot MV | AI Music Video</b></button><button type="button" class="vt" data-yt="k6q73QxS5FU"><span class="th"><img src="https://i.ytimg.com/vi/k6q73QxS5FU/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>아무것도 아닌 3월 어느날 — 전현석 | 원숭이 인형탈 MV | AI 뮤직비디오</b></button><button type="button" class="vt" data-yt="mM815MYcGvc"><span class="th"><img src="https://i.ytimg.com/vi/mM815MYcGvc/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>네 앞에 설게 (I&#x27;ll Stand Before You) — 전현석 | Official MV</b></button></div></article><article class="ch"><header><img class="av" src="https://yt3.googleusercontent.com/EENv6D9St0zneRpFWQJHJ7XiHUvFMRjoFy9IQTLIUhv9Bptfrb4oIBPdYKjZp5fmYI_qQEz2=s900-c-k-c0x00ffffff-no-rj" alt="" loading="lazy" referrerpolicy="no-referrer"><div><h3>AIRA-vid</h3><span class="hd">@AiraShortsMEDIA</span><p>Welcome to AIRA-Shorts!  &quot;AIRA&quot; stands for Artificial Intelligence Radiant Adventures.  Join us as we explore the beauty</p></div><a class="sub" href="https://www.youtube.com/@AiraShortsMEDIA?sub_confirmation=1" target="_blank" rel="noopener">채널 보기 ↗</a></header>
+  <div class="vg"><button type="button" class="vt" data-yt="mMegOz9QAb8"><span class="th"><img src="https://i.ytimg.com/vi/mMegOz9QAb8/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>너에게 보여줄 여름 (K-Dream in Jeju) | JEJU K-Dream Dance Festa 2026 Official MV</b></button><button type="button" class="vt" data-yt="ROjKkNhCftA"><span class="th"><img src="https://i.ytimg.com/vi/ROjKkNhCftA/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>[K-Dream Dance Festa 2026] 제주담다: 입자의 순환 (Embracing Jeju: Cycle of Particles) Official Hologram Video</b></button><button type="button" class="vt" data-yt="-3XKUomxO9o"><span class="th"><img src="https://i.ytimg.com/vi/-3XKUomxO9o/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>무쏘맨 공모전 출품작 | [AI 뮤지컬] 겁쟁이의 질주 - 잎사귀 심장과 강철 바퀴 | KGM 무쏘맨 AI AWARDS</b></button><button type="button" class="vt" data-yt="dAM8vUUbJ04"><span class="th"><img src="https://i.ytimg.com/vi/dAM8vUUbJ04/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>쓱닦고 착!! 픽토·닦토·팩토·흡토 — 메디힐 더마패드 2.0 제대로 쓰는 법 (feat. 리유저블 용기)</b></button><button type="button" class="vt" data-yt="w-k_NWKD5xw"><span class="th"><img src="https://i.ytimg.com/vi/w-k_NWKD5xw/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>&quot;오늘도 출근 | 제주도 봄날의 힐링 브이로그 🌸 에코랜드 기차여행, 돌고래 투어, 노을 카페&quot;</b></button><button type="button" class="vt" data-yt="DQZuI6XKFwY"><span class="th"><img src="https://i.ytimg.com/vi/DQZuI6XKFwY/mqdefault.jpg" alt="" loading="lazy"><i>Shorts</i><span class="pl" aria-hidden="true">▶</span></span><b>A Beautiful Spring Flower Journey with AI Model &#x27;Choi Ha-eun&#x27;#AI #모델 #최하은 #봄꽃 #화보 #Grok #Gemini #GPT</b></button><button type="button" class="vt" data-yt="v5phxX01apM"><span class="th"><img src="https://i.ytimg.com/vi/v5phxX01apM/mqdefault.jpg" alt="" loading="lazy"><i>Shorts</i><span class="pl" aria-hidden="true">▶</span></span><b>Spring Blossom Photoshoot! #AImodel #HaEun #SpringBlossoms #PilatesModel #JejuIsland #ModelLife</b></button><button type="button" class="vt" data-yt="mNskNgcJh_Q"><span class="th"><img src="https://i.ytimg.com/vi/mNskNgcJh_Q/mqdefault.jpg" alt="" loading="lazy"><i>Shorts</i><span class="pl" aria-hidden="true">▶</span></span><b>#Jeju #Ojori #AI - Real Scenery &amp; Digital Magic w/ GPT, Gemini, image.fx, Midjourney, KlingAI</b></button></div></article><article class="ch"><header><img class="av" src="https://yt3.googleusercontent.com/k78JTESFuc0SDrjBcqQvgiNU_qbPMYKEl3dtOMKYp0LG3HQ1K1tnBr-XyRHbS5c6jyK_7XaSzg=s900-c-k-c0x00ffffff-no-rj" alt="" loading="lazy" referrerpolicy="no-referrer"><div><h3>AIRAkids</h3><span class="hd">@airamedia_kids</span><p>🌙 AIRA Lullaby - AI가 만드는 특별한 자장가 세상</p></div><a class="sub" href="https://www.youtube.com/@airamedia_kids?sub_confirmation=1" target="_blank" rel="noopener">채널 보기 ↗</a></header>
+  <div class="vg"><button type="button" class="vt" data-yt="0K_1jSZpeBI"><span class="th"><img src="https://i.ytimg.com/vi/0K_1jSZpeBI/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>햇살 퐁당! 같이 놀자 🌸 코스모와 봄날 친구들 | Sunshine Pop! Let&#x27;s Play Together | AIRAkids</b></button><button type="button" class="vt" data-yt="d03OlJigJPM"><span class="th"><img src="https://i.ytimg.com/vi/d03OlJigJPM/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>환상의 설날 ✨ 뽀글이와 친구들의 마법 설날 대모험 | AIRAkids</b></button><button type="button" class="vt" data-yt="hsY-IudfPyo"><span class="th"><img src="https://i.ytimg.com/vi/hsY-IudfPyo/mqdefault.jpg" alt="" loading="lazy"><i>Shorts</i><span class="pl" aria-hidden="true">▶</span></span><b>비밀의 문 열면 마법의 설날이 시작돼요✨ #환상의설날 #shorts</b></button><button type="button" class="vt" data-yt="MhBpfvgHOuo"><span class="th"><img src="https://i.ytimg.com/vi/MhBpfvgHOuo/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>귀여운 도룡뇽과 팔색조와 함께하는 제주 곶자왈 여행</b></button><button type="button" class="vt" data-yt="TjNJDphADOs"><span class="th"><img src="https://i.ytimg.com/vi/TjNJDphADOs/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>기다림의 바다 | 제주 조수웅덩이의 작은 생명이 전하는 위로</b></button><button type="button" class="vt" data-yt="7_HJXRa6ago"><span class="th"><img src="https://i.ytimg.com/vi/7_HJXRa6ago/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>Winter Dreamers ✨ Y2K Teen Pop | 윈터 드리머즈 | Official MV</b></button><button type="button" class="vt" data-yt="zVWAJpZxyV4"><span class="th"><img src="https://i.ytimg.com/vi/zVWAJpZxyV4/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>Jeju Island में परिवार का जादुई दिन | Peaceful Healing Journey Under the Stars</b></button><button type="button" class="vt" data-yt="IjupG_n4Yss"><span class="th"><img src="https://i.ytimg.com/vi/IjupG_n4Yss/mqdefault.jpg" alt="" loading="lazy"><span class="pl" aria-hidden="true">▶</span></span><b>Un Día Familiar en la Isla de Jeju | Viaje de Sanación Bajo las Estrellas</b></button></div></article><article class="ch"><header><img class="av" src="https://yt3.googleusercontent.com/PrXpEieuzTJAh5qpfEpx8FBqQFwo2uPG2mlTPxmftx7dLjy61EXCEI-i2fP1lFGlaieZ4bI1ln8=s900-c-k-c0x00ffffff-no-rj" alt="" loading="lazy" referrerpolicy="no-referrer"><div><h3>CurioEpic 큐리오에픽</h3><span class="hd">@CurioEpicTV</span><p>만약 공룡이 멸종하지 않았다면? 쓸데없지만 미치도록 궁금한 질문들에 압도적인 AI 시네마틱 비주얼로 답합니다. 과학, 세계사, 한국 설화를 넘나드는 지식 다큐멘터리 큐리오에픽(CurioEpic)!</p></div><a class="sub" href="https://www.youtube.com/@CurioEpicTV?sub_confirmation=1" target="_blank" rel="noopener">채널 보기 ↗</a></header>
+  <p class="empty">곧 첫 영상이 올라옵니다.</p></article></div></section>
+</main>
+<footer>
+  <div class="wrap">
+    <span>© 2026 JEJUGRAPHER · <a href="index.html" style="font-weight:500;color:var(--navy);text-decoration:underline;text-underline-offset:3px">제주그래퍼</a></span>
+    <span>촬영·영상 제작 문의는 <a href="inquiry.html" style="color:var(--terra);border-bottom:1px solid">문의</a>로</span>
+  </div>
+</footer>
+<dialog id="yt" aria-label="영상 보기">
+  <div class="ytbar"><button type="button" id="ytx">닫기</button></div>
+  <div style="position:relative;aspect-ratio:16/9;background:#000"><iframe id="ytf" title="영상" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe></div>
+</dialog>
+<script>
+const yt=document.getElementById("yt"), ytf=document.getElementById("ytf");
+document.addEventListener("click",e=>{const b=e.target.closest("[data-yt]"); if(!b) return; ytf.src=`https://www.youtube-nocookie.com/embed/${b.dataset.yt}?autoplay=1&rel=0`; yt.showModal();});
+const ytClose=()=>{ytf.src=""; yt.close();};
+document.getElementById("ytx").onclick=ytClose; yt.addEventListener("click",e=>{if(e.target===yt) ytClose();}); yt.addEventListener("close",()=>{ytf.src="";});
+// 지금 보고 있는 분류를 탭에 표시
+const tabs=[...document.querySelectorAll(".tabs a")];
+const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting) tabs.forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+en.target.id));}),{rootMargin:"-40% 0px -55% 0px"});
+document.querySelectorAll(".grp").forEach(s=>io.observe(s));
+</script>
+<script>/* ☰ 메뉴 (휴대폰) */
+(function(){var b=document.querySelector('.mtog'),m=document.getElementById('siteMenu');if(!b||!m)return;
+function set(o){m.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.innerHTML=o?'✕ 닫기':'☰ 메뉴';}
+b.addEventListener('click',function(e){e.stopPropagation();set(!m.classList.contains('open'));});
+m.addEventListener('click',function(e){if(e.target.closest('a'))set(false);});
+document.addEventListener('click',function(e){if(m.classList.contains('open')&&!m.contains(e.target))set(false);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false);});})();
+</script>
+</body>
+</html>
