@@ -118,7 +118,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
   .menu a{display:block;padding:15px 24px;border-top:1px solid rgba(0,0,0,.07);font-size:16px}
   .menu a:first-child{border-top:0}
 }
-}
+
+/* 기록 영상 창: 화면 한가운데, 뒤는 어둡게, 닫기는 영상 위 오른쪽 */
+#yt{margin:auto!important;border:0;padding:0;background:transparent;width:min(960px,calc(100vw - 24px));max-width:none;overflow:visible}
+#yt::backdrop{background:rgba(10,12,14,.88)}
+#yt .ytbar{display:flex;justify-content:flex-end;margin-bottom:10px}
+#yt #ytx{float:none!important;margin:0!important;min-height:44px;padding:.5em 1.3em!important;font-weight:700;border-radius:999px;background:#fff;border:0;cursor:pointer;color:#222}
 </style>
 </head>
 <body>
@@ -199,8 +204,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 </footer>
 
 <dialog id="yt" aria-label="기록 영상">
+  <div class="ytbar"><button type="button" id="ytx" style="margin-top:10px;float:right;background:#fff;border:1px solid var(--line);padding:.45em 1.1em;font:500 .9rem var(--sans);cursor:pointer">닫기</button></div>
   <div style="position:relative;aspect-ratio:16/9;background:#000"><iframe id="ytf" title="기록 영상" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe></div>
-  <button type="button" id="ytx" style="margin-top:10px;float:right;background:#fff;border:1px solid var(--line);padding:.45em 1.1em;font:500 .9rem var(--sans);cursor:pointer">닫기</button>
 </dialog>
 <script>
 /* 행사사진 목록 — 날짜는 사진첩 비밀번호라 표시하지 않습니다.
@@ -208,8 +213,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 const PILOT = [
   { t:"숨, 평대", s:"바다를 품은 순비기 향낭 · 평대의 향을 담은 AROMATIC THERAPY INHALER", w:"평대 돝오름 ~ 평대리생태체험장 · 구좌읍 평대리", url:"eco/g/9a0a9d467758/", yt:"xWmK9Opii3w", img:"eco/g/9a0a9d467758/cover.jpg" },
   { t:"빛이 숲을 떠나는 시간", s:"해 질 녘 저지곶자왈", w:"저지곶자왈 · 한경면 저지리", url:"eco/g/409184708a11/", yt:"Na_Yx3Be0CY", img:"eco/g/409184708a11/cover.jpg" },
-  { t:"다시, 대나무 · 미로숲길에서 쉬멍, 맛있게 차롱", s:"오영희 장인의 호근", w:"호근동 마을회관 · 하논 · 서귀포 치유의숲", url:"eco/g/c211db604c81/", yt:"", img:"eco/g/c211db604c81/cover.jpg" },
-  { t:"하례리 보물찾기", s:"고살리숲 — 밧줄놀이 · 숲속 보물찾기", w:"고살리숲 · 남원읍 하례리", url:"eco/g/4fee7759275a/", yt:"", img:"eco/g/4fee7759275a/cover.jpg" },
+  { t:"다시, 대나무 · 미로숲길에서 쉬멍, 맛있게 차롱", s:"오영희 장인의 호근", w:"호근동 마을회관 · 하논 · 서귀포 치유의숲", url:"eco/g/c211db604c81/", yt:"gg6-9TWov0g", img:"eco/g/c211db604c81/cover.jpg" },
+  { t:"하례리 보물찾기", s:"고살리숲 — 밧줄놀이 · 숲속 보물찾기", w:"고살리숲 · 남원읍 하례리", url:"eco/g/4fee7759275a/", yt:"RWKi5WYQKMY", img:"eco/g/4fee7759275a/cover.jpg" },
   { t:"동백동산 기후탐사대 · 오감찾기 프로젝트", s:"탄소 흡수원 찾기 · 동백동산에서 오감 찾기", w:"동백동산 · 조천읍 선흘리", url:"", img:"" },
 ];
 const WEEK = [
