@@ -112,17 +112,24 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 
 dialog{border:0;padding:0;background:transparent;color:var(--cloud)}
 dialog::backdrop{background:rgba(4,12,7,.94)}
-#viewer{max-width:100vw;max-height:100vh;width:100vw;height:100vh;margin:0}
-.vw{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:max(.8rem,env(safe-area-inset-top,0px)) 1rem max(1rem,env(safe-area-inset-bottom,0px))}
-.vw-top{display:flex;justify-content:space-between;align-items:center;gap:.6rem}
-.vw-top .t{font:500 .9rem var(--mono)}
-.vw-img{position:relative;display:flex;align-items:center;justify-content:center;min-height:0}
-.vw-img img{max-width:100%;max-height:100%;object-fit:contain}
-.nav,.x{background:rgba(8,22,14,.6);border:1px solid var(--line);color:var(--cloud);width:46px;height:46px;cursor:pointer;font-size:1.4rem}
+/* 크게 보기: 화면 전체를 덮는 고정 창 (휴대폰 주소창 높이 변화에도 버튼이 화면 안에 남도록 dvh) */
+#viewer{position:fixed;inset:0;width:100%;height:100%;height:100dvh;max-width:none;max-height:none;margin:0;background:#050d08}
+#viewer[open]{display:block}
+html.lock,html.lock body{overflow:hidden}
+.vw{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:max(.6rem,env(safe-area-inset-top,0px)) max(.6rem,env(safe-area-inset-right,0px)) max(.7rem,env(safe-area-inset-bottom,0px)) max(.6rem,env(safe-area-inset-left,0px))}
+.vw-top{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding-bottom:.5rem}
+.vw-top .t{font:500 .88rem/1.4 var(--mono);min-width:0}
+.vw-top .t b{color:var(--amber);font-weight:500;margin-right:.5rem}
+.vw-img{position:relative;display:flex;align-items:center;justify-content:center;min-height:0;touch-action:pan-y pinch-zoom;user-select:none;-webkit-user-select:none}
+.vw-img img{max-width:100%;max-height:100%;object-fit:contain;-webkit-user-drag:none;transition:opacity .15s}
+.vw-img img.ld{opacity:.35}
+.nav,.x{background:rgba(5,13,8,.55);border:1px solid rgba(238,245,236,.35);color:var(--cloud);width:48px;height:48px;cursor:pointer;font-size:1.6rem;line-height:1;border-radius:50%;flex:none;-webkit-tap-highlight-color:transparent}
 .nav:hover,.x:hover{border-color:var(--glow);color:var(--glow)}
-.nav{position:absolute;top:50%;margin-top:-23px}
-.nav.prev{left:.25rem}.nav.next{right:.25rem}
-.vw-bot{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;padding-top:.8rem}
+.nav{position:absolute;top:50%;margin-top:-24px;z-index:2}
+.nav.prev{left:.2rem}.nav.next{right:.2rem}
+.vw-bot{display:flex;justify-content:center;align-items:center;gap:.45rem;flex-wrap:wrap;padding-top:.7rem}
+.vw-bot .btn{min-height:44px}
+.vw-hint{text-align:center;font-size:.78rem;color:#7d9a85;padding-top:.35rem}
 #vwPick[aria-pressed="true"]{background:var(--amber);color:var(--deep);border-color:var(--amber)}
 
 .dlg{width:min(560px,100vw - 2rem);max-height:calc(100vh - 2rem);margin:auto}
@@ -135,6 +142,15 @@ dialog::backdrop{background:rgba(4,12,7,.94)}
 .dl-list a{color:var(--cloud);text-decoration:none;border-bottom:1px solid var(--line);padding:.3rem 0;display:flex;justify-content:space-between}
 .dl-list a:hover{color:var(--glow)}
 .dl-list a.done::after{content:"받음";color:var(--ok)}
+.dl-list button{background:none;border:0;border-bottom:1px solid var(--line);color:var(--cloud);padding:.35rem 0;display:flex;justify-content:space-between;cursor:pointer;text-align:left;font:inherit}
+.dl-list button.done::after{content:"받음";color:var(--ok)}
+.dl-list button.bad::after{content:"다시 눌러 주세요";color:var(--err)}
+.prog{height:6px;background:var(--deep);border:1px solid var(--line);margin:.6rem 0}
+.prog i{display:block;height:100%;width:0;background:var(--amber);transition:width .2s}
+.chunks{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0}
+.chunks .btn.done{background:var(--ok)}
+.meta button{background:none;border:0;color:var(--mute);cursor:pointer;font:inherit;padding:.2rem 0 .2rem .6rem}
+.meta button:hover{color:var(--glow)}
 form.rq{display:grid;gap:1rem}
 label{display:grid;gap:.35rem;font-size:.88rem;color:var(--mute)}
 .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}
@@ -160,9 +176,13 @@ label{display:grid;gap:.35rem;font-size:.88rem;color:var(--mute)}
   .top-grid,.how{grid-template-columns:minmax(0,1fr)}
   .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem .6rem}
   .two{grid-template-columns:minmax(0,1fr)}
-  .nav{top:auto;bottom:-3.4rem;margin:0}
-  .nav.prev{left:calc(50% - 56px)}.nav.next{right:calc(50% - 56px)}
-  .vw-bot{padding-top:3.8rem}
+  .sel{width:40px;height:40px}
+  .chip{padding:.4rem .85rem;min-height:38px}
+  .bar .wrap{gap:.45rem}
+  .bar .row{width:100%}
+  .bar .row .btn{flex:1;justify-content:center;min-height:44px}
+  .tools .pick{width:100%}
+  .dl-list button{min-height:42px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -224,7 +244,7 @@ label{display:grid;gap:.35rem;font-size:.88rem;color:var(--mute)}
     <div class="wrap">
       <h2>사진 받는 법</h2>
       <div class="how">
-        <div><b>골라서 받기</b><p>사진 오른쪽 위 네모를 눌러 여러 장을 고른 뒤, 아래에 뜨는 <b style="display:inline">받기</b>를 누르세요. 한 장씩 받을 때는 사진을 크게 열어 받기를 누르면 됩니다.</p></div>
+        <div><b>골라서 한 번에 받기</b><p>사진 오른쪽 위 네모를 눌러 여러 장을 고르거나 <b style="display:inline">이 묶음 고르기</b>를 누른 뒤, 아래에 뜨는 <b style="display:inline">받기</b>를 누르세요. 휴대폰은 사진 앱에 바로 저장되고, 컴퓨터는 ZIP 파일 하나로 받아집니다.</p></div>
         <div><b>원본이 필요하면</b><p>여기서 받는 사진은 휴대폰·SNS에 알맞은 크기(긴 변 2048px)입니다. 인화나 큰 화면용 원본은 사진을 고른 뒤 <b style="display:inline">원본 요청</b>을 보내 주세요. 준비되면 연락드려요.</p></div>
         <div><b>내리고 싶은 사진</b><p>공개되길 원하지 않는 사진이 있으면 골라서 원본 요청 창에서 <b style="display:inline">사진 내려 주세요</b>를 선택해 보내 주세요. 확인하는 대로 내리겠습니다.</p></div>
       </div>
@@ -269,16 +289,17 @@ label{display:grid;gap:.35rem;font-size:.88rem;color:var(--mute)}
       <span class="t" id="vwTitle"></span>
       <button class="x" type="button" id="vwClose" aria-label="닫기">×</button>
     </div>
-    <div class="vw-img">
-      <img id="vwImg" alt="">
+    <div class="vw-img" id="vwStage">
+      <img id="vwImg" alt="" draggable="false">
       <button class="nav prev" type="button" id="vwPrev" aria-label="이전 사진">‹</button>
       <button class="nav next" type="button" id="vwNext" aria-label="다음 사진">›</button>
     </div>
     <div class="vw-bot">
       <button class="btn ghost sm" type="button" id="vwPick" aria-pressed="false">고르기</button>
-      <a class="btn sm" id="vwDown" target="_blank" rel="noopener">이 사진 받기</a>
+      <button class="btn sm" type="button" id="vwDown">이 사진 받기</button>
       <button class="btn ghost sm" type="button" id="vwReq">원본 요청</button>
     </div>
+    <div class="vw-hint">옆으로 밀거나 ‹ › 를 눌러 다음 사진으로 넘겨요</div>
   </div>
 </dialog>
 
@@ -287,12 +308,16 @@ label{display:grid;gap:.35rem;font-size:.88rem;color:var(--mute)}
     <h3>고른 사진 받기</h3>
     <p class="sub" id="dlSub"></p>
     <div class="foot" style="justify-content:flex-start">
-      <button class="btn sm" type="button" id="dlAll">모두 받기</button>
+      <button class="btn sm" type="button" id="dlAll">한 번에 받기</button>
+      <button class="btn ghost sm" type="button" id="dlZip" hidden>ZIP 파일로 받기</button>
       <button class="btn ghost sm" type="button" id="dlClose">닫기</button>
     </div>
+    <div class="prog" id="dlProg" hidden><i></i></div>
     <p class="msg" id="dlMsg" role="status"></p>
-    <div class="dl-list" id="dlList"></div>
-    <p class="sub" style="font-size:.85rem;margin:0">휴대폰에서 한꺼번에 받기가 막히면 목록의 번호를 하나씩 눌러 주세요. 많이 받으실 때는 <a id="dlFolder" target="_blank" rel="noopener">드라이브 폴더</a>에서 받으셔도 됩니다.</p>
+    <div class="chunks" id="dlChunks"></div>
+    <details style="margin-top:.4rem"><summary style="cursor:pointer;color:var(--mute);font-size:.88rem">한 장씩 받기</summary>
+    <div class="dl-list" id="dlList"></div></details>
+    <p class="sub" style="font-size:.85rem;margin:.6rem 0 0">많이 받으실 때는 <a id="dlFolder" target="_blank" rel="noopener">드라이브 폴더</a>에서 받으셔도 됩니다.</p>
   </div>
 </dialog>
 
@@ -377,7 +402,9 @@ $("#gateForm").addEventListener("submit", async e => {
 /* ── 사진첩 ─────────────────────────────────── */
 // 미리보기(드라이브 업로드 전): IDS 값이 "local:" 로 시작하면 내 컴퓨터의 사진을 바로 보여 줌
 const img = (n, w) => IDS[n].startsWith("local:") ? IDS[n].slice(6) : `https://drive.google.com/thumbnail?id=${IDS[n]}&sz=w${w}`;
-const dl = n => IDS[n].startsWith("local:") ? IDS[n].slice(6) : `https://drive.google.com/uc?export=download&id=${IDS[n]}`;
+// 원본 파일: lh3 주소는 CORS를 허용해서 파일로 받아 저장·공유·ZIP에 쓸 수 있음 (uc?export=download 는 막힘)
+const full = n => IDS[n].startsWith("local:") ? IDS[n].slice(6) : `https://lh3.googleusercontent.com/d/${IDS[n]}=s0`;
+const fname = n => `${VERSION}_${n}.jpg`;
 const byN = Object.fromEntries(PHOTOS.map(p => [p.n, p]));
 const SEL_KEY = "jejugrapher-sel-" + SESSION;
 const state = { filter: "전체", list: PHOTOS, idx: 0, sel: new Set() };
@@ -417,7 +444,7 @@ function card(p, i) {
       <span class="tag">No. ${p.n}</span>
     </button>
     <button class="sel" type="button" data-sel="${p.n}" aria-pressed="${on}" aria-label="사진 ${p.n} 고르기">✓</button>
-    <div class="meta"><span><span class="no">${p.n}</span> · ${p.t}</span><a href="${dl(p.n)}" target="_blank" rel="noopener">받기</a></div>
+    <div class="meta"><span><span class="no">${p.n}</span> · ${p.t}</span><button type="button" data-dl="${p.n}">받기</button></div>
   </article>`;
 }
 function render() {
@@ -442,6 +469,7 @@ function syncBar() {
 }
 $("#groups").addEventListener("click", e => {
   const s = e.target.closest("[data-sel]"); if (s) return toggle(s.dataset.sel);
+  const d = e.target.closest("[data-dl]"); if (d) return saveOne(d.dataset.dl, d);
   const g = e.target.closest("[data-gsel]"); if (g) { state.list.filter(p => p.s === g.dataset.gsel).forEach(p => toggle(p.n, true)); return; }
   const sh = e.target.closest(".shot"); if (sh) openViewer(+sh.dataset.i);
 });
@@ -449,48 +477,137 @@ $("#pickAll").onclick = () => state.list.forEach(p => toggle(p.n, true));
 $("#barClear").onclick = () => [...state.sel].forEach(n => toggle(n, false));
 const selList = () => PHOTOS.filter(p => state.sel.has(p.n)).map(p => p.n);
 
+/* 파일 받기 도구 */
+const MOBILE = matchMedia("(pointer:coarse)").matches || /iPhone|iPad|Android/i.test(navigator.userAgent);
+const CAN_SHARE = (() => { try { return !!navigator.canShare && navigator.canShare({ files: [new File(["x"], "t.jpg", { type: "image/jpeg" })] }); } catch (e) { return false; } })();
+const USE_SHARE = MOBILE && CAN_SHARE;   // 휴대폰: 공유 창 → '이미지 저장'으로 사진 앱에 바로
+const cache = new Map();                 // n → Promise<File>
+function getFile(n) {
+  if (!cache.has(n)) cache.set(n, fetch(full(n), { referrerPolicy: "no-referrer" })
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); })
+    .then(b => new File([b], fname(n), { type: b.type && b.type.startsWith("image/") ? b.type : "image/jpeg" }))
+    .catch(e => { cache.delete(n); throw e; }));
+  return cache.get(n);
+}
+function saveBlob(blob, name) {
+  const u = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 60000);
+}
+async function shareFiles(files) {
+  try { await navigator.share({ files }); return true; }
+  catch (e) { if (e.name === "AbortError") return false; throw e; }
+}
+const ready = {};                        // 이미 받아 둔 파일 (공유는 누르는 순간 바로 불러야 해서)
+async function saveOne(n, btn) {
+  const old = btn && btn.textContent;
+  try {
+    if (USE_SHARE && ready[n]) { await shareFiles([ready[n]]); return; }
+    if (btn) btn.textContent = "준비 중…";
+    const f = await getFile(n); ready[n] = f;
+    if (USE_SHARE) {
+      try { await shareFiles([f]); }
+      catch (e) { if (btn) { btn.textContent = "저장하기 ↓"; return; } }   // 시간이 지나 막히면 한 번 더 누르면 됨
+    } else saveBlob(f, f.name);
+    if (btn) btn.textContent = old;
+  } catch (e) {
+    if (btn) btn.textContent = old;
+    window.open(full(n), "_blank", "noopener");   // 마지막 방법: 새 창에서 길게 눌러 저장
+  }
+}
+
 /* 크게 보기 */
 const viewer = $("#viewer");
-function openViewer(i) { state.idx = i; showV(); viewer.showModal(); }
+function openViewer(i) { state.idx = i; showV(); document.documentElement.classList.add("lock"); viewer.showModal(); $("#vwNext").focus({ preventScroll: true }); }
+viewer.addEventListener("close", () => document.documentElement.classList.remove("lock"));
 function showV() {
-  const p = state.list[state.idx];
-  $("#vwImg").src = img(p.n, 2000); $("#vwImg").alt = `사진 ${p.n}`;
-  $("#vwTitle").textContent = `No. ${p.n} · ${p.t} · ${p.s}`;
-  $("#vwDown").href = dl(p.n);
+  const p = state.list[state.idx], im = $("#vwImg");
+  im.classList.add("ld"); im.onload = () => im.classList.remove("ld");
+  im.src = img(p.n, 2000); im.alt = `사진 ${p.n}`;
+  $("#vwTitle").innerHTML = `<b>${state.idx + 1} / ${state.list.length}</b>No. ${p.n} · ${p.s}`;
   $("#vwPick").setAttribute("aria-pressed", state.sel.has(p.n));
   $("#vwPick").textContent = state.sel.has(p.n) ? "고름 ✓" : "고르기";
+  $("#vwDown").textContent = "이 사진 받기";
+  // 앞뒤 사진 미리 불러오기
+  [1, -1].forEach(d => { const q = state.list[(state.idx + d + state.list.length) % state.list.length]; if (q) new Image().src = img(q.n, 2000); });
+  if (USE_SHARE) getFile(p.n).then(f => ready[p.n] = f).catch(() => {});
 }
 const step = d => { state.idx = (state.idx + d + state.list.length) % state.list.length; showV(); };
-$("#vwPrev").onclick = () => step(-1); $("#vwNext").onclick = () => step(1);
+$("#vwPrev").onclick = e => { e.stopPropagation(); step(-1); };
+$("#vwNext").onclick = e => { e.stopPropagation(); step(1); };
 $("#vwClose").onclick = () => viewer.close();
 $("#vwPick").onclick = () => { toggle(state.list[state.idx].n); showV(); };
+$("#vwDown").onclick = e => saveOne(state.list[state.idx].n, e.currentTarget);
 $("#vwReq").onclick = () => { const n = state.list[state.idx].n; viewer.close(); openReq([n]); };
 viewer.addEventListener("keydown", e => { if (e.key === "ArrowLeft") step(-1); if (e.key === "ArrowRight") step(1); if (e.key === " ") { e.preventDefault(); $("#vwPick").click(); } });
-viewer.addEventListener("click", e => { if (e.target === viewer || e.target.classList.contains("vw-img")) viewer.close(); });
-let tx = null;
-viewer.addEventListener("touchstart", e => tx = e.touches[0].clientX, { passive: true });
-viewer.addEventListener("touchend", e => { if (tx === null) return; const d = e.changedTouches[0].clientX - tx; if (Math.abs(d) > 50) step(d < 0 ? 1 : -1); tx = null; });
+// 사진 왼쪽/오른쪽을 누르면 이전/다음 (사진을 눌러도 창이 닫히지 않음)
+$("#vwStage").addEventListener("click", e => {
+  if (e.target.closest(".nav") || moved) return;
+  const r = e.currentTarget.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
+  if (x < .33) step(-1); else if (x > .67) step(1);
+});
+let tx = null, ty = null, moved = false;
+const zoomed = () => window.visualViewport && window.visualViewport.scale > 1.05;
+$("#vwStage").addEventListener("touchstart", e => { moved = false; if (e.touches.length !== 1 || zoomed()) { tx = null; return; } tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+$("#vwStage").addEventListener("touchend", e => {
+  if (tx === null) return;
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty; tx = null;
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) { moved = true; step(dx < 0 ? 1 : -1); setTimeout(() => moved = false, 400); }
+});
 
-/* 고른 사진 받기: 숨은 iframe으로 차례로 받기 (막히면 목록에서 하나씩) */
-const dlg = $("#dl");
+/* 고른 사진 한 번에 받기
+   휴대폰: 사진을 미리 받아 둔 뒤 공유 창 → '이미지 n개 저장' (한 번에 10장씩)
+   컴퓨터: ZIP 파일 하나로 */
+const dlg = $("#dl"); const CHUNK = 10;
+let JSZIP = null;
+const loadZip = () => JSZIP || (JSZIP = new Promise((ok, no) => { const sc = document.createElement("script");
+  sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"; sc.onload = () => ok(window.JSZip); sc.onerror = no; document.head.appendChild(sc); }));
+function prog(i, n) { $("#dlProg").hidden = false; $("#dlProg i").style.width = (100 * i / n) + "%"; }
+const say = (t, c = "") => { $("#dlMsg").className = "msg " + c; $("#dlMsg").textContent = t; };
+async function fetchAll(ns) {
+  let done = 0; const out = new Array(ns.length), bad = [];
+  let k = 0;
+  async function worker() { while (k < ns.length) { const i = k++; try { out[i] = await getFile(ns[i]); } catch (e) { bad.push(ns[i]); } prog(++done, ns.length); say(`사진을 준비하는 중… ${done} / ${ns.length}`); } }
+  await Promise.all([1, 2, 3, 4].map(worker));
+  return { files: out.filter(Boolean), bad };
+}
+let dlNs = [];
 $("#barDl").onclick = () => {
-  const ns = selList();
-  $("#dlSub").textContent = `${ns.length}장을 받습니다. 사진마다 파일이 하나씩 내려받아져요.`;
-  $("#dlList").innerHTML = ns.map(n => `<a href="${dl(n)}" target="_blank" rel="noopener" data-n="${n}"><span>No. ${n} · ${byN[n].t}</span></a>`).join("");
-  $("#dlMsg").textContent = ""; dlg.showModal();
+  dlNs = selList();
+  $("#dlSub").textContent = USE_SHARE
+    ? `${dlNs.length}장을 받습니다. ‘한 번에 받기’를 누르면 사진을 준비한 뒤, 저장 버튼이 나타나요. 공유 창에서 ‘이미지 저장’을 누르면 사진 앱에 들어갑니다.`
+    : `${dlNs.length}장을 ZIP 파일 하나로 받습니다.`;
+  $("#dlZip").hidden = !USE_SHARE;
+  $("#dlList").innerHTML = dlNs.map(n => `<button type="button" data-n="${n}"><span>No. ${n} · ${byN[n].s}</span></button>`).join("");
+  $("#dlChunks").innerHTML = ""; $("#dlProg").hidden = true; say(""); $("#dlAll").disabled = false; dlg.showModal();
 };
-$("#dlList").addEventListener("click", e => { const a = e.target.closest("a"); if (a) a.classList.add("done"); });
+$("#dlList").addEventListener("click", async e => { const b = e.target.closest("button"); if (!b) return;
+  try { await saveOne(b.dataset.n); b.classList.add("done"); b.classList.remove("bad"); } catch (err) { b.classList.add("bad"); } });
+async function zipAll() {
+  $("#dlAll").disabled = $("#dlZip").disabled = true;
+  try {
+    const [Z, r] = await Promise.all([loadZip(), fetchAll(dlNs)]);
+    say("ZIP 파일을 만드는 중…");
+    const z = new Z(); r.files.forEach(f => z.file(f.name, f));
+    const blob = await z.generateAsync({ type: "blob", compression: "STORE" });
+    saveBlob(blob, `${VERSION}_사진${r.files.length}장.zip`);
+    say(r.bad.length ? `${r.files.length}장을 받았어요. 받지 못한 사진: ${r.bad.join(", ")} (한 장씩 받기에서 다시 눌러 주세요)` : `${r.files.length}장을 ZIP 파일로 받았어요. 받은 파일 폴더를 확인해 주세요.`, r.bad.length ? "err" : "ok");
+  } catch (e) { say("받지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요. 안 되면 ‘한 장씩 받기’를 이용해 주세요.", "err"); }
+  $("#dlAll").disabled = $("#dlZip").disabled = false;
+}
 $("#dlAll").onclick = async () => {
-  const links = [...document.querySelectorAll("#dlList a")]; $("#dlAll").disabled = true;
-  for (let i = 0; i < links.length; i++) {
-    $("#dlMsg").className = "msg"; $("#dlMsg").textContent = `받는 중… ${i + 1} / ${links.length}`;
-    const f = document.createElement("iframe"); f.hidden = true; f.src = links[i].href; document.body.appendChild(f);
-    setTimeout(() => f.remove(), 60000); links[i].classList.add("done");
-    await new Promise(r => setTimeout(r, 900));
-  }
-  $("#dlMsg").className = "msg ok"; $("#dlMsg").textContent = "다 보냈어요. 받은 파일 폴더를 확인해 주세요.";
-  $("#dlAll").disabled = false;
+  if (!USE_SHARE) return zipAll();
+  $("#dlAll").disabled = true;
+  const r = await fetchAll(dlNs);
+  const groups = []; for (let i = 0; i < r.files.length; i += CHUNK) groups.push(r.files.slice(i, i + CHUNK));
+  $("#dlChunks").innerHTML = groups.map((g, i) => `<button type="button" class="btn sm" data-g="${i}">${groups.length > 1 ? `${i * CHUNK + 1}–${i * CHUNK + g.length}번째 ` : ""}${g.length}장 저장</button>`).join("");
+  $("#dlChunks").onclick = async e => { const b = e.target.closest("[data-g]"); if (!b) return;
+    try { if (await shareFiles(groups[+b.dataset.g])) { b.classList.add("done"); b.textContent = "저장함 ✓ " + b.textContent.replace("저장함 ✓ ", ""); } }
+    catch (err) { say("저장 창을 열지 못했어요. 버튼을 한 번 더 눌러 주세요. 계속 안 되면 ZIP 파일로 받아 주세요.", "err"); } };
+  say((r.bad.length ? `받지 못한 사진: ${r.bad.join(", ")} · ` : "") + (groups.length > 1 ? "준비됐어요. 아래 버튼을 차례로 눌러 저장해 주세요." : "준비됐어요. 아래 버튼을 눌러 저장해 주세요."), "ok");
+  $("#dlAll").disabled = false; $("#dlAll").textContent = "다시 준비하기";
 };
+$("#dlZip").onclick = zipAll;
 $("#dlClose").onclick = () => dlg.close();
 dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
 
