@@ -1,169 +1,474 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>세화 아침 러닝 · 런린이집 | 영상 | 제주그래퍼</title>
-<meta name="description" content="구좌 러닝크루 런린이집 — 해녀박물관에서 별방진까지 달린 아침, 드론 FPV · 360 영상">
-<meta property="og:title" content="세화 아침 러닝 · 런린이집">
-<meta property="og:description" content="해녀박물관에서 별방진까지 — 드론 FPV · 360 영상">
-<meta property="og:image" content="cover.jpg">
-<meta name="robots" content="noindex">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JEJUGRAPHER — 제주그래퍼 | 3D 공간데이터 · AI 영상 · 촬영 · 편집 · 웹</title>
+<meta name="description" content="모든 기술을 자체 보유한 제주 기반 풀스택 스튜디오 JEJUGRAPHER. 3D 가우시안 스플래팅 공간데이터, AI 뮤직비디오, 드론·360 VR 촬영, 편집, 웹 제작까지 전 과정을 다룹니다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --sea:#0E2A3F; --deep:#071A2A; --panel:#14384F; --line:rgba(255,217,168,.18);
-  --dawn:#FFD9A8; --sun:#FFB86B; --teal:#5FC7D6; --cloud:#F3F7FA; --mute:#A8BDCC; --err:#FF9A8F;
+  --bg:#F8F4EC; --navy:#1F3A5F; --terra:#C97B5B; --ink:#2C2825; --line:#E3DCCE;
 }
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;color:var(--cloud);font-family:"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;line-height:1.6;
-  background:linear-gradient(180deg,#1B3550 0%,var(--sea) 28%,var(--deep) 100%) fixed;min-height:100vh}
-a{color:var(--teal)}
-.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
-header{padding:28px 0 18px;background:radial-gradient(120% 90% at 85% -10%,rgba(255,184,107,.38),rgba(255,217,168,.10) 45%,transparent 70%)}
-.back{display:inline-block;color:var(--mute);text-decoration:none;font-size:.92rem;margin-bottom:14px}
-.back:hover{color:var(--dawn)}
-.eyebrow{color:var(--sun);font-weight:700;letter-spacing:.04em;font-size:.95rem}
-h1{font-size:clamp(2rem,6vw,3.2rem);line-height:1.15;margin:.2em 0 .3em;font-weight:800}
-.lede{color:#DCE7EF;max-width:46em;margin:0}
-.meta{color:var(--mute);font-size:.92rem;margin-top:10px}
-h2{font-size:1.35rem;margin:0 0 .4em}
-section{padding:22px 0}
-.yt-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media (max-width:760px){.yt-grid{grid-template-columns:1fr}}
-.card{background:rgba(20,56,79,.62);border:1px solid var(--line);border-radius:14px;padding:14px}
-.card h3{margin:.1em 0 .2em;font-size:1.05rem}
-.card p{margin:0 0 10px;color:var(--mute);font-size:.92rem}
-.ratio{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000}
-.ratio iframe,.ratio img{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover}
-.ratio button{all:unset;cursor:pointer;position:absolute;inset:0}
-.play{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;
-  background:rgba(7,26,42,.62);border:2px solid var(--dawn)}
-.play:after{content:"";position:absolute;left:25px;top:19px;border-left:20px solid var(--dawn);border-top:13px solid transparent;border-bottom:13px solid transparent}
-.gate{display:flex;justify-content:center;padding:34px 0}
-.gate-box{width:min(440px,100%);text-align:center;background:rgba(20,56,79,.72);border:1px solid var(--line);border-radius:16px;padding:26px 18px}
-.gate-box .big{font-size:1.6rem;font-weight:800;color:var(--dawn)}
-.gate-box p{color:#DCE7EF;font-size:.95rem}
-form{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-input{font:inherit;font-size:1.15rem;letter-spacing:.12em;text-align:center;width:190px;padding:10px 12px;border-radius:10px;
-  border:1px solid var(--line);background:var(--deep);color:var(--cloud)}
-input:focus{outline:2px solid var(--teal);outline-offset:1px}
-.btn{font:inherit;font-weight:700;border:0;border-radius:10px;padding:10px 18px;background:var(--sun);color:#2A1606;cursor:pointer;text-decoration:none;display:inline-block}
-.btn.ghost{background:transparent;color:var(--dawn);border:1px solid var(--line)}
-.btn:focus-visible{outline:2px solid var(--cloud);outline-offset:2px}
-.err{color:var(--err);min-height:1.4em;margin-top:8px;font-size:.92rem}
-small{color:var(--mute)}
-.sec h2{margin-top:10px}
-.clips{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
-.clip{background:rgba(20,56,79,.55);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.clip .ratio{border-radius:0}
-.clip .t{padding:10px 12px 12px}
-.clip b{display:block}
-.clip span{display:block;color:var(--mute);font-size:.88rem}
-.clip .row{display:flex;gap:8px;margin-top:8px}
-.clip .row a{font-size:.9rem;padding:6px 12px}
-.how{color:#DCE7EF;font-size:.92rem;margin:0 0 12px}
-dialog{border:0;padding:0;background:transparent;max-width:none;max-height:none;width:100vw;height:100vh}
-dialog::backdrop{background:rgba(4,14,24,.92)}
-.stage{width:min(94vw,1100px);margin:6vh auto 0}
-.stage .ratio{border-radius:12px}
-.stage .bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
-footer{padding:28px 0 40px;color:var(--mute);font-size:.9rem;border-top:1px solid var(--line);margin-top:20px}
-footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;font-weight:400}
+h1,h2,h3{font-family:'Gowun Batang',serif}
+.container{max-width:1180px;margin:0 auto;padding:0 24px}
+section{padding:150px 0}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+nav{position:fixed;top:0;left:0;right:0;background:rgba(248,244,236,.94);border-bottom:1px solid var(--line);z-index:100;backdrop-filter:blur(8px)}
+.navin{max-width:1180px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Gowun Batang',serif;font-weight:700;font-size:19px;letter-spacing:2px;color:var(--navy)}
+.menu{display:flex;gap:22px;font-size:14px}
+.menu a{color:var(--ink)}
+.menu a:hover{color:var(--terra)}
+.menu .map{color:var(--terra);font-weight:500}
+
+.hero{padding:210px 0 150px;text-align:center}
+.eyebrow{font-size:13.5px;letter-spacing:3px;color:var(--terra);margin-bottom:22px;font-weight:500}
+.hero h1{font-size:42px;line-height:1.5;color:var(--navy);font-weight:700;margin-bottom:26px}
+.hero .sub{font-size:16.5px;color:#5a544c;max-width:660px;margin:0 auto 40px}
+.cta{display:inline-block;background:var(--terra);color:#fff;padding:16px 38px;font-size:15.5px;font-weight:500;letter-spacing:.5px;border:0;cursor:pointer}
+.cta:hover{background:#b56a4c}
+.stackrow{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:54px}
+.stack{border:1px solid var(--line);background:#fff;padding:9px 18px;font-size:13.5px;color:var(--navy)}
+.stack b{color:var(--terra);font-weight:500;margin-right:6px}
+
+.shead{margin-bottom:60px}
+.snum{font-size:13px;letter-spacing:3px;color:var(--terra);margin-bottom:14px;font-weight:500}
+.shead h2{font-size:30px;color:var(--navy);line-height:1.5;font-weight:700}
+.shead p{margin-top:14px;font-size:15.5px;color:#5a544c;max-width:680px}
+
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:64px}
+.scitem{position:relative;background:#000;overflow:hidden}
+.scitem img{width:100%;height:190px;object-fit:cover;transition:.25s}
+.scitem:hover img{transform:scale(1.05)}
+.sclab{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,rgba(20,18,15,.85));color:#fff;font-size:12.5px;padding:26px 12px 10px}
+.sclab b{display:block;font-size:13.5px;font-weight:500}
+
+.domains{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.dom{background:#fff;border:1px solid var(--line);padding:34px 32px}
+.dom h3{font-size:18px;color:var(--navy);margin-bottom:12px}
+.dom p{font-size:14.5px;color:#5a544c}
+.morelink{display:inline-block;margin-top:40px;font-size:15px;color:var(--terra);font-weight:500;border-bottom:1px solid var(--terra);padding-bottom:2px;margin-right:28px}
+
+.feat{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.feat .vwrap{position:relative;padding-top:56.25%;background:#000}
+.feat iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.feat .vt{margin-top:14px;font-size:15px;font-weight:500;color:var(--navy)}
+.feat .vd{font-size:13.5px;color:#8d8577}
+
+.works{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:52px}
+.wcard{background:#fff;border:1px solid var(--line);transition:.15s}
+.wcard:hover{border-color:var(--terra)}
+.wthumb{position:relative;padding-top:56.25%;overflow:hidden;background:#ddd}
+.wthumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.wbody{padding:15px 17px 17px}
+.wt{font-size:15px;font-weight:500;color:var(--navy)}
+.wd{font-size:13px;color:#8d8577;margin-top:3px}
+.badge{display:inline-block;font-size:11.5px;color:#fff;background:var(--navy);padding:2px 9px;margin-top:8px;letter-spacing:.5px}
+
+.chans{margin-top:56px;padding-top:40px;border-top:1px solid var(--line)}
+.chans .ct{font-size:14px;color:#8d8577;margin-bottom:16px}
+.chrow{display:flex;flex-wrap:wrap;gap:12px}
+.chip{border:1px solid var(--navy);color:var(--navy);padding:10px 20px;font-size:14px;background:transparent;cursor:pointer}
+.chip:hover{background:var(--navy);color:#fff}
+
+.gearwrap{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.gear{background:#fff;border:1px solid var(--line);padding:30px 26px}
+.gear .gt{font-size:13px;letter-spacing:2px;color:var(--terra);margin-bottom:10px;font-weight:500}
+.gear h3{font-size:17.5px;color:var(--navy);margin-bottom:8px}
+.gear p{font-size:13.5px;color:#5a544c}
+.years{display:flex;gap:44px;margin-top:56px;flex-wrap:wrap}
+.years .y{font-family:'Gowun Batang',serif;font-size:34px;color:var(--terra)}
+.years .yl{font-size:13.5px;color:#8d8577}
+
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.step{background:#fff;border:1px solid var(--line);padding:28px 26px}
+.step .n{font-family:'Gowun Batang',serif;font-size:24px;color:var(--terra);margin-bottom:12px}
+.step h3{font-size:16.5px;color:var(--navy);margin-bottom:9px}
+.step p{font-size:13.5px;color:#5a544c}
+.comm{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:52px}
+.commcard{background:#fff;border:1px solid var(--line);padding:26px 24px}
+.commcard h3{font-size:15.5px;color:var(--navy);margin-bottom:8px}
+.commcard p{font-size:13px;color:#5a544c}
+.commcard .st{display:inline-block;font-size:11.5px;color:var(--terra);border:1px solid var(--terra);padding:1px 8px;margin-top:10px}
+
+.mapsec{background:var(--navy);color:#f4efe4}
+.mapsec .snum{color:#e8b49a}
+.mapsec h2{color:#fff}
+.mapsec .shead p{color:#c3cddc}
+.mapgrid{display:grid;grid-template-columns:1.2fr 1fr;gap:44px;align-items:center;margin-bottom:60px}
+.mapframe{border:1px solid #3a557e;background:#16294a;position:relative;padding-top:66%}
+.mapframe iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.mapinfo h3{font-family:'Gowun Batang',serif;font-size:24px;margin-bottom:16px;color:#fff}
+.mapinfo p{font-size:15px;color:#c3cddc;margin-bottom:12px}
+.mapstat{display:flex;gap:36px;margin:26px 0}
+.mapstat .num{font-family:'Gowun Batang',serif;font-size:29px;color:#e8b49a}
+.mapstat .lab{font-size:13px;color:#93a5c1;margin-top:2px}
+.mapbtn{display:inline-block;background:var(--terra);color:#fff;padding:14px 32px;font-size:15px;font-weight:500}
+.mapbtn:hover{background:#b56a4c}
+.webgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.webcard{background:#243f66;border:1px solid #3a557e;padding:28px 26px}
+.webcard h3{font-family:'Gowun Batang',serif;font-size:17px;color:#fff;margin-bottom:8px}
+.webcard p{font-size:13.5px;color:#c3cddc}
+.webcard a{display:inline-block;margin-top:14px;font-size:13.5px;color:#e8b49a;border-bottom:1px solid #e8b49a}
+
+.contact{text-align:center}
+.contact .closing{font-family:'Gowun Batang',serif;font-size:22px;line-height:1.9;color:var(--navy);max-width:680px;margin:0 auto 48px}
+.cinfo{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;font-size:14.5px;color:#5a544c;margin:48px 0 36px}
+.cinfo b{color:var(--navy);font-weight:500}
+.creds{font-size:13px;color:#8d8577;margin-top:40px;letter-spacing:.3px}
+.snsrow{display:flex;justify-content:center;gap:14px;margin-top:24px}
+
+footer{border-top:1px solid var(--line);padding:32px 0;font-size:13px;color:#8d8577}
+.fin{max-width:1180px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+footer a{color:var(--terra)}
+footer .adminlink{color:#b7ab97}
+
+@media (max-width:1024px){
+  .hero h1{font-size:33px}
+  .scale{grid-template-columns:repeat(3,1fr)}
+  .works{grid-template-columns:repeat(2,1fr)}
+  .steps,.gearwrap,.comm{grid-template-columns:1fr 1fr}
+  .mapgrid{grid-template-columns:1fr}
+  .webgrid{grid-template-columns:1fr}
+}
+@media (max-width:767px){
+  section{padding:96px 0}
+  .hero{padding:150px 0 100px}
+  .hero h1{font-size:26px}
+  .scale{grid-template-columns:repeat(2,1fr)}
+  .feat,.works,.steps,.gearwrap,.comm,.domains{grid-template-columns:1fr}
+}
+
+/* 휴대폰: ☰ 메뉴 버튼 → 누르면 메뉴 목록이 아래로 펼쳐짐 (모든 메뉴를 한눈에, 크게 눌러지게) */
+.mtog{display:none}
+@media (max-width:860px){
+  html{scroll-padding-top:76px}
+  .mtog{display:inline-flex;align-items:center;gap:6px;height:42px;padding:0 16px;border:1px solid rgba(26,43,74,.25);border-radius:999px;background:#fff;color:#1A2B4A;font:500 15px/1 inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .mtog[aria-expanded="true"]{background:#1A2B4A;color:#fff}
+  .menu{display:none!important;position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:0!important;background:#F8F4EC;border-bottom:1px solid rgba(0,0,0,.1);box-shadow:0 14px 28px rgba(0,0,0,.12);padding:4px 0 10px;max-height:calc(100vh - 64px);max-height:calc(100dvh - 64px);overflow-y:auto;font-size:16px!important}
+  .menu.open{display:flex!important}
+  .menu a{display:block;padding:15px 24px;border-top:1px solid rgba(0,0,0,.07);font-size:16px}
+  .menu a:first-child{border-top:0}
+}
+
+/* 웹 · 체험 제작 — 체험 게임 */
+.gamerow{margin-top:40px;border:1px solid var(--line);background:#fff;padding:26px 26px 24px;scroll-margin-top:80px}
+.gamehead span{font-size:12.5px;letter-spacing:1.5px;color:var(--terra);font-weight:500}
+.gamehead h3{font-family:'Gowun Batang',serif;font-size:22px;color:var(--navy);margin:6px 0 8px;line-height:1.45}
+.gamehead p{font-size:15px;color:#5a544c;max-width:760px}
+.gamecard2{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px 28px;align-items:end;margin-top:18px;border-top:1px solid var(--line);padding-top:18px}
+.gamecard2 b{font-size:18px;color:var(--navy)}
+.gamecard2 span{font-size:13px;color:var(--terra);margin-left:10px}
+.gamecard2 p{font-size:14.5px;color:#5a544c;margin-top:6px}
+.gl{display:flex;flex-direction:column;gap:8px}
+.gl a{border:1px solid var(--navy);color:var(--navy);padding:9px 16px;font-size:14px;text-align:center;white-space:nowrap}
+.gl a:first-child{background:var(--navy);color:#fff}
+@media (max-width:767px){.gamerow{padding:20px 16px}.gamecard2{grid-template-columns:1fr}.gl a{white-space:normal}}
 </style>
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <a class="back" href="/media.html">← 영상 · 사진 보기 · 제주그래퍼</a>
-    <div class="eyebrow">구좌 러닝크루 · 세화 모닝런</div>
-    <h1>세화 아침 러닝 · 런린이집</h1>
-    <p class="lede">제주해녀박물관에서 몸을 풀고, 면수동 포구와 용문사를 지나 별방진을 조금 넘어 돌아온 아침을 드론 FPV와 360 카메라로 담았습니다.</p>
-    <p class="meta">런린이집 <a href="https://www.instagram.com/nursery.run/" target="_blank" rel="noopener">@nursery.run</a> · 헬린이집 <a href="https://www.instagram.com/nursery.gym/" target="_blank" rel="noopener">@nursery.gym</a></p>
+
+<nav>
+  <div class="navin">
+    <a class="logo" href="#top">JEJUGRAPHER</a>
+    <button class="mtog" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="siteMenu">☰ 메뉴</button>
+    <div class="menu" id="siteMenu">
+      <a href="spatial/index.html">공간데이터</a>
+      <a href="#filming">영상 제작</a>
+      <a href="#web">웹·체험 제작</a>
+      <a href="aiclass.html">AI 강의</a>
+      <a href="byeolbam.html">별밤사진관</a>
+      <a href="media.html">영상·사진 보기</a>
+      <a class="map" href="https://jajumap.com" target="_blank" rel="noopener">제주맵 ↗</a>
+      <a href="inquiry.html">문의</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="container">
+    <div class="eyebrow">JEJUGRAPHER · 제주그래퍼 · SINCE 2017</div>
+    <h1>현실의 공간과 이야기를<br>기술로 빚어내는 풀스택 스튜디오</h1>
+    <p class="sub">3D 가우시안 스플래팅 공간데이터부터 AI 뮤직비디오, 드론·360° 촬영과 편집, 웹 서비스 제작까지 — 다섯 개의 기술 영역을 모두 자체 보유해, 기획부터 납품까지 외주 없이 원스톱으로 진행합니다.</p>
+    <a class="cta" href="inquiry.html">프로젝트 편하게 문의하기</a>
+    <div class="stackrow">
+      <a class="stack" href="#gs3d"><b>01</b>3D 공간데이터</a>
+      <a class="stack" href="#filming"><b>02</b>촬영</a>
+      <a class="stack" href="#editing"><b>03</b>편집 · 포스트</a>
+      <a class="stack" href="#aivideo"><b>04</b>AI 영상 제작</a>
+      <a class="stack" href="#web"><b>05</b>웹 · 체험 제작</a>
+    </div>
   </div>
 </header>
 
-<main>
-<section>
-  <div class="wrap">
-    <div class="yt-grid">
-      <div class="card">
-        <h3>같이 달리면, 아침이 가볍다</h3>
-        <p>런린이집 크루 소개 · 2분</p>
-        <div class="ratio" data-yt="9LojjzD7vqQ"><button type="button" aria-label="크루 소개 영상 재생"><img src="https://i.ytimg.com/vi/9LojjzD7vqQ/hqdefault.jpg" alt="" loading="lazy"><span class="play"></span></button></div>
+<!-- 01 3DGS 공간데이터 -->
+<section id="gs3d" style="background:#fff">
+  <div class="container">
+    <div class="shead">
+      <div class="snum">01 — 3D SPATIAL DATA · GAUSSIAN SPLATTING</div>
+      <h2>현장을 통째로 떠서, 모니터 위로 가져옵니다.</h2>
+      <p>하늘의 항공 촬영부터 동굴 내부, 걸어서 담는 실내, 0.07mm급 초정밀 접사까지 — 전혀 다른 다섯 가지 크기의 공간이 하나의 3D 파이프라인에서 만들어집니다. 촬영·재구성·검증·배포 전 과정을 자체 기술과 장비로 수행합니다.</p>
+    </div>
+
+    <div class="scale">
+      <a class="scitem" href="spatial/index.html"><img loading="lazy" src="spatial/images/jgcv7_s03_axis1_aerial_v2.jpeg" alt="항공 광역 스캔"><span class="sclab"><b>항공 광역</b>드론 · km 단위</span></a>
+      <a class="scitem" href="spatial/index.html"><img loading="lazy" src="spatial/images/jgcv7_s04_axis2_widecave_v2.jpeg" alt="대형 동굴 스캔"><span class="sclab"><b>대형 동굴</b>광대역 내부 공간</span></a>
+      <a class="scitem" href="spatial/index.html"><img loading="lazy" src="spatial/images/jgcv7_s05_axis3_crawlcave_v2.jpeg" alt="협소 동굴 스캔"><span class="sclab"><b>협소 동굴</b>포복 구간 정밀 기록</span></a>
+      <a class="scitem" href="spatial/index.html"><img loading="lazy" src="spatial/images/jgcv7_s06_axis4_walkingscan_v1.jpeg" alt="보행 스캔"><span class="sclab"><b>보행 스캔</b>실내·시설 공간</span></a>
+      <a class="scitem" href="spatial/index.html"><img loading="lazy" src="spatial/images/jgcv7_s07_axis5_microscan_v1.jpeg" alt="초정밀 접사 스캔"><span class="sclab"><b>초정밀 접사</b>0.07mm급 사물</span></a>
+    </div>
+
+    <div class="domains">
+      <div class="dom"><h3>3D 가우시안 입자 기술</h3><p>수천만 개의 빛나는 점으로 사물을 빚어냅니다. 투명한 유리나 거친 질감까지 눈앞에 있는 것처럼 생생하게 살려냅니다.</p></div>
+      <div class="dom"><h3>사진 3D 변환 기술</h3><p>여러 장의 평면 사진을 마치 찰흙처럼 이어 붙여 입체로 만듭니다. 여러분의 소중한 공간이 자연스러운 3D 작품으로 새롭게 태어납니다.</p></div>
+      <div class="dom"><h3>초정밀 드론 항공 측량</h3><p>하늘의 위성 좌표계로 거대한 대자연을 스케치합니다. 복잡한 마을이나 거대한 산맥도 오차 없이 꼼꼼하게 3D 지도로 펼쳐냅니다.</p></div>
+      <div class="dom"><h3>고품질 3D 엔진 통합</h3><p>흩어진 조각들을 영화 속 한 장면처럼 아름답게 합쳐냅니다. 인터넷 연결 없이도 누구나 편안하게 현장을 거닐며 체험할 수 있습니다.</p></div>
+    </div>
+
+    <a class="morelink" href="spatial/index.html">공간데이터 스튜디오 전체 보기 ↗</a>
+    <a class="morelink" href="https://sketchfab.com/Hyun-seok.Jun" target="_blank" rel="noopener">3D 작품 직접 감상해보기 ↗</a>
+  </div>
+</section>
+
+<!-- 03 촬영 -->
+<section id="filming">
+  <div class="container">
+    <div class="shead">
+      <div class="snum">02 — FILMING · AERIAL · 360°</div>
+      <h2>하늘에서, 물가에서, 동굴 속에서 찍습니다.</h2>
+      <p>시네마틱 드론과 FPV, 8K 360° 카메라, 풀프레임 미러리스를 현장에 맞게 조합합니다. 영상·사진 16년, 360° VR 13년의 촬영 경험이 바탕입니다. 이 섹션의 영상은 모두 실제 촬영본입니다.</p>
+    </div>
+
+    <div class="feat" style="margin-bottom:56px">
+      <div>
+        <div class="vwrap"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/MeDE5tZcCZc" title="만장굴 360 VR" allowfullscreen></iframe></div>
+        <div class="vt">만장굴 내부 360° VR — 지하 실시간 지도 <span class="badge" style="margin-left:6px">360° 실사</span></div>
+        <div class="vd">8K 360° 실사 촬영 · GPS가 닿지 않는 동굴 내부를 3D 재구성 지도와 함께 걷습니다</div>
       </div>
-      <div class="card">
-        <h3>Morning Run on Jeju's Rainbow Seawall</h3>
-        <p>FPV · 360 드론 본편 · 4분</p>
-        <div class="ratio" data-yt="m9nS_ENCcHA"><button type="button" aria-label="FPV 본편 영상 재생"><img src="https://i.ytimg.com/vi/m9nS_ENCcHA/hqdefault.jpg" alt="" loading="lazy"><span class="play"></span></button></div>
+      <div>
+        <div style="background:#fff;border:1px solid var(--line);padding:30px 28px;height:100%">
+          <div class="gt" style="font-size:13px;letter-spacing:2px;color:var(--terra);font-weight:500;margin-bottom:12px">REAL FOOTAGE CHANNELS</div>
+          <h3 style="font-size:17.5px;color:var(--navy);margin-bottom:10px">실사 영상은 유형별 채널에서</h3>
+          <p style="font-size:14px;color:#5a544c;margin-bottom:18px">오름·해변·계곡을 담은 8K 360° VR과 스피드감 있는 FPV, 행사·풍경 시네마틱 실사 영상을 채널에서 감상할 수 있습니다.</p>
+          <div class="chrow">
+            <a class="chip" href="https://www.youtube.com/@360VRjeju" target="_blank" rel="noopener">360° VR 영상 ↗</a>
+            <a class="chip" href="https://youtube.com/@jejugrapher" target="_blank" rel="noopener">FPV · 실사 영상 ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gearwrap">
+      <div class="gear"><div class="gt">CINEMATIC DRONE</div><h3>시네마틱 항공 촬영</h3><p>해안선과 오름, 행사장을 부드러운 항공 시점으로 담습니다. 대형 화면에도 견디는 고해상도 촬영.</p></div>
+      <div class="gear"><div class="gt">FPV</div><h3>FPV 다이나믹 촬영</h3><p>고공 낙하, 좁은 공간 통과, 인물 추적 — 일반 드론이 만들 수 없는 속도감 있는 시점을 만듭니다.</p></div>
+      <div class="gear"><div class="gt">8K 360°</div><h3>360° VR 촬영</h3><p>8K 360° 카메라로 공간 전체를 기록합니다. VR 헤드셋 감상과 리프레이밍 편집 모두 대응합니다.</p></div>
+      <div class="gear"><div class="gt">FULL-FRAME</div><h3>지상 시네마틱</h3><p>풀프레임 미러리스로 인물과 현장을 시네마틱하게 담습니다. 8K 촬영과 저조도 환경에 강합니다.</p></div>
+    </div>
+    <div class="years">
+      <div><div class="y">16년+</div><div class="yl">영상 · 사진</div></div>
+      <div><div class="y">13년+</div><div class="yl">360° VR</div></div>
+      <div><div class="y">4년+</div><div class="yl">AI 워크플로우</div></div>
+      <div><div class="y">2017</div><div class="yl">스튜디오 설립</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 편집 · 포스트 -->
+<section id="editing" style="background:#fff">
+  <div class="container">
+    <div class="shead">
+      <div class="snum">03 — EDITING · POST-PRODUCTION</div>
+      <h2>찍은 것을 작품으로 다듬습니다.</h2>
+      <p>비트에 맞춘 컷 편집, 모션그래픽과 자막, 색보정, 다국어 배리에이션까지 — 촬영본과 AI 생성물이 한 편의 완성작으로 이어집니다.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h3>구성 · 컷 편집</h3><p>음악의 비트와 에너지 곡선에 맞춰 컷을 배치합니다. 훅이 터지는 순간을 계산해 설계합니다.</p></div>
+      <div class="step"><div class="n">02</div><h3>모션그래픽 · 자막</h3><p>타이틀, 지도 오버레이, 정보 카드, 캘리그래피 타이포를 영상 위에 얹습니다.</p></div>
+      <div class="step"><div class="n">03</div><h3>색보정 · 사운드</h3><p>장면의 감정에 맞는 색을 입히고, 음악과 효과음의 균형을 잡습니다.</p></div>
+      <div class="step"><div class="n">04</div><h3>플랫폼별 마감</h3><p>유튜브·쇼츠·릴스 규격과 다국어 자막·메타데이터까지 배포 형태로 마무리합니다.</p></div>
+    </div>
+    <div class="comm">
+      <div class="commcard"><h3>갯것이영화제 인트로</h3><p>새벽 갯벌과 아이, 갯고둥의 이야기. AI 이미지·영상 제작 담당.</p><span class="st">진행 중</span></div>
+      <div class="commcard"><h3>2026 세계 습지의 날 오프닝</h3><p>「생명이 머무는 곳, 습지」 해양환경공단 발주 오프닝 영상.</p><span class="st">진행 중</span></div>
+      <div class="commcard"><h3>K-Dream Dance Festa 2026</h3><p>곽지해변 댄스 페스타 항공·FPV 촬영과 애프터무비 편집.</p><span class="st">완료</span></div>
+      <div class="commcard"><h3>생태관광 주간 × 갯것이 영화제</h3><p>영화 6편·생태 체험 6개를 담은 홍보 영상과 안내 그래픽.</p><span class="st">완료</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 AI 영상 제작 -->
+<section id="aivideo">
+  <div class="container">
+    <div class="shead">
+      <div class="snum">04 — AI FILMS &amp; MUSIC VIDEOS</div>
+      <h2>AI로 이야기를 노래와 영상으로 만듭니다.</h2>
+      <p>음악 생성부터 이미지·영상 생성, 유통까지 AI 파이프라인 전 과정을 직접 설계해 운용합니다. 최대 9개 언어로 같은 노래를 다시 부르고, 제주를 배경으로 한 세계관을 쌓아 갑니다. 아래 작품은 모두 AI로 제작했습니다.</p>
+    </div>
+
+    <div class="feat">
+      <div>
+        <div class="vwrap"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/s6JVKpELk3E" title="Hello Stranger Ep.1" allowfullscreen></iframe></div>
+        <div class="vt">Hello Stranger — Ep.1 Signal of Edge</div>
+        <div class="vd">자체 IP 뮤직비디오 시리즈 · 제주를 배경으로 한 이방인들의 이야기</div>
+      </div>
+      <div>
+        <div class="vwrap"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/jhK_eqwDmBI" title="Snow Tonight" allowfullscreen></iframe></div>
+        <div class="vt">Snow Tonight — Funk Pop</div>
+        <div class="vd">AI 생성 뮤직비디오 · 제주 겨울밤 · 50클립 드론샷 스타일</div>
+      </div>
+    </div>
+
+    <div class="works">
+      <a class="wcard" href="https://youtu.be/ihgfKZY7Hfs" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/ihgfKZY7Hfs/hqdefault.jpg" alt="가을에 놓다"></div>
+        <div class="wbody"><div class="wt">가을에 놓다</div><div class="wd">Progressive House</div><span class="badge">9개 언어</span></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/MLaU5dq7J6o" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/MLaU5dq7J6o/hqdefault.jpg" alt="바람이 말해줘"></div>
+        <div class="wbody"><div class="wt">바람이 말해줘</div><div class="wd">90년대 팝 발라드</div><span class="badge">4개 언어</span></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/2fgWcRZVNtI" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/2fgWcRZVNtI/hqdefault.jpg" alt="디지털 아리랑"></div>
+        <div class="wbody"><div class="wt">디지털 아리랑</div><div class="wd">K-Pop · 판소리 퓨전</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/4V_pfyzVWt4" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/4V_pfyzVWt4/hqdefault.jpg" alt="아리랑 2026"></div>
+        <div class="wbody"><div class="wt">아리랑 2026</div><div class="wd">퓨전국악</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/mc2WNM2zQQs" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/mc2WNM2zQQs/hqdefault.jpg" alt="보고 싶어"></div>
+        <div class="wbody"><div class="wt">보고 싶어</div><div class="wd">샤우팅 랩</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/Kn7OSYGoAH0" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/Kn7OSYGoAH0/hqdefault.jpg" alt="웨스 앤더슨 스타일 뮤직비디오"></div>
+        <div class="wbody"><div class="wt">웨스 앤더슨 스타일 MV</div><div class="wd">대칭 구도 · 파스텔</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/cteAqGGwDZ4" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/cteAqGGwDZ4/hqdefault.jpg" alt="그냥, 옆에"></div>
+        <div class="wbody"><div class="wt">그냥, 옆에</div><div class="wd">발라드</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/AI7w-trKFQQ" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/AI7w-trKFQQ/hqdefault.jpg" alt="혼자 온 제주"></div>
+        <div class="wbody"><div class="wt">혼자 온 제주</div><div class="wd">힐링 여행</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/M7x6o0pMcHY" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/M7x6o0pMcHY/hqdefault.jpg" alt="우리의 새해"></div>
+        <div class="wbody"><div class="wt">우리의 새해</div><div class="wd">신년 · 위로</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/XSrJiy757U4" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/XSrJiy757U4/hqdefault.jpg" alt="바람이 말해줘 일본어"></div>
+        <div class="wbody"><div class="wt">風が教えてくれる</div><div class="wd">바람이 말해줘 · 일본어판</div></div>
+      </a>
+      <a class="wcard" href="https://youtu.be/rw6olFCKUR0" target="_blank" rel="noopener">
+        <div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/rw6olFCKUR0/hqdefault.jpg" alt="Let Go in Autumn"></div>
+        <div class="wbody"><div class="wt">Let Go in Autumn</div><div class="wd">가을에 놓다 · 영어판</div></div>
+      </a>
+    </div>
+
+    <div class="chans">
+      <div class="ct">유튜브 채널 — 성격별로 나누어 운영합니다.</div>
+      <div class="chrow">
+        <a class="chip" href="https://youtube.com/@high-reschronicles-ku4dx" target="_blank" rel="noopener">뮤직비디오 ↗</a>
+        <a class="chip" href="https://youtube.com/@airamedia_kids" target="_blank" rel="noopener">아동 뮤직비디오 ↗</a>
+        <a class="chip" href="https://youtube.com/@airashortsmedia" target="_blank" rel="noopener">광고 · 실험 쇼츠 ↗</a>
+        <a class="chip" href="https://youtube.com/@jejugrapher" target="_blank" rel="noopener">FPV · 실험 영상 ↗</a>
+        <a class="chip" href="https://www.youtube.com/@360VRjeju" target="_blank" rel="noopener">360° VR ↗</a>
       </div>
     </div>
   </div>
 </section>
 
-<section class="gate" id="gate">
-  <div class="gate-box">
-    <div class="big">전체 영상 받기 🔒</div>
-    <p>그날 함께 달린 분들을 위한 전체 길이 영상 10개(1080p, 색 보정)입니다.<br>안내받은 비밀번호(숫자 열 자리)를 입력해 주세요.</p>
-    <form id="gateForm" autocomplete="off">
-      <input id="pw" inputmode="numeric" maxlength="12" placeholder="숫자 열 자리" aria-label="비밀번호" required>
-      <button class="btn" type="submit">열기</button>
-    </form>
-    <div class="err" id="gateErr" role="alert"></div>
-    <small>비밀번호는 크루장님을 통해 안내해 드렸어요.</small>
+<!-- 05 웹 · 인터랙티브 -->
+<section class="mapsec" id="web">
+  <div class="container">
+    <div class="shead">
+      <div class="snum">05 — WEB · INTERACTIVE · GAMES</div>
+      <h2>콘텐츠가 사는 집까지 직접 짓습니다.</h2>
+      <p>지도 서비스부터 행사 안내 페이지, 아이들이 직접 읽는 축제 페이지, 행사장 대형화면에서 여럿이 함께하는 체험 게임까지 — 프레임워크 없는 가벼운 웹으로 직접 설계하고 구현합니다.</p>
+    </div>
+    <div class="mapgrid">
+      <div class="mapframe">
+        <iframe loading="lazy" src="https://jajumap.com" title="제주맵 — 제주 여행자 지도"></iframe>
+      </div>
+      <div class="mapinfo">
+        <h3>제주 여행자 지도, 제주맵</h3>
+        <p>직접 다니며 모은 제주의 장소들을 한 장의 지도에 담았습니다. 촬영한 영상이 지도 위의 자리와 연결됩니다.</p>
+        <div class="mapstat">
+          <div><div class="num">930+</div><div class="lab">등록 스팟</div></div>
+          <div><div class="num">4</div><div class="lab">지원 언어</div></div>
+          <div><div class="num">자동</div><div class="lab">드론 규제 판별</div></div>
+        </div>
+        <a class="mapbtn" href="https://jajumap.com" target="_blank" rel="noopener">jajumap.com 바로가기 ↗</a>
+      </div>
+    </div>
+    <div class="webgrid">
+      <div class="webcard"><h3>갯것이 영화제 × 생태관광 주간</h3><p>상영작·체험 프로그램·예매를 안내하는 행사 공식 페이지.</p><a href="https://jejuecotourism.com" target="_blank" rel="noopener">jejuecotourism.com ↗</a></div>
+      <div class="webcard"><h3>초록별 환경놀이터 (해바라기센터)</h3><p>구좌 아이들이 그린 그림으로 만든 환경축제 안내 페이지. 손그림 행사장 지도·프로그램·시간표를 아이 눈높이로.</p><a href="https://jejugrapher.github.io/Jeju-Sunflower/" target="_blank" rel="noopener">초록별 환경놀이터 ↗</a></div>
+      <div class="webcard"><h3>공간데이터 쇼케이스</h3><p>5축 스캔 라인업과 워크플로우를 소개하는 기술 갤러리.</p><a href="spatial/index.html">jejugrapher.com/spatial ↗</a></div>
+      <div class="webcard"><h3>이 웹사이트</h3><p>지금 보고 계신 페이지 — 단일 HTML과 바닐라 JS로 직접 제작.</p><a href="https://jejugrapher.com">jejugrapher.com</a></div>
+    </div>
+    <div class="gamerow" id="games">
+      <div class="gamehead"><span>체험 게임 · 직접 기획·제작</span><h3>QR 하나로 다 함께, 대형화면 멀티플레이</h3><p>계정도 앱 설치도 없이 폰으로 QR을 찍으면 바로 참여합니다. 행사장·교실·전시장 대형화면에 띄워 여럿이 함께 즐기는 체험형 웹 게임입니다.</p></div>
+      <div class="gamecard2">
+        <div><b>🧹 청소 대작전</b><span>최대 10명 · 멀티플레이</span><p>캐릭터와 장비를 골라 랜덤으로 정해지는 제주 맵(마을·해변·계곡·곶자왈)을 누비며 쓰레기를 치우는 청소 경쟁 게임. 물개·게·조랑말·해녀·구좌당근·세화바다거북 캐릭터.</p></div>
+        <div class="gl"><a href="games.html">게임 소개 · 사용법</a><a href="games/cleanup/" target="_blank" rel="noopener">대형화면으로 열기 ↗</a><a href="games/cleanup/phone/" target="_blank" rel="noopener">폰 화면 미리보기 ↗</a></div>
+      </div>
+    </div>
   </div>
 </section>
 
-<section id="clipsArea" hidden>
-  <div class="wrap">
-    <p class="how">▶ 를 누르면 여기서 바로 보고, <b>드라이브에서 받기</b>를 누르면 구글 드라이브 화면의 받기(↓) 버튼으로 원본 파일을 저장할 수 있어요. 휴대폰은 드라이브 앱에서 「사본 저장/오프라인」을 쓰면 편해요.</p>
-    <div id="secs"></div>
+<!-- 별밤사진관 -->
+<section id="byeolbam" style="background:radial-gradient(120% 90% at 50% 0%,#0e2547 0%,#0B1D3A 45%,#06122A 100%);color:#EEF3F9;overflow:hidden">
+  <div class="container" style="text-align:center">
+    <div class="snum" style="color:#BFF3FF">EXPERIENCE · 별밤사진관 · 야간 빛그림 사진</div>
+    <h2 style="font-size:31px;color:#fff;line-height:1.5;text-shadow:0 0 22px rgba(86,203,239,.45)">제주 밤하늘 아래, 빛으로 그린 한 장</h2>
+    <p style="font-size:15.5px;color:#c3d4e8;max-width:660px;margin:16px auto 0">전현석이 직접 진행하는 야간 라이트 페인팅 사진 체험입니다. 어두운 제주의 밤, 빛으로 그린 그림 속에 여러분의 한 장면을 남깁니다. 방송 「산꾼도시여자들」에도 소개되었습니다.</p>
+    <a class="cta" href="byeolbam.html" style="margin-top:34px;background:#56CBEF;color:#06122A">별밤사진관 자세히 보기 ↗</a>
   </div>
 </section>
-</main>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="snum" style="margin-bottom:36px">06 — CONTACT</div>
+    <p class="closing">봐 주셔서 고맙습니다.<br>여러분의 소중한 공간과 이야기가 디지털 세상에서 오래 숨 쉴 수 있도록 정성껏 만들어 드릴게요.<br>언제든 편안하게 이야기를 들려주세요.</p>
+    <a class="cta" href="inquiry.html">문의 남기기</a>
+    <div class="cinfo">
+      <span><b>이메일</b> whipia@naver.com</span>
+      <span><b>전화</b> 010-6778-9199</span>
+      <span><b>주소</b> 제주 제주시 산천단동1길 15, 1동 3층 303호</span>
+    </div>
+    <div class="snsrow">
+      <a class="chip" href="https://instagram.com/jejugrapher" target="_blank" rel="noopener">Instagram ↗</a>
+      <a class="chip" href="https://sketchfab.com/Hyun-seok.Jun" target="_blank" rel="noopener">Sketchfab ↗</a>
+      <a class="chip" href="https://jajumap.com" target="_blank" rel="noopener">제주맵 ↗</a>
+    </div>
+    <div class="creds">2017년 설립 · 제주창조경제혁신센터 입주기업 · 청년창업사관학교 수료 · 사업자등록번호 512-11-63348</div>
+  </div>
+</section>
 
 <footer>
-  <div class="wrap">
-    <span>세화 아침 러닝 · 런린이집</span>
-    <span>촬영·편집 : <a href="https://jejugrapher.com/" target="_blank" rel="noopener" style="color:var(--dawn);font-weight:700">제주그래퍼</a></span>
+  <div class="fin">
+    <span>© 2026 JEJUGRAPHER · 전현석</span>
+    <span><a href="https://jajumap.com" target="_blank" rel="noopener">jajumap.com</a> · <a href="https://jejuecotourism.com" target="_blank" rel="noopener">jejuecotourism.com</a></span>
   </div>
 </footer>
 
-<dialog id="dv" aria-label="영상 보기">
-  <div class="stage">
-    <div class="ratio" id="dvBox"></div>
-    <div class="bar"><b id="dvT"></b><span><a class="btn ghost" id="dvDl" target="_blank" rel="noopener">드라이브에서 받기</a> <button class="btn" type="button" id="dvX">닫기</button></span></div>
-  </div>
-</dialog>
-
-<script>
-const HASH = "b53b806185b1df8096283414ab12df2ebc4adf3453c378db18cd1e43c4e1e958";
-const DATA = [{"s":"360 · 크루 옆에서 따라가며","v":[{"id":"1BU1krGiydCJJo_qee0RsNj43oWxLDg4S","label":"360 01 이륙과해안달리기","note":"이륙 → 해맞이해안로를 달리는 크루 옆 · 면수동 포구","poster":"s/세화러닝_360_01_이륙과해안달리기.jpg","d":"4:50"},{"id":"1af6F4xBuXOdGdZIPlonGn6H-snG-cdAv","label":"360 02 마무리스트레칭과단체","note":"돌아와 카메라 앞 댄스 · 마무리 스트레칭과 단체 인사","poster":"s/세화러닝_360_02_마무리스트레칭과단체.jpg","d":"4:34"}]},{"s":"드론 FPV · 세화~하도 해안과 별방진","v":[{"id":"18G5lie_2Fa_qKOplpb2QKn4PATix2GCh","label":"FPV 01 해안과일출","note":"해 뜬 바다 위에서 크루 쪽으로","poster":"s/세화러닝_FPV_01_해안과일출.jpg","d":"3:33"},{"id":"1AL_l9VOxhHZPtly7V9MtEONt0xmVwr-v","label":"FPV 02 별방진과무지개방파제","note":"별방진 앞 무지개 방파제 · 하도리 해안","poster":"s/세화러닝_FPV_02_별방진과무지개방파제.jpg","d":"3:44"},{"id":"1l4rY6dWPf-bCcYjG-HZHX_rtpSWtU-hc","label":"FPV 03 마을길","note":"반환 뒤 마을길 · 다리","poster":"s/세화러닝_FPV_03_마을길.jpg","d":"1:35"},{"id":"1himr19E2GkWxBAa-Y5a7EoXeLN_Qqs-k","label":"FPV 04 빛내림과추적","note":"빛내림 속 근접 추적","poster":"s/세화러닝_FPV_04_빛내림과추적.jpg","d":"3:06"},{"id":"1G7O4uxEg1F453NABWKjUWjJ0ptGW_0ZX","label":"FPV 05 해안도로","note":"해안도로를 따라","poster":"s/세화러닝_FPV_05_해안도로.jpg","d":"0:57"}]},{"s":"하늘에서 본 해안도로","v":[{"id":"1f-Ve1lXSXSmXmf8O3rYvQtVSuBRpYAR9","label":"드론 01","note":"해녀박물관 앞 해안","poster":"s/세화러닝_드론_01.jpg","d":"0:12"},{"id":"1eab2IQczqxreFMNIupzyYY8lQMf8I4Uh","label":"드론 02","note":"해녀박물관 앞 해안","poster":"s/세화러닝_드론_02.jpg","d":"0:14"},{"id":"1jdw5APvOn0cnkj_SYsXb7ovZ_MxoCuHO","label":"드론 03 해안달리기와단체","note":"해안을 달리는 크루 · 횡단보도 손 인사","poster":"s/세화러닝_드론_03_해안달리기와단체.jpg","d":"3:14"}]}];
-const $ = s => document.querySelector(s);
-const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-document.querySelectorAll("[data-yt]").forEach(b => b.querySelector("button").addEventListener("click", () => {
-  b.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${b.dataset.yt}?autoplay=1&rel=0" title="유튜브 영상" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
-}));
-async function sha(t){ const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)); return [...new Uint8Array(d)].map(x => x.toString(16).padStart(2,"0")).join(""); }
-function open_(){
-  $("#gate").hidden = true; $("#clipsArea").hidden = false;
-  $("#secs").innerHTML = DATA.map(g => `<div class="sec"><h2>${esc(g.s)}</h2><div class="clips">` + g.v.map(v => `
-    <div class="clip"><div class="ratio"><button type="button" data-id="${v.id}" data-t="${esc(v.label)}" aria-label="${esc(v.label)} 보기"><img src="${v.poster}" alt="" loading="lazy"><span class="play"></span></button></div>
-    <div class="t"><b>${esc(v.label)}</b><span>${esc(v.note)} · ${v.d}</span>
-    <div class="row"><a class="btn ghost" href="https://drive.google.com/file/d/${v.id}/view" target="_blank" rel="noopener">드라이브에서 받기</a></div></div></div>`).join("") + `</div></div>`).join("");
-  document.querySelectorAll(".clip button").forEach(b => b.addEventListener("click", () => {
-    $("#dvBox").innerHTML = `<iframe src="https://drive.google.com/file/d/${b.dataset.id}/preview" title="${b.dataset.t}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
-    $("#dvT").textContent = b.dataset.t; $("#dvDl").href = `https://drive.google.com/file/d/${b.dataset.id}/view`; $("#dv").showModal();
-  }));
-}
-$("#dvX").addEventListener("click", () => { $("#dv").close(); });
-$("#dv").addEventListener("close", () => { $("#dvBox").innerHTML = ""; });
-$("#gateForm").addEventListener("submit", async e => {
-  e.preventDefault(); const v = $("#pw").value.replace(/\D/g, "");
-  if (await sha("byeolbam-pw:" + v) === HASH) { try { sessionStorage.setItem("saewha-ok", "1"); } catch (_) {} open_(); }
-  else { $("#gateErr").textContent = "비밀번호가 맞지 않아요. 안내받은 숫자를 다시 확인해 주세요."; $("#pw").select(); }
-});
-try { if (sessionStorage.getItem("saewha-ok") === "1") open_(); } catch (_) {}
+<script>/* ☰ 메뉴 (휴대폰) */
+(function(){var b=document.querySelector('.mtog'),m=document.getElementById('siteMenu');if(!b||!m)return;
+function set(o){m.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.innerHTML=o?'✕ 닫기':'☰ 메뉴';}
+b.addEventListener('click',function(e){e.stopPropagation();set(!m.classList.contains('open'));});
+m.addEventListener('click',function(e){if(e.target.closest('a'))set(false);});
+document.addEventListener('click',function(e){if(m.classList.contains('open')&&!m.contains(e.target))set(false);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false);});})();
 </script>
 </body>
 </html>
