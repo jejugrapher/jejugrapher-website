@@ -263,6 +263,7 @@ dialog::backdrop{background:rgba(3,9,22,.94)}
         </div>
         <p class="tv-meta">tvN 《산꾼도시여자들》 4회, 2022년 3월 4일 방송. 출처: tvN Joy 유튜브 채널.
           <a href="https://www.youtube.com/watch?v=7mPm3bMiu_8" target="_blank" rel="noopener">YouTube에서 보기</a></p>
+<div class="player" id="player2" style="margin-top:1.1rem"><button type="button" id="playBtn2" aria-label="산꾼도시여자들 별밤사진관 장면 재생"><img src="byeolbam/works/tv2.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true"></span></button></div><p class="tv-meta">같은 방송의 다른 장면 — 디글 채널 공개 클립. <a href="https://www.youtube.com/watch?v=VgSmrhIEPW8" target="_blank" rel="noopener">YouTube에서 보기</a></p>
       </div>
       <div class="prose">
         <h2 id="h-tv">방송에 나온 별밤사진관</h2>
@@ -273,7 +274,83 @@ dialog::backdrop{background:rgba(3,9,22,.94)}
   </section>
 
   <!-- 우리 사진 받기: 촬영 회차별 사진 페이지 (촬영 날짜 6자리로 열림) -->
-  <section class="block mine" id="mine" aria-labelledby="h-mine">
+  
+<section id="works" class="block" aria-labelledby="h-works">
+<style>
+#works .w-group{margin-top:clamp(2.4rem,5vw,3.6rem)}
+#works .w-head{border-top:1px solid var(--line);padding-top:1rem;margin-bottom:1rem}
+#works .w-head h3{font-size:1.2rem;font-weight:700}
+#works .w-head p{color:#CFDAE8;font-size:.96rem;max-width:40em;margin-top:.35rem}
+#works .w-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,19rem),1fr));gap:clamp(8px,1vw,14px)}
+#works figure{margin:0;background:var(--deep);cursor:zoom-in;overflow:hidden;border-radius:2px}
+#works figure img{display:block;width:100%;height:100%;aspect-ratio:3/2;object-fit:cover;transition:transform .5s ease,filter .5s ease}
+#works figure:hover img{transform:scale(1.035);filter:brightness(1.08)}
+#works figcaption{padding:.55rem .1rem .2rem;color:#CFDAE8;font-size:.9rem}
+#wlb{border:0;padding:0;background:rgba(5,8,12,.94);max-width:100vw;max-height:100vh;width:100%;height:100%}
+#wlb::backdrop{background:rgba(0,0,0,.8)}
+#wlb .box{display:grid;grid-template-rows:1fr auto;height:100%;padding:1rem}
+#wlb img{max-width:100%;max-height:100%;margin:auto;object-fit:contain}
+#wlb .cap{color:#E8EFF7;text-align:center;padding:.8rem;font-size:.98rem}
+#wlb button{position:absolute;top:1rem;right:1rem;background:none;border:0;color:#fff;font-size:2rem;cursor:pointer}
+</style>
+<div class="wrap">
+<h2 id="h-works">무엇을 그릴까 — 빛그림 작품 모음</h2>
+<p class="lead">셔터가 열려 있는 동안 어둠 속에서 빛을 움직이면 그 자리에 그림이 남습니다. 아래는 별밤사진관에서 실제로 찍은 작품들입니다. 사진을 눌러 크게 볼 수 있고, 촬영 날 원하는 그림을 고르시면 됩니다.</p>
+<div class="w-group"><div class="w-head"><h3>보름달과 초승달</h3><p>가장 많이 고르는 그림입니다. 달빛 안에 앉거나, 초승달에 걸터앉아 하트를 건네는 장면을 만듭니다.</p></div><div class="w-grid">
+<figure data-full="byeolbam/works/w070.jpg" data-cap="달빛 안에 앉아"><img src="byeolbam/works/w070_t.jpg" alt="달빛 안에 앉아" loading="lazy" decoding="async"><figcaption>달빛 안에 앉아</figcaption></figure>
+<figure data-full="byeolbam/works/w189.jpg" data-cap="달 앞에 나란히"><img src="byeolbam/works/w189_t.jpg" alt="달 앞에 나란히" loading="lazy" decoding="async"><figcaption>달 앞에 나란히</figcaption></figure>
+<figure data-full="byeolbam/works/w068.jpg" data-cap="달을 품고 앉아"><img src="byeolbam/works/w068_t.jpg" alt="달을 품고 앉아" loading="lazy" decoding="async"><figcaption>달을 품고 앉아</figcaption></figure>
+<figure data-full="byeolbam/works/w448.jpg" data-cap="달을 마주 보고"><img src="byeolbam/works/w448_t.jpg" alt="달을 마주 보고" loading="lazy" decoding="async"><figcaption>달을 마주 보고</figcaption></figure>
+<figure data-full="byeolbam/works/w498.jpg" data-cap="달 아래 실루엣"><img src="byeolbam/works/w498_t.jpg" alt="달 아래 실루엣" loading="lazy" decoding="async"><figcaption>달 아래 실루엣</figcaption></figure>
+<figure data-full="byeolbam/works/w411.jpg" data-cap="초승달 위에서"><img src="byeolbam/works/w411_t.jpg" alt="초승달 위에서" loading="lazy" decoding="async"><figcaption>초승달 위에서</figcaption></figure>
+<figure data-full="byeolbam/works/w443.jpg" data-cap="초승달과 하트"><img src="byeolbam/works/w443_t.jpg" alt="초승달과 하트" loading="lazy" decoding="async"><figcaption>초승달과 하트</figcaption></figure>
+</div></div>
+<div class="w-group"><div class="w-head"><h3>고래와 돌고래</h3><p>제주 바다를 밤하늘로 옮겨 옵니다. 고래가 머리 위를 지나가고, 돌고래가 곁에서 헤엄칩니다.</p></div><div class="w-grid">
+<figure data-full="byeolbam/works/w213.jpg" data-cap="밤하늘을 건너는 고래"><img src="byeolbam/works/w213_t.jpg" alt="밤하늘을 건너는 고래" loading="lazy" decoding="async"><figcaption>밤하늘을 건너는 고래</figcaption></figure>
+<figure data-full="byeolbam/works/w222.jpg" data-cap="고래를 바라보며"><img src="byeolbam/works/w222_t.jpg" alt="고래를 바라보며" loading="lazy" decoding="async"><figcaption>고래를 바라보며</figcaption></figure>
+<figure data-full="byeolbam/works/w463.jpg" data-cap="고래가 건네는 하트"><img src="byeolbam/works/w463_t.jpg" alt="고래가 건네는 하트" loading="lazy" decoding="async"><figcaption>고래가 건네는 하트</figcaption></figure>
+<figure data-full="byeolbam/works/w476.jpg" data-cap="돌고래와 마주 서서"><img src="byeolbam/works/w476_t.jpg" alt="돌고래와 마주 서서" loading="lazy" decoding="async"><figcaption>돌고래와 마주 서서</figcaption></figure>
+<figure data-full="byeolbam/works/w219.jpg" data-cap="돌고래와 초승달"><img src="byeolbam/works/w219_t.jpg" alt="돌고래와 초승달" loading="lazy" decoding="async"><figcaption>돌고래와 초승달</figcaption></figure>
+<figure data-full="byeolbam/works/w168.jpg" data-cap="셋이서 올려다본 돌고래"><img src="byeolbam/works/w168_t.jpg" alt="셋이서 올려다본 돌고래" loading="lazy" decoding="async"><figcaption>셋이서 올려다본 돌고래</figcaption></figure>
+<figure data-full="byeolbam/works/w482.jpg" data-cap="가족과 돌고래"><img src="byeolbam/works/w482_t.jpg" alt="가족과 돌고래" loading="lazy" decoding="async"><figcaption>가족과 돌고래</figcaption></figure>
+</div></div>
+<div class="w-group"><div class="w-head"><h3>등 뒤에 돋는 날개</h3><p>사람 뒤에서 빛으로 날개를 그립니다. 아이도 어른도 가장 좋아하는 그림입니다.</p></div><div class="w-grid">
+<figure data-full="byeolbam/works/w404.jpg" data-cap="밤바다 앞의 날개"><img src="byeolbam/works/w404_t.jpg" alt="밤바다 앞의 날개" loading="lazy" decoding="async"><figcaption>밤바다 앞의 날개</figcaption></figure>
+<figure data-full="byeolbam/works/w505.jpg" data-cap="길 위에 선 날개"><img src="byeolbam/works/w505_t.jpg" alt="길 위에 선 날개" loading="lazy" decoding="async"><figcaption>길 위에 선 날개</figcaption></figure>
+</div></div>
+<div class="w-group"><div class="w-head"><h3>불꽃</h3><p>불빛을 길게 흘려 사람 둘레에 불꽃을 세웁니다. 강한 그림을 원할 때 고릅니다.</p></div><div class="w-grid">
+<figure data-full="byeolbam/works/w045.jpg" data-cap="불꽃 속에 서서"><img src="byeolbam/works/w045_t.jpg" alt="불꽃 속에 서서" loading="lazy" decoding="async"><figcaption>불꽃 속에 서서</figcaption></figure>
+<figure data-full="byeolbam/works/w046.jpg" data-cap="불을 등지고"><img src="byeolbam/works/w046_t.jpg" alt="불을 등지고" loading="lazy" decoding="async"><figcaption>불을 등지고</figcaption></figure>
+</div></div>
+<div class="w-group"><div class="w-head"><h3>별자리와 별빛</h3><p>실제 별 위에 별자리를 잇고, 손끝에서 별빛이 흩어지게 합니다.</p></div><div class="w-grid">
+<figure data-full="byeolbam/works/w073.jpg" data-cap="별자리를 잇다"><img src="byeolbam/works/w073_t.jpg" alt="별자리를 잇다" loading="lazy" decoding="async"><figcaption>별자리를 잇다</figcaption></figure>
+<figure data-full="byeolbam/works/w522.jpg" data-cap="각자의 별자리"><img src="byeolbam/works/w522_t.jpg" alt="각자의 별자리" loading="lazy" decoding="async"><figcaption>각자의 별자리</figcaption></figure>
+<figure data-full="byeolbam/works/w453.jpg" data-cap="손끝에서 흩어지는 별빛"><img src="byeolbam/works/w453_t.jpg" alt="손끝에서 흩어지는 별빛" loading="lazy" decoding="async"><figcaption>손끝에서 흩어지는 별빛</figcaption></figure>
+<figure data-full="byeolbam/works/w509.jpg" data-cap="별과 함께 그린 마음"><img src="byeolbam/works/w509_t.jpg" alt="별과 함께 그린 마음" loading="lazy" decoding="async"><figcaption>별과 함께 그린 마음</figcaption></figure>
+</div></div>
+<div class="w-group"><div class="w-head"><h3>빛으로 쓴 글씨</h3><p>이름, 날짜, 전하고 싶은 말을 빛으로 씁니다. 글씨는 거울상으로 써야 바로 보입니다.</p></div><div class="w-grid">
+<figure data-full="byeolbam/works/w066.jpg" data-cap="I ♥ YOU"><img src="byeolbam/works/w066_t.jpg" alt="I ♥ YOU" loading="lazy" decoding="async"><figcaption>I ♥ YOU</figcaption></figure>
+<figure data-full="byeolbam/works/w093.jpg" data-cap="JEJU"><img src="byeolbam/works/w093_t.jpg" alt="JEJU" loading="lazy" decoding="async"><figcaption>JEJU</figcaption></figure>
+<figure data-full="byeolbam/works/w094.jpg" data-cap="한글도 그대로"><img src="byeolbam/works/w094_t.jpg" alt="한글도 그대로" loading="lazy" decoding="async"><figcaption>한글도 그대로</figcaption></figure>
+</div></div>
+<div class="w-group"><div class="w-head"><h3>빛의 색면</h3><p>색이 있는 빛을 넓게 흘려 배경을 통째로 바꿉니다.</p></div><div class="w-grid">
+<figure data-full="byeolbam/works/w164.jpg" data-cap="무지개 커튼 앞에서"><img src="byeolbam/works/w164_t.jpg" alt="무지개 커튼 앞에서" loading="lazy" decoding="async"><figcaption>무지개 커튼 앞에서</figcaption></figure>
+<figure data-full="byeolbam/works/w196.jpg" data-cap="색면 위의 춤"><img src="byeolbam/works/w196_t.jpg" alt="색면 위의 춤" loading="lazy" decoding="async"><figcaption>색면 위의 춤</figcaption></figure>
+<figure data-full="byeolbam/works/w206.jpg" data-cap="깃털처럼 흩어지는 빛"><img src="byeolbam/works/w206_t.jpg" alt="깃털처럼 흩어지는 빛" loading="lazy" decoding="async"><figcaption>깃털처럼 흩어지는 빛</figcaption></figure>
+</div></div>
+<div class="w-group"><div class="w-head"><h3>빛그림 없이, 별 아래 사람</h3><p>그림을 더하지 않고 은하수와 사람만 담기도 합니다. 별밤사진관이 시작한 자리입니다.</p></div><div class="w-grid">
+<figure data-full="byeolbam/works/w079.jpg" data-cap="은하수 아래"><img src="byeolbam/works/w079_t.jpg" alt="은하수 아래" loading="lazy" decoding="async"><figcaption>은하수 아래</figcaption></figure>
+<figure data-full="byeolbam/works/w547.jpg" data-cap="혼자 선 밤"><img src="byeolbam/works/w547_t.jpg" alt="혼자 선 밤" loading="lazy" decoding="async"><figcaption>혼자 선 밤</figcaption></figure>
+<figure data-full="byeolbam/works/w077.jpg" data-cap="불빛 하나 들고"><img src="byeolbam/works/w077_t.jpg" alt="불빛 하나 들고" loading="lazy" decoding="async"><figcaption>불빛 하나 들고</figcaption></figure>
+<figure data-full="byeolbam/works/w017.jpg" data-cap="앉아서 올려다본 하늘"><img src="byeolbam/works/w017_t.jpg" alt="앉아서 올려다본 하늘" loading="lazy" decoding="async"><figcaption>앉아서 올려다본 하늘</figcaption></figure>
+</div></div>
+</div>
+<dialog id="wlb"><div class="box"><img id="wlbImg" alt=""><p class="cap" id="wlbCap"></p></div><button type="button" aria-label="닫기">×</button></dialog>
+<script>(function(){var f=[].slice.call(document.querySelectorAll('#works figure')),d=document.getElementById('wlb'),im=document.getElementById('wlbImg'),c=document.getElementById('wlbCap');
+f.forEach(function(el){el.addEventListener('click',function(){im.src=el.dataset.full;im.alt=el.dataset.cap;c.textContent=el.dataset.cap;d.showModal();});});
+d.querySelector('button').onclick=function(){d.close();};d.addEventListener('click',function(e){if(e.target===d)d.close();});})();</script>
+</section>
+<section class="block mine" id="mine" aria-labelledby="h-mine">
     <div class="wrap">
       <div class="gallery-head">
         <h2 id="h-mine">우리 사진 받기</h2>
@@ -335,6 +412,15 @@ dialog::backdrop{background:rgba(3,9,22,.94)}
     f.allowFullscreen=true;
     document.getElementById('player').replaceChildren(f);
   });
+  var btn2=document.getElementById('playBtn2');
+  if(btn2){ btn2.addEventListener('click',function(){
+    var g=document.createElement('iframe');
+    g.src='https://www.youtube-nocookie.com/embed/VgSmrhIEPW8?autoplay=1&rel=0';
+    g.title='산꾼도시여자들 별밤사진관 장면';
+    g.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    g.allowFullscreen=true;
+    document.getElementById('player2').replaceChildren(g);
+  }); }
 
   // 라이트박스
   var items=[].slice.call(document.querySelectorAll('.g-item'));
