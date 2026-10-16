@@ -12,7 +12,7 @@
   #gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:rgba(0,10,30,.9);cursor:pointer;z-index:20;}
   #gate h1{font-size:52px;margin:0;} #gate p{font-size:22px;opacity:.85;margin:0;}
   /* 로비 */
-  #lobby{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(#0b3d91,#03132b);z-index:10;padding:38px 16px 12px;box-sizing:border-box;overflow:auto;}
+  #lobby{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(#0b3d91,#03132b);z-index:10;padding:56px 16px 12px;box-sizing:border-box;overflow:auto;}
   #lobby.on{display:flex;}
   #lobbyTop{display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap;}
   #lobbyTop #qrbox{width:min(34vh,320px);padding:12px;}
@@ -341,12 +341,27 @@ if(GameRT.ready&&GameRT.ready.then){ GameRT.ready.then(function(room){
 /* ───────── 로비 회전 설명(게임방법·캐릭터·장비 번갈아) ───────── */
 var TIPS=(function(){
   var howto=[
-    {tag:'🎮 게임 방법', emoji:'📱', name:'이렇게 참여해요', desc:'QR 찍기 → 별명·비밀번호 정하기 → 캐릭터·장비 고르기!'},
     {tag:'🎮 게임 방법', emoji:'🧺', name:'자동으로 줍기', desc:'쓰레기 근처에 가기만 하면 저절로 주워 담아요'},
     {tag:'🎮 게임 방법', emoji:'🦘', name:'점프로 피하기', desc:'점프하면 상대 발사를 피할 수 있어요 (갈매기는 저절로!)'},
     {tag:'🎮 게임 방법', emoji:'💥', name:'밀치기', desc:'상대와 부딪히면 쓰레기를 떨어뜨리게 할 수 있어요'},
     {tag:'🎮 게임 방법', emoji:'🗺️', name:'지형이 중요해', desc:'맵은 랜덤! 캐릭터·장비마다 물·모래·숲 강점이 달라요'},
     {tag:'🎮 게임 방법', emoji:'🏆', name:'누적 순위', desc:'잘하면 화면 맨 위 TOP5에 내 별명이! 별명 비밀번호로 내 것임을 증명해요'}
+  ];
+  var setup=[
+    {tag:'📲 참여·설정', emoji:'📷', name:'QR로 접속', desc:'폰 카메라로 대형화면의 QR을 찍으면 바로 들어와요 (방 코드 입력도 가능)'},
+    {tag:'📲 참여·설정', emoji:'✍️', name:'별명 입력', desc:'내 별명을 적어요 — 대형화면 점수·순위에 이 별명이 표시돼요 (친구와 겹치면 안 돼요)'},
+    {tag:'📲 참여·설정', emoji:'🔒', name:'별명 비밀번호', desc:'숫자 4자리 비밀번호를 정해요 — 다음에 같은 별명으로 이어서 하고, 내 1등을 증명할 때 필요해요'},
+    {tag:'📲 참여·설정', emoji:'🧍', name:'캐릭터 고르기', desc:'7종 중 하나를 눌러 선택! 캐릭터마다 물·모래·숲 강점과 특기가 달라요'},
+    {tag:'📲 참여·설정', emoji:'🎒', name:'장비 고르기', desc:'줍는 도구·담는 통·신발·방어특기 4가지를 골라 나만의 조합을 만들어요'},
+    {tag:'📲 참여·설정', emoji:'⏳', name:'시작·대기실', desc:'‘시작하기’를 누르면 대기실로! 인원이 모이면 60초 뒤 자동으로 게임이 시작돼요'}
+  ];
+  var controls=[
+    {tag:'📱 폰 조작', emoji:'🕹️', name:'이동', desc:'왼쪽 방향 버튼을 꾹 누르면 그 방향으로 계속 움직여요 (8방향, 떼면 멈춤)'},
+    {tag:'📱 폰 조작', emoji:'🎯', name:'포신 돌리고 발사', desc:'◀ ▶ 버튼으로 포신 방향을 맞추고 🎯 발사! 내 저장소 쓰레기가 탄환이 돼요'},
+    {tag:'📱 폰 조작', emoji:'🦘', name:'점프', desc:'점프 버튼으로 담·바위를 넘고 상대 발사도 피해요 (갈매기는 점프 없이 자동 회피)'},
+    {tag:'📱 폰 조작', emoji:'💥', name:'밀치기', desc:'밀치기 버튼으로 옆 친구를 밀어 쓰레기를 떨어뜨려요'},
+    {tag:'📱 폰 조작', emoji:'🧺', name:'줍기는 자동', desc:'쓰레기 가까이 가면 저절로 주워요 — 줍기 버튼은 없어요!'},
+    {tag:'📱 폰 조작', emoji:'🚀', name:'부스트', desc:'부스트 장비를 고르면 🚀 버튼으로 잠깐 빨라져요'}
   ];
   var chars=G.CHAR_ORDER.map(function(k){var c=G.CHARACTERS[k];return {tag:'🙋 캐릭터 소개', emoji:c.emoji, name:c.name, desc:c.trait};});
   var equip=[];
@@ -354,8 +369,8 @@ var TIPS=(function(){
   G.CONTAINER_ORDER.forEach(function(k){var e=G.CONTAINERS[k];equip.push({tag:'🧰 장비·담는 도구', emoji:e.emoji, name:e.name, desc:e.desc});});
   G.FEET_ORDER.forEach(function(k){var e=G.FEET[k];equip.push({tag:'🧰 장비·신발', emoji:e.emoji, name:e.name, desc:e.desc});});
   G.GEAR_ORDER.forEach(function(k){var e=G.GEAR[k];equip.push({tag:'🧰 장비·방어/특기', emoji:e.emoji, name:e.name, desc:e.desc});});
-  var out=[],i=0,more=true;                                   // 게임방법→캐릭터→장비 순으로 번갈아 배치
-  while(more){ more=false; [howto,chars,equip].forEach(function(b){ if(i<b.length){ out.push(b[i]); more=true; } }); i++; }
+  var out=[],i=0,more=true;                                   // 참여설정→폰조작→게임방법→캐릭터→장비 순으로 번갈아(모든 작동법 노출)
+  while(more){ more=false; [setup,controls,howto,chars,equip].forEach(function(b){ if(i<b.length){ out.push(b[i]); more=true; } }); i++; }
   return out;
 })();
 var tipIdx=0, tipTimer=null;
