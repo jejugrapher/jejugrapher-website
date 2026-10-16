@@ -12,15 +12,22 @@
   #gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:rgba(0,10,30,.9);cursor:pointer;z-index:20;}
   #gate h1{font-size:52px;margin:0;} #gate p{font-size:22px;opacity:.85;margin:0;}
   /* 로비 */
-  #lobby{position:fixed;inset:0;display:none;align-items:center;justify-content:center;gap:60px;background:linear-gradient(#0b3d91,#03132b);z-index:10;}
+  #lobby{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(#0b3d91,#03132b);z-index:10;padding:38px 16px 12px;box-sizing:border-box;overflow:auto;}
   #lobby.on{display:flex;}
+  #lobbyTop{display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap;}
+  #lobbyTop #qrbox{width:min(34vh,320px);padding:12px;}
+  #qrbox canvas,#qrbox img{width:100%!important;height:auto!important;display:block;}
   #lobby img{width:min(46vh,440px);background:#fff;padding:18px;border-radius:20px;}
   #lobby .txt h1{font-size:56px;margin:0 0 10px;} #lobby .txt p{font-size:26px;margin:6px 0;opacity:.92;}
   #lobby .u{font-size:22px;font-family:monospace;opacity:.75;margin-top:14px;}
   #roster{display:flex;flex-wrap:wrap;gap:10px;max-width:520px;margin-top:20px;}
   #roster .p{background:rgba(255,255,255,.15);border-radius:12px;padding:8px 14px;font-size:20px;}
-  /* 로비 회전 설명 패널(게임방법·캐릭터·장비 번갈아) */
-  #tips{position:absolute;left:50%;bottom:3.5vh;transform:translateX(-50%);width:min(1150px,92vw);background:rgba(0,10,30,.6);border:2px solid rgba(255,255,255,.14);border-radius:20px;padding:18px 26px;box-shadow:0 12px 44px rgba(0,0,0,.4);z-index:11;}
+  /* 로비 하단 패널: 핵심플레이 데모 + 회전 설명(캐릭터·장비) */
+  #tips{position:relative;width:min(1000px,94vw);background:rgba(0,10,30,.62);border:2px solid rgba(255,255,255,.14);border-radius:20px;padding:12px 22px 14px;box-shadow:0 12px 44px rgba(0,0,0,.4);z-index:11;flex:none;}
+  #demoTitle{text-align:center;font-size:16px;font-weight:900;color:#fff;opacity:.92;margin-bottom:6px;letter-spacing:.3px;}
+  #demo{width:100%;max-width:860px;height:auto;aspect-ratio:920 / 180;display:block;margin:0 auto;background:rgba(255,255,255,.05);border-radius:14px;}
+  #demoCap{text-align:center;font-size:20px;font-weight:800;color:#ffd166;margin:8px 0 2px;min-height:26px;}
+  #tipDivider{height:1px;background:rgba(255,255,255,.14);margin:10px 0 12px;}
   #tipInner{display:flex;align-items:center;gap:22px;transition:opacity .35s;}
   #tipTag{flex:none;background:#ffd166;color:#15233f;font-weight:900;font-size:17px;padding:7px 16px;border-radius:999px;white-space:nowrap;}
   #tipEmoji{flex:none;font-size:56px;line-height:1;}
@@ -69,6 +76,7 @@
 <div id="scores"><h3>🧹 청소 점수</h3><div id="scoreList"></div></div>
 
 <div id="lobby">
+  <div id="lobbyTop">
   <div id="qrbox" style="width:min(46vh,440px);background:#fff;padding:18px;border-radius:20px;display:flex;align-items:center;justify-content:center;"></div>
   <div class="txt">
     <h1>🧹 청소 대작전</h1>
@@ -79,13 +87,21 @@
     <div class="u" id="phoneUrl"></div>
     <div style="margin-top:10px"><a id="ctrlLink" href="#" target="_blank" style="color:#8ee;font-size:16px;text-decoration:underline">🕹️ 컨트롤 화면 열기</a></div>
     <div id="cdBox" style="display:none;margin-top:14px;font-size:30px;font-weight:900;color:#ffd166"></div>
-    <div style="margin-top:14px;font-size:17px;opacity:.85">참가한 친구 <b id="waitCount">0</b>명 <span style="opacity:.7">(한 명만 와도 60초 뒤 시작 · 최대 10명 · 5명 이하면 AI와 대결!)</span></div>
+    <div style="margin-top:14px;font-size:17px;opacity:.85">참가한 친구 <b id="waitCount">0</b>명 <span style="opacity:.7">(한 명만 와도 60초 뒤 시작 · 최대 10명 · 3명 이하면 AI 1마리와 대결!)</span></div>
     <div id="waitGrid" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;max-width:520px"></div>
   </div>
-  <div id="tips"><div id="tipDots"></div><div id="tipInner">
-    <span id="tipTag"></span><span id="tipEmoji"></span>
-    <div id="tipTextWrap"><div id="tipName"></div><div id="tipDesc"></div></div>
-  </div></div>
+  </div>
+  <div id="tips">
+    <div id="demoTitle">🎮 이렇게 해요 — 쓰레기를 주워 내 저장소에 넣고, 그걸 탄환으로 발사해 상대 걸 뺏어요!</div>
+    <canvas id="demo"></canvas>
+    <div id="demoCap"></div>
+    <div id="tipDivider"></div>
+    <div id="tipDots"></div>
+    <div id="tipInner">
+      <span id="tipTag"></span><span id="tipEmoji"></span>
+      <div id="tipTextWrap"><div id="tipName"></div><div id="tipDesc"></div></div>
+    </div>
+  </div>
 </div>
 
 <div id="gate"><h1>🧹 청소 대작전</h1><p>화면을 한 번 누르면 시작합니다 (소리 켜짐)</p></div>
@@ -171,8 +187,8 @@ function addAIPlayers(){
   // 기존 AI 제거
   Object.keys(players).forEach(function(id){ if(players[id]&&players[id].ai){ if(E.removePlayer)E.removePlayer(id); delete players[id]; }});
   var humans=Object.keys(players).filter(function(id){return players[id]&&players[id].nick;}).length;
-  if(humans>AI_FILL) return 0;                                // 6명 이상이면 AI 없음
-  var count=Math.max(1, AI_FILL-humans);                      // 사람 적을수록 AI 많이(솔로=4, 5명=1)
+  if(humans<1 || humans>3) return 0;                          // 참가자 1~3명일 때만 AI 등장(4명 이상은 AI 없음)
+  var count=1;                                                // AI는 딱 1마리
   var pool=G.CHAR_ORDER.slice().sort(function(){return Math.random()-0.5;});   // 캐릭터 겹치지 않게 섞기
   for(var i=0;i<count;i++){
     var id='ai_'+i;
@@ -327,9 +343,7 @@ var TIPS=(function(){
   var howto=[
     {tag:'🎮 게임 방법', emoji:'📱', name:'이렇게 참여해요', desc:'QR 찍기 → 별명·비밀번호 정하기 → 캐릭터·장비 고르기!'},
     {tag:'🎮 게임 방법', emoji:'🧺', name:'자동으로 줍기', desc:'쓰레기 근처에 가기만 하면 저절로 주워 담아요'},
-    {tag:'🎮 게임 방법', emoji:'🏠', name:'내 창고에 저장', desc:'모은 쓰레기를 내 색깔 창고에 가져가면 점수가 쌓여요'},
-    {tag:'🎮 게임 방법', emoji:'🎯', name:'터렛으로 뺏기', desc:'창고 포신을 돌려 발사! 맞히면 상대 쓰레기를 뺏어와요'},
-    {tag:'🎮 게임 방법', emoji:'🦘', name:'점프로 피하기', desc:'점프하면 터렛 공격을 피할 수 있어요 (갈매기는 저절로!)'},
+    {tag:'🎮 게임 방법', emoji:'🦘', name:'점프로 피하기', desc:'점프하면 상대 발사를 피할 수 있어요 (갈매기는 저절로!)'},
     {tag:'🎮 게임 방법', emoji:'💥', name:'밀치기', desc:'상대와 부딪히면 쓰레기를 떨어뜨리게 할 수 있어요'},
     {tag:'🎮 게임 방법', emoji:'🗺️', name:'지형이 중요해', desc:'맵은 랜덤! 캐릭터·장비마다 물·모래·숲 강점이 달라요'},
     {tag:'🎮 게임 방법', emoji:'🏆', name:'누적 순위', desc:'잘하면 화면 맨 위 TOP5에 내 별명이! 별명 비밀번호로 내 것임을 증명해요'}
@@ -360,6 +374,56 @@ function showTip(){
 }
 function startTips(){ if(tipTimer)return; showTip(); tipTimer=setInterval(function(){ tipIdx++; showTip(); },6000); }
 startTips();
+
+/* ── 핵심 플레이 데모(줍기→저장→발사→뺏기) 애니메이션 = 플레이 화면처럼 보여주기 ── */
+(function(){
+  var cv=document.getElementById('demo'); if(!cv) return;
+  var g=cv.getContext('2d'); var CW=920, CH=180; cv.width=CW; cv.height=CH;
+  var MINE='#ff4fa3', ENEMY='#22c1e6', TRASHC='#9ad36b';
+  var homeX=120, homeY=120, enemyX=800, enemyY=72, pileX=430, pileY=122;
+  var CAPS=['① 쓰레기를 주워요','② 내 저장소(쓰레기통)에 넣어요 — 탄환이 돼요','③ 발사! 저장한 쓰레기가 탄환이에요','④ 상대 저장소·캐릭터를 맞혀 쓰레기를 뺏어와요!'];
+  var T0=performance.now();
+  function L(a,b,t){return a+(b-a)*t;}
+  function ez(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+  function rr(x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
+  function bin(x,y,col,label,count,flash){
+    g.save(); g.globalAlpha=flash?(0.45+0.55*Math.abs(Math.sin(performance.now()*0.018))):1;
+    g.fillStyle=col; g.strokeStyle='rgba(0,0,0,.35)'; g.lineWidth=3; rr(x-36,y-28,72,56,12); g.fill(); g.stroke();
+    g.font='26px sans-serif'; g.textAlign='center'; g.textBaseline='middle'; g.fillText('🗑️',x,y);
+    g.restore();
+    g.fillStyle='#fff'; g.font='bold 15px sans-serif'; g.textAlign='center'; g.textBaseline='alphabetic'; g.fillText(label,x,y+46);
+    g.fillStyle='#ffd166'; g.beginPath(); g.arc(x+32,y-30,15,0,6.3); g.fill();
+    g.fillStyle='#15233f'; g.font='bold 16px sans-serif'; g.textBaseline='middle'; g.fillText(String(count),x+32,y-29);
+  }
+  function chr(x,y,carry){
+    g.fillStyle=MINE; g.beginPath(); g.arc(x,y,21,0,6.3); g.fill(); g.strokeStyle='rgba(0,0,0,.35)'; g.lineWidth=3; g.stroke();
+    g.font='24px sans-serif'; g.textAlign='center'; g.textBaseline='middle'; g.fillText('🦭',x,y+1);
+    if(carry){ g.font='17px sans-serif'; g.fillText('🧺',x,y-28); }
+  }
+  function frame(now){
+    var t=((now-T0)/1000)%8, ph=Math.floor(t/2), pt=ez((t%2)/2);
+    g.clearRect(0,0,CW,CH);
+    var myBank=2, enemyBank=5, cxp=homeX, cyp=homeY, carry=0, proj=null, back=null, pile=true, eflash=false;
+    if(ph===0){ cxp=L(homeX,pileX,pt); cyp=L(homeY,pileY,pt); carry=pt>.8?1:0; pile=pt<.82; }
+    else if(ph===1){ cxp=L(pileX,homeX,pt); cyp=L(pileY,homeY,pt); carry=pt<.82?1:0; myBank=pt>.82?3:2; pile=false; }
+    else if(ph===2){ myBank=3; pile=false; proj={x:L(homeX,enemyX,pt),y:L(homeY,enemyY,pt)}; }
+    else { myBank=pt>.7?4:3; enemyBank=pt>.35?4:5; eflash=pt<.6; pile=false; back={x:L(enemyX,homeX,pt),y:L(enemyY,homeY,pt)}; }
+    // 바닥 점선 경로
+    g.strokeStyle='rgba(255,255,255,.12)'; g.lineWidth=2; g.setLineDash([6,8]);
+    g.beginPath(); g.moveTo(homeX,homeY); g.lineTo(pileX,pileY); g.moveTo(homeX,homeY); g.lineTo(enemyX,enemyY); g.stroke(); g.setLineDash([]);
+    bin(homeX,homeY,MINE,'내 저장소',myBank,false);
+    bin(enemyX,enemyY,ENEMY,'상대 저장소',enemyBank,eflash);
+    if(pile){ g.font='26px sans-serif'; g.textAlign='center'; g.textBaseline='middle'; g.fillText('🥤',pileX-12,pileY); g.fillText('🫙',pileX+16,pileY+3); }
+    if(proj){ g.fillStyle=TRASHC; g.beginPath(); g.arc(proj.x,proj.y,10,0,6.3); g.fill(); g.strokeStyle='#fff'; g.lineWidth=2; g.stroke();
+      g.strokeStyle='rgba(154,211,107,.5)'; g.lineWidth=3; g.beginPath(); g.moveTo(homeX,homeY); g.lineTo(proj.x,proj.y); g.stroke(); }
+    if(back){ g.font='22px sans-serif'; g.textAlign='center'; g.textBaseline='middle'; g.fillText('🗑️',back.x,back.y); }
+    if(ph===3 && eflash){ g.font='30px sans-serif'; g.textAlign='center'; g.fillText('💥',enemyX,enemyY); }
+    chr(cxp,cyp,carry);
+    var cap=document.getElementById('demoCap'); if(cap) cap.textContent=CAPS[ph];
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
 
 /* ───────── 비밀번호 잠금(1234567) ───────── */
 var SCREEN_PW='1234567';

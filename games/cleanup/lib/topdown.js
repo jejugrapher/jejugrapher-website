@@ -513,12 +513,12 @@ function TopDown(opts) {
     if (p._wander && now < p._wander) { p.ctrl = { dx: Math.cos(now*0.004 + p.bob), dy: Math.sin(now*0.005 + p.bob*2), until: now + 300 }; return; }
     // 기회형 PvP: 1등 견제 발사 / 옆에 적 창고면 습격 / 옆에 짐 든 상대면 밀치기
     if (now > (p.aiPvp || 0)) {
-      var ld = leaderId(); if (ld && ld !== p.id && (p.bank||0) > 0 && now > (p.fireCD||0) && Math.random() < 0.4) {   // AI는 1등을 자동조준해 견제
+      var ld = leaderId(); if (ld && ld !== p.id && (p.bank||0) > 1 && now > (p.fireCD||0) && Math.random() < 0.15) {   // AI는 1등을 가끔 견제(약하게)
         var lo = players[ld], lw = M.warehouses && M.warehouses[ld], mw = M.warehouses && M.warehouses[p.id];
         if (mw) { var tgx = lo ? lo.x : (lw?lw.x:p.x), tgy = lo ? lo.y : (lw?lw.y:p.y); p.aimAngle = Math.atan2(tgy - mw.y, tgx - mw.x); }
         p.aiPvp = now + 500; fireTurret(p); return; }
       var opp = null, od = BUMP_R; Object.keys(players).forEach(function (id) { if (id === p.id) return; var o = players[id]; if (!o.holds || !o.holds.length || o.afk || now < (o.iframe||0)) return; var d = Math.hypot(p.x - o.x, p.y - o.y); if (d < od) { od = d; opp = o; } });
-      if (opp && Math.random() < 0.5) { p.aiPvp = now + 700; bump(p); return; }
+      if (opp && Math.random() < 0.28) { p.aiPvp = now + 900; bump(p); return; }
     }
     var mode = (p.holds.length >= Math.min(cap(p), 6)) ? 'home' : 'trash';   // 6개 모으면 내 창고로 귀환(자동 뱅킹)
     var lost = p._t && ((p._t.trash && p._t.trash.held) || (p._t.clump && p._t.clump.hp <= 0));
@@ -542,7 +542,7 @@ function TopDown(opts) {
     else { tx = tgt.trash.x; ty = tgt.trash.y; reach = 52; }
     var dx = tx - p.x, dy = ty - p.y, dist = Math.hypot(dx, dy) || 1;
     p.ctrl = { dx: dx/dist, dy: dy/dist, until: now + 300 };
-    if (!tgt.home && dist < reach) p._tExp = 0;                 // 도착=자동 줍기(autoPickup)가 처리 → 다음 목표
+    if (!tgt.home && dist < reach) { p._tExp = 0; if (Math.random() < 0.3) p._wander = now + 250 + Math.random()*400; }   // 도착=자동 줍기 → 다음 목표(가끔 머뭇거려 효율↓)
   }
   function step(dt, now) {
     var sp = Math.min(W, H) * BASE_SPEED_FRAC * speedScale;
@@ -574,6 +574,7 @@ function TopDown(opts) {
         if (s.hAccel && Math.abs(dx) > Math.abs(dy)) tmul *= 1.3;  // 게: 가로 이동 가속
         if (s.homeTurf) { var mwh = M && M.warehouses ? M.warehouses[id] : null; if (mwh && Math.hypot(p.x-mwh.x, p.y-mwh.y) < WH_R*2.4) tmul *= 1.3; }  // 해녀 홈터프
         if (now < (p.alarmUntil||0)) tmul *= 1.5;                // 경보기: 귀환 가속
+        if (p.ai) tmul *= 0.68;                                  // AI 핸디캡: 사람보다 느리게(너무 잘하지 않도록)
         var mv = sp * tmul * dt;
         var nx = p.x + dx*mv; if (inBounds(nx, p.y, 18) && !block(nx, p.y)) p.x = nx;
         var ny = p.y + dy*mv; if (inBounds(p.x, ny, 18) && !block(p.x, ny)) p.y = ny;
