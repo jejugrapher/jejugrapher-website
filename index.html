@@ -171,6 +171,21 @@ footer .adminlink{color:#b7ab97}
 .gl a{border:1px solid var(--navy);color:var(--navy);padding:9px 16px;font-size:14px;text-align:center;white-space:nowrap}
 .gl a:first-child{background:var(--navy);color:#fff}
 @media (max-width:767px){.gamerow{padding:20px 16px}.gamecard2{grid-template-columns:1fr}.gl a{white-space:normal}}
+
+.techwrap{border-top:1px solid var(--line);padding-top:30px}
+.techhead h3{font-size:17.5px;color:var(--navy);margin:8px 0 6px}
+.techhead p{font-size:14px;color:#5a544c;max-width:60em;margin-bottom:20px}
+.techgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.techcard{display:block;background:#fff;border:1px solid var(--line);padding:0 0 14px}
+.techcard:hover{border-color:var(--terra)}
+.techthumb{position:relative;display:block;aspect-ratio:16/9;overflow:hidden;background:#000}
+.techthumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.techcard:hover .techthumb img{transform:scale(1.05)}
+.techplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;font-size:20px;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.techcard b{display:block;font-size:14.5px;font-weight:500;color:var(--navy);padding:12px 14px 4px}
+.techcard span:last-child{display:block;font-size:13px;color:#8d8577;padding:0 14px;line-height:1.6}
+@media(max-width:900px){.techgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.techgrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -180,8 +195,8 @@ footer .adminlink{color:#b7ab97}
     <a class="logo" href="#top">JEJUGRAPHER</a>
     <button class="mtog" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="siteMenu">☰ 메뉴</button>
     <div class="menu" id="siteMenu">
-      <a href="spatial/index.html">공간데이터</a>
-      <a href="#filming">영상 제작</a>
+      <a href="#filming">영상 제작</a><a href="spatial/index.html">공간데이터</a>
+      
       <a href="#web">웹·체험 제작</a>
       <a href="aiclass.html">AI 강의</a>
       <a href="byeolbam.html">별밤사진관</a>
@@ -200,9 +215,9 @@ footer .adminlink{color:#b7ab97}
     <p class="sub">3D 가우시안 스플래팅 공간데이터부터 AI 뮤직비디오, 드론·360° 촬영과 편집, 웹 서비스 제작까지 — 다섯 개의 기술 영역을 모두 자체 보유해, 기획부터 납품까지 외주 없이 원스톱으로 진행합니다.</p>
     <a class="cta" href="inquiry.html">프로젝트 편하게 문의하기</a>
     <div class="stackrow">
-      <a class="stack" href="#gs3d"><b>01</b>3D 공간데이터</a>
-      <a class="stack" href="#filming"><b>02</b>촬영</a>
-      <a class="stack" href="#editing"><b>03</b>편집 · 포스트</a>
+      <a class="stack" href="#filming"><b>01</b>촬영</a>
+      <a class="stack" href="#editing"><b>02</b>편집 · 포스트</a>
+      <a class="stack" href="#gs3d"><b>03</b>3D 공간데이터</a>
       <a class="stack" href="#aivideo"><b>04</b>AI 영상 제작</a>
       <a class="stack" href="#web"><b>05</b>웹 · 체험 제작</a>
     </div>
@@ -210,15 +225,117 @@ footer .adminlink{color:#b7ab97}
 </header>
 
 <!-- 01 3DGS 공간데이터 -->
+<section id="filming">
+  <div class="container">
+    <div class="shead">
+      <div class="snum">01 — FILMING · AERIAL · 360°</div>
+      <h2>하늘에서, 물가에서, 동굴 속에서 찍습니다.</h2>
+      <p>시네마틱 드론과 FPV, 8K 360° 카메라, 풀프레임 미러리스를 현장에 맞게 조합합니다. 영상·사진 16년, 360° VR 13년의 촬영 경험이 바탕입니다. 이 섹션의 영상은 모두 실제 촬영본입니다.</p>
+    </div>
+
+    <div class="feat" style="margin-bottom:24px">
+<div>
+<div class="vwrap"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/07dIm0ToziQ" title="숲속 네트 놀이터 — 미로숲놀이터 네트플레이" allowfullscreen></iframe></div>
+<div class="vt">숲속 네트 놀이터 — 미로숲놀이터 네트플레이 <span class="badge" style="margin-left:6px">행사 기록</span></div>
+<div class="vd">나무 사이 오색 그물에서 논 하루. 좁은 네트 사이를 아이들 곁에서 따라 날며 담았습니다.</div>
+</div>
+<div>
+<div class="vwrap"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/9LojjzD7vqQ" title="런린이집 세화 모닝런" allowfullscreen></iframe></div>
+<div class="vt">런린이집 세화 모닝런 <span class="badge" style="margin-left:6px">드론 · 360</span></div>
+<div class="vd">해 뜨는 바다 위에서 고도를 올렸다가 달리는 크루 곁으로 내려오며 담았습니다.</div>
+</div>
+</div>
+<div class="feat" style="margin-bottom:56px">
+<div>
+<div class="vwrap"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/Tcx6INUUB4E" title="제주 하루 한 바퀴 — 360° VR 드라이브" allowfullscreen></iframe></div>
+<div class="vt">제주 하루 한 바퀴 — 360° VR 드라이브 <span class="badge" style="margin-left:6px">8K 360°</span></div>
+<div class="vd">함덕·1100고지·중문·사려니숲. 화면을 돌려 보면 조수석에 앉은 것처럼 보입니다.</div>
+</div>
+<div>
+<div style="background:#fff;border:1px solid var(--line);padding:30px 28px;height:100%">
+<div class="gt" style="font-size:13px;letter-spacing:2px;color:var(--terra);font-weight:500;margin-bottom:12px">REAL FOOTAGE CHANNELS</div>
+<h3 style="font-size:17.5px;color:var(--navy);margin-bottom:10px">더 많은 영상은 「영상·사진 보기」에서</h3>
+<p style="font-size:14px;color:#5a544c;margin-bottom:18px">행사 기록 영상과 사진첩, 오름·해변·계곡을 담은 8K 360° VR, 스피드감 있는 FPV까지 한곳에 모아 두었습니다.</p>
+<div class="chrow">
+<a class="chip" href="media.html">영상 · 사진 보기 →</a>
+<a class="chip" href="https://www.youtube.com/@360VRjeju" target="_blank" rel="noopener">360° VR 채널 ↗</a>
+<a class="chip" href="https://youtube.com/@jeju-fpv" target="_blank" rel="noopener">FPV 채널 ↗</a>
+</div>
+</div>
+</div>
+</div>
+    </div>
+
+    <div class="techwrap" style="margin-bottom:56px">
+<div class="techhead"><div class="gt" style="font-size:13px;letter-spacing:2px;color:var(--terra);font-weight:500">TECHNICAL WORK</div><h3>쉽게 찍히지 않는 자리에서</h3><p>빛이 없거나, 지나갈 틈이 좁거나, 사람이 바로 곁에 있는 곳입니다. 장비와 비행 방식을 현장에 맞춰 바꿔 가며 찍은 기록입니다.</p></div>
+<div class="techgrid">
+<a class="techcard" href="https://www.youtube.com/watch?v=Ce0P-hy9mBQ" target="_blank" rel="noopener"><span class="techthumb"><img loading="lazy" src="https://i.ytimg.com/vi/Ce0P-hy9mBQ/mqdefault.jpg" alt=""><span class="techplay" aria-hidden="true">▶</span></span><b>빛이 없는 지하 공간</b><span>불빛 한 줄기 없는 일제 지하벙커를 기체 조명만으로 — 조명 드론 탐사 테스트</span></a>
+<a class="techcard" href="https://www.youtube.com/watch?v=twj7m3-R7sY" target="_blank" rel="noopener"><span class="techthumb"><img loading="lazy" src="https://i.ytimg.com/vi/twj7m3-R7sY/mqdefault.jpg" alt=""><span class="techplay" aria-hidden="true">▶</span></span><b>용암동굴 통과</b><span>천장이 낮고 길이 좁은 용암동굴 안을 FPV 로 지나며 촬영</span></a>
+<a class="techcard" href="https://www.youtube.com/watch?v=JJzrLO8Mbvc" target="_blank" rel="noopener"><span class="techthumb"><img loading="lazy" src="https://i.ytimg.com/vi/JJzrLO8Mbvc/mqdefault.jpg" alt=""><span class="techplay" aria-hidden="true">▶</span></span><b>아이들 곁 네트 사이</b><span>사람이 노는 공간 안으로 들어가 프롭가드 기체로 속도를 낮춰 그물 틈을 통과</span></a>
+<a class="techcard" href="https://www.youtube.com/watch?v=IG3LuH9EKPg" target="_blank" rel="noopener"><span class="techthumb"><img loading="lazy" src="https://i.ytimg.com/vi/IG3LuH9EKPg/mqdefault.jpg" alt=""><span class="techplay" aria-hidden="true">▶</span></span><b>협곡 저공 비행</b><span>안덕계곡 바닥을 따라 낮게 — 8K 360° 로 기록</span></a>
+</div>
+</div>
+<div class="gearwrap">
+      <div class="gear"><div class="gt">CINEMATIC DRONE</div><h3>시네마틱 항공 촬영</h3><p>해안선과 오름, 행사장을 부드러운 항공 시점으로 담습니다. 대형 화면에도 견디는 고해상도 촬영.</p></div>
+      <div class="gear"><div class="gt">FPV</div><h3>FPV 다이나믹 촬영</h3><p>고공 낙하, 좁은 공간 통과, 인물 추적 — 일반 드론이 만들 수 없는 속도감 있는 시점을 만듭니다.</p></div>
+      <div class="gear"><div class="gt">8K 360°</div><h3>360° VR 촬영</h3><p>8K 360° 카메라로 공간 전체를 기록합니다. VR 헤드셋 감상과 리프레이밍 편집 모두 대응합니다.</p></div>
+      <div class="gear"><div class="gt">FULL-FRAME</div><h3>지상 시네마틱</h3><p>풀프레임 미러리스로 인물과 현장을 시네마틱하게 담습니다. 8K 촬영과 저조도 환경에 강합니다.</p></div>
+    </div>
+    <div class="years">
+      <div><div class="y">16년+</div><div class="yl">영상 · 사진</div></div>
+      <div><div class="y">13년+</div><div class="yl">360° VR</div></div>
+      <div><div class="y">4년+</div><div class="yl">AI 워크플로우</div></div>
+      <div><div class="y">2017</div><div class="yl">스튜디오 설립</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 편집 · 포스트 -->
+<section id="editing" style="background:#fff">
+  <div class="container">
+    <div class="shead">
+      <div class="snum">02 — EDITING · POST-PRODUCTION</div>
+      <h2>찍은 것을 작품으로 다듬습니다.</h2>
+      <p>비트에 맞춘 컷 편집, 모션그래픽과 자막, 색보정, 다국어 배리에이션까지 — 촬영본과 AI 생성물이 한 편의 완성작으로 이어집니다.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h3>구성 · 컷 편집</h3><p>음악의 비트와 에너지 곡선에 맞춰 컷을 배치합니다. 훅이 터지는 순간을 계산해 설계합니다.</p></div>
+      <div class="step"><div class="n">02</div><h3>모션그래픽 · 자막</h3><p>타이틀, 지도 오버레이, 정보 카드, 캘리그래피 타이포를 영상 위에 얹습니다.</p></div>
+      <div class="step"><div class="n">03</div><h3>색보정 · 사운드</h3><p>장면의 감정에 맞는 색을 입히고, 음악과 효과음의 균형을 잡습니다.</p></div>
+      <div class="step"><div class="n">04</div><h3>플랫폼별 마감</h3><p>유튜브·쇼츠·릴스 규격과 다국어 자막·메타데이터까지 배포 형태로 마무리합니다.</p></div>
+    </div>
+    <div class="comm">
+      <div class="commcard"><h3>갯것이영화제 인트로</h3><p>새벽 갯벌과 아이, 갯고둥의 이야기. AI 이미지·영상 제작 담당.</p><span class="st">진행 중</span></div>
+      <div class="commcard"><h3>2026 세계 습지의 날 오프닝</h3><p>「생명이 머무는 곳, 습지」 해양환경공단 발주 오프닝 영상.</p><span class="st">진행 중</span></div>
+      <div class="commcard"><h3>K-Dream Dance Festa 2026</h3><p>곽지해변 댄스 페스타 항공·FPV 촬영과 애프터무비 편집.</p><span class="st">완료</span></div>
+      <div class="commcard"><h3>생태관광 주간 × 갯것이 영화제</h3><p>영화 6편·생태 체험 6개를 담은 홍보 영상과 안내 그래픽.</p><span class="st">완료</span></div>
+    </div>
+  </div>
+</section>
 <section id="gs3d" style="background:#fff">
   <div class="container">
     <div class="shead">
-      <div class="snum">01 — 3D SPATIAL DATA · GAUSSIAN SPLATTING</div>
+      <div class="snum">03 — 3D SPATIAL DATA · GAUSSIAN SPLATTING</div>
       <h2>현장을 통째로 떠서, 모니터 위로 가져옵니다.</h2>
       <p>하늘의 항공 촬영부터 동굴 내부, 걸어서 담는 실내, 0.07mm급 초정밀 접사까지 — 전혀 다른 다섯 가지 크기의 공간이 하나의 3D 파이프라인에서 만들어집니다. 촬영·재구성·검증·배포 전 과정을 자체 기술과 장비로 수행합니다.</p>
     </div>
 
-    <div class="scale">
+    <div class="feat" style="margin-bottom:48px">
+<div>
+<div class="vwrap"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/MeDE5tZcCZc" title="만장굴 내부 360° VR — 지하 실시간 지도" allowfullscreen></iframe></div>
+<div class="vt">만장굴 내부 360° VR — 지하 실시간 지도 <span class="badge" style="margin-left:6px">360° 실사</span></div>
+<div class="vd">8K 360° 실사 촬영 · GPS가 닿지 않는 동굴 내부를 3D 재구성 지도와 함께 걷습니다</div>
+</div>
+<div>
+<div style="background:#F8F4EC;border:1px solid var(--line);padding:30px 28px;height:100%">
+<div class="gt" style="font-size:13px;letter-spacing:2px;color:var(--terra);font-weight:500;margin-bottom:12px">CAVE · UNDERGROUND</div>
+<h3 style="font-size:17.5px;color:var(--navy);margin-bottom:10px">GPS 가 닿지 않는 곳을 기록합니다</h3>
+<p style="font-size:14px;color:#5a544c;margin-bottom:18px">동굴 안에서는 위성 신호가 끊깁니다. 레이저 스캐너와 다중 카메라로 통로를 따라가며 위치를 이어 붙이고, 걸어온 길을 그대로 지도로 만듭니다. 측량·보존 기록·전시 콘텐츠에 씁니다.</p>
+<div class="chrow"><a class="chip" href="spatial/index.html">공간데이터 자세히 →</a></div>
+</div>
+</div>
+</div>
+<div class="scale">
       <a class="scitem" href="spatial/index.html"><img loading="lazy" src="spatial/images/jgcv7_s03_axis1_aerial_v2.jpeg" alt="항공 광역 스캔"><span class="sclab"><b>항공 광역</b>드론 · km 단위</span></a>
       <a class="scitem" href="spatial/index.html"><img loading="lazy" src="spatial/images/jgcv7_s04_axis2_widecave_v2.jpeg" alt="대형 동굴 스캔"><span class="sclab"><b>대형 동굴</b>광대역 내부 공간</span></a>
       <a class="scitem" href="spatial/index.html"><img loading="lazy" src="spatial/images/jgcv7_s05_axis3_crawlcave_v2.jpeg" alt="협소 동굴 스캔"><span class="sclab"><b>협소 동굴</b>포복 구간 정밀 기록</span></a>
@@ -239,70 +356,7 @@ footer .adminlink{color:#b7ab97}
 </section>
 
 <!-- 03 촬영 -->
-<section id="filming">
-  <div class="container">
-    <div class="shead">
-      <div class="snum">02 — FILMING · AERIAL · 360°</div>
-      <h2>하늘에서, 물가에서, 동굴 속에서 찍습니다.</h2>
-      <p>시네마틱 드론과 FPV, 8K 360° 카메라, 풀프레임 미러리스를 현장에 맞게 조합합니다. 영상·사진 16년, 360° VR 13년의 촬영 경험이 바탕입니다. 이 섹션의 영상은 모두 실제 촬영본입니다.</p>
-    </div>
 
-    <div class="feat" style="margin-bottom:56px">
-      <div>
-        <div class="vwrap"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/MeDE5tZcCZc" title="만장굴 360 VR" allowfullscreen></iframe></div>
-        <div class="vt">만장굴 내부 360° VR — 지하 실시간 지도 <span class="badge" style="margin-left:6px">360° 실사</span></div>
-        <div class="vd">8K 360° 실사 촬영 · GPS가 닿지 않는 동굴 내부를 3D 재구성 지도와 함께 걷습니다</div>
-      </div>
-      <div>
-        <div style="background:#fff;border:1px solid var(--line);padding:30px 28px;height:100%">
-          <div class="gt" style="font-size:13px;letter-spacing:2px;color:var(--terra);font-weight:500;margin-bottom:12px">REAL FOOTAGE CHANNELS</div>
-          <h3 style="font-size:17.5px;color:var(--navy);margin-bottom:10px">실사 영상은 유형별 채널에서</h3>
-          <p style="font-size:14px;color:#5a544c;margin-bottom:18px">오름·해변·계곡을 담은 8K 360° VR과 스피드감 있는 FPV, 행사·풍경 시네마틱 실사 영상을 채널에서 감상할 수 있습니다.</p>
-          <div class="chrow">
-            <a class="chip" href="https://www.youtube.com/@360VRjeju" target="_blank" rel="noopener">360° VR 영상 ↗</a>
-            <a class="chip" href="https://youtube.com/@jejugrapher" target="_blank" rel="noopener">FPV · 실사 영상 ↗</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="gearwrap">
-      <div class="gear"><div class="gt">CINEMATIC DRONE</div><h3>시네마틱 항공 촬영</h3><p>해안선과 오름, 행사장을 부드러운 항공 시점으로 담습니다. 대형 화면에도 견디는 고해상도 촬영.</p></div>
-      <div class="gear"><div class="gt">FPV</div><h3>FPV 다이나믹 촬영</h3><p>고공 낙하, 좁은 공간 통과, 인물 추적 — 일반 드론이 만들 수 없는 속도감 있는 시점을 만듭니다.</p></div>
-      <div class="gear"><div class="gt">8K 360°</div><h3>360° VR 촬영</h3><p>8K 360° 카메라로 공간 전체를 기록합니다. VR 헤드셋 감상과 리프레이밍 편집 모두 대응합니다.</p></div>
-      <div class="gear"><div class="gt">FULL-FRAME</div><h3>지상 시네마틱</h3><p>풀프레임 미러리스로 인물과 현장을 시네마틱하게 담습니다. 8K 촬영과 저조도 환경에 강합니다.</p></div>
-    </div>
-    <div class="years">
-      <div><div class="y">16년+</div><div class="yl">영상 · 사진</div></div>
-      <div><div class="y">13년+</div><div class="yl">360° VR</div></div>
-      <div><div class="y">4년+</div><div class="yl">AI 워크플로우</div></div>
-      <div><div class="y">2017</div><div class="yl">스튜디오 설립</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- 04 편집 · 포스트 -->
-<section id="editing" style="background:#fff">
-  <div class="container">
-    <div class="shead">
-      <div class="snum">03 — EDITING · POST-PRODUCTION</div>
-      <h2>찍은 것을 작품으로 다듬습니다.</h2>
-      <p>비트에 맞춘 컷 편집, 모션그래픽과 자막, 색보정, 다국어 배리에이션까지 — 촬영본과 AI 생성물이 한 편의 완성작으로 이어집니다.</p>
-    </div>
-    <div class="steps">
-      <div class="step"><div class="n">01</div><h3>구성 · 컷 편집</h3><p>음악의 비트와 에너지 곡선에 맞춰 컷을 배치합니다. 훅이 터지는 순간을 계산해 설계합니다.</p></div>
-      <div class="step"><div class="n">02</div><h3>모션그래픽 · 자막</h3><p>타이틀, 지도 오버레이, 정보 카드, 캘리그래피 타이포를 영상 위에 얹습니다.</p></div>
-      <div class="step"><div class="n">03</div><h3>색보정 · 사운드</h3><p>장면의 감정에 맞는 색을 입히고, 음악과 효과음의 균형을 잡습니다.</p></div>
-      <div class="step"><div class="n">04</div><h3>플랫폼별 마감</h3><p>유튜브·쇼츠·릴스 규격과 다국어 자막·메타데이터까지 배포 형태로 마무리합니다.</p></div>
-    </div>
-    <div class="comm">
-      <div class="commcard"><h3>갯것이영화제 인트로</h3><p>새벽 갯벌과 아이, 갯고둥의 이야기. AI 이미지·영상 제작 담당.</p><span class="st">진행 중</span></div>
-      <div class="commcard"><h3>2026 세계 습지의 날 오프닝</h3><p>「생명이 머무는 곳, 습지」 해양환경공단 발주 오프닝 영상.</p><span class="st">진행 중</span></div>
-      <div class="commcard"><h3>K-Dream Dance Festa 2026</h3><p>곽지해변 댄스 페스타 항공·FPV 촬영과 애프터무비 편집.</p><span class="st">완료</span></div>
-      <div class="commcard"><h3>생태관광 주간 × 갯것이 영화제</h3><p>영화 6편·생태 체험 6개를 담은 홍보 영상과 안내 그래픽.</p><span class="st">완료</span></div>
-    </div>
-  </div>
-</section>
 
 <!-- 02 AI 영상 제작 -->
 <section id="aivideo">
@@ -470,5 +524,16 @@ m.addEventListener('click',function(e){if(e.target.closest('a'))set(false);});
 document.addEventListener('click',function(e){if(m.classList.contains('open')&&!m.contains(e.target))set(false);});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false);});})();
 </script>
+<!-- jg-copyright-notice -->
+<div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
+<div style="max-width:880px;margin:0 auto">
+<strong style="display:block;color:#F3D9A4;font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:.02em">⚠ 무단 복제 · 도용 금지 — 저작권 경고</strong>
+이 사이트의 모든 사진 · 영상 · 글 · 음악 · 디자인 · 프로그램은 <b style="color:#fff">제주그래퍼(JEJUGRAPHER)</b>와 원저작자에게 저작권이 있으며 「저작권법」의 보호를 받습니다.
+저작권자의 <b style="color:#fff">사전 서면 동의 없이</b> 복제 · 다운로드 후 재배포 · 전송 · 게시 · 편집 · 2차 가공 · 캡처 사용 · 상업적 이용 · AI 학습 데이터로 사용하는 행위를 <b style="color:#fff">엄격히 금지</b>합니다.
+사진과 영상 속 인물의 초상권도 함께 보호됩니다.
+무단 도용이 확인되면 사전 경고 없이 「저작권법」 제136조(5년 이하의 징역 또는 5천만 원 이하의 벌금)에 따른 <b style="color:#fff">형사 고소와 민사상 손해배상 청구</b>를 진행합니다.
+<span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
+</div></div>
+<!-- /jg-copyright-notice -->
 </body>
 </html>
