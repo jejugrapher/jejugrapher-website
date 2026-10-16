@@ -188,6 +188,10 @@ footer .adminlink{color:#b7ab97}
 @media(max-width:560px){.techgrid{grid-template-columns:1fr}}
 
 .shots{display:grid;grid-template-columns:repeat(var(--c,4),1fr);gap:16px;margin-top:26px}
+.bshots .shot{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16)}
+.bshots .shot b{color:#EEF3F9}
+.bshots .shot span:last-child{color:#a9c0d8}
+.bshots a.shot:hover{border-color:#56CBEF}
 .shot{display:block;background:#fff;border:1px solid var(--line);padding:0 0 14px;color:inherit}
 a.shot:hover{border-color:var(--terra)}
 .sh-im{display:block;aspect-ratio:16/9;overflow:hidden;background:#0c0c0e}
@@ -342,13 +346,12 @@ a.shot:hover .sh-im img{transform:scale(1.05)}
       <div class="commcard"><h3>2026 세계 습지의 날 오프닝</h3><p>「생명이 머무는 곳, 습지」 해양환경공단 발주 오프닝 영상.</p><span class="st">진행 중</span></div>
       <div class="commcard"><h3>K-Dream Dance Festa 2026</h3><p>곽지해변 댄스 페스타 항공·FPV 촬영과 애프터무비 편집.</p><span class="st">완료</span></div>
       <div class="commcard"><h3>생태관광 주간 × 갯것이 영화제</h3><p>영화 6편·생태 체험 6개를 담은 홍보 영상과 안내 그래픽.</p><span class="st">완료</span></div>
-    
+</div>
 <div class="shots" style="--c:4">
 <a class="shot" href="https://www.youtube.com/watch?v=tAy1ASz-xGc"><span class="sh-im"><img loading="lazy" src="https://i.ytimg.com/vi/tAy1ASz-xGc/mqdefault.jpg" alt="기후탐사대 기록 영상"></span><b>행사 기록 — 동백동산 기후탐사대</b><span>현장음 정리·자막·구성까지</span></a>
 <a class="shot" href="https://www.youtube.com/watch?v=I6uVG54iCM8"><span class="sh-im"><img loading="lazy" src="https://i.ytimg.com/vi/I6uVG54iCM8/mqdefault.jpg" alt="제주나무이야기"></span><b>인터뷰 — 제주나무이야기</b><span>말이 살아나게 끊고 붙입니다</span></a>
 <a class="shot" href="https://www.youtube.com/watch?v=Gi_NvWsjuMM"><span class="sh-im"><img loading="lazy" src="https://i.ytimg.com/vi/Gi_NvWsjuMM/mqdefault.jpg" alt="사운드워킹"></span><b>소리 중심 — 화순곶자왈 사운드워킹</b><span>현장음을 주인공으로 둔 편집</span></a>
 <a class="shot" href="https://www.youtube.com/watch?v=NiLFq7hBvoY"><span class="sh-im"><img loading="lazy" src="https://i.ytimg.com/vi/NiLFq7hBvoY/mqdefault.jpg" alt="360 드라이브"></span><b>360° — 숲길 드라이브</b><span>스티칭·안정화·나딜 지도 합성</span></a>
-</div>
 </div>
   </div>
 </section>
@@ -515,13 +518,11 @@ a.shot:hover .sh-im img{transform:scale(1.05)}
         <div><b>🧹 청소 대작전</b><span>최대 10명 · 멀티플레이</span><p>캐릭터와 장비를 골라 랜덤으로 정해지는 제주 맵(마을·해변·계곡·곶자왈)을 누비며 쓰레기를 치우는 청소 경쟁 게임. 물개·게·조랑말·해녀·구좌당근·세화바다거북 캐릭터.</p></div>
         <div class="gl"><a href="games.html">게임 소개 · 사용법</a><a href="games/cleanup/" target="_blank" rel="noopener">대형화면으로 열기 ↗</a><a href="games/cleanup/phone/" target="_blank" rel="noopener">폰 화면 미리보기 ↗</a></div>
       </div>
-    
-<div class="shots" style="--c:4">
+</div>
+<div class="shots" style="--c:3">
 <a class="shot" href="games.html"><span class="sh-im"><img loading="lazy" src="games/cleanup/assets/promo/play2.jpg" alt="청소 대작전 플레이 화면"></span><b>청소 대작전 — 플레이</b><span>쓰레기를 모아 저장소에 쌓고, 발사해 뺏는 경쟁</span></a>
 <a class="shot" href="games.html"><span class="sh-im"><img loading="lazy" src="games/cleanup/assets/promo/characters.jpg" alt="제주 캐릭터 7종"></span><b>제주 캐릭터 7종</b><span>물개·게·조랑말·갈매기·해녀·구좌당근·세화바다거북</span></a>
 <a class="shot" href="games.html"><span class="sh-im"><img loading="lazy" src="games/cleanup/assets/promo/lobby.jpg" alt="대기 화면과 QR"></span><b>폰으로 바로 참여</b><span>대형화면 QR 을 찍으면 설치 없이 최대 10명</span></a>
-<a class="shot" href="https://jajumap.com"><span class="sh-im"><img loading="lazy" src="shots/jajumap_지도화면.jpg" alt="제주 여행자 지도 화면"></span><b>제주맵 — 931곳</b><span>장소·드론 규제·실시간 날씨를 한 화면에</span></a>
-</div>
 </div>
   </div>
 </section>
@@ -529,16 +530,15 @@ a.shot:hover .sh-im img{transform:scale(1.05)}
 <!-- 별밤사진관 -->
 <section id="byeolbam" style="background:radial-gradient(120% 90% at 50% 0%,#0e2547 0%,#0B1D3A 45%,#06122A 100%);color:#EEF3F9;overflow:hidden">
   <div class="container" style="text-align:center">
-    <div class="snum" style="color:#BFF3FF">EXPERIENCE · 별밤사진관 · 야간 빛그림 사진
-<div class="shots" style="--c:4">
+    <div class="snum" style="color:#BFF3FF">EXPERIENCE · 별밤사진관 · 야간 빛그림 사진</div>
+    <h2 style="font-size:31px;color:#fff;line-height:1.5;text-shadow:0 0 22px rgba(86,203,239,.45)">제주 밤하늘 아래, 빛으로 그린 한 장</h2>
+    <p style="font-size:15.5px;color:#c3d4e8;max-width:660px;margin:16px auto 0">전현석이 직접 진행하는 야간 라이트 페인팅 사진 체험입니다. 어두운 제주의 밤, 빛으로 그린 그림 속에 여러분의 한 장면을 남깁니다. 방송 「산꾼도시여자들」에도 소개되었습니다.</p>
+<div class="shots bshots" style="--c:4;text-align:left">
 <a class="shot" href="byeolbam.html#works"><span class="sh-im"><img loading="lazy" src="byeolbam/works/w070_t.jpg" alt="보름달 빛그림"></span><b>달빛 안에 앉아</b><span>보름달을 빛으로 그려 그 안에 앉습니다</span></a>
 <a class="shot" href="byeolbam.html#works"><span class="sh-im"><img loading="lazy" src="byeolbam/works/w404_t.jpg" alt="날개 빛그림"></span><b>등 뒤에 돋는 날개</b><span>사람 뒤에서 빛으로 날개를 그립니다</span></a>
 <a class="shot" href="byeolbam.html#works"><span class="sh-im"><img loading="lazy" src="byeolbam/works/w213_t.jpg" alt="고래 빛그림"></span><b>밤하늘을 건너는 고래</b><span>제주 바다를 밤하늘로 옮겨 옵니다</span></a>
 <a class="shot" href="byeolbam.html#works"><span class="sh-im"><img loading="lazy" src="byeolbam/works/w066_t.jpg" alt="빛으로 쓴 글씨"></span><b>빛으로 쓴 말</b><span>이름·날짜·전하고 싶은 말을 빛으로</span></a>
 </div>
-</div>
-    <h2 style="font-size:31px;color:#fff;line-height:1.5;text-shadow:0 0 22px rgba(86,203,239,.45)">제주 밤하늘 아래, 빛으로 그린 한 장</h2>
-    <p style="font-size:15.5px;color:#c3d4e8;max-width:660px;margin:16px auto 0">전현석이 직접 진행하는 야간 라이트 페인팅 사진 체험입니다. 어두운 제주의 밤, 빛으로 그린 그림 속에 여러분의 한 장면을 남깁니다. 방송 「산꾼도시여자들」에도 소개되었습니다.</p>
     <a class="cta" href="byeolbam.html" style="margin-top:34px;background:#56CBEF;color:#06122A">별밤사진관 자세히 보기 ↗</a>
   </div>
 </section>

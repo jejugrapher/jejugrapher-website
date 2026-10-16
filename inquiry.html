@@ -72,7 +72,40 @@ textarea{min-height:170px;resize:vertical}
 <!-- /jg-seo -->
 </head>
 <body>
-<nav><div class="navin"><a class="logo" href="./">JEJUGRAPHER</a><a class="back" href="./">← 메인으로</a></div></nav>
+<!-- jg-nav -->
+<style>
+#jgnav{position:sticky;top:0;z-index:60;background:rgba(248,244,236,.96);border-bottom:1px solid #E3DCCE;backdrop-filter:blur(8px);font-family:'IBM Plex Sans KR','Apple SD Gothic Neo',sans-serif}
+#jgnav .in{max-width:1180px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:relative}
+#jgnav a{color:#1F3A5F;text-decoration:none}
+#jgnav .lg{font-family:'Gowun Batang',serif;font-weight:700;font-size:18px;letter-spacing:2px;white-space:nowrap}
+#jgnav .mn{display:flex;gap:20px;font-size:14px}
+#jgnav .mn a:hover{color:#C97B5B}
+#jgnav .mn a[aria-current]{color:#C97B5B;font-weight:500}
+#jgnav .tg{display:none;align-items:center;gap:6px;height:40px;padding:0 15px;border:1px solid #E3DCCE;border-radius:999px;background:transparent;color:#1F3A5F;font:500 15px/1 inherit;cursor:pointer}
+@media (max-width:900px){
+ #jgnav .tg{display:inline-flex}
+ #jgnav .mn{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:0;background:#F8F4EC;border-bottom:1px solid #E3DCCE}
+ #jgnav .mn.open{display:flex}
+ #jgnav .mn a{padding:15px 24px;border-top:1px solid #E3DCCE;font-size:16px}
+}
+</style>
+<nav id="jgnav"><div class="in">
+<a class="lg" href="index.html">JEJUGRAPHER</a>
+<button class="tg" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="jgmenu">☰ 메뉴</button>
+<div class="mn" id="jgmenu"><a href="spatial/index.html">공간데이터</a>
+<a href="index.html#filming">영상 제작</a>
+<a href="index.html#web">웹·체험 제작</a>
+<a href="aiclass.html">AI 강의</a>
+<a href="byeolbam.html">별밤사진관</a>
+<a href="media.html">영상·사진 보기</a>
+<a href="https://jajumap.com" target="_blank" rel="noopener">제주맵 ↗</a>
+<a href="inquiry.html" aria-current="page">문의</a></div>
+</div></nav>
+<script>(function(){var b=document.querySelector('#jgnav .tg'),m=document.getElementById('jgmenu');
+b.addEventListener('click',function(){var o=m.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false');});})();</script>
+<!-- /jg-nav -->
+
+
 <div class="wrap">
   <h1>프로젝트 문의</h1>
   <p class="lead">공간데이터 · 촬영 · 편집 · AI 영상 · 웹 제작 — 어떤 이야기든 편하게 남겨 주세요. 평일 기준 하루 안에 답을 드립니다.</p>
