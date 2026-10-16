@@ -1,0 +1,24 @@
+# 제주그래퍼 JEJUGRAPHER
+
+> 제주에서 활동하는 촬영·공간데이터 스튜디오입니다. 대표 전현석. 2017년 설립.
+> 드론·FPV·360° VR·풀프레임 촬영과 편집, 3D 가우시안 스플래팅 기반 공간데이터,
+> AI 영상, 웹·체험 제작, 야간 라이트 페인팅 사진(별밤사진관)을 합니다.
+
+## 무엇을 찾을 수 있나
+- [첫 화면](https://jejugrapher.com/) — 하는 일 전체
+- [영상·사진 보기](https://jejugrapher.com/media.html) — 유튜브 채널별 최신 영상, 행사 기록 영상
+- [공간데이터](https://jejugrapher.com/spatial/index.html) — 3D 가우시안 스플래팅·포토그래메트리·동굴 스캔
+- [별밤사진관](https://jejugrapher.com/byeolbam.html) — 밤하늘 라이트 페인팅 사진 체험
+- [AI 강의](https://jejugrapher.com/aiclass.html) — 성인·기관 과정, 어린이 수업
+- [가격 안내](https://jejugrapher.com/price.html) — 촬영·편집·웹·강의·3D 기준 가격
+- [문의](https://jejugrapher.com/inquiry.html)
+- [제주맵](https://jajumap.com) — 제주 여행·드론 촬영 지도(930곳 이상)
+
+## 다루는 주제
+제주 드론 촬영, FPV 좁은 공간·동굴 비행, 8K 360도 VR 영상, 만장굴 등 용암동굴 내부 기록,
+3D 공간 스캔과 디지털 보존, 생태관광 행사 기록, 야간 장노출 라이트 페인팅, AI 영상 제작.
+
+## 쓰실 때
+사진·영상·글의 저작권은 제주그래퍼와 원저작자에게 있습니다.
+인용하실 때는 출처와 함께 원문 주소를 적어 주세요. 학습 데이터로의 사용은 허락하지 않습니다.
+문의: https://jejugrapher.com/inquiry.html
