@@ -812,6 +812,52 @@ if(!$('p-gs').hidden)applyGS();
   };
   lay='veg'; renderMap();
 })();
+
+(function(){
+  if(typeof SITES==='undefined') return;
+  var PAL=[[42,93,143,'water'],[217,210,197,'stone'],[159,210,122,'grass'],[224,60,60,'vine'],[31,122,52,'tree']];
+  var OUT={stone:[255,176,31,215], grass:[200,240,106,150], vine:[255,45,111,225], tree:[25,195,125,175], water:[10,22,40,130]};
+  var cache={};
+  LN.wall='돌과 식물 한눈에';
+  LEG.wall='<i style="background:#ffb01f"></i>드러난 돌 <i style="background:#ff2d6f"></i>덩굴·관목 추정 '
+    +'<i style="background:#19c37d"></i>수목 <i style="background:#c8f06a"></i>초지'
+    +'<div class="legnote">같은 자리를 <b>돌과 식물로만</b> 칠했습니다. 해안을 따라 이어지는 <b>주황 띠가 드러난 돌벽</b>이고, '
+    +'그 위를 덮은 분홍·초록이 성벽을 밀어내는 식물입니다. 주황이 끊긴 자리가 곧 덮인 자리입니다.'
+    +'<br>분홍 점선은 해안 10–25 m <b>성벽대 경계</b>입니다. 실제 성벽 중심선은 아직 그리지 않았습니다.</div>';
+  SITES.forEach(function(s){ if(s.layers.indexOf('wall')<0) s.layers.splice(1,0,'wall'); });
+  function make(id, cb){
+    if(cache[id]) return cb(cache[id]);
+    var im=new Image();
+    im.onload=function(){
+      var w=im.naturalWidth,h=im.naturalHeight;
+      var c=document.createElement('canvas'); c.width=w;c.height=h;
+      var x=c.getContext('2d'); x.drawImage(im,0,0);
+      var d=x.getImageData(0,0,w,h), p=d.data;
+      for(var i=0;i<p.length;i+=4){
+        var R=p[i],G=p[i+1],B=p[i+2];
+        if(R>150&&G<90&&B>90&&B<190&&R-G>70){ p[i]=255;p[i+1]=77;p[i+2]=166;p[i+3]=255; continue; }
+        var best=1e9,k=null;
+        for(var t=0;t<PAL.length;t++){var q=PAL[t],dd=(R-q[0])*(R-q[0])+(G-q[1])*(G-q[1])+(B-q[2])*(B-q[2]); if(dd<best){best=dd;k=q[3];}}
+        var o=OUT[k]; if(o){p[i]=o[0];p[i+1]=o[1];p[i+2]=o[2];p[i+3]=o[3];} else p[i+3]=0;
+      }
+      x.putImageData(d,0,0); cache[id]=c.toDataURL('image/png'); cb(cache[id]);
+    };
+    im.onerror=function(){cb(null);};
+    im.src='map/site'+f2(id)+'_class.jpg';
+  }
+  var _r=renderMap;
+  renderMap=function(){
+    if(lay!=='wall'){ _r(); return; }
+    var s=SITES[cur];
+    lay='class'; _r(); lay='wall';
+    document.getElementById('tagB').textContent=LN.wall;
+    document.getElementById('legend').innerHTML=LEG.wall;
+    document.getElementById('layChips').querySelectorAll('button').forEach(function(bt,i){ bt.setAttribute('aria-pressed', s.layers[i]==='wall'); });
+    var img=document.getElementById('imgB'); img.removeAttribute('src');
+    make(s.id, function(url){ if(url && lay==='wall') img.src=url; });
+  };
+  renderMap();                 /* 레이어 목록을 다시 그려 새 칩이 바로 보이게 */
+})();
 </script>
 <div class="jgfoot">촬영 · 처리 · 분석 제주그래퍼 JEJUGRAPHER · DJI Mavic 3 Multispectral · 2026년 10월<br>3D 메시와 가우시안 스플래팅, 정사영상·식생 지도는 모두 같은 한 번의 촬영에서 나왔습니다. 길이 · 면적 · 높이 차 같은 <b>상대 측정은 유효</b>하지만, 절대 좌표는 보정 전이라 측량 성과로는 쓸 수 없습니다.<br>사진 · 그림 · 수치와 글의 저작권은 제주그래퍼에 있습니다.<a class="go" href="report/">수치와 방법이 담긴 분석 보고서 보기 →</a> · <a href="/media.html">영상 · 사진 보기</a> · <a href="/inquiry.html">조사 문의</a></div>
 <!-- jg-copyright-notice -->
