@@ -79,9 +79,23 @@ th{background:#EFEADD;font-weight:500;width:34%}
 .memo li{margin:.5rem 0 .5rem 1.1rem;font-size:.97rem}
 .keep{background:#EFF4EC;border:1px solid var(--line);border-radius:12px;padding:1.3rem;margin-top:1.8rem}
 .keep b{display:block;font-family:var(--serif);color:var(--forest);font-size:1.1rem;margin-bottom:.5rem}
-.dlbtn{display:inline-block;margin-top:1rem;font:500 .98rem var(--sans);padding:.7em 1.2em;border:1px solid var(--line);
- border-radius:10px;background:var(--paper);color:var(--navy);cursor:pointer}
-.dlbtn:hover{border-color:var(--terra);color:var(--terra)}
+.rgrp{font:500 .95rem var(--sans);color:var(--forest);margin:2rem 0 .8rem;display:flex;align-items:center;gap:.8rem}
+.rgrp::after{content:"";flex:1;height:1px;background:var(--line)}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.rc{position:relative;display:block;text-align:left;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--paper);cursor:pointer;padding:0 0 .9rem;font:inherit;color:inherit}
+.rc:hover{border-color:var(--terra)}
+.rc img{width:100%;aspect-ratio:16/9;object-fit:cover;background:#111}
+.rc b{display:block;font-family:var(--serif);font-size:1.02rem;color:var(--navy);padding:.7rem .9rem .1rem}
+.rc>span:not(.rp){display:block;font-size:.86rem;color:var(--mute);padding:0 .9rem;line-height:1.55}
+.rp{position:absolute;left:50%;top:calc(28.125% - 20px);transform:translateX(-50%);width:40px;height:40px;border-radius:50%;
+ background:rgba(0,0,0,.55);color:#fff;font-size:.95rem;display:grid;place-items:center}
+#rdlg{border:0;padding:0;background:#000;width:min(1100px,94vw);border-radius:12px}
+#rdlg::backdrop{background:rgba(0,0,0,.75)}
+.rbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.6rem .9rem;background:#111;color:#fff}
+.rbar b{font:500 .95rem var(--sans)}
+.rbar button{font:500 .9rem var(--sans);padding:.4em .9em;border:1px solid #444;border-radius:8px;background:#222;color:#fff;cursor:pointer}
+.rwrap{position:relative;aspect-ratio:16/9;background:#000}
+.rwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .credit{border-top:1px solid var(--line);padding-top:1.6rem;margin-top:2.4rem;font-size:.9rem;color:var(--mute)}
 .credit .go{display:inline-block;margin-top:1.1rem;text-decoration:none;color:var(--terra);border-bottom:1px solid}
 @media (max-width:760px){.vids{grid-template-columns:1fr}}
@@ -128,7 +142,7 @@ th{background:#EFEADD;font-weight:500;width:34%}
     <div class="facts">
       <div class="fact"><b>카메라 7대</b><span>동시 촬영</span></div>
       <div class="fact"><b>175개</b><span>촬영 소스</span></div>
-      <div class="fact"><b>1,400여 장</b><span>사진 (촬영 위치 기입)</span></div>
+      <div class="fact"><b>1,400여 장</b><span>사진</span></div>
       <div class="fact"><b>영상 20편</b><span>준비 과정부터 하루 기록까지</span></div>
     </div>
   </div>
@@ -173,29 +187,17 @@ th{background:#EFEADD;font-weight:500;width:34%}
 <section style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="narrow">
     <div class="kicker">HOW</div>
-    <h2>카메라 일곱 대로 하루를 담는 법</h2>
-    <p>하루를 빠짐없이 담으려면 여러 대를 동시에 돌려야 합니다. 자리마다 역할을 나눴습니다.</p>
+    <h2>카메라 일곱 대를 한 번에</h2>
+    <p>하루를 빠짐없이 담으려고 자리마다 역할을 나눠 일곱 대를 동시에 돌렸습니다.</p>
     <table><tr><th>역할</th><th>장비</th></tr><tr><td>무대 전체 고정</td><td>DJI Osmo Pocket 3 · 삼각대 · 4K</td></tr><tr><td>무대 + 객석 360°</td><td>Insta360 · Osmo 360 · 삼각대</td></tr><tr><td>현장 취재</td><td>Sony α1 · Sony ZV-E1</td></tr><tr><td>항공</td><td>DJI Mavic 3 Cine</td></tr><tr><td>저공 · 실내</td><td>DJI Avata 2</td></tr><tr><td>준비 과정 360°</td><td>Avata 360</td></tr></table>
-    <div class="memo">
-      <b style="display:block;font-family:var(--serif);color:var(--forest);font-size:1.05rem;margin-bottom:.5rem">기술 메모 — 시계부터 맞춥니다</b>
-      <ul>
-        <li>카메라마다 내장 시계가 최대 <b>2분 넘게</b> 어긋나 있었습니다. 소리 파형을 하루 단위로 비교해 보정값을 구하고(Pocket 3 기준 Osmo 360 +99.5초 · α1 +147.2초 · ZV-E1 +102.8초), 무대 LED 화면 패턴으로 눈으로 다시 확인했습니다.</li>
-        <li><b>드론은 1시간이 어긋나</b> 있었습니다. 파일 메타데이터의 UTC 변환이 틀어진 것으로, 영상 내용(식전공연 장면)으로 확인해 바로잡았습니다.</li>
-        <li>편집은 원본에 직결해 작업했습니다. 컬러 매니지먼트로 일곱 대의 색을 맞추고, 중간 재압축 없이 한 번만 인코딩했습니다.</li>
-        <li><b>현장 소리를 그대로 살렸습니다.</b> 음악은 그 아래에 깔고, 공연 구간에서는 음악 음량만 낮춰 끊기지 않게 했습니다.</li>
-        <li>장면마다 어디서 무엇을 하는 중인지 자막을 달되, <b>얼굴을 가리지 않도록</b> 컷마다 얼굴 위치를 찾아 빈 자리에 배치했습니다.</li>
-        <li>사진에는 휴대폰 GPX 기록을 맞춰 <b>촬영 위치를 EXIF에 기입</b>했습니다.</li>
-      </ul>
-    </div>
   </div>
 </section>
 
 <section>
   <div class="narrow">
     <div class="keep">
-      <b>당일 기록 영상은 공개하지 않습니다</b>
-      <p style="font-size:.97rem">행사 전체 기록과 프로그램별·행사장별 영상, 인터뷰까지 <b>16편</b>은 주최 측에 따로 전달했습니다. 아이들이 많이 담긴 기록이라 이 페이지에서는 공개하지 않습니다.</p>
-      <button type="button" class="dlbtn" data-name="초록별 환경놀이터" data-dl="Im1hLYM/iil+E5a74sHMK4OH+fPXEt5qVkBKab1ijO3GCPPWYPqmIvMnqI8XiuDpwCX37GoktcduMcwTRM8EfQ3Q4A5uIk+N">🔒 영상 받기 (안내받은 비밀번호)</button>
+      <b>원본 파일이 필요하시면</b>
+      <p style="font-size:.97rem">이 페이지의 영상은 보시는 것까지만 열어 두었습니다. 원본 파일이 필요하신 주최·주관 측은 따로 전달드린 자료실을 이용해 주세요.</p>
     </div>
     <div class="credit">
       촬영 · 편집 제주그래퍼 JEJUGRAPHER · 2026년 10월<br>
@@ -230,16 +232,19 @@ th{background:#EFEADD;font-weight:500;width:34%}
   var t; row.addEventListener('scroll',function(){ clearTimeout(t); t=setTimeout(mark,80); });
   window.addEventListener('resize',mark); mark();
 })();
-/* 영상 받기 — 사이트 공통 방식: 비밀번호로 드라이브 폴더 주소를 풀어서 엶 */
+/* 기록 영상 — 구글드라이브 미리보기로 재생만 (내려받기 없음) */
 (function(){
-  async function key(pw,n){const out=[];for(let i=0;out.length<n;i++){const d=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("jg-dl:"+pw+":"+i));out.push(...new Uint8Array(d));}return out;}
-  document.addEventListener("click",async e=>{
-    const b=e.target.closest("[data-dl]"); if(!b) return;
-    const pw=(prompt((b.dataset.name||"")+" 영상 받기\n안내받은 비밀번호(숫자)를 입력해 주세요.")||"").replace(/\D/g,""); if(!pw) return;
-    const c=Uint8Array.from(atob(b.dataset.dl),x=>x.charCodeAt(0)); const k=await key(pw,c.length);
-    const u=new TextDecoder().decode(c.map((x,i)=>x^k[i]));
-    if(u.startsWith("https://drive.google.com/")) window.open(u,"_blank","noopener"); else alert("비밀번호가 맞지 않아요. 다시 확인해 주세요.");
+  var d=document.getElementById('rdlg'); if(!d) return;
+  var f=document.getElementById('rif'), t=document.getElementById('rttl');
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-drive]'); if(!b) return;
+    f.src='https://drive.google.com/file/d/'+b.dataset.drive+'/preview';
+    t.textContent=b.querySelector('b').textContent; d.showModal();
   });
+  function close_(){ f.src=''; d.close(); }
+  document.getElementById('rx').onclick=close_;
+  d.addEventListener('click',function(e){ if(e.target===d) close_(); });
+  d.addEventListener('close',function(){ f.src=''; });
 })();
 </script>
 <!-- jg-copyright-notice -->
