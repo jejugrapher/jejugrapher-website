@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>별도환해장성 드론 식생 분석 — 환해장성에 번지는 식물을 멀티스펙트럴로 재다 | 제주그래퍼</title>
+<meta name="description" content="제주 화북 별도환해장성을 멀티스펙트럴 드론(DJI Mavic 3 Multispectral)으로 촬영해, 성벽에 번진 식생과 덩굴을 NDVI·식생 높이로 분석한 보고서입니다. 구간별 위험도와 3년 순환 관리안을 담았습니다.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="별도환해장성 드론 식생 분석 — 성벽에 번지는 식물을 멀티스펙트럴로">
+<meta property="og:description" content="제주 화북 별도환해장성을 멀티스펙트럴 드론(DJI Mavic 3 Multispectral)으로 촬영해, 성벽에 번진 식생과 덩굴을 NDVI·식생 높이로 분석한 보고서입니다. 구간별 위험도와 3년 순환 관리안을 담았습니다.">
+<meta property="og:image" content="https://jejugrapher.com/spatial/whanhae-wall/img/site00_class.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{--ink:#1d2530;--mute:#5f6b78;--line:#d3dae2;--acc:#14532d;--accbg:#eef4ee;--warn:#fff6e5;--warnline:#e0a020;--bg:#ffffff;--card:#f8faf8;--y1:#d7301f;--y2:#e8962a;--y3:#3f8f3f;--btn:#ffffff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e6e9ee;--mute:#a3adb8;--line:#3a424c;--acc:#7fd39a;--accbg:#1c2a20;--warn:#2e2614;--bg:#14181d;--card:#1a1f25;--btn:#20262d}}
+:root[data-theme="dark"]{--ink:#e6e9ee;--mute:#a3adb8;--line:#3a424c;--acc:#7fd39a;--accbg:#1c2a20;--warn:#2e2614;--bg:#14181d;--card:#1a1f25;--btn:#20262d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.75 "Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif}
+main{max-width:1180px;margin:0 auto;padding:32px 16px 60px}
+h1{font-size:27px;margin:0 0 4px;border-bottom:3px solid var(--acc);padding-bottom:12px;line-height:1.4}
+.sub{color:var(--mute);margin:8px 0 22px}
+h2{font-size:20px;margin:46px 0 12px;color:var(--acc);border-left:5px solid var(--acc);padding-left:12px}
+h3{font-size:16px;margin:24px 0 8px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 9px;vertical-align:top}
+th{background:var(--accbg);text-align:center}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+.tw{overflow-x:auto}
+img.fig{width:100%;border:1px solid var(--line);border-radius:6px;margin:8px 0 2px;background:#fff}
+.cap{font-size:13px;color:var(--mute);margin:2px 0 18px}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:18px 0}
+.kpi div{background:var(--accbg);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi b{display:block;font-size:23px;color:var(--acc);line-height:1.3}
+.kpi span{font-size:13px;color:var(--mute)}
+.warn{background:var(--warn);border-left:5px solid var(--warnline);padding:12px 16px;border-radius:0 6px 6px 0;margin:16px 0}
+.y1,.y2,.y3{display:inline-block;padding:0 8px;border-radius:9px;color:#fff;font-size:13px;white-space:nowrap}
+.y1{background:var(--y1)}.y2{background:var(--y2)}.y3{background:var(--y3)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+code{font-size:13px;background:var(--accbg);padding:1px 5px;border-radius:4px;word-break:break-all}
+ul,ol{padding-left:22px} li{margin:3px 0}
+footer{margin-top:40px;color:var(--mute);font-size:13px;border-top:1px solid var(--line);padding-top:12px}
+/* viewer */
+.viewer{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chips button,.lay button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--btn);color:var(--ink);padding:4px 11px;border-radius:16px;cursor:pointer}
+.chips button[aria-pressed="true"],.lay button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--bg)}
+.vt{font-weight:700;font-size:16px;margin:4px 0 2px}
+.vnote{font-size:13px;color:var(--mute);margin-bottom:8px}
+.vgrid{display:grid;grid-template-columns:1fr 230px;gap:14px}
+@media (max-width:860px){.vgrid{grid-template-columns:1fr}}
+.cmp{position:relative;width:100%;border-radius:8px;overflow:hidden;background:#fff;touch-action:none;user-select:none;cursor:ew-resize;border:1px solid var(--line)}
+.cmp img{display:block;width:100%;height:auto;pointer-events:none}
+.cmp .top{position:absolute;inset:0}
+.cmp .bar{position:absolute;top:0;bottom:0;width:3px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.4);transform:translateX(-1.5px);pointer-events:none}
+.cmp .knob{position:absolute;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.4);display:grid;place-items:center;font-size:14px;color:#333;pointer-events:none}
+.cmp .tag{position:absolute;top:8px;font-size:12px;background:rgba(0,0,0,.55);color:#fff;padding:2px 8px;border-radius:6px;pointer-events:none}
+.cmp .tl{left:8px}.cmp .trr{right:8px}
+.lay{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+.range{width:100%;margin:8px 0 0}
+.side table{font-size:13px;margin:0}
+.side td:first-child{color:var(--mute);white-space:nowrap}
+.legend{font-size:12px;color:var(--mute);margin-top:10px;line-height:1.9}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:2px;vertical-align:-1px;margin-right:4px;border:1px solid rgba(0,0,0,.15)}
+.ramp{height:10px;border-radius:3px;margin:3px 0 1px;border:1px solid rgba(0,0,0,.15)}
+.rl{display:flex;justify-content:space-between;font-size:11px}
+@media print{.viewer .chips,.viewer .lay,.range{display:none}}
+
+.jgnav{position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--line)}
+.jgin{max-width:1180px;margin:0 auto;padding:0 16px;height:54px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.jgnav a{color:var(--ink);text-decoration:none}
+.jglogo{font-weight:700;letter-spacing:2px;font-size:16px;white-space:nowrap}
+.jglinks{display:flex;gap:16px;font-size:14px;color:var(--mute)}
+.jglinks a{color:var(--mute)} .jglinks a:hover{color:var(--acc)}
+.jgfoot{max-width:1180px;margin:0 auto;padding:28px 16px 48px;border-top:1px solid var(--line);color:var(--mute);font-size:14px}
+.jgfoot a{color:var(--acc)}
+@media (max-width:560px){.jglinks a:first-child{display:none}}
+</style>
+
+<!-- jg-seo -->
+<link rel="canonical" href="https://jejugrapher.com/spatial/whanhae-wall/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://jejugrapher.com/spatial/whanhae-wall/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="별도환해장성 드론 식생 분석 — 환해장성에 번지는 식물을 멀티스펙트럴로 재다 | 제주그래퍼">
+<meta name="twitter:description" content="제주 화북 별도환해장성을 멀티스펙트럴 드론(DJI Mavic 3 Multispectral)으로 촬영해, 성벽에 번진 식생과 덩굴을 NDVI·식생 높이로 분석한 보고서입니다. 구간별 위험도와 3년 순환 관리안을 담았습니다.">
+<!-- /jg-seo -->
+</head>
+<body>
+<nav class="jgnav"><div class="jgin">
+<a class="jglogo" href="/">JEJUGRAPHER</a>
+<span class="jglinks"><a href="/spatial/index.html">공간데이터</a><a href="/media.html">영상 · 사진 보기</a><a href="/inquiry.html">문의</a></span>
+</div></nav>
+<main>
+<h1>별도환해장성 M3M 항공조사 — ODM 처리·식생 분석 보고서</h1>
+<p class="sub">제주 화북 별도환해장성 · 촬영 2026-10-12 (DJI Mavic 3 Multispectral) · 처리 2026-10-16~17 (OpenDroneMap 3.6.2) · v2</p>
+
+<div class="kpi">
+  <div><b>1,645 / 1,651</b><span>RGB 카메라 복원 (99.6%)</span></div>
+  <div><b>1.5 cm / 2.1 cm</b><span>RGB / 멀티스펙트럴 정사영상</span></div>
+  <div><b>55.1%</b><span>성벽대(해안 10–25 m) 식생피복률</span></div>
+  <div><b>10.9%</b><span>성벽대 덩굴 추정률</span></div>
+  <div><b>6 · 6 · 5 구간</b><span>1·2·3년차 순환 배분 (해안 50 m 구간 17개)</span></div>
+</div>
+
+<h2>0. 요약</h2>
+<ul>
+  <li><b>처리 완료.</b> RGB 1,651장과 멀티스펙트럴(MS) 6,604장으로 다음을 만들었습니다.
+    <ul>
+      <li>정사영상, 표면·지면 고도(DSM·DTM), 반사율 4밴드</li>
+      <li>NDVI·NDRE·GNDVI, 식생 높이(CHM)</li>
+    </ul></li>
+  <li><b>석재와 식생은 분명하게 구분됩니다.</b> 아래 <b>비교 뷰어</b>에서 같은 장소의 RGB 사진과 NDVI·위색·분류·높이를 슬라이더로 겹쳐 볼 수 있습니다.</li>
+  <li><b>식생이 내륙에서 성벽 쪽으로 밀고 들어옵니다.</b> 해안에서 멀어질수록 식생피복률이 높아집니다: 0–10 m 1.6% → 10–25 m(성벽대) 55.1% → 25–50 m 86.1%.</li>
+  <li><b>1년차 구간 3·10·11·12·13·14</b>의 성벽대 평균은 식생 77.3%, 덩굴 16.7%입니다. 최우선은 <b>구간 10</b>(덩굴 추정 38.8%)입니다.</li>
+  <li><b>현재 통계는 해안선 기준 대리 분석입니다.</b> 성벽 중심선을 QGIS에서 그리면(약 30분) 중심선 기준 0–1 / 1–3 / 3–10 m 정밀 통계를 바로 낼 수 있습니다. 구간 7처럼 대리선이 성벽을 벗어난 곳이 있어 꼭 필요합니다.</li>
+  <li><b>이번 자료는 1차 기준(baseline)입니다.</b>
+    <ul>
+      <li>절대 위치가 RTK 기준으로 수평 약 0.8 m, 수직 약 3.6 m 평행 이동돼 있습니다.</li>
+      <li>RGB와 MS의 상대 어긋남은 중앙값 0.20 m입니다.</li>
+    </ul></li>
+</ul>
+
+<h2>1. 장소별 비교 뷰어</h2>
+<p>위쪽 버튼으로 장소를 고르고, 아래 버튼으로 오른쪽에 겹칠 분석 레이어를 고릅니다. 사진 위를 끌거나 슬라이더를 움직이면 왼쪽(RGB)과 오른쪽(분석)의 경계가 바뀝니다.</p>
+<div class="viewer" id="viewer">
+  <div class="chips" id="chips" role="group" aria-label="장소 선택"></div>
+  <div class="vt" id="vt"></div>
+  <div class="vnote" id="vnote"></div>
+  <div class="vgrid">
+    <div>
+      <div class="cmp" id="cmp">
+        <img id="imgA" alt="RGB 정사영상">
+        <div class="top" id="topWrap"><img id="imgB" alt="분석 레이어"></div>
+        <div class="bar" id="bar"></div><div class="knob" id="knob">⇆</div>
+        <span class="tag tl">RGB 사진</span><span class="tag trr" id="tagB"></span>
+      </div>
+      <input type="range" class="range" id="rng" min="0" max="100" value="50" aria-label="비교 경계 위치">
+      <div class="lay" id="lay" role="group" aria-label="분석 레이어 선택"></div>
+    </div>
+    <div class="side">
+      <table id="stats"></table>
+      <div class="legend" id="legend"></div>
+    </div>
+  </div>
+</div>
+
+<h2>2. 사업 배경과 분석 목적</h2>
+<p>제주도 환해장성 17개소 문화재 돌봄사업 제안을 위한 자료입니다. 아래는 회의 녹취록에서 정리한 요구입니다.</p>
+<div class="tw"><table>
+<tr><th>#</th><th>회의에서 나온 요구</th><th>이 보고서의 대응</th></tr>
+<tr><td>①</td><td>성벽과 엽록소를 가진 식생의 구분, 한눈에 다른 색</td><td>NDVI·근적외 기반 석재·초지·덩굴·수목 분류 (비교 뷰어 "석재·식생 분류")</td></tr>
+<tr><td>②</td><td>성벽 중심과 양옆까지 함께 분석</td><td>해안선 거리대 0–10 / 10–25 / 25–50 m. 중심선 기준 0–1 / 1–3 / 3–10 m는 디지타이징 후</td></tr>
+<tr><td>③</td><td>구간별 1·2·3년차 순환 관리계획</td><td>해안 50 m 구간 위험도 점수 → 연차 배분 (5장)</td></tr>
+<tr><td>④</td><td>관리 구역과 미관리 구역의 차이</td><td>중심선 레이어 <code>managed</code> 필드로 비교. 현재 관리 범위 정보 필요</td></tr>
+<tr><td>⑤</td><td>기준점을 두어 이전·이후 비교</td><td>이번 = 1차 기준. cm급 비교는 RTK 재촬영부터</td></tr>
+<tr><td>⑥</td><td>덩굴 추가 촬영</td><td>미실시. NDVI + 높이(CHM)로 대리 추정</td></tr>
+</table></div>
+<p>핵심 위협은 <b>덩굴·관목이 돌 사이에서 굵어지며 돌을 벌리는 것</b>입니다. 가늘 때 3년 주기로 제거한다는 것이 사업 설계의 뼈대입니다.</p>
+
+<h2>3. 데이터와 처리</h2>
+<div class="tw"><table>
+<tr><th>비행</th><th>RGB</th><th>MS(4밴드)</th><th>위치측위</th><th>특징</th></tr>
+<tr><td>006</td><td class="n">529</td><td class="n">2,116</td><td>단독측위</td><td>연직, 고도 41 m</td></tr>
+<tr><td>007</td><td class="n">611</td><td class="n">2,444</td><td>단독측위</td><td>연직</td></tr>
+<tr><td>008</td><td class="n">426</td><td class="n">1,704</td><td>RTK Fixed</td><td>연직</td></tr>
+<tr><td>009</td><td class="n">85</td><td class="n">340</td><td>RTK Fixed</td><td>사선(−58~−15°), 돔 왜곡 방지</td></tr>
+<tr><th>합계</th><td class="n"><b>1,651</b></td><td class="n"><b>6,604</b></td><td colspan="2">단독측위 69% · RTK 31%</td></tr>
+</table></div>
+<ul>
+  <li><b>RGB:</b> <code>--gps-accuracy 1.5 --feature-quality high --min-num-features 12000 --pc-quality high --dsm --dtm --dem-resolution 5 --orthophoto-resolution 1.5</code></li>
+  <li><b>MS:</b> <code>--gps-accuracy 1.5 --radiometric-calibration camera+sun --feature-quality high --pc-quality high --dsm --dem-resolution 5 --orthophoto-resolution 2</code></li>
+  </ul>
+<h3>처리 중 발견하고 해결한 문제</h3>
+<div class="tw"><table>
+<tr><th>문제</th><th>원인</th><th>조치</th></tr>
+<tr><td>데이터 로드 중단</td><td>RGB 2장의 DJI MakerNote 빈 값 때문에 exifread가 오류를 냄</td><td>빈 값 건너뛰기 1줄 추가(원본 백업). 사진은 빠짐없이 사용</td></tr>
+<tr><td><b>GPU 미사용</b></td><td>ODM 폴더의 <code>nvcuda.dll</code>이 20 KB 빈 껍데기라 실제 드라이버 대신 불러옴</td><td>이름 변경 → 깊이맵 <b>분당 8장에서 377장으로 약 45배</b>. 이미 만든 835장은 재활용</td></tr>
+<tr><td>검은 현무암이 식생으로 오분류</td><td>암반의 적·근적외 반사율이 0.004 수준이라 NDVI 비율이 튐</td><td>식생 판정에 <b>근적외 반사율 ≥ 0.012</b> 조건 추가(풀밭 하위 10%가 0.027)</td></tr>
+<tr><td>카메라 위치 복원이 느림</td><td>OpenSfM 증분 복원은 CPU 1코어 위주</td><td>정상 동작. 이 PC에서 <code>--split</code>은 순차 처리라 이득이 없음</td></tr>
+</table></div>
+
+<h2>4. 처리 품질</h2>
+<div class="tw"><table>
+<tr><th>지표</th><th>RGB</th><th>MS</th><th>맥 자체 파이프라인(참고)</th></tr>
+<tr><td>카메라 복원</td><td class="n">1,645 / 1,651</td><td class="n">1,625 / 1,651</td><td class="n">1,645 / 1,651</td></tr>
+<tr><td>3D 점 (희소)</td><td class="n">1,528,710</td><td class="n">703,529</td><td class="n">985,868</td></tr>
+<tr><td>재투영 오차</td><td class="n">1.28 px</td><td class="n">1.32 px</td><td class="n">0.69 px</td></tr>
+<tr><td>정사영상</td><td class="n">43,462 × 23,095</td><td class="n">30,434 × 16,964</td><td class="n">44,981 × 23,138</td></tr>
+</table></div>
+<div class="tw"><table>
+<tr><th>절대 위치 검증 기준</th><th>매수</th><th>수평 차 (중앙 / p90)</th><th>수직 차 (중앙)</th></tr>
+<tr><td>RTK Fixed 사진 (008·009)</td><td class="n">507</td><td class="n">0.78 m / 0.83 m</td><td class="n">−3.57 m</td></tr>
+<tr><td>단독측위 사진 (006·007)</td><td class="n">1,138</td><td class="n">0.36 m / 0.54 m</td><td class="n">+2.18 m</td></tr>
+</table></div>
+<div class="warn"><b>해석.</b> RTK 사진과 단독측위 사진의 GPS를 같은 1.5 m 정확도로 취급했습니다. 그래서 모델 전체가 단독측위(69%) 쪽으로 끌려가, RTK 기준으로 수평 약 0.8 m, 수직 약 3.6 m <b>평행 이동</b>돼 있습니다(사진 간 편차 작음). 형태·면적·피복률·높이 분석에는 영향이 없지만, 측량 좌표로는 쓸 수 없습니다.</div>
+<p><b>RGB↔MS 상대 정합</b>은 녹색 밴드 위상상관(10 cm 격자, 신뢰 타일 28개)으로 쟀습니다. 결과는 중앙 0.20 m, p90 0.30 m이고 방향성은 없습니다. 해안 10–25 m 분석에는 충분하지만, 중심선 기준 0–1 m 거리대에서는 경계 픽셀이 섞일 수 있습니다.</p>
+<div class="two">
+  <div><img class="fig" loading="lazy" decoding="async" src="img/fig_ndvi_hist.png" alt="NDVI 분포"><p class="cap">NDVI 분포. 식생 봉우리 0.6~0.8, 바다는 음수로 정상입니다.</p></div>
+  <div><p style="margin-top:10px">반사율 절대값은 낮게 나왔습니다(풀밭 근적외 약 0.04). <code>camera+sun</code> 보정의 알려진 과소평가 특성이고, 보정판이 없으면 절대 반사율은 성립하지 않습니다. <b>NDVI 같은 비율 지수는 유효</b>해서 이번 분석에는 지장이 없습니다.</p></div>
+</div>
+
+<h2>5. 해안 거리대별 식생 압력</h2>
+<p>바다(NDVI&lt;0인 가장 큰 영역)의 경계를 해안선으로 자동 추출하고, 모든 육지 픽셀의 해안선까지 거리를 계산했습니다. 맥 보고서와 같은 기준으로 성벽은 10–25 m 대에 있다고 봅니다.</p>
+<div class="two">
+<div class="tw"><table>
+<tr><th>해안 거리</th><th>면적 m²</th><th>식생</th><th>수목</th><th>덩굴 추정</th><th>석재·나지</th><th>NDVI</th></tr>
+<tr><td>0–10 m</td><td class="n">9,417</td><td class="n">1.6%</td><td class="n">0.0%</td><td class="n">0.1%</td><td class="n">84.3%</td><td class="n">0.05</td></tr><tr><td><b>10–25 m (성벽대)</b></td><td class="n">9,400</td><td class="n">55.1%</td><td class="n">2.7%</td><td class="n">10.9%</td><td class="n">40.8%</td><td class="n">0.44</td></tr><tr><td>25–50 m</td><td class="n">15,258</td><td class="n">86.1%</td><td class="n">6.8%</td><td class="n">15.4%</td><td class="n">11.9%</td><td class="n">0.59</td></tr>
+</table>
+<p class="cap">0–10 m는 파도에 노출된 암반대라 식생이 거의 없습니다(석재·나지 84.3%). 성벽대부터 식생이 절반 이상을 덮고, 내륙은 86.1%입니다.</p></div>
+<div><img class="fig" loading="lazy" decoding="async" src="img/fig_band_bars.png" alt="거리대별 피복 구성"></div>
+</div>
+
+<h2>6. 구간별 위험도와 3년 순환 배분</h2>
+<p>해안선을 약 15 m 폭으로 부드럽게 다듬은 뒤 50 m씩 나누고, 서쪽에서 동쪽으로 17개 구간에 번호를 매겼습니다. 구간 위치는 비교 뷰어의 <b>전체 범위 → 연차 배분</b> 레이어에서 볼 수 있습니다.</p>
+<p>위험도 = 0.5 × 성벽대 식생피복률 + 0.3 × 성벽대 덩굴 추정률 + 0.2 × 인접대(25–50 m) 식생피복률. 점수 상위 3분의 1은 1년차, 중위는 2년차, 하위는 3년차입니다.</p>
+<img class="fig" loading="lazy" decoding="async" src="img/fig_section_bars.png" alt="구간별 식생피복률">
+<p class="cap">구간별 성벽대 식생피복률(막대색 = 연차)과 덩굴 추정률(선)</p>
+<div class="tw"><table>
+<tr><th>구간</th><th>성벽대 면적 m²</th><th>식생피복률</th><th>덩굴 추정</th><th>수목</th><th>인접대 식생</th><th>위험도</th><th>연차</th></tr>
+<tr><td>10</td><td class="n">216</td><td class="n">77.6%</td><td class="n">38.8%</td><td class="n">0.4%</td><td class="n">100.0%</td><td class="n">0.705</td><td class="n"><span class="y1">1년차</span></td></tr><tr><td>13</td><td class="n">631</td><td class="n">89.7%</td><td class="n">11.7%</td><td class="n">1.1%</td><td class="n">99.9%</td><td class="n">0.683</td><td class="n"><span class="y1">1년차</span></td></tr><tr><td>12</td><td class="n">785</td><td class="n">81.4%</td><td class="n">18.6%</td><td class="n">8.6%</td><td class="n">96.9%</td><td class="n">0.656</td><td class="n"><span class="y1">1년차</span></td></tr><tr><td>14</td><td class="n">643</td><td class="n">81.5%</td><td class="n">7.9%</td><td class="n">0.8%</td><td class="n">97.9%</td><td class="n">0.627</td><td class="n"><span class="y1">1년차</span></td></tr><tr><td>3</td><td class="n">437</td><td class="n">69.5%</td><td class="n">7.4%</td><td class="n">0.1%</td><td class="n">99.5%</td><td class="n">0.569</td><td class="n"><span class="y1">1년차</span></td></tr><tr><td>11</td><td class="n">895</td><td class="n">64.2%</td><td class="n">15.7%</td><td class="n">1.3%</td><td class="n">99.8%</td><td class="n">0.568</td><td class="n"><span class="y1">1년차</span></td></tr><tr><td>9</td><td class="n">465</td><td class="n">64.9%</td><td class="n">12.2%</td><td class="n">0.5%</td><td class="n">94.2%</td><td class="n">0.550</td><td class="n"><span class="y2">2년차</span></td></tr><tr><td>15</td><td class="n">433</td><td class="n">68.1%</td><td class="n">8.0%</td><td class="n">1.4%</td><td class="n">66.6%</td><td class="n">0.498</td><td class="n"><span class="y2">2년차</span></td></tr><tr><td>4</td><td class="n">622</td><td class="n">47.8%</td><td class="n">11.0%</td><td class="n">1.6%</td><td class="n">99.7%</td><td class="n">0.471</td><td class="n"><span class="y2">2년차</span></td></tr><tr><td>5</td><td class="n">1,104</td><td class="n">50.0%</td><td class="n">13.4%</td><td class="n">1.2%</td><td class="n">87.4%</td><td class="n">0.465</td><td class="n"><span class="y2">2년차</span></td></tr><tr><td>16</td><td class="n">682</td><td class="n">52.5%</td><td class="n">14.8%</td><td class="n">7.0%</td><td class="n">64.4%</td><td class="n">0.436</td><td class="n"><span class="y2">2년차</span></td></tr><tr><td>17</td><td class="n">280</td><td class="n">46.9%</td><td class="n">10.2%</td><td class="n">3.6%</td><td class="n">70.6%</td><td class="n">0.406</td><td class="n"><span class="y2">2년차</span></td></tr><tr><td>8</td><td class="n">751</td><td class="n">30.1%</td><td class="n">6.8%</td><td class="n">5.0%</td><td class="n">89.6%</td><td class="n">0.350</td><td class="n"><span class="y3">3년차</span></td></tr><tr><td>2</td><td class="n">292</td><td class="n">20.0%</td><td class="n">1.2%</td><td class="n">1.9%</td><td class="n">99.5%</td><td class="n">0.303</td><td class="n"><span class="y3">3년차</span></td></tr><tr><td>1</td><td class="n">660</td><td class="n">16.2%</td><td class="n">0.3%</td><td class="n">1.4%</td><td class="n">51.4%</td><td class="n">0.184</td><td class="n"><span class="y3">3년차</span></td></tr><tr><td>7</td><td class="n">268</td><td class="n">5.5%</td><td class="n">0.0%</td><td class="n">0.0%</td><td class="n">78.3%</td><td class="n">0.184</td><td class="n"><span class="y3">3년차</span></td></tr><tr><td>6</td><td class="n">122</td><td class="n">0.0%</td><td class="n">0.0%</td><td class="n">0.0%</td><td class="n">—</td><td class="n">0.000</td><td class="n"><span class="y3">3년차</span></td></tr>
+</table></div>
+<ul class="cap"><li><span class="y1">1년차</span> 구간 3·10·11·12·13·14 · 성벽대 3,606 m² · 평균 식생 77.3% · 덩굴 16.7%</li><li><span class="y2">2년차</span> 구간 4·5·9·15·16·17 · 성벽대 3,586 m² · 평균 식생 55.0% · 덩굴 11.6%</li><li><span class="y3">3년차</span> 구간 1·2·6·7·8 · 성벽대 2,093 m² · 평균 식생 14.4% · 덩굴 1.7%</li></ul>
+<p><b>제안.</b> 덩굴 추정이 가장 높은 구간 10부터 현장에서 확인할 것을 권합니다. 3년차 구간 가운데 식생이 적은 곳에는 실제로 관리되는 곳도 있고, 대리선이 암반 위에 놓여 낮게 나온 곳(구간 7)도 있습니다. 발주처의 관리 범위와 중심선 재분석으로 구분해야 합니다.</p>
+
+<h2>7. 한계와 주의</h2>
+<ul>
+  <li><b>성벽 중심선이 아닌 해안선 기준입니다.</b> 맥에서 자동 추출을 3회 시도했지만, 현무암 암반과 성벽이 분광·형태로 갈라지지 않아 실패했습니다. 해안 암반이 넓은 곳은 10–25 m 대가 성벽을 벗어납니다(구간 7).</li>
+  <li><b>덩굴 추정은 대리 지표입니다.</b> NDVI≥0.45이면서 높이 0.2–2 m인 곳을 덩굴로 봤으므로, 저수고 관목과 초본이 섞입니다. 돌담 위 식생은 담 높이가 더해져 수목으로 분류될 수 있습니다.</li>
+  <li><b>문턱값은 현장 검증 전 임시값입니다.</b> 식생 0.30, 덩굴 0.45, 높이 2 m, 근적외 0.012입니다. 스크립트 인자로 조정할 수 있습니다.</li>
+  <li><b>반사율은 상대값입니다.</b> 보정판을 촬영하지 않았습니다. 절대 위치는 4장 참고입니다.</li>
+  <li>남서쪽 마을은 비행 범위 가장자리라 정사영상이 번져 있어 분석에서 제외했습니다.</li>
+</ul>
+
+<h2>8. 다음 단계</h2>
+<ol>
+  <li><b>성벽 중심선 그리기 (QGIS, 약 30분)</b>
+    <ul>
+      <li>QGIS 프로젝트의 "★ 성벽 중심선" 레이어에 중심선을 그립니다. 관리 중인 구간은 <code>managed=1</code>로 둡니다.</li>
+      <li>그다음 중심선 기준 통계 스크립트를 50 m 구간으로 돌립니다.</li>
+    </ul></li>
+  <li><b>관리 범위 정보 받기:</b> 현 수행업체의 관리 구간을 발주처에서 받아 관리·미관리를 비교합니다.</li>
+  <li><b>본 촬영은 네트워크 RTK 연결:</b> <code>--gps-accuracy 0.05</code>로 처리하면 절대 위치 cm급, 5 cm 변위 비교가 가능합니다. 섞인 경우에는 사진별 정확도를 <code>geo.txt</code>로 지정합니다.</li>
+  <li><b>덩굴 전용 촬영:</b> 1년차 구간을 저고도(15~20 m)와 사선으로 추가 촬영합니다.</li>
+  <li><b>보정판 촬영:</b> 연도 간 반사율 비교가 필요하면 함께 찍습니다.</li>
+  </ol>
+
+<footer>작성 2026-10-17 · OpenDroneMap 3.6.2 (OpenSfM + OpenMVS CUDA) · Python(rasterio·scipy·skimage) + QGIS 3.44 LTR · 촬영·처리·분석 제주그래퍼 JEJUGRAPHER</footer>
+</main>
+<script>
+const V=[{"id": 0, "layers": {"rgb": "img/site00_rgb.jpg", "ndvi": "img/site00_ndvi.jpg", "false": "img/site00_false.jpg", "class": "img/site00_class.jpg", "chm": "img/site00_chm.jpg", "priority": "img/site00_priority.jpg"}, "title": "전체 범위 (약 652 × 346 m)", "note": "해안 띠 17개 구간 전체. 연차 배분 레이어에서 구간 번호를 확인하세요.", "stats": null}, {"id": 10, "layers": {"rgb": "img/site10_rgb.jpg", "ndvi": "img/site10_ndvi.jpg", "false": "img/site10_false.jpg", "class": "img/site10_class.jpg", "chm": "img/site10_chm.jpg"}, "note": "분홍 선 = 해안 10–25 m 성벽대 구간 경계. 왼쪽은 RGB 사진, 오른쪽은 선택한 분석 레이어입니다.", "title": "구간 10 — 위험도 1위 · 덩굴 추정 최다 — 식생 78%·덩굴 39%, 1년차", "stats": [["연차", "1년차"], ["위험도", "0.705"], ["성벽대 면적", "216 m²"], ["식생피복률", "77.6%"], ["덩굴 추정", "38.8%"], ["수목", "0.4%"], ["범위", "45 × 44 m"]]}, {"id": 13, "layers": {"rgb": "img/site13_rgb.jpg", "ndvi": "img/site13_ndvi.jpg", "false": "img/site13_false.jpg", "class": "img/site13_class.jpg", "chm": "img/site13_chm.jpg"}, "note": "분홍 선 = 해안 10–25 m 성벽대 구간 경계. 왼쪽은 RGB 사진, 오른쪽은 선택한 분석 레이어입니다.", "title": "구간 13 — 위험도 2위 — 식생 90%·덩굴 12%, 1년차", "stats": [["연차", "1년차"], ["위험도", "0.683"], ["성벽대 면적", "631 m²"], ["식생피복률", "89.7%"], ["덩굴 추정", "11.7%"], ["수목", "1.1%"], ["범위", "67 × 49 m"]]}, {"id": 12, "layers": {"rgb": "img/site12_rgb.jpg", "ndvi": "img/site12_ndvi.jpg", "false": "img/site12_false.jpg", "class": "img/site12_class.jpg", "chm": "img/site12_chm.jpg"}, "note": "분홍 선 = 해안 10–25 m 성벽대 구간 경계. 왼쪽은 RGB 사진, 오른쪽은 선택한 분석 레이어입니다.", "title": "구간 12 — 위험도 3위 — 식생 81%·덩굴 19%, 1년차", "stats": [["연차", "1년차"], ["위험도", "0.656"], ["성벽대 면적", "785 m²"], ["식생피복률", "81.4%"], ["덩굴 추정", "18.6%"], ["수목", "8.6%"], ["범위", "79 × 45 m"]]}, {"id": 14, "layers": {"rgb": "img/site14_rgb.jpg", "ndvi": "img/site14_ndvi.jpg", "false": "img/site14_false.jpg", "class": "img/site14_class.jpg", "chm": "img/site14_chm.jpg"}, "note": "분홍 선 = 해안 10–25 m 성벽대 구간 경계. 왼쪽은 RGB 사진, 오른쪽은 선택한 분석 레이어입니다.", "title": "구간 14 — 위험도 4위 — 식생 82%·덩굴 8%, 1년차", "stats": [["연차", "1년차"], ["위험도", "0.627"], ["성벽대 면적", "643 m²"], ["식생피복률", "81.5%"], ["덩굴 추정", "7.9%"], ["수목", "0.8%"], ["범위", "63 × 63 m"]]}, {"id": 7, "layers": {"rgb": "img/site07_rgb.jpg", "ndvi": "img/site07_ndvi.jpg", "false": "img/site07_false.jpg", "class": "img/site07_class.jpg", "chm": "img/site07_chm.jpg"}, "note": "실제 성벽(사진 아래쪽 띠)은 분홍 경계 밖에 있습니다. 해안선 대리 분석의 한계를 보여 주는 구간이며, 중심선을 그린 뒤 다시 평가해야 합니다.", "title": "구간 7 — 식생 최소 구간 — 해안선 기준 성벽대가 넓은 암반 위에 놓인 예", "stats": [["연차", "3년차"], ["위험도", "0.184"], ["성벽대 면적", "268 m²"], ["식생피복률", "5.5%"], ["덩굴 추정", "0.0%"], ["수목", "0.0%"], ["범위", "45 × 51 m"]]}];
+const LN={"ndvi": "NDVI 식생지수", "false": "근적외 위색", "class": "석재·식생 분류", "chm": "식생 높이", "priority": "연차 배분"};
+const LEG={
+ ndvi:'<div>NDVI</div><div class="ramp" style="background:linear-gradient(90deg,#2a5d8f,#d9d2c5 31%,#f7f4a8 54%,#9fd27a 65%,#0b5d1e)"></div><div class="rl"><span>−0.4</span><span>0</span><span>0.3</span><span>0.9</span></div>',
+ false:'<div>근적외-적-녹 위색: 식생은 <b style="color:#e0457a">분홍·적색</b>, 암반·바다는 청회색입니다.</div>',
+ class:'<div><i style="background:#2a5d8f"></i>수역 <i style="background:#d9d2c5"></i>석재·나지<br><i style="background:#9fd27a"></i>초지 <i style="background:#e03c3c"></i>덩굴 추정 <i style="background:#1f7a34"></i>수목</div>',
+ chm:'<div>식생·지물 높이</div><div class="ramp" style="background:linear-gradient(90deg,#f4f1ea,#fde0c5 2%,#e03c3c 13%,#1f7a34 40%,#00441b)"></div><div class="rl"><span>0</span><span>2 m</span><span>6 m</span><span>15 m</span></div>',
+ priority:'<div><span class="y1">1년차</span> <span class="y2">2년차</span> <span class="y3">3년차</span><br>원 안 숫자 = 구간 번호</div>'};
+let cur=0,layer='class',pos=50;
+const $=id=>document.getElementById(id);
+function setPos(p){pos=Math.max(0,Math.min(100,p));$('topWrap').style.clipPath='inset(0 0 0 '+pos+'%)';$('bar').style.left=pos+'%';$('knob').style.left=pos+'%';$('rng').value=pos}
+function render(){
+ const s=V[cur];
+ $('chips').querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-pressed',i===cur));
+ if(!s.layers[layer])layer=Object.keys(s.layers).find(k=>k!=='rgb');
+ $('imgA').src=s.layers.rgb;$('imgB').src=s.layers[layer];$('tagB').textContent=LN[layer];
+ $('vt').textContent=s.title;$('vnote').textContent=s.note||'';
+ const lay=$('lay');lay.innerHTML='';
+ Object.keys(s.layers).filter(k=>k!=='rgb').forEach(k=>{const b=document.createElement('button');b.textContent=LN[k];b.setAttribute('aria-pressed',k===layer);b.onclick=()=>{layer=k;render()};lay.appendChild(b)});
+ $('stats').innerHTML=s.stats?s.stats.map(r=>'<tr><td>'+r[0]+'</td><td class="n">'+r[1]+'</td></tr>').join(''):'<tr><td>해안 구간</td><td class="n">17개</td></tr><tr><td>해안선(다듬음)</td><td class="n">약 1,020 m</td></tr>';
+ $('legend').innerHTML=LEG[layer]||'';setPos(pos)}
+V.forEach((s,i)=>{const b=document.createElement('button');b.textContent=s.id===0?'전체 범위':'구간 '+s.id;b.onclick=()=>{cur=i;render()};$('chips').appendChild(b)});
+const cmp=$('cmp');let drag=false;
+function fromEvt(e){const r=cmp.getBoundingClientRect();setPos((e.clientX-r.left)/r.width*100)}
+cmp.addEventListener('pointerdown',e=>{drag=true;cmp.setPointerCapture(e.pointerId);fromEvt(e)});
+cmp.addEventListener('pointermove',e=>{if(drag)fromEvt(e)});
+cmp.addEventListener('pointerup',()=>drag=false);
+$('rng').addEventListener('input',e=>setPos(+e.target.value));
+layer='priority';render();
+</script>
+<div class="jgfoot">촬영·처리·분석 제주그래퍼 JEJUGRAPHER · DJI Mavic 3 Multispectral · 2026년 10월<br>이 보고서의 사진·그림·수치와 글의 저작권은 제주그래퍼에 있습니다. 절대 좌표는 보정 전이라 측량 자료로 쓸 수 없습니다.<br><br><a href="/media.html">← 영상 · 사진 보기로 돌아가기</a> · <a href="/spatial/index.html">공간데이터 둘러보기</a> · <a href="/inquiry.html">조사 문의</a></div>
+<!-- jg-copyright-notice -->
+<div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
+<div style="max-width:880px;margin:0 auto">
+<strong style="display:block;color:#F3D9A4;font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:.02em">⚠ 무단 복제 · 도용 금지 — 저작권 경고</strong>
+이 사이트의 모든 사진 · 영상 · 글 · 음악 · 디자인 · 프로그램은 <b style="color:#fff">제주그래퍼(JEJUGRAPHER)</b>와 원저작자에게 저작권이 있으며 「저작권법」의 보호를 받습니다.
+저작권자의 <b style="color:#fff">사전 서면 동의 없이</b> 복제 · 다운로드 후 재배포 · 전송 · 게시 · 편집 · 2차 가공 · 캡처 사용 · 상업적 이용 · AI 학습 데이터로 사용하는 행위를 <b style="color:#fff">엄격히 금지</b>합니다.
+사진과 영상 속 인물의 초상권도 함께 보호됩니다.
+무단 도용이 확인되면 사전 경고 없이 「저작권법」 제136조(5년 이하의 징역 또는 5천만 원 이하의 벌금)에 따른 <b style="color:#fff">형사 고소와 민사상 손해배상 청구</b>를 진행합니다.
+<span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
+</div></div>
+<!-- /jg-copyright-notice -->
+</body>
+</html>
