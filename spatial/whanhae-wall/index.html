@@ -168,6 +168,22 @@ footer{margin-top:44px;padding-top:14px;border-top:1px solid var(--line);font-si
 .msuse b{display:block;font:600 .98rem var(--f-body);margin-bottom:.25rem}
 .msuse span{font-size:.88rem;color:var(--mute);line-height:1.65}
 @media (max-width:900px){.idx,.msuse{grid-template-columns:1fr}}
+
+.why{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 22px 18px;margin:0 0 22px}
+.why h2{margin-bottom:.5rem}
+.why .lead{max-width:64ch;margin-bottom:1rem}
+.why .two{display:grid;grid-template-columns:1.25fr 1fr;gap:20px;align-items:start}
+.cmp2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cmp2 figure{margin:0}
+.cmp2 img{width:100%;height:auto;display:block;border-radius:10px;border:1px solid var(--line)}
+.cmp2 figcaption{font:12.5px var(--f-body);color:var(--mute);margin-top:6px;line-height:1.6}
+.cmp2 b{color:var(--basalt)}
+.whyk{display:flex;flex-direction:column;gap:10px}
+.whyk div{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.whyk b{display:block;font:700 1.25rem var(--f-mono);color:var(--sea);line-height:1.2}
+.whyk span{font-size:.88rem;color:var(--mute);line-height:1.6}
+.whyk .bad b{color:var(--survey)}
+@media (max-width:900px){.why .two{grid-template-columns:1fr}}
 .legnote{margin-top:.5rem;font-size:.86rem;color:var(--mute);line-height:1.6}</style>
 
 <!-- jg-seo -->
@@ -193,16 +209,40 @@ footer{margin-top:44px;padding-top:14px;border-top:1px solid var(--line);font-si
   <div>
     <p class="eyebrow">제주 화북 · 별도환해장성 · 2026-10-12 촬영</p>
     <h1>별도환해장성<br>디지털 트윈</h1>
-    <p class="lede">드론 한 번의 비행으로 정사영상, 3D 모델, 가우시안 스플래팅, 식생 분석까지 만들었습니다. 아래 작업창에서 직접 돌려 보고 재 보세요.</p>
-    <div class="caps"><span>정사영상 1.5 cm</span><span>3D 메시</span><span>가우시안 스플래팅</span><span>3D·2D 거리 측정</span><span>멀티스펙트럴 NDVI</span><span>3년 순환 관리안</span></div>
+    <p class="lede">바닷가에 쌓은 돌벽을 <b>덩굴이 얼마나 덮었는지</b> 재려고 날았습니다. 한 번의 비행으로 정사영상 · 3D 메시 · 가우시안 스플래팅 · 식생 분석을 함께 만들었고, 아래 작업창에서 직접 돌려 보고 재 보실 수 있습니다.</p>
+    <div class="caps"><span>정사영상 1.5 cm</span><span>3D 메시</span><span>가우시안 스플래팅</span><span>3D·2D 거리 측정</span><span>성벽 돌 · 덩굴 구분</span><span>멀티스펙트럴 NDVI</span><span>3년 순환 관리안</span></div>
   </div>
   <div class="spec">
     <div><b>1,651 × 5</b><span>촬영 캡처 × 밴드 (RGB + 녹·적·레드에지·근적외)</span></div>
     <div><b>675 × 294 m</b><span>복원 범위</span></div>
     <div><b>1,645</b><span>카메라 위치 복원 (99.6%)</span></div>
-    <div><b>55.1%</b><span>성벽대(해안 10–25 m) 식생피복률</span></div>
+    <div><b>55.1%</b><span>성벽대(해안 10–25 m)를 식물이 덮은 비율</span></div>
   </div>
 </header>
+
+
+<section class="why">
+  <p class="eyebrow">왜 찍었나</p>
+  <h2>덩굴이 돌벽을 벌립니다</h2>
+  <p class="lead">환해장성은 바닷가에 돌을 쌓아 올린 성벽입니다. 시멘트 없이 돌과 돌을 맞물려 쌓았기 때문에,
+  <b>덩굴과 관목이 돌 틈에 뿌리를 내리고 줄기가 굵어지면 돌이 밀려나고 결국 무너집니다.</b>
+  그래서 이번 촬영의 목적은 하나입니다 — <b>성벽을 식물이 얼마나 덮었는지 재는 것.</b>
+  사람 눈으로는 이끼 낀 돌과 마른 덩굴이 비슷해 보이지만, 근적외선으로 보면 <b>살아 있는 식물만 환하게 드러납니다.</b></p>
+  <div class="two">
+    <div class="cmp2">
+      <figure><img src="map/site10_rgb.jpg" alt="구간 10 정사영상 — 돌벽과 식물이 섞여 보입니다" loading="lazy">
+        <figcaption><b>사진 그대로</b> — 돌벽인지 덩굴인지 한눈에 갈라지지 않습니다</figcaption></figure>
+      <figure><img src="map/site10_class.jpg" alt="구간 10 분류 — 성벽 돌은 밝은 회색, 덩굴 추정은 붉은색" loading="lazy">
+        <figcaption><b>돌과 식물을 가른 뒤</b> — 회색이 성벽 돌, <span style="color:var(--survey);font-weight:600">붉은색이 성벽을 벌리는 덩굴</span>, 연두는 풀, 진녹색은 나무</figcaption></figure>
+    </div>
+    <div class="whyk">
+      <div><b>55.1%</b><span>성벽대(해안 10–25 m)에서 식물이 덮은 비율</span></div>
+      <div class="bad"><b>10.9%</b><span>그 가운데 성벽을 벌릴 수 있는 <b>덩굴·관목</b>으로 추정되는 비율</span></div>
+      <div class="bad"><b>구간 10 · 38.8%</b><span>17개 구간 중 덩굴이 가장 많이 덮은 곳 — 가장 먼저 걷어 내야 할 구간</span></div>
+      <div><b>3년 순환</b><span>덩굴이 가늘 때 3년 주기로 걷어 내도록 구간을 1·2·3년차로 나눔</span></div>
+    </div>
+  </div>
+</section>
 
 <div class="bench" id="bench">
   <div class="tabs" role="tablist" aria-label="뷰어 선택">
@@ -719,6 +759,58 @@ if(!$('p-gs').hidden)applyGS();
     chm:'<div class="legnote">표면 높이(DSM)에서 땅 높이(DTM)를 뺀 값. <b>풀인지 덤불인지 나무인지</b>를 높이로 가릅니다.</div>'};
   Object.keys(more).forEach(function(k){ if(LEG[k]!==undefined) LEG[k]=LEG[k]+more[k]; });
   if(typeof renderMap==='function') renderMap();
+})();
+
+(function(){
+  if(typeof SITES==='undefined'||typeof LN==='undefined') return;
+  var PAL=[[42,93,143,'water'],[217,210,197,'stone'],[159,210,122,'grass'],[224,60,60,'vine'],[31,122,52,'tree']];
+  var OUT={grass:[200,240,106,110],vine:[255,45,111,205],tree:[25,195,125,150]};
+  var cache={};
+  LN.veg='돌벽 위 식물만';
+  LEG.veg='<i style="background:#ff2d6f"></i>덩굴·관목 추정 <i style="background:#19c37d"></i>수목 <i style="background:#c8f06a"></i>초지'
+    +'<div class="legnote">검은 현무암 돌벽 사진 위에 <b>살아 있는 식물만</b> 색으로 덮었습니다. 색이 없는 어두운 부분이 드러난 돌입니다. 가운데 손잡이를 끌면 덮인 정도가 바로 보입니다.</div>';
+  SITES.forEach(function(s){ if(s.layers.indexOf('veg')<0) s.layers.unshift('veg'); });
+
+  function make(id, cb){
+    if(cache[id]) return cb(cache[id]);
+    var im=new Image(); im.crossOrigin='anonymous';
+    im.onload=function(){
+      var w=im.naturalWidth, h=im.naturalHeight;
+      var c=document.createElement('canvas'); c.width=w; c.height=h;
+      var x=c.getContext('2d'); x.drawImage(im,0,0);
+      var d=x.getImageData(0,0,w,h), p=d.data;
+      for(var i=0;i<p.length;i+=4){
+        var r=p[i],g=p[i+1],b=p[i+2], best=1e9, kind=null;
+        for(var k=0;k<PAL.length;k++){
+          var q=PAL[k], dd=(r-q[0])*(r-q[0])+(g-q[1])*(g-q[1])+(b-q[2])*(b-q[2]);
+          if(dd<best){best=dd;kind=q[3];}
+        }
+        var o=OUT[kind];
+        if(o){ p[i]=o[0]; p[i+1]=o[1]; p[i+2]=o[2]; p[i+3]=o[3]; }
+        else { p[i+3]=0; }
+      }
+      x.putImageData(d,0,0);
+      cache[id]=c.toDataURL('image/png');
+      cb(cache[id]);
+    };
+    im.onerror=function(){ cb(null); };
+    im.src='map/site'+f2(id)+'_class.jpg';
+  }
+
+  var _render=renderMap;
+  renderMap=function(){
+    if(lay!=='veg'){ _render(); return; }
+    var s=SITES[cur];
+    lay='class'; _render(); lay='veg';                 /* 통계·범례는 분류 기준으로 그린 뒤 */
+    document.getElementById('tagB').textContent=LN.veg;
+    document.getElementById('legend').innerHTML=LEG.veg;
+    var lc=document.getElementById('layChips');
+    lc.querySelectorAll('button').forEach(function(b,i){ b.setAttribute('aria-pressed', s.layers[i]==='veg'); });
+    var img=document.getElementById('imgB');
+    img.removeAttribute('src');
+    make(s.id, function(url){ if(url && lay==='veg') img.src=url; });
+  };
+  lay='veg'; renderMap();
 })();
 </script>
 <div class="jgfoot">촬영 · 처리 · 분석 제주그래퍼 JEJUGRAPHER · DJI Mavic 3 Multispectral · 2026년 10월<br>3D 메시와 가우시안 스플래팅, 정사영상·식생 지도는 모두 같은 한 번의 촬영에서 나왔습니다. 길이 · 면적 · 높이 차 같은 <b>상대 측정은 유효</b>하지만, 절대 좌표는 보정 전이라 측량 성과로는 쓸 수 없습니다.<br>사진 · 그림 · 수치와 글의 저작권은 제주그래퍼에 있습니다.<a class="go" href="report/">수치와 방법이 담긴 분석 보고서 보기 →</a> · <a href="/media.html">영상 · 사진 보기</a> · <a href="/inquiry.html">조사 문의</a></div>
