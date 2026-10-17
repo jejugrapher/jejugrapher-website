@@ -79,6 +79,25 @@ th{background:#EFEADD;font-weight:500;width:34%}
 .memo li{margin:.5rem 0 .5rem 1.1rem;font-size:.97rem}
 .keep{background:#EFF4EC;border:1px solid var(--line);border-radius:12px;padding:1.3rem;margin-top:1.8rem}
 .keep b{display:block;font-family:var(--serif);color:var(--forest);font-size:1.1rem;margin-bottom:.5rem}
+/* 프로그램 */
+.prog{display:grid;grid-template-columns:1.15fr 1fr;gap:28px;margin-top:1.8rem}
+.ph2{font:500 .95rem var(--sans);color:var(--terra);letter-spacing:.04em;margin-bottom:.9rem;display:flex;align-items:center;gap:.7rem}
+.ph2::after{content:"";flex:1;height:1px;background:var(--line)}
+.tl{list-style:none;border-left:2px solid var(--line);padding-left:1.3rem}
+.tl li{position:relative;padding-bottom:1.15rem}
+.tl li::before{content:"";position:absolute;left:calc(-1.3rem - 7px);top:.6rem;width:12px;height:12px;border-radius:50%;background:var(--forest);border:2px solid var(--paper)}
+.tl time{display:block;font-size:.82rem;font-weight:500;color:var(--forest);letter-spacing:.03em}
+.tl b{display:block;font-family:var(--serif);font-size:1.08rem;color:var(--navy);margin:.1rem 0 .15rem}
+.tl span{display:block;font-size:.9rem;color:var(--mute);line-height:1.6}
+.zl{list-style:none}
+.zl li{padding:.7rem 0;border-bottom:1px solid var(--line)}
+.zl li:last-child{border-bottom:0}
+.zl b{display:block;font-family:var(--serif);font-size:1.02rem;color:var(--navy)}
+.zl span{display:block;font-size:.88rem;color:var(--mute);line-height:1.6}
+/* 기록 메모 (접어 둠) */
+.how{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.6rem}
+.how summary{cursor:pointer;font:500 .97rem var(--sans);color:var(--navy)}
+.how table{margin-top:.8rem}
 .rgrp{font:500 .95rem var(--sans);color:var(--forest);margin:2rem 0 .8rem;display:flex;align-items:center;gap:.8rem}
 .rgrp::after{content:"";flex:1;height:1px;background:var(--line)}
 .rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
@@ -98,24 +117,13 @@ th{background:#EFEADD;font-weight:500;width:34%}
 .rwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .credit{border-top:1px solid var(--line);padding-top:1.6rem;margin-top:2.4rem;font-size:.9rem;color:var(--mute)}
 .credit .go{display:inline-block;margin-top:1.1rem;text-decoration:none;color:var(--terra);border-bottom:1px solid}
-@media (max-width:760px){.vids{grid-template-columns:1fr}}
+@media (max-width:760px){.vids{grid-template-columns:1fr}.prog{grid-template-columns:1fr;gap:2.2rem}}
 @media (max-width:560px){
   .cd{min-height:430px} .cd .tx{padding:4.6rem 1.1rem 1.2rem} .cd h3{font-size:1.2rem}
   .arrows{display:none} th{width:40%}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
-
-<!-- jg-seo -->
-<link rel="canonical" href="https://jejugrapher.com/story/chorok-eco/">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
-<meta property="og:locale" content="ko_KR">
-<meta property="og:url" content="https://jejugrapher.com/story/chorok-eco/">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="구좌 아이들이 만든 초록별 환경놀이터 — 준비부터 하루까지 | 제주그래퍼">
-<meta name="twitter:description" content="구좌 아이들이 봄부터 가을까지 직접 준비한 환경축제 「초록별 환경놀이터」. 2026년 10월 10일 제주해녀박물관 야외광장에서 열린 하루를 카메라 일곱 대로 기록했습니다.">
-<!-- /jg-seo -->
 </head>
 <body>
 <nav><div class="wrap navin">
@@ -140,10 +148,44 @@ th{background:#EFEADD;font-weight:500;width:34%}
     <p>하루 동안 메인무대에서 일곱 가지 순서(식전공연 · 개회식 · 환경사생대회 시상식 · 구좌 어린이합창단 · 다 함께 퍼포먼스 · 초록빛 환경골든벨 · 에코시네마)가 이어졌고, 체험부스 · 에코마켓 · 놀이존 · 자연체험 · 포토존이 함께 열렸습니다. 해가 진 뒤에는 잔디밭에 스크린을 세워 환경 영화를 함께 봤습니다.</p>
     <p class="note" style="font-size:.9rem;color:var(--mute);margin-top:1rem">주최 구좌읍 · 주관 구좌읍지역아동센터연합회, 해바라기지역아동센터</p>
     <div class="facts">
-      <div class="fact"><b>카메라 7대</b><span>동시 촬영</span></div>
-      <div class="fact"><b>175개</b><span>촬영 소스</span></div>
-      <div class="fact"><b>1,400여 장</b><span>사진</span></div>
-      <div class="fact"><b>영상 20편</b><span>준비 과정부터 하루 기록까지</span></div>
+      <div class="fact"><b>지역아동센터 4곳</b><span>구좌읍</span></div>
+      <div class="fact"><b>학교 6곳</b><span>함께한 아이들</span></div>
+      <div class="fact"><b>부스 25</b><span>체험 · 마켓 · 놀이 · 포토존</span></div>
+      <div class="fact"><b>6시간</b><span>낮 1시부터 해 질 때까지</span></div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="kicker">PROGRAM</div>
+    <h2>하루 동안 있었던 일</h2>
+    <p class="narrow" style="margin-left:0">낮 한 시, 제주 청소년 오케스트라의 식전공연으로 문을 열어 해가 질 때까지 이어졌습니다. 메인무대가 쉬는 사이에는 광장을 둘러싼 부스에서 체험과 장터가 함께 열렸습니다.</p>
+    <div class="prog">
+      <div class="pcol">
+        <div class="ph2">메인무대</div>
+        <ol class="tl">
+          <li><time>13:10</time><b>식전공연</b><span>제주 청소년 오케스트라 — 지휘 김태근 · 바리톤 정재윤 협연</span></li>
+          <li><time>13:26</time><b>개회식</b><span>구좌읍 주최 · 내빈 소개와 축하말씀</span></li>
+          <li><time>13:41</time><b>환경사생대회 시상식</b><span>구좌 아이들이 그린 환경 그림 가운데 뽑힌 수상작</span></li>
+          <li><time>13:47</time><b>구좌 어린이합창단</b><span>초록별을 주제로 한 노래 — 지휘 차애란</span></li>
+          <li><time>13:53</time><b>다 함께 퍼포먼스</b><span>무대 위아래 구분 없이 참가자 전원이 함께</span></li>
+          <li><time>16:22</time><b>도전! 환경 골든벨</b><span>하루 동안 배운 환경 이야기를 문제로</span></li>
+          <li><time>해 질 녘</time><b>에코시네마</b><span>「조수웅덩이 바다의 시작」 상영과 임형묵 감독과의 대화</span></li>
+        </ol>
+      </div>
+      <div class="pcol">
+        <div class="ph2">광장 둘레</div>
+        <ul class="zl">
+          <li><b>환경체험부스</b><span>버려진 물건을 다시 쓰는 업사이클링, 제주의 풀과 꽃으로 만드는 작품</span></li>
+          <li><b>놀이존</b><span>플라스틱 대신 나무로 만든 전통 놀이기구</span></li>
+          <li><b>미술체험존</b><span>분필 그림 · 페이스페인팅</span></li>
+          <li><b>에코 순환 마트 · 모모장</b><span>쓰던 물건을 주고받는 장터</span></li>
+          <li><b>음식체험존</b><span>지역 먹거리로 차린 부스</span></li>
+          <li><b>전시 · 포토존</b><span>아이들 작품 전시와 해녀복 체험 포토존</span></li>
+          <li><b>자연 · 동물체험</b><span>가까이에서 만나는 생물</span></li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
@@ -184,21 +226,15 @@ th{background:#EFEADD;font-weight:500;width:34%}
   </div>
 </section>
 
-<section style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
-  <div class="narrow">
-    <div class="kicker">HOW</div>
-    <h2>카메라 일곱 대를 한 번에</h2>
-    <p>하루를 빠짐없이 담으려고 자리마다 역할을 나눠 일곱 대를 동시에 돌렸습니다.</p>
-    <table><tr><th>역할</th><th>장비</th></tr><tr><td>무대 전체 고정</td><td>DJI Osmo Pocket 3 · 삼각대 · 4K</td></tr><tr><td>무대 + 객석 360°</td><td>Insta360 · Osmo 360 · 삼각대</td></tr><tr><td>현장 취재</td><td>Sony α1 · Sony ZV-E1</td></tr><tr><td>항공</td><td>DJI Mavic 3 Cine</td></tr><tr><td>저공 · 실내</td><td>DJI Avata 2</td></tr><tr><td>준비 과정 360°</td><td>Avata 360</td></tr></table>
-  </div>
-</section>
-
+<section id="record"><div class="wrap"><div class="kicker">RECORD · 16</div><h2>행사 기록 영상 16편</h2><p class="narrow" style="margin-left:0">행사 전체 기록과 프로그램별·행사장별 영상, 인터뷰까지 <b>모두 여기서 보실 수 있습니다.</b> 보고 싶은 순서를 눌러 주세요.</p><div class="rgrp">전체 기록</div><div class="rgrid"><button type="button" class="rc" data-drive="111-nTmNdnnz4kDE3KSXu6cr-DPKDUKUM" aria-label="행사 기록 전체 보기"><img src="https://drive.google.com/thumbnail?id=111-nTmNdnnz4kDE3KSXu6cr-DPKDUKUM&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>행사 기록 전체</b><span>하루를 한 편으로</span></button></div><div class="rgrp">프로그램별</div><div class="rgrid"><button type="button" class="rc" data-drive="1Bj6qbxav68cYQ0rzu11CU9hlb-FFsvPH" aria-label="1. 식전공연 보기"><img src="https://drive.google.com/thumbnail?id=1Bj6qbxav68cYQ0rzu11CU9hlb-FFsvPH&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>1. 식전공연</b><span>제주 청소년 오케스트라</span></button><button type="button" class="rc" data-drive="1hgEM87t5bSNk4T4dDDjlRJJ8NIhKbwhN" aria-label="2. 개회식 보기"><img src="https://drive.google.com/thumbnail?id=1hgEM87t5bSNk4T4dDDjlRJJ8NIhKbwhN&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>2. 개회식</b><span>축하말씀</span></button><button type="button" class="rc" data-drive="1Iuqnit8kqtU2mGaj_8XLZql013Xzjd5Y" aria-label="3. 환경사생대회 시상식 보기"><img src="https://drive.google.com/thumbnail?id=1Iuqnit8kqtU2mGaj_8XLZql013Xzjd5Y&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>3. 환경사생대회 시상식</b><span>아이들이 그린 환경</span></button><button type="button" class="rc" data-drive="1xg6xZGpNmisJXUFySVXWhRkmDEJLi1Bi" aria-label="4. 구좌 어린이합창단 보기"><img src="https://drive.google.com/thumbnail?id=1xg6xZGpNmisJXUFySVXWhRkmDEJLi1Bi&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>4. 구좌 어린이합창단</b><span>초록별을 노래하다</span></button><button type="button" class="rc" data-drive="10ZXfwx1f23WhlfuD2cPc9mDRWQPMpyc6" aria-label="5. 다 함께 퍼포먼스 보기"><img src="https://drive.google.com/thumbnail?id=10ZXfwx1f23WhlfuD2cPc9mDRWQPMpyc6&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>5. 다 함께 퍼포먼스</b><span>무대 위아래 구분 없이</span></button><button type="button" class="rc" data-drive="1man4OgHt20WOIRI_H9xKMLIlWKgiqm23" aria-label="6. 초록빛 환경골든벨 보기"><img src="https://drive.google.com/thumbnail?id=1man4OgHt20WOIRI_H9xKMLIlWKgiqm23&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>6. 초록빛 환경골든벨</b><span>배운 것을 문제로</span></button><button type="button" class="rc" data-drive="17x2qHf98onvJ3716-xuiVQml9aHC_KgP" aria-label="7. 에코시네마 보기"><img src="https://drive.google.com/thumbnail?id=17x2qHf98onvJ3716-xuiVQml9aHC_KgP&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>7. 에코시네마</b><span>잔디밭 극장</span></button></div><div class="rgrp">행사장별</div><div class="rgrid"><button type="button" class="rc" data-drive="1EpG3Mnh1ch4VmH2Kww2HUSffm_zUSKyd" aria-label="메인무대 보기"><img src="https://drive.google.com/thumbnail?id=1EpG3Mnh1ch4VmH2Kww2HUSffm_zUSKyd&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>메인무대</b></button><button type="button" class="rc" data-drive="1RQf7sxzHbh5XYBmVhMA1rGz22JkQHYcS" aria-label="환경체험부스 보기"><img src="https://drive.google.com/thumbnail?id=1RQf7sxzHbh5XYBmVhMA1rGz22JkQHYcS&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>환경체험부스</b></button><button type="button" class="rc" data-drive="1dX2blpvWLUC2PtS0sd6cwUy5aHPXO1ky" aria-label="에코마켓 · 음식체험 보기"><img src="https://drive.google.com/thumbnail?id=1dX2blpvWLUC2PtS0sd6cwUy5aHPXO1ky&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>에코마켓 · 음식체험</b></button><button type="button" class="rc" data-drive="1D4v54WSKC0bMZRncN89NtZkMRPbDMSac" aria-label="놀이존 보기"><img src="https://drive.google.com/thumbnail?id=1D4v54WSKC0bMZRncN89NtZkMRPbDMSac&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>놀이존</b></button><button type="button" class="rc" data-drive="1vaHHU1x9VE0ARYZ5A6aIN2MArwQvZgm2" aria-label="전시 · 포토존 보기"><img src="https://drive.google.com/thumbnail?id=1vaHHU1x9VE0ARYZ5A6aIN2MArwQvZgm2&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>전시 · 포토존</b></button><button type="button" class="rc" data-drive="18TH69TOpR7MiY05jUH5curSriv6zGaVn" aria-label="자연 · 동물체험 보기"><img src="https://drive.google.com/thumbnail?id=18TH69TOpR7MiY05jUH5curSriv6zGaVn&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>자연 · 동물체험</b></button><button type="button" class="rc" data-drive="1FZYMMbiCWKwMDA2ntQuiEmnS24Ji-1pW" aria-label="에코시네마 보기"><img src="https://drive.google.com/thumbnail?id=1FZYMMbiCWKwMDA2ntQuiEmnS24Ji-1pW&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>에코시네마</b></button></div><div class="rgrp">인터뷰</div><div class="rgrid"><button type="button" class="rc" data-drive="1U5RzTwDYprZpM7fkWxRghobqYatpCVWS" aria-label="준비한 사람들 보기"><img src="https://drive.google.com/thumbnail?id=1U5RzTwDYprZpM7fkWxRghobqYatpCVWS&sz=w640" alt="" loading="lazy"><span class="rp" aria-hidden="true">▶</span><b>준비한 사람들</b><span>행사를 준비하고 부스를 꾸린 분들의 이야기</span></button></div></div></section>
+<dialog id="rdlg" aria-label="기록 영상 보기"><div class="rbar"><b id="rttl"></b><button type="button" id="rx">닫기</button></div><div class="rwrap"><iframe id="rif" title="기록 영상" allow="autoplay; fullscreen" allowfullscreen></iframe></div></dialog>
 <section>
   <div class="narrow">
-    <div class="keep">
-      <b>원본 파일이 필요하시면</b>
-      <p style="font-size:.97rem">이 페이지의 영상은 보시는 것까지만 열어 두었습니다. 원본 파일이 필요하신 주최·주관 측은 따로 전달드린 자료실을 이용해 주세요.</p>
-    </div>
+    <details class="how">
+      <summary>어떻게 기록했나 — 카메라 일곱 대를 한 번에</summary>
+      <p style="font-size:.95rem;margin-top:.8rem">하루를 빠짐없이 담으려고 자리마다 역할을 나눠 일곱 대를 동시에 돌렸습니다. 촬영 소스 175개, 사진 1,400여 장.</p>
+      <table><tr><th>역할</th><th>장비</th></tr><tr><td>무대 전체 고정</td><td>DJI Osmo Pocket 3 · 삼각대 · 4K</td></tr><tr><td>무대 + 객석 360°</td><td>Insta360 · Osmo 360 · 삼각대</td></tr><tr><td>현장 취재</td><td>Sony α1 · Sony ZV-E1</td></tr><tr><td>항공</td><td>DJI Mavic 3 Cine</td></tr><tr><td>저공 · 실내</td><td>DJI Avata 2</td></tr><tr><td>준비 과정 360°</td><td>Avata 360</td></tr></table>
+    </details>
     <div class="credit">
       촬영 · 편집 제주그래퍼 JEJUGRAPHER · 2026년 10월<br>
       사진과 영상의 저작권은 제주그래퍼에 있으며, 사진 제공 시 「촬영 제주그래퍼」 표기를 부탁드립니다.
@@ -232,7 +268,7 @@ th{background:#EFEADD;font-weight:500;width:34%}
   var t; row.addEventListener('scroll',function(){ clearTimeout(t); t=setTimeout(mark,80); });
   window.addEventListener('resize',mark); mark();
 })();
-/* 기록 영상 — 구글드라이브 미리보기로 재생만 (내려받기 없음) */
+/* 기록 영상 — 눌러서 보기 */
 (function(){
   var d=document.getElementById('rdlg'); if(!d) return;
   var f=document.getElementById('rif'), t=document.getElementById('rttl');
@@ -247,15 +283,4 @@ th{background:#EFEADD;font-weight:500;width:34%}
   d.addEventListener('close',function(){ f.src=''; });
 })();
 </script>
-<!-- jg-copyright-notice -->
-<div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
-<div style="max-width:880px;margin:0 auto">
-<strong style="display:block;color:#F3D9A4;font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:.02em">⚠ 무단 복제 · 도용 금지 — 저작권 경고</strong>
-이 사이트의 모든 사진 · 영상 · 글 · 음악 · 디자인 · 프로그램은 <b style="color:#fff">제주그래퍼(JEJUGRAPHER)</b>와 원저작자에게 저작권이 있으며 「저작권법」의 보호를 받습니다.
-저작권자의 <b style="color:#fff">사전 서면 동의 없이</b> 복제 · 다운로드 후 재배포 · 전송 · 게시 · 편집 · 2차 가공 · 캡처 사용 · 상업적 이용 · AI 학습 데이터로 사용하는 행위를 <b style="color:#fff">엄격히 금지</b>합니다.
-사진과 영상 속 인물의 초상권도 함께 보호됩니다.
-무단 도용이 확인되면 사전 경고 없이 「저작권법」 제136조(5년 이하의 징역 또는 5천만 원 이하의 벌금)에 따른 <b style="color:#fff">형사 고소와 민사상 손해배상 청구</b>를 진행합니다.
-<span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
-</div></div>
-<!-- /jg-copyright-notice -->
 </body></html>
