@@ -14,20 +14,21 @@
   /* 캐릭터(제주): 지형별 이동배수(1.0=보통), 기본 용량 cap, 특수 패시브 pv
      pv: superArmor(1회 피격무시)·hAccel(가로가속)·homeTurf(내창고 근처 강함)·fly(벽/물 무시 비행) */
   var CHARACTERS = {
-    pony:    { name: '조랑말', emoji: '🐎', cat: 'animal',  dive: 6,  cap: 3, pv: 'dash',       role: '수집·기동', trait: '가장 빠름! 대신 조금밖에 못 담아요',
-               mul: { water: 0.8, sand: 1.3, forest: 1.4, village: 1.5, air: 1.1 } },
-    seal:    { name: '물개',   emoji: '🦭', cat: 'whale',   dive: 30, cap: 8, pv: 'superArmor', role: '대량 운반', trait: '가장 많이 담는 튼튼이! 한 번은 안 뺏겨요(10초). 좀 느려요',
-               mul: { water: 1.6, sand: 0.7, forest: 0.6, village: 0.6, air: 0.6 } },
-    gull:    { name: '갈매기', emoji: '🐦', cat: 'bird',    dive: 5,  cap: 4, pv: 'fly', fly: true, role: '습격·기동', trait: '벽·물 위를 날아 어디든 습격! 공격이 빨라요',
-               mul: { water: 1.0, sand: 1.2, forest: 1.0, village: 1.0, air: 1.6 } },
-    crab:    { name: '게',     emoji: '🦀', cat: 'crawler', dive: 20, cap: 5, pv: 'hAccel', moisture: true, role: '견제(둔화)', trait: '부딪히면 상대를 느리게! 가로로 빨라요. 몸이 마르면 기절',
-               mul: { water: 1.4, sand: 1.6, forest: 1.0, village: 1.0, air: 1.0 } },
-    haenyeo: { name: '해녀',   emoji: '🧜', cat: 'person',  dive: 25, cap: 5, pv: 'homeTurf',  role: '수비', trait: '내 창고 근처에선 빠르고 강해요! 지킬 때 최고',
-               mul: { water: 1.2, sand: 1.0, forest: 1.0, village: 1.0, air: 1.0 } },
-    carrot:  { name: '구좌당근', emoji: '🥕', cat: 'plant',  dive: 8,  cap: 7, pv: 'dash',       role: '수집(육상)', trait: '구좌 흙에서 쑥쑥! 땅에서 빠르고 많이 담아요. 물은 느려요',
-               mul: { water: 0.6, sand: 1.3, forest: 1.2, village: 1.4, air: 0.7 } },
-    turtle:  { name: '세화바다거북', emoji: '🐢', cat: 'whale', dive: 40, cap: 9, pv: 'superArmor', role: '대량 운반(해상)', trait: '세화 앞바다 튼튼한 등껍질! 바다에서 최고, 아주 많이 담고 한 번은 안 뺏겨요. 땅에선 느려요',
-               mul: { water: 1.7, sand: 0.6, forest: 0.5, village: 0.5, air: 0.5 } }
+    /* ★이동속도는 모든 캐릭터 동일(mul=1.0). 구분은 용량·특기(비속도)로만. */
+    pony:    { name: '조랑말', emoji: '🐎', cat: 'animal',  dive: 15, cap: 4, pv: 'jumper',     role: '기동·점프', trait: '점프의 명수! 더 자주 뛰어 담·함정을 넘고 상대 발사도 잘 피해요',
+               mul: { water: 1, sand: 1, forest: 1, village: 1, air: 1 } },
+    seal:    { name: '물개',   emoji: '🦭', cat: 'whale',   dive: 30, cap: 8, pv: 'superArmor', role: '대량 운반', trait: '아주 많이 담는 튼튼이! 한 번은 공격을 안 받아요(10초)',
+               mul: { water: 1, sand: 1, forest: 1, village: 1, air: 1 } },
+    gull:    { name: '갈매기', emoji: '🐦', cat: 'bird',    dive: 10, cap: 4, pv: 'fly', fly: true, role: '습격·회피', trait: '벽·물 위를 날아 어디든 습격! 발사도 날아서 잘 피하고 공격이 빨라요',
+               mul: { water: 1, sand: 1, forest: 1, village: 1, air: 1 } },
+    crab:    { name: '게',     emoji: '🦀', cat: 'crawler', dive: 20, cap: 5, pv: 'slow', moisture: true, role: '견제(둔화)', trait: '부딪히면 상대를 3초 느리게! 대신 몸이 마르면 기절해요(물에서 회복)',
+               mul: { water: 1, sand: 1, forest: 1, village: 1, air: 1 } },
+    haenyeo: { name: '해녀',   emoji: '🧜', cat: 'person',  dive: 25, cap: 6, pv: 'homeTurf',  role: '수비', trait: '수비의 달인! 내 창고 근처에선 쓰레기를 덜 뺏겨요. 지킬 때 최고',
+               mul: { water: 1, sand: 1, forest: 1, village: 1, air: 1 } },
+    carrot:  { name: '구좌당근', emoji: '🥕', cat: 'plant',  dive: 12, cap: 7, pv: 'steady',    role: '대용량·안정', trait: '많이 담는 구좌당근! 부딪히거나 맞아도 쓰레기를 덜 흘려요(안정)',
+               mul: { water: 1, sand: 1, forest: 1, village: 1, air: 1 } },
+    turtle:  { name: '세화바다거북', emoji: '🐢', cat: 'whale', dive: 40, cap: 9, pv: 'superArmor', role: '최대 운반', trait: '가장 많이 담는 튼튼한 등껍질! 한 번은 공격을 안 받아요. 느긋한 대장',
+               mul: { water: 1, sand: 1, forest: 1, village: 1, air: 1 } }
   };
   var CHAR_ORDER = ['seal', 'crab', 'pony', 'gull', 'haenyeo', 'carrot', 'turtle'];
 
@@ -65,17 +66,18 @@
 
   /* 장비 슬롯 C: 신발 */
   var FEET = {
-    fins:     { name: '오리발', emoji: '🦶', desc: '물속 슝슝! 육지는 느려요' },
-    sneakers: { name: '운동화', emoji: '👟', desc: '육지 어디서나 빨라요. 물속은 느려요' },
-    boots:    { name: '장화',   emoji: '🥾', desc: '곶자왈에서 최고! 다른 곳은 보통' }
+    fins:     { name: '오리발', emoji: '🦶', desc: '물속에서 살짝 더 빨라요' },
+    sneakers: { name: '운동화', emoji: '👟', desc: '어디서나 조금 더 빨라요(무난)' },
+    boots:    { name: '장화',   emoji: '🥾', desc: '곶자왈(숲)에서 살짝 더 빨라요' }
   };
   var FEET_ORDER = ['fins', 'sneakers', 'boots'];
 
   function isWater(terrain) { return terrain === 'water'; }
   function footMul(feetKey, terrain) {
-    if (feetKey === 'fins') return isWater(terrain) ? 1.8 : 0.4;
-    if (feetKey === 'sneakers') return isWater(terrain) ? 0.6 : 1.4;
-    if (feetKey === 'boots') return terrain === 'forest' ? 1.6 : 1.0;
+    // 속도 편차 최소화(최대 ±10%) — 이동이 답답하지 않게
+    if (feetKey === 'fins') return isWater(terrain) ? 1.1 : 0.95;
+    if (feetKey === 'sneakers') return 1.05;
+    if (feetKey === 'boots') return terrain === 'forest' ? 1.1 : 1.0;
     return 1.0;
   }
 
@@ -103,14 +105,15 @@
       dive: ch.dive,
       moisture: !!ch.moisture,                  // 게: 수분 게이지
       fly: !!ch.fly,                            // 갈매기: 벽·물 무시 비행
-      superArmor: ch.pv === 'superArmor',       // 물개: 1회 피격 무시(10초)
-      homeTurf: ch.pv === 'homeTurf',           // 해녀: 내 창고 근처 강함
-      hAccel: ch.pv === 'hAccel',               // 게: 가로 이동 가속
+      superArmor: ch.pv === 'superArmor',       // 물개·거북: 1회 피격 무시(10초)
+      homeTurf: ch.pv === 'homeTurf',           // 해녀: 내 창고 근처에서 덜 뺏김(수비)
+      jumper: ch.pv === 'jumper',               // 조랑말: 점프 쿨다운 짧음
+      hAccel: false,                            // (폐지: 속도 특기 제거)
       pickup: tool.pickup,                      // area | single | fast
       areaR: tool.areaR || 0,
       canHeavy: !!tool.canHeavy, canCorner: !!tool.canCorner,
       canSteal: !!tool.canSteal, cooldown: cooldown,
-      capacity: (ch.cap || 5) + (cont.capBonus || 0), collect: cont.collect, leak: cont.leak, dropResist: cont.dropResist || 0,
+      capacity: (ch.cap || 5) + (cont.capBonus || 0), collect: cont.collect, leak: (cont.leak || 0) * (ch.pv === 'steady' ? 0.4 : 1), dropResist: (cont.dropResist || 0) + (ch.pv === 'steady' ? 1 : 0),
       gear: gear, gearLock: gear === 'lock', gearTrap: gear === 'trap', gearAlarm: gear === 'alarm', gearBoost: gear === 'boost'
     };
   }

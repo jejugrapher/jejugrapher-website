@@ -222,7 +222,7 @@ function TopDown(opts) {
     if (a === 'grab') grab(p); else if (a === 'bump' || a === 'steal') bump(p); else if (a === 'gear') useGear(p); else if (a === 'jump') jump(p); else if (a === 'fire') fireTurret(p); }
   var JUMP_DUR = 520, JUMP_CD = 1300;
   function jump(p) { var now = performance.now(); if (now < (p.jumpCD||0) || now < p.stunUntil) return;   // 담·함정 뛰어넘기(잠깐 벽 통과 + 높이 점프)
-    p.jumpCD = now + JUMP_CD; p.jumpUntil = now + JUMP_DUR; p.act = now; sfx('jump'); }
+    p.jumpCD = now + (st(p).jumper ? 700 : JUMP_CD); p.jumpUntil = now + JUMP_DUR; p.act = now; sfx('jump'); }   // 조랑말: 점프 더 자주
   function useGear(p) { var s = st(p), now = performance.now();
     if (s.gearBoost) { if (now < (p.boostCD||0)) return; p.boostCD = now + 10000; p.boostUntil = now + 1500; p.act = now; say('슝! 🚀', p.x, p.y - 46, '#7ae1ff'); burst(p.x, p.y, '#7ae1ff'); }
   }
@@ -571,8 +571,7 @@ function TopDown(opts) {
         if (now < (p.slowUntil||0)) tmul *= 0.5;                 // 게 집게에 둔화
         if (now < (p.boostUntil||0)) tmul *= 2.0;               // 부스트 장비
         if (jumping) tmul *= 1.5;                                // 점프 도약(담 넘기 쉽게)
-        if (s.hAccel && Math.abs(dx) > Math.abs(dy)) tmul *= 1.3;  // 게: 가로 이동 가속
-        if (s.homeTurf) { var mwh = M && M.warehouses ? M.warehouses[id] : null; if (mwh && Math.hypot(p.x-mwh.x, p.y-mwh.y) < WH_R*2.4) tmul *= 1.3; }  // 해녀 홈터프
+        // (캐릭터 속도 특기 폐지: 모든 캐릭터 동일 속도 — 게 가로가속·해녀 홈가속 제거)
         if (now < (p.alarmUntil||0)) tmul *= 1.5;                // 경보기: 귀환 가속
         if (p.ai) tmul *= 0.68;                                  // AI 핸디캡: 사람보다 느리게(너무 잘하지 않도록)
         var mv = sp * tmul * dt;
@@ -622,7 +621,10 @@ function TopDown(opts) {
             if (now < (o.jumpUntil||0)) { say('점프 회피! 🦘', o.x, o.y - 46, '#8ee'); hit = true; break; }           // 점프 중이면 발사체 회피
             if (o.char === 'gull' && Math.random() < 0.6) { say('휙~ 날아 피함!', o.x, o.y - 46, '#8ee'); hit = true; break; }  // 갈매기: 날아서 자동 회피(점프 불필요)
             var cnt = owner && owner.counterUntil > now && owner.counterTarget === hid;        // 반격: 나를 쏜 상대를 되받아침 → 2배
+            var vos = st(o);
             var maxC = Math.min(10, o.holds.length), gotC = Math.min(o.holds.length, weightedSteal(maxC, Math.min(1, (o.bank||0)/15)) * (cnt ? 2 : 1));   // 0~보유량(최대10) 탈취
+            if (vos.dropResist) gotC = Math.max(0, gotC - vos.dropResist);                      // 당근(안정): 덜 뺏김
+            if (vos.homeTurf) { var hmw = M.warehouses && M.warehouses[hid]; if (hmw && Math.hypot(o.x-hmw.x, o.y-hmw.y) < WH_R*2.4) gotC = Math.floor(gotC*0.4); }   // 해녀: 내 창고 근처 수비
             if (gotC > 0) { for (var d3 = 0; d3 < gotC; d3++) o.holds.pop(); if (owner) { owner.bank = (owner.bank||0) + gotC; M.score[sh.owner] = owner.bank; } }
             if (cnt) { owner.counterUntil = 0; say('반격 성공! 2배! 💥', o.x, o.y - 62, '#ffd23f', 1.4, 26); }
             o.counterTarget = sh.owner; o.counterUntil = now + 4000;                          // 당한 사람은 4초간 되받아치기 가능
