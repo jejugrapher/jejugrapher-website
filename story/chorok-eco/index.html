@@ -84,17 +84,21 @@ th{background:#EFEADD;font-weight:500;width:34%}
 .ph2{font:500 .95rem var(--sans);color:var(--terra);letter-spacing:.04em;margin-bottom:.9rem;display:flex;align-items:center;gap:.7rem}
 .ph2::after{content:"";flex:1;height:1px;background:var(--line)}
 .tl{list-style:none;border-left:2px solid var(--line);padding-left:1.3rem}
-.tl li{position:relative;padding-bottom:1.15rem}
+.tl li{position:relative;padding-bottom:1.15rem;display:grid;grid-template-columns:minmax(0,1fr) 132px;gap:14px;align-items:start}
+.tl li>img,.zl li>img{width:132px;aspect-ratio:16/10;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
 .tl li::before{content:"";position:absolute;left:calc(-1.3rem - 7px);top:.6rem;width:12px;height:12px;border-radius:50%;background:var(--forest);border:2px solid var(--paper)}
 .tl time{display:block;font-size:.82rem;font-weight:500;color:var(--forest);letter-spacing:.03em}
 .tl b{display:block;font-family:var(--serif);font-size:1.08rem;color:var(--navy);margin:.1rem 0 .15rem}
 .tl span{display:block;font-size:.9rem;color:var(--mute);line-height:1.6}
 .zl{list-style:none}
-.zl li{padding:.7rem 0;border-bottom:1px solid var(--line)}
+.zl li{padding:.7rem 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) 132px;gap:14px;align-items:center}
 .zl li:last-child{border-bottom:0}
 .zl b{display:block;font-family:var(--serif);font-size:1.02rem;color:var(--navy)}
 .zl span{display:block;font-size:.88rem;color:var(--mute);line-height:1.6}
 /* 기록 메모 (접어 둠) */
+.pin{margin:1.6rem 0 .4rem}
+.pin img{width:100%;aspect-ratio:21/9;object-fit:cover;border-radius:12px}
+.pin figcaption{font-size:.86rem;color:var(--mute);margin-top:.5rem}
 .how{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.6rem}
 .how summary{cursor:pointer;font:500 .97rem var(--sans);color:var(--navy)}
 .how table{margin-top:.8rem}
@@ -118,6 +122,10 @@ th{background:#EFEADD;font-weight:500;width:34%}
 .credit{border-top:1px solid var(--line);padding-top:1.6rem;margin-top:2.4rem;font-size:.9rem;color:var(--mute)}
 .credit .go{display:inline-block;margin-top:1.1rem;text-decoration:none;color:var(--terra);border-bottom:1px solid}
 @media (max-width:760px){.vids{grid-template-columns:1fr}.prog{grid-template-columns:1fr;gap:2.2rem}}
+@media (max-width:460px){
+  .tl li,.zl li{grid-template-columns:minmax(0,1fr) 96px;gap:10px}
+  .tl li>img,.zl li>img{width:96px}
+}
 @media (max-width:560px){
   .cd{min-height:430px} .cd .tx{padding:4.6rem 1.1rem 1.2rem} .cd h3{font-size:1.2rem}
   .arrows{display:none} th{width:40%}
@@ -161,30 +169,15 @@ th{background:#EFEADD;font-weight:500;width:34%}
     <div class="kicker">PROGRAM</div>
     <h2>하루 동안 있었던 일</h2>
     <p class="narrow" style="margin-left:0">낮 한 시, 제주 청소년 오케스트라의 식전공연으로 문을 열어 해가 질 때까지 이어졌습니다. 메인무대가 쉬는 사이에는 광장을 둘러싼 부스에서 체험과 장터가 함께 열렸습니다.</p>
+    <figure class="pin"><img src="img/p_ipgu.jpg" alt="꽃으로 꾸민 행사장 입구 아치" loading="lazy"><figcaption>꽃으로 꾸민 입구 아치. 행사 이름도 아이들이 지었습니다.</figcaption></figure>
     <div class="prog">
       <div class="pcol">
         <div class="ph2">메인무대</div>
-        <ol class="tl">
-          <li><time>13:10</time><b>식전공연</b><span>제주 청소년 오케스트라 — 지휘 김태근 · 바리톤 정재윤 협연</span></li>
-          <li><time>13:26</time><b>개회식</b><span>구좌읍 주최 · 내빈 소개와 축하말씀</span></li>
-          <li><time>13:41</time><b>환경사생대회 시상식</b><span>구좌 아이들이 그린 환경 그림 가운데 뽑힌 수상작</span></li>
-          <li><time>13:47</time><b>구좌 어린이합창단</b><span>초록별을 주제로 한 노래 — 지휘 차애란</span></li>
-          <li><time>13:53</time><b>다 함께 퍼포먼스</b><span>무대 위아래 구분 없이 참가자 전원이 함께</span></li>
-          <li><time>16:22</time><b>도전! 환경 골든벨</b><span>하루 동안 배운 환경 이야기를 문제로</span></li>
-          <li><time>해 질 녘</time><b>에코시네마</b><span>「조수웅덩이 바다의 시작」 상영과 임형묵 감독과의 대화</span></li>
-        </ol>
+        <ol class="tl"><li><div><time>13:10</time><b>식전공연</b><span>제주 청소년 오케스트라 — 지휘 김태근 · 바리톤 정재윤 협연</span></div><img src="img/c02_opening.jpg" alt="" loading="lazy"></li><li><div><time>13:26</time><b>개회식</b><span>구좌읍 주최 · 내빈 소개와 축하말씀</span></div><img src="img/c03_gaehoe.jpg" alt="" loading="lazy"></li><li><div><time>13:41</time><b>환경사생대회 시상식</b><span>구좌 아이들이 그린 환경 그림 가운데 뽑힌 수상작</span></div><img src="img/c04_sisang.jpg" alt="" loading="lazy"></li><li><div><time>13:47</time><b>구좌 어린이합창단</b><span>초록별을 주제로 한 노래 — 지휘 차애란</span></div><img src="img/c05_hapchang.jpg" alt="" loading="lazy"></li><li><div><time>13:53</time><b>다 함께 퍼포먼스</b><span>무대 위아래 구분 없이 참가자 전원이 함께</span></div><img src="img/c06_together.jpg" alt="" loading="lazy"></li><li><div><time>16:22</time><b>도전! 환경 골든벨</b><span>하루 동안 배운 환경 이야기를 문제로</span></div><img src="img/c10_goldenbell.jpg" alt="" loading="lazy"></li><li><div><time>해 질 녘</time><b>에코시네마</b><span>「조수웅덩이 바다의 시작」 상영과 임형묵 감독과의 대화</span></div><img src="img/c11_cinema.jpg" alt="" loading="lazy"></li></ol>
       </div>
       <div class="pcol">
         <div class="ph2">광장 둘레</div>
-        <ul class="zl">
-          <li><b>환경체험부스</b><span>버려진 물건을 다시 쓰는 업사이클링, 제주의 풀과 꽃으로 만드는 작품</span></li>
-          <li><b>놀이존</b><span>플라스틱 대신 나무로 만든 전통 놀이기구</span></li>
-          <li><b>미술체험존</b><span>분필 그림 · 페이스페인팅</span></li>
-          <li><b>에코 순환 마트 · 모모장</b><span>쓰던 물건을 주고받는 장터</span></li>
-          <li><b>음식체험존</b><span>지역 먹거리로 차린 부스</span></li>
-          <li><b>전시 · 포토존</b><span>아이들 작품 전시와 해녀복 체험 포토존</span></li>
-          <li><b>자연 · 동물체험</b><span>가까이에서 만나는 생물</span></li>
-        </ul>
+        <ul class="zl"><li><div><b>환경체험부스</b><span>버려진 물건을 다시 쓰는 업사이클링</span></div><img src="img/c07_booth.jpg" alt="" loading="lazy"></li><li><div><b>미술 · 자연물 체험</b><span>제주의 풀과 꽃을 재료로, 분필 그림과 페이스페인팅까지</span></div><img src="img/p_pul.jpg" alt="" loading="lazy"></li><li><div><b>놀이존</b><span>플라스틱 대신 나무로 만든 전통 놀이기구</span></div><img src="img/p_nori.jpg" alt="" loading="lazy"></li><li><div><b>잔디밭 놀이존</b><span>잔디밭 전체가 놀이터</span></div><img src="img/c09_nori.jpg" alt="" loading="lazy"></li><li><div><b>에코 순환 마트 · 모모장</b><span>쓰던 물건을 주고받는 장터</span></div></li><li><div><b>음식체험존</b><span>지역 먹거리로 차린 부스</span></div></li><li><div><b>전시 · 포토존</b><span>아이들 작품 전시와 해녀복 체험 포토존</span></div><img src="img/c08_haenyeo.jpg" alt="" loading="lazy"></li><li><div><b>자연 · 동물체험</b><span>가까이에서 만나는 생물</span></div></li></ul>
       </div>
     </div>
   </div>
