@@ -139,7 +139,36 @@ footer{margin-top:44px;padding-top:14px;border-top:1px solid var(--line);font-si
 .jgfoot a{color:var(--sea)}
 .jgfoot .go{display:inline-block;margin-top:1rem;border-bottom:1px solid}
 @media (max-width:600px){.jglinks a:first-child{display:none}}
-</style>
+
+.zl{transform-origin:0 0;will-change:transform}
+.zl.abs{position:absolute;inset:0}
+.cmp .zl img{display:block;width:100%;height:auto}
+.cmp .zl.abs img{position:absolute;inset:0}
+.zbtns{position:absolute;right:8px;bottom:8px;display:flex;gap:6px;z-index:5}
+.zbtns button{width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.55);color:#fff;font:600 15px/1 var(--f-body);cursor:pointer;display:grid;place-items:center}
+.zbtns button:hover{background:var(--sea);border-color:var(--sea)}
+.zbtns .wide{width:auto;padding:0 10px;font-size:12.5px}
+.zhint{position:absolute;left:8px;bottom:8px;z-index:5;font:12px var(--f-body);color:#fff;background:rgba(0,0,0,.5);padding:3px 8px;border-radius:6px;pointer-events:none}
+#p-map:fullscreen{background:var(--paper);padding:10px;overflow:auto}
+#p-map:fullscreen .cmp{margin:0 auto}
+
+.ms .lead{max-width:62ch}
+.msfig{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 16px 12px;margin:18px 0}
+.msfig svg{width:100%;height:auto;display:block}
+.msfig figcaption{font:12.5px var(--f-body);color:var(--mute);margin-top:10px;line-height:1.7}
+.idx{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:6px}
+.idx article{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 15px;display:flex;flex-direction:column;gap:.45rem}
+.idx h4{font:700 1.05rem var(--f-display);color:var(--sea)}
+.idx .eq{font:500 13px var(--f-mono);background:var(--paper);border:1px solid var(--line);border-radius:7px;padding:7px 9px;color:var(--basalt)}
+.idx p{font-size:.92rem;color:var(--mute);line-height:1.7;margin:0}
+.idx .use{font-size:.88rem;color:var(--basalt);border-top:1px dashed var(--line);padding-top:.5rem;margin-top:auto}
+.msuse{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px;counter-reset:u}
+.msuse li{list-style:none;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 14px 13px;position:relative}
+.msuse li::before{counter-increment:u;content:counter(u);display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--sea);color:#fff;font:600 12px var(--f-mono);margin-bottom:.5rem}
+.msuse b{display:block;font:600 .98rem var(--f-body);margin-bottom:.25rem}
+.msuse span{font-size:.88rem;color:var(--mute);line-height:1.65}
+@media (max-width:900px){.idx,.msuse{grid-template-columns:1fr}}
+.legnote{margin-top:.5rem;font-size:.86rem;color:var(--mute);line-height:1.6}</style>
 
 <!-- jg-seo -->
 <link rel="canonical" href="https://jejugrapher.com/spatial/whanhae-wall/">
@@ -285,6 +314,80 @@ footer{margin-top:44px;padding-top:14px;border-top:1px solid var(--line);font-si
   </div>
 </div>
 
+
+<section class="ms">
+  <p class="eyebrow">멀티스펙트럴이란</p>
+  <h2>눈에 보이지 않는 빛으로 잎을 셉니다</h2>
+  <p class="lead">사람 눈은 빨강·초록·파랑 세 가지 빛만 봅니다. 이 드론은 거기에 <b>레드에지</b>와 <b>근적외</b>를 더해 다섯 가지 빛으로 같은 장면을 동시에 찍습니다.
+  살아 있는 잎은 <b>빨간빛은 빨아들이고(광합성에 씁니다) 근적외는 거울처럼 되쏩니다.</b> 돌과 흙은 어느 빛이든 비슷하게 반사합니다.
+  이 차이가 크면 식물, 작으면 돌 — 그 차이를 숫자로 만든 것이 식생지수입니다.</p>
+
+  <figure class="msfig">
+    <svg viewBox="0 0 760 300" role="img" aria-label="잎·돌·물의 빛 반사율 그래프. 잎은 근적외에서 크게 치솟습니다.">
+      <rect x="148" y="40" width="46" height="210" fill="#5b8a34" opacity=".10"/>
+      <rect x="336" y="40" width="46" height="210" fill="#d7301f" opacity=".10"/>
+      <rect x="497" y="40" width="47" height="210" fill="#e8962a" opacity=".12"/>
+      <rect x="603" y="40" width="75" height="210" fill="#0e6b72" opacity=".12"/>
+      <text x="171" y="34" text-anchor="middle" font-size="12" fill="#6aa83d">녹색</text>
+      <text x="359" y="34" text-anchor="middle" font-size="12" fill="#e05b4a">적색</text>
+      <text x="520" y="34" text-anchor="middle" font-size="12" fill="#d08a2a">레드에지</text>
+      <text x="640" y="34" text-anchor="middle" font-size="12" fill="#2f9aa3">근적외</text>
+      <line x1="70" y1="250" x2="730" y2="250" stroke="var(--line)"/>
+      <line x1="70" y1="40" x2="70" y2="250" stroke="var(--line)"/>
+      <text x="70" y="270" text-anchor="middle" font-size="11" fill="var(--mute)">450</text>
+      <text x="388" y="270" text-anchor="middle" font-size="11" fill="var(--mute)">670 nm</text>
+      <text x="720" y="270" text-anchor="middle" font-size="11" fill="var(--mute)">900</text>
+      <text x="60" y="254" text-anchor="end" font-size="11" fill="var(--mute)">0</text>
+      <text x="60" y="79" text-anchor="end" font-size="11" fill="var(--mute)">50%</text>
+      <text x="26" y="150" text-anchor="middle" font-size="11" fill="var(--mute)" transform="rotate(-90 26 150)">반사율</text>
+      <path d="M70 236 L142 232 L214 211 L287 226 L388 236 L431 215 L460 152 L489 103 L546 82 L662 75 L720 75"
+            fill="none" stroke="#43a85a" stroke-width="3.2" stroke-linejoin="round"/>
+      <path d="M70 232 L214 229 L388 226 L518 222 L720 218"
+            fill="none" stroke="var(--mute)" stroke-width="2.6" stroke-dasharray="7 5"/>
+      <path d="M70 232 L214 232 L388 240 L518 247 L720 248"
+            fill="none" stroke="#5a9bd5" stroke-width="2.4" stroke-dasharray="3 5"/>
+      <text x="676" y="68" font-size="12.5" fill="#43a85a" font-weight="600">잎</text>
+      <text x="676" y="213" font-size="12.5" fill="var(--mute)">돌 · 흙</text>
+      <text x="676" y="262" font-size="12.5" fill="#5a9bd5">물</text>
+      <path d="M392 232 L392 128" stroke="#ef5aa8" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <path d="M392 128 L660 86" stroke="#ef5aa8" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <text x="470" y="122" font-size="12.5" fill="#ef5aa8" font-weight="600">이 벌어짐이 클수록 = 잎이 많고 건강</text>
+    </svg>
+    <figcaption>잎은 적색을 빨아들여 바닥을 찍고, 레드에지를 지나며 급히 치솟아 근적외에서 절반 가까이 되쏩니다. 돌·흙은 밋밋하고, 물은 근적외를 거의 되쏘지 않습니다.
+    검은 현무암은 적색·근적외가 모두 아주 낮아 비율이 요동치기 때문에, 이번 분석에서는 <b>근적외 반사율이 일정 값을 넘을 때만</b> 식물로 봤습니다.</figcaption>
+  </figure>
+
+  <div class="idx">
+    <article>
+      <h4>NDVI</h4>
+      <div class="eq">(근적외 − 적색) ÷ (근적외 + 적색)</div>
+      <p>가장 널리 쓰는 기본 지수입니다. <b>잎이 얼마나 많고 살아 있는지</b>를 봅니다. 값은 −1~1이고, 맨땅은 0 언저리, 우거진 숲은 0.8 위입니다.</p>
+      <div class="use">이번 분석의 <b>식생 판정 기준</b> — NDVI 0.30 이상이면 식물, 0.45 이상이고 높이가 0.2~2 m면 덩굴로 추정</div>
+    </article>
+    <article>
+      <h4>NDRE</h4>
+      <div class="eq">(근적외 − 레드에지) ÷ (근적외 + 레드에지)</div>
+      <p>적색 대신 <b>레드에지</b>를 씁니다. 적색은 잎이 조금만 겹쳐도 다 빨려 더 이상 변하지 않는데(포화), 레드에지는 그 안에서도 차이가 남습니다. <b>우거진 곳의 활력 차이</b>를 봅니다.</p>
+      <div class="use">덩굴이 두껍게 덮인 구간에서 NDVI가 한계에 닿을 때, 속이 살아 있는지 갈라 보는 데 씁니다</div>
+    </article>
+    <article>
+      <h4>GNDVI</h4>
+      <div class="eq">(근적외 − 녹색) ÷ (근적외 + 녹색)</div>
+      <p>적색 대신 <b>녹색</b>을 씁니다. 녹색은 엽록소 양에 민감해서 <b>잎의 푸름(엽록소 함량)</b>을 더 잘 드러냅니다.</p>
+      <div class="use">같은 면적이라도 마른 풀과 푸른 풀을 가르는 데, 그리고 계절·연차 비교의 보조 지표로 씁니다</div>
+    </article>
+  </div>
+
+  <ol class="msuse">
+    <li><b>다섯 가지 빛으로 찍기</b><span>한 번의 비행에서 RGB 사진과 녹·적·레드에지·근적외 4밴드를 같은 자리에서 동시에 기록</span></li>
+    <li><b>지수로 바꾸기</b><span>정사영상 위에서 픽셀마다 NDVI·NDRE·GNDVI를 계산해 지도로 만듦</span></li>
+    <li><b>식물과 돌 가르기</b><span>NDVI 0.30 이상 <b>그리고</b> 근적외 반사율이 일정 값 이상일 때만 식물 — 검은 현무암의 잡음을 걸러 냄</span></li>
+    <li><b>높이와 합치기</b><span>표면 높이에서 땅 높이를 뺀 식생 높이와 겹쳐, 초지 · 덩굴 추정 · 수목으로 나누고 구간별 위험도를 매김</span></li>
+  </ol>
+
+  <p class="note" style="margin-top:14px">※ 보정판(반사율 기준 패널) 없이 처리해 <b>절대 반사율은 낮게 나옵니다.</b> 그래서 반사율 자체가 아니라 <b>비율로 만든 지수</b>만 씁니다. 식생·덩굴 기준값은 현장 확인 전의 임시값입니다.</p>
+</section>
+
 <section>
   <p class="eyebrow">처리 공정</p>
   <h2>사진에서 디지털 트윈까지</h2>
@@ -405,7 +508,7 @@ $('dDist').onclick=()=>setMode('dist');$('dArea').onclick=()=>setMode('area');$(
  knob.addEventListener('pointerdown',e=>{drag=true;knob.setPointerCapture(e.pointerId);e.stopPropagation()});
  knob.addEventListener('pointermove',e=>{if(drag)setPos(rel(e)[0]*100)});
  knob.addEventListener('pointerup',()=>drag=false);
- cmp.addEventListener('click',e=>{if(e.target===knob)return;const[x,y]=rel(e);if(!mode){setPos(x*100);return}const s=SITES[cur];pts.push([x*s.px[0],y*s.px[1]]);drawMeasure()});
+ cmp.addEventListener('click',e=>{if(e.target===knob||e.target.closest('.zbtns'))return;const[x,y]=rel(e);if(!mode){setPos(x*100);return}const s=SITES[cur];const[u,v]=cmp.__unzoom?cmp.__unzoom(e.clientX,e.clientY):[x,y];pts.push([u*s.px[0],v*s.px[1]]);drawMeasure()});
 })();
 renderMap();
 /* tabs */
@@ -506,6 +609,118 @@ window.addEventListener('tabopen',e=>{if(e.detail==='t-gs')applyGS();if(e.detail
 if(!$('p-gs').hidden)applyGS();
 </script>
 
+<script>
+
+/* 지도 확대·축소·이동·전체화면 — 측정은 이미지 좌표로 계산하므로 확대와 무관하게 정확합니다 */
+(function(){
+  var cmp=document.getElementById('cmp'); if(!cmp) return;
+  var imgA=document.getElementById('imgA'), topW=document.getElementById('topWrap'),
+      imgB=document.getElementById('imgB'), svg=document.getElementById('msvg');
+  function layer(){ var d=document.createElement('div'); d.className='zl'; return d; }
+  var zA=layer(), zB=layer(), zS=layer();
+  zB.className=zS.className='zl abs';
+  cmp.insertBefore(zA, imgA); zA.appendChild(imgA);      /* 흐름에 남겨 두어 높이를 만든다 */
+  topW.appendChild(zB); zB.appendChild(imgB);
+  cmp.insertBefore(zS, document.getElementById('bar')); zS.appendChild(svg);
+  var z=1, tx=0, ty=0;
+  function apply(){
+    var t='translate('+tx+'px,'+ty+'px) scale('+z+')';
+    zA.style.transform=zB.style.transform=zS.style.transform=t;
+    document.getElementById('zLevel').textContent=Math.round(z*100)+'%';
+  }
+  function clamp(){
+    var w=cmp.clientWidth, h=cmp.clientHeight;
+    var minx=Math.min(0, w-w*z), miny=Math.min(0, h-h*z);
+    tx=Math.max(minx, Math.min(0, tx)); ty=Math.max(miny, Math.min(0, ty));
+  }
+  function zoomAt(nz, cx, cy){
+    nz=Math.max(1, Math.min(8, nz));
+    var r=cmp.getBoundingClientRect(), px=cx-r.left, py=cy-r.top;
+    tx = px - (px-tx)*(nz/z); ty = py - (py-ty)*(nz/z);
+    z=nz; clamp(); apply();
+  }
+  function reset(){ z=1; tx=0; ty=0; apply(); }
+  /* 버튼 */
+  var box=document.createElement('div'); box.className='zbtns';
+  box.innerHTML='<button type="button" id="zOut" aria-label="축소">−</button>'
+    +'<button type="button" class="wide" id="zLevel" aria-label="원래 크기로">100%</button>'
+    +'<button type="button" id="zIn" aria-label="확대">＋</button>'
+    +'<button type="button" id="zFull" aria-label="전체 화면">⛶</button>';
+  cmp.appendChild(box);
+  var hint=document.createElement('div'); hint.className='zhint';
+  hint.textContent='휠로 확대 · 끌어서 이동 · ⛶ 전체 화면';
+  cmp.appendChild(hint);
+  document.getElementById('zIn').onclick=function(){var r=cmp.getBoundingClientRect();zoomAt(z*1.5,r.left+r.width/2,r.top+r.height/2)};
+  document.getElementById('zOut').onclick=function(){var r=cmp.getBoundingClientRect();zoomAt(z/1.5,r.left+r.width/2,r.top+r.height/2)};
+  document.getElementById('zLevel').onclick=reset;
+  document.getElementById('zFull').onclick=function(){
+    var el=document.getElementById('p-map');
+    if(document.fullscreenElement) document.exitFullscreen();
+    else if(el.requestFullscreen) el.requestFullscreen();
+  };
+  function fitFull(){
+    var pane=document.getElementById('p-map');
+    if(document.fullscreenElement===pane){
+      var ar=(imgA.naturalWidth||16)/(imgA.naturalHeight||10);
+      var avail=window.innerHeight-170;                 /* 칩·측정줄 자리 */
+      cmp.style.maxWidth=Math.round(avail*ar)+'px';
+    } else cmp.style.maxWidth='';
+    clamp(); apply();
+  }
+  document.addEventListener('fullscreenchange',function(){ setTimeout(fitFull,60); });
+  window.addEventListener('resize',function(){ setTimeout(fitFull,60); });
+  /* 휠 확대 */
+  cmp.addEventListener('wheel',function(e){ e.preventDefault(); zoomAt(z*(e.deltaY<0?1.18:1/1.18), e.clientX, e.clientY); },{passive:false});
+  /* 끌어서 이동 (확대했을 때만) — 조금이라도 끌면 클릭으로 치지 않음 */
+  var down=null, moved=false;
+  cmp.addEventListener('pointerdown',function(e){
+    if(e.target.closest('.zbtns')||e.target.id==='knob') return;
+    down={x:e.clientX,y:e.clientY,tx:tx,ty:ty}; moved=false;
+  });
+  cmp.addEventListener('pointermove',function(e){
+    if(!down) return;
+    var dx=e.clientX-down.x, dy=e.clientY-down.y;
+    if(!moved && Math.hypot(dx,dy)<4) return;
+    if(z<=1) return;
+    moved=true; tx=down.tx+dx; ty=down.ty+dy; clamp(); apply();
+  });
+  window.addEventListener('pointerup',function(){ setTimeout(function(){down=null;},0); });
+  cmp.addEventListener('click',function(e){ if(moved){ e.stopImmediatePropagation(); moved=false; } },true);
+  /* 두 손가락 확대 */
+  var pts={}, d0=0, z0=1;
+  cmp.addEventListener('pointerdown',function(e){ pts[e.pointerId]=e; });
+  cmp.addEventListener('pointermove',function(e){
+    if(!(e.pointerId in pts)) return; pts[e.pointerId]=e;
+    var k=Object.keys(pts); if(k.length!==2) return;
+    var a=pts[k[0]], b=pts[k[1]], d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
+    if(!d0){ d0=d; z0=z; return; }
+    zoomAt(z0*d/d0,(a.clientX+b.clientX)/2,(a.clientY+b.clientY)/2);
+  });
+  function up(e){ delete pts[e.pointerId]; if(Object.keys(pts).length<2) d0=0; }
+  cmp.addEventListener('pointerup',up); cmp.addEventListener('pointercancel',up);
+  /* 장소·레이어를 바꾸면 원래 크기로 */
+  ['siteChips','layChips'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.addEventListener('click',function(){ setTimeout(reset,0); });
+  });
+  apply();
+  /* 측정 좌표 보정 — 확대·이동한 만큼 되돌려 이미지 좌표로 */
+  cmp.__unzoom=function(cx,cy){ var r=cmp.getBoundingClientRect();
+    return [((cx-r.left)-tx)/z/r.width, ((cy-r.top)-ty)/z/r.height]; };
+})();
+
+/* 레이어마다 '이게 무엇인지' 한 줄 덧붙이기 */
+(function(){
+  if(typeof LEG==='undefined') return;
+  var more={
+    priority:'<div class="legnote">위험도(식생·덩굴·인접 식생을 합친 점수)로 17개 구간을 1·2·3년차에 나눈 관리 계획 지도입니다.</div>',
+    class:'<div class="legnote">NDVI와 높이로 픽셀을 다섯 갈래로 나눈 지도입니다. 성벽을 벌리는 <b>덩굴 추정</b>이 붉게 표시됩니다.</div>',
+    ndvi:'<div class="legnote">(근적외 − 적색) ÷ (근적외 + 적색). <b>잎이 많고 건강할수록 초록</b>, 돌·모래는 가운데, 물은 음수입니다.</div>',
+    'false':'<div class="legnote">근적외를 빨강 자리에 넣어 만든 그림. 사람 눈에 안 보이는 <b>근적외를 강하게 되쏘는 식물이 붉게</b> 드러납니다.</div>',
+    chm:'<div class="legnote">표면 높이(DSM)에서 땅 높이(DTM)를 뺀 값. <b>풀인지 덤불인지 나무인지</b>를 높이로 가릅니다.</div>'};
+  Object.keys(more).forEach(function(k){ if(LEG[k]!==undefined) LEG[k]=LEG[k]+more[k]; });
+  if(typeof renderMap==='function') renderMap();
+})();
+</script>
 <div class="jgfoot">촬영 · 처리 · 분석 제주그래퍼 JEJUGRAPHER · DJI Mavic 3 Multispectral · 2026년 10월<br>3D 메시와 가우시안 스플래팅, 정사영상·식생 지도는 모두 같은 한 번의 촬영에서 나왔습니다. 길이 · 면적 · 높이 차 같은 <b>상대 측정은 유효</b>하지만, 절대 좌표는 보정 전이라 측량 성과로는 쓸 수 없습니다.<br>사진 · 그림 · 수치와 글의 저작권은 제주그래퍼에 있습니다.<a class="go" href="report/">수치와 방법이 담긴 분석 보고서 보기 →</a> · <a href="/media.html">영상 · 사진 보기</a> · <a href="/inquiry.html">조사 문의</a></div>
 <!-- jg-copyright-notice -->
 <div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
