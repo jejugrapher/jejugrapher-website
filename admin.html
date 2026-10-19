@@ -39,6 +39,19 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
 .state.down{border-color:var(--warn);color:var(--warn)}
 #say{position:sticky;bottom:0;padding:.7rem 0;color:var(--mute);font-size:.9rem;background:linear-gradient(transparent,var(--bg) 40%)}
 .hint{color:var(--mute);font-size:.86rem;margin:.2rem 0 1rem}
+.rep{margin-top:.8rem;border-top:1px solid var(--line);padding-top:.7rem}
+.rep summary{cursor:pointer;color:var(--navy);font-size:.9rem;font-weight:500;list-style:none}
+.rep summary::-webkit-details-marker{display:none}
+.rep summary::before{content:"✎ ";color:var(--terra)}
+.rep .f{display:flex;gap:8px;flex-wrap:wrap;margin-top:.7rem;align-items:center}
+.rep select,.rep input[type=text]{padding:.45rem .6rem;border:1px solid var(--line);border-radius:8px;background:#fff}
+.rep input[type=text]{flex:1;min-width:160px}
+.rep textarea{width:100%;min-height:110px;margin-top:.7rem;padding:.6rem .7rem;border:1px solid var(--line);
+  border-radius:9px;background:#fff;font:inherit;resize:vertical}
+.rep label{font-size:.88rem;color:var(--mute);display:flex;align-items:center;gap:.35rem}
+.done{background:var(--bg);border-left:3px solid var(--ok);padding:.5rem .7rem;margin-top:.6rem;
+  font-size:.9rem;white-space:pre-wrap;color:var(--ink)}
+.done b{color:var(--ok);font-weight:500}
 </style></head><body>
 <div class="wrap">
   <div id="gate" class="gate">
@@ -103,6 +116,16 @@ async function call(mode, extra) {
   return r.json();
 }
 
+/* ── 탭 ── */
+function setTab(n) {
+  $('#t1').classList.toggle('on', n === 1);
+  $('#t2').classList.toggle('on', n === 2);
+  $('#p1').hidden = n !== 1;
+  $('#p2').hidden = n !== 2;
+}
+$('#t1').addEventListener('click', () => setTab(1));
+$('#t2').addEventListener('click', () => setTab(2));
+
 /* ── 들어가기 ── */
 $('#gf').addEventListener('submit', async e => {
   e.preventDefault();
@@ -145,9 +168,57 @@ async function loadAsks() {
         <div style="font-weight:500">${esc(it.name) || '(이름 없음)'}
           ${it.contact ? `<span style="color:var(--mute);font-weight:400"> · ${esc(it.contact)}</span>` : ''}</div>
         <div class="msg" style="margin-top:.5rem">${esc(it.message)}</div>
+        ${it.reply ? `<div class="done"><b>보낸 답변</b>
+${esc(it.reply)}</div>` : ''}
+        ${replyBox(it)}
       </div>`).join('');
   } catch (e) { $('#asks').textContent = '서버에 닿지 못했습니다.'; }
 }
+
+/* ── 답변하기 ── */
+const isMail = s => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(s || '').trim());
+
+function replyBox(it) {
+  const mail = isMail(it.contact);
+  return `<details class="rep" data-row="${it.row}" data-to="${esc(it.contact)}">
+    <summary>답변하기</summary>
+    <div class="f">
+      <select data-f="status">
+        ${['접수', '답변완료', '보류', '종결'].map(v =>
+          `<option${v === (it.status || '접수') ? ' selected' : ''}>${v}</option>`).join('')}
+      </select>
+      <input type="text" data-f="memo" placeholder="내부 메모 (상대에게 안 보입니다)" value="${esc(it.memo)}">
+    </div>
+    <textarea data-f="reply" placeholder="${mail ? '답변 내용 — 메일로 그대로 갑니다' : '답변 내용 (기록만 됩니다)'}">${esc(it.reply)}</textarea>
+    <div class="f">
+      ${mail
+        ? `<label><input type="checkbox" data-f="send" checked> ${esc(it.contact)} 로 메일 보내기</label>`
+        : `<label>연락처가 메일이 아니라 기록만 됩니다 — ${esc(it.contact) || '연락처 없음'}</label>`}
+      <button class="btn pri" data-reply="1" style="margin-left:auto">저장</button>
+    </div>
+  </details>`;
+}
+
+document.addEventListener('click', async e => {
+  const b = e.target.closest('button[data-reply]');
+  if (!b) return;
+  const box = b.closest('.rep');
+  const g = f => { const el = box.querySelector(`[data-f="${f}"]`); return el ? el.value : ''; };
+  const sendEl = box.querySelector('[data-f="send"]');
+  const reply = g('reply').trim();
+  if (reply.length > 1500) { say('답변이 너무 깁니다. 1500자 안으로 줄여 주세요.'); return; }
+  if (sendEl && sendEl.checked && !reply) { say('보낼 내용이 비어 있습니다.'); return; }
+  b.disabled = true; say('저장하는 중…');
+  try {
+    const d = await call('ask_reply', {
+      row: box.dataset.row, status: g('status'), memo: g('memo'),
+      reply: reply, send: sendEl && sendEl.checked ? '1' : '0', to: box.dataset.to
+    });
+    say(d.ok ? ('저장했습니다' + (d.sent ? ' · 메일 ' + d.sent : '')) : ('실패: ' + (d.why || '알 수 없음')));
+    if (d.ok) loadAsks();
+  } catch (err) { say('서버에 닿지 못했습니다.'); }
+  b.disabled = false;
+});
 
 /* ── 페이지 공개 관리 ── */
 let STATE = {};
