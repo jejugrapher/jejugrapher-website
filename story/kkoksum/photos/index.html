@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>꽃숨 사진첩 — 함께하신 분들께 | 제주그래퍼</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6F1E7;--ink:#1B2430;--mute:#7A7267;--line:#E3DCCE;--navy:#1F3A5F;--terra:#C97B5B}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font:400 16px/1.75 "IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif;background:var(--bg);color:var(--ink);word-break:keep-all}
+nav{border-bottom:1px solid var(--line)}
+.navin{max-width:1100px;margin:0 auto;padding:0 18px;height:56px;display:flex;align-items:center;justify-content:space-between}
+nav a{color:var(--ink);text-decoration:none;font-size:.92rem}
+.logo{font-weight:700;letter-spacing:2px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 18px}
+.wrapsec{padding:26px 0 48px}
+h1{font-family:"Gowun Batang",serif;font-size:1.7rem;letter-spacing:.03em;margin-bottom:.5rem}
+.kicker{font-size:.8rem;letter-spacing:.2em;color:var(--terra);margin-bottom:.7rem}
+.note{color:var(--mute);font-size:.94rem}
+.gate{max-width:420px;margin:12vh auto;text-align:center;padding:0 18px}
+input{width:100%;padding:.75rem .9rem;border:1px solid var(--line);border-radius:10px;background:#fff;font:inherit}
+button{font:inherit;cursor:pointer}
+.btn{width:100%;margin-top:.7rem;padding:.75rem;border:0;border-radius:10px;background:var(--navy);color:#fff}
+.go{display:inline-block;padding:.6rem 1.1rem;border-radius:10px;background:var(--terra);color:#fff;text-decoration:none}
+.dwrap{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.dwrap iframe{width:100%;height:min(76vh,860px);border:0;display:block}
+footer{border-top:1px solid var(--line);padding:22px 18px 40px;color:var(--mute);font-size:.88rem;text-align:center}
+footer a{color:var(--terra)}
+</style></head><body>
+<nav><div class="navin"><a class="logo" href="/">JEJUGRAPHER</a>
+<a href="/story/kkoksum/">← 꽃숨 이야기</a></div></nav>
+
+<div id="gate" class="gate">
+  <div class="kicker">PRIVATE</div>
+  <h1>꽃숨 사진첩</h1>
+  <p class="note">2026년 10월 21일, 함께하신 분들께 드리는 사진입니다.<br>안내받은 비밀번호를 넣어 주세요.</p>
+  <form id="f" autocomplete="off" style="margin-top:1.3rem">
+    <input id="pw" type="password" inputmode="numeric" placeholder="비밀번호" aria-label="비밀번호" required>
+    <button class="btn" type="submit">열기</button>
+  </form>
+  <p id="msg" role="status" style="min-height:1.5em;margin-top:.8rem;color:var(--terra);font-size:.92rem"></p>
+</div>
+
+<div id="head" class="wrap" style="padding-top:26px;display:none">
+  <div class="kicker">2026.10.21 · 제주치유농장 꽃숨</div>
+  <h1>함께하신 분들께</h1>
+</div>
+
+<script>
+(function(){
+  var L={s:"6pfM91MKdKEJ9kMA2Q7kdQ==",i:"eDxIEeNhsjZotnHz",c:"wxz3kUlGTSIaW506ZguvQ1R+CVc+cTJ2q9pCV6d+TbGkVn2mAkn3IeiTp+4phwVvX5db6yVO0u+80P1gvr3XtMDW+6J55jJ14+3ZJTaEUcpz7S8x4oqMuWABW+RI6MaGXQgSRyNEFJ1uuQy7sVOuWcxcoB8gXNXWrgUhIxpBF1/MtCF+PJk1xLcbNUGBR6UbgZiQzssMXmC4dNQABPvk7M2SPHpYTrIZWMppobOkhwsPGRPq1XHvw12pupvnLYHzXF5mvdnP9XgmVV9DuKlbwG3XkRqqh/qoHzna+pqk0xhxCvHvmQXONvxBAq9yXEerQSdRE1Fl1k6iVIvTklXrcAHlPrnMuzsVukC9yvr7NaObvDyAYfBOYRVdjP+GBOtMlfbwAs7635aR0XwYZ73DuPTdpZxjBVNkGIpgVISb69XBmcBIMGRVgcCS3qJCo3DVsv1pYvJ6ZA8Y9pNhyh4eU0h2oRlSzxvBTqSNDEySicSj7yCS9GrBkLKi6IIA3Yv61LeXXzDAiZjHb1nV2iRmmMOMC0fobUO9ki69xKGgCPvXa3I04VKZ5+p4dMOtXsHpZBKYLY+uMf2QHFurjK67VFu16L9rcCk6MWmtLLGQWTf24qebCL+wS8o1iOMvwUAvVTvtH1uHq9hdTnt3a43Rof+TFTXPqHP8l1gcGCOX2kUEid4a8BRkZseih2/lfXUYZm/ePRTUDJzeCp3YAD3C+8duH+zsHLGvPVCPtk5C8LFGtEqdjT9B3/NT4FmR/zNc3pMsERU5NwN5d/aOXnqCrXTO4Tzjcewj78ioC/I0roECcO4MGgbz3ykjRxsFtKZK2WhdjIMNeqSwKT+RgVjJWjvuz7n9lhS4iGY4EMZ2huJFEKKdMdDcWmoyi57a8UUunhmmZXPaxZn6Yd3NaedlUWGazC2ZiN+A0CjWmk8lQWQJY26OHcSzJSWT6TNtgOMS1Wt/LDehwWn44iP4at+3Y3gi0OuQKTFLKU9W4jzg1SR/BvLzycPWwNtMIqCspUWkqDM9ffyAOMLqb/MwTiNVXELGSrF2BWtR0Vz59E1y3N0ciCEvM5htkI+aJqce6M+a+vdE21cFjNaKmLm4GwtexP7wQ9JcBgCGwzVaQstSQ3g6OVwEGz2gBcILBGzIGzNaKhG3oBigW61MgN3b6h3r7i4+viwN/Za45yuo6iDa0wt3Hw3hyln9cskoGJw2bVf2SS9VL8yfNS9PgAyP1rI/vEcgRvv6F948g5Zn2tqR5y2do4OIzreAPy0hAogm++BIcidzRJrZw75bzj655S2rqW5y+04Qc+LhiRkxz6tvkg==",n:200000};
+  var u8=function(b){return Uint8Array.from(atob(b),function(c){return c.charCodeAt(0)})};
+  async function open_(pw){
+    var k0=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);
+    var k=await crypto.subtle.deriveKey({name:"PBKDF2",salt:u8(L.s),iterations:L.n,hash:"SHA-256"},k0,
+                                        {name:"AES-GCM",length:256},false,["decrypt"]);
+    var html=new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:u8(L.i)},k,u8(L.c)));
+    document.getElementById("gate").remove();
+    document.getElementById("head").style.display="block";
+    document.getElementById("head").insertAdjacentHTML("afterend",html);
+  }
+  document.getElementById("f").addEventListener("submit",async function(e){
+    e.preventDefault();
+    var m=document.getElementById("msg"); m.textContent="여는 중…";
+    try{ await open_(document.getElementById("pw").value.trim()) }
+    catch(err){ m.textContent="비밀번호가 맞지 않습니다."; }
+  });
+})();
+</script>
+
+<footer>촬영·편집 제주그래퍼 JEJUGRAPHER · 제주치유농장 꽃숨<br>
+<a href="/story/kkoksum/">꽃숨 이야기로 돌아가기</a></footer>
+<!-- jg-copyright-notice -->
+<div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
+<div style="max-width:880px;margin:0 auto">
+<strong style="display:block;color:#F3D9A4;font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:.02em">⚠ 무단 복제 · 도용 금지 — 저작권 경고</strong>
+이 사이트의 모든 사진 · 영상 · 글 · 음악 · 디자인 · 프로그램은 <b style="color:#fff">제주그래퍼(JEJUGRAPHER)</b>와 원저작자에게 저작권이 있으며 「저작권법」의 보호를 받습니다.
+저작권자의 <b style="color:#fff">사전 서면 동의 없이</b> 복제 · 다운로드 후 재배포 · 전송 · 게시 · 편집 · 2차 가공 · 캡처 사용 · 상업적 이용 · AI 학습 데이터로 사용하는 행위를 <b style="color:#fff">엄격히 금지</b>합니다.
+사진과 영상 속 인물의 초상권도 함께 보호됩니다.
+무단 도용이 확인되면 사전 경고 없이 「저작권법」 제136조(5년 이하의 징역 또는 5천만 원 이하의 벌금)에 따른 <b style="color:#fff">형사 고소와 민사상 손해배상 청구</b>를 진행합니다.
+<span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
+</div></div>
+<!-- /jg-copyright-notice -->
+<!-- jg-guard -->
+<script>(function(){var H=location.pathname.replace(/^\/+/,"");fetch("https://script.google.com/macros/s/AKfycbwYW8zN_7UyGnbeYpf3A5hSeSp4GVTc3N3Rj3c28WgnOiAZHVDuovvn4WvN5zHE6_WV/exec?mode=state").then(function(r){return r.json()}).then(function(d){if(!d||!d.hidden||!d.hidden.length)return;var hit=d.hidden.some(function(p){p=String(p).replace(/^\/+/,"");return p&&(H===p||H===p+"index.html"||H.indexOf(p)===0)});if(!hit)return;document.title="준비 중";document.body.innerHTML='<div style="min-height:100vh;display:grid;place-items:center;text-align:center;padding:2rem;font:400 16px/1.8 \'IBM Plex Sans KR\',\'Apple SD Gothic Neo\',sans-serif;color:#1B2430">'+'<div><h1 style="font-size:1.5rem">잠시 내려 두었습니다</h1>'+'<p style="color:#6b6b6b">이 페이지는 지금 볼 수 없습니다.<br>'+'문의는 <a href="/inquiry.html" style="color:#C97B5B">문의하기</a>로 주세요.</p>'+'<p><a href="/" style="color:#C97B5B">제주그래퍼 첫 화면으로</a></p></div></div>';document.body.style.background="#F6F1E7";}).catch(function(){})})();</script>
+<!-- /jg-guard -->
+</body></html>
