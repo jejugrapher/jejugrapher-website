@@ -37,6 +37,8 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
 .state{font-size:.78rem;padding:.1rem .55rem;border-radius:999px;border:1px solid var(--line);color:var(--mute)}
 .state.hid{border-color:var(--terra);color:var(--terra)}
 .state.down{border-color:var(--warn);color:var(--warn)}
+.sub2x{margin:1.4rem 0 .6rem;font-size:.85rem;letter-spacing:.08em;color:var(--mute);
+  border-top:1px solid var(--line);padding-top:1rem}
 #say{position:sticky;bottom:0;padding:.7rem 0;color:var(--mute);font-size:.9rem;background:linear-gradient(transparent,var(--bg) 40%)}
 .hint{color:var(--mute);font-size:.86rem;margin:.2rem 0 1rem}
 .rep{margin-top:.8rem;border-top:1px solid var(--line);padding-top:.7rem}
@@ -52,11 +54,6 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
 .done{background:var(--bg);border-left:3px solid var(--ok);padding:.5rem .7rem;margin-top:.6rem;
   font-size:.9rem;white-space:pre-wrap;color:var(--ink)}
 .done b{color:var(--ok);font-weight:500}
-.pw{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:.6rem;
-    border-top:1px dashed var(--line);padding-top:.6rem}
-.pw label{font-size:.85rem;color:var(--mute)}
-.pw input{width:170px;padding:.4rem .6rem;border:1px solid var(--line);border-radius:8px;background:#fff;font:inherit}
-.pw .st{font-size:.8rem;color:var(--mute)}
 </style></head><body>
 <div class="wrap">
   <div id="gate" class="gate">
@@ -88,8 +85,12 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
       <p class="hint">
         <b>가리기</b>는 몇 초 안에 화면에서 사라집니다. 파일은 서버에 남아 있어, 주소를 아는 사람은 볼 수 있습니다.<br>
         <b>내리기</b>는 깃허브에서 실제로 페이지를 바꿉니다. 1~2분 걸리고, 사진 파일은 남습니다.<br>
-        <b>비밀번호</b>는 바꾸면 바로 적용됩니다. 참가자 사진첩처럼 비밀번호로 여는 페이지에만 해당합니다.
+        목록은 깃허브에서 그때그때 읽어 옵니다 — <b>새로 올린 페이지는 바로 여기 나타납니다.</b><br>
+        촬영 기록을 최신순으로 위에 두고, 첫 화면·가격 같은 페이지는 아래에 모았습니다.<br>
+
       </p>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:.5rem">
+        <button class="btn ghost" id="refresh">목록 새로고침</button></div>
       <div id="pages"></div>
       <div class="card">
         <div class="row"><span class="t">목록에 없는 주소</span></div>
@@ -106,7 +107,8 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
 
 <script>
 const API = "https://script.google.com/macros/s/AKfycbwYW8zN_7UyGnbeYpf3A5hSeSp4GVTc3N3Rj3c28WgnOiAZHVDuovvn4WvN5zHE6_WV/exec";
-const PAGES = [{"path": "eco/pilot/", "title": "2026 제주 생태관광주간 · 체험 평가단 시범프로그램"}, {"path": "spatial/", "title": "JEJUGRAPHER — 공간 데이터 풀스택 스튜디오"}, {"path": "spatial/whanhae-wall/", "title": "별도환해장성 디지털 트윈 — 3D 측정 · 가우시안 스플래팅 · 식생 분석"}, {"path": "spatial/whanhae-wall/report/", "title": "별도환해장성 드론 식생 분석 — 환해장성에 번지는 식물을 멀티스펙트럴로 재다"}, {"path": "story/chorok-eco/", "title": "구좌 아이들이 만든 초록별 환경놀이터 — 준비부터 하루까지"}, {"path": "story/jeju-cave-spring/", "title": "땅 아래 물길 — 제주의 어느 신비한 동굴"}, {"path": "story/kkoksum/", "title": "꽃으로 숨 쉬는 곳 — 제주치유농장 꽃숨"}, {"path": "story/kkoksum/photos/", "title": "꽃숨 사진첩 — 함께하신 분들께"}, {"path": "story/lucky/", "title": "럭키, 자연으로 — 붉은바다거북 럭키의 7년과 귀환"}];
+const REPO = 'jejugrapher/jejugrapher-website';
+let PAGES = [];
 let KEY = null;
 
 const $ = s => document.querySelector(s);
@@ -131,6 +133,10 @@ function setTab(n) {
 }
 $('#t1').addEventListener('click', () => setTab(1));
 $('#t2').addEventListener('click', () => setTab(2));
+$('#refresh').addEventListener('click', async () => {
+  PAGES = []; try { sessionStorage.removeItem('jg-pages'); } catch (e) {}
+  $('#pages').textContent = '다시 읽는 중…'; await loadPages(); say('목록을 다시 읽었습니다.');
+});
 
 /* ── 들어가기 ── */
 $('#gf').addEventListener('submit', async e => {
@@ -226,51 +232,71 @@ document.addEventListener('click', async e => {
   b.disabled = false;
 });
 
-/* ── 페이지 비밀번호 ── */
-let PW = {};
-function pwRow(path) {
-  const r = PW[path];
-  if (!r) return `<div class="pw"><label>비밀번호 없음 — 넣으면 잠깁니다</label>
-    <input type="text" data-pw="${esc(path)}" placeholder="비밀번호">
-    <button class="btn" data-pwset="${esc(path)}">저장</button></div>`;
-  return `<div class="pw"><label>비밀번호</label>
-    <input type="text" data-pw="${esc(path)}" value="${esc(r.pw)}">
-    <button class="btn" data-pwset="${esc(path)}">바꾸기</button>
-    <span class="st">${r.at ? new Date(r.at).toLocaleDateString('ko-KR') + ' 바뀜' : ''}${r.has ? '' : ' · 보여줄 내용이 비어 있습니다'}</span></div>`;
-}
-document.addEventListener('click', async e => {
-  const b = e.target.closest('button[data-pwset]');
-  if (!b) return;
-  const path = b.dataset.pwset;
-  const el = document.querySelector(`input[data-pw="${CSS.escape(path)}"]`);
-  const pw = (el ? el.value : '').trim();
-  if (!pw) { say('비밀번호를 적어 주세요.'); return; }
-  b.disabled = true; say('저장하는 중…');
-  try {
-    const d = await call('pw_set', { path, pw });
-    say(d.ok ? `비밀번호를 바꿨습니다 — /${path}` : `실패: ${d.why || '알 수 없음'}`);
-    if (d.ok) loadPages();
-  } catch (err) { say('서버에 닿지 못했습니다.'); }
-  b.disabled = false;
-});
+/* ── 페이지 목록 — 깃허브에서 그때그때 읽어 온다 (올리면 바로 보임) ── */
+const SKIP = /^(admin\.html|card\/|games\/|404\.html)/;
+const DATE = /(20\d\d)[.\-년\s]+(\d{1,2})[.\-월\s]+(\d{1,2})/;
+// 촬영 기록 페이지 — 이것만 날짜로 줄 세운다. 나머지(첫 화면·가격 등)는 아래에
+const SHOT = /^(story\/|spatial\/|eco\/g\/|eco\/pilot\/|byeolbam\/g\/|sound\/g\/|run\/g\/)/;
 
-/* ── 페이지 공개 관리 ── */
+async function fetchPages(force) {
+  if (!force) {
+    try {
+      const c = JSON.parse(sessionStorage.getItem('jg-pages') || 'null');
+      if (c && c.t > Date.now() - 30*60*1000) return c.v;
+    } catch (e) {}
+  }
+  const r = await fetch(`https://api.github.com/repos/${REPO}/git/trees/main?recursive=1`);
+  const t = (await r.json()).tree || [];
+  const paths = t.map(x => x.path)
+    .filter(p => p.endsWith('.html') && !p.includes('원본') && !SKIP.test(p));
+  // 페이지 주소로 바꾸기 — index.html 은 폴더로
+  const list = paths.map(p => ({ file: p, path: p.replace(/index\.html$/, '') }));
+  // 각 페이지에서 제목과 촬영 날짜를 읽어 최신 촬영이 위로
+  await Promise.all(list.map(async it => {
+    try {
+      const h = await (await fetch('/' + it.file, {cache:'no-cache'})).text();
+      const t = h.match(/<title>([^<]*)<\/title>/);
+      it.title = t ? t[1].replace(/\s*\|.*$/, '').trim() : it.path;
+      // 페이지 전체에서 가장 늦은 날짜를 촬영일로 본다 (크레딧이 글 끝에 있는 경우가 많다)
+      let best = '';
+      for (const m of h.matchAll(new RegExp(DATE, 'g'))) {
+        const mo = +m[2], da = +m[3];
+        if (mo < 1 || mo > 12 || da < 1 || da > 31) continue;
+        const d = `${m[1]}-${String(mo).padStart(2,'0')}-${String(da).padStart(2,'0')}`;
+        if (d > best) best = d;
+      }
+      it.date = best;
+    } catch (e) { it.title = it.path; it.date = ''; }
+  }));
+  list.forEach(it => { it.shot = SHOT.test(it.file); if (!it.shot) it.date = ''; });
+  list.sort((a, b) => (b.shot - a.shot)
+    || (b.date || '').localeCompare(a.date || '')
+    || a.path.localeCompare(b.path));
+  try { sessionStorage.setItem('jg-pages', JSON.stringify({t: Date.now(), v: list})); } catch (e) {}
+  return list;
+}
+
 let STATE = {};
 async function loadPages() {
+  if (!PAGES.length) {
+    $('#pages').textContent = '페이지 목록을 불러오는 중…';
+    try { PAGES = await fetchPages(); }
+    catch (e) { $('#pages').textContent = '깃허브에서 목록을 읽지 못했습니다.'; return; }
+  }
   try {
     const d = await call('admin_state');
     STATE = {};
     (d.items || []).forEach(r => { STATE[r.path.replace(/^\/+/, '')] = r; });
   } catch (e) {}
-  try {
-    const d = await call('pw_list');
-    PW = {};
-    (d.items || []).forEach(r => { PW[r.path.replace(/^\/+/, '')] = r; });
-  } catch (e) {}
+
+  let shown = true;
   $('#pages').innerHTML = PAGES.map(p => {
+    let sep = '';
+    if (shown && !p.shot) { shown = false;
+      sep = '<div class="sub2x">그 밖의 페이지</div>'; }
     const s = STATE[p.path] || {};
-    return `<div class="card"><div class="row">
-      <div><div class="t">${esc(p.title)}
+    return sep + `<div class="card"><div class="row">
+      <div><div class="t">${p.date ? `<span style="color:var(--mute);font-size:.82rem">${esc(p.date)}</span>  ` : ''}${esc(p.title)}
         ${s.hidden ? '<span class="state hid">가려짐</span>' : ''}
         ${s.down ? '<span class="state down">내려짐</span>' : ''}</div>
         <div class="p">/${esc(p.path)}</div></div>
@@ -278,7 +304,7 @@ async function loadPages() {
         <button class="btn" data-act="${s.hidden ? 'show' : 'hide'}" data-path="${esc(p.path)}">${s.hidden ? '다시 보이기' : '가리기'}</button>
         <button class="btn ${s.down ? '' : 'warn'}" data-act="${s.down ? 'republish' : 'unpublish'}" data-path="${esc(p.path)}">${s.down ? '되돌리기' : '내리기'}</button>
       </div></div>
-      ${pwRow(p.path)}</div>`;
+      </div>`;
   }).join('');
 }
 
