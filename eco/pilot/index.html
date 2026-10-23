@@ -135,7 +135,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 .hero::after{background:linear-gradient(180deg,rgba(8,14,24,.08) 0%,rgba(8,14,24,0) 45%,rgba(8,14,24,.58) 100%),linear-gradient(90deg,rgba(8,14,24,.35) 0%,rgba(8,14,24,0) 55%)}
 @media (prefers-reduced-motion:reduce){.hero>img.hs{animation:none;opacity:0}.hero>img.hs:nth-of-type(1){opacity:1}}
 
-/* 영상·사진 보기 */
+/* 3D 모델 섬네일 */
+.vt .th i.d3{background:var(--forest)}
+.vt .mv{font:400 .78rem var(--mono);color:var(--mute)}
+a.vt:hover b{text-decoration:underline;text-underline-offset:3px}
+
+/* 포트폴리오 */
 .tabs{position:sticky;top:64px;z-index:15;background:rgba(248,244,236,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
 .tabs .wrap{display:flex;flex-wrap:wrap;gap:.45rem;padding:.7rem 0}
 .tabs a{font:500 .9rem var(--sans);padding:.5em 1em;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--navy);white-space:nowrap}
@@ -213,7 +218,7 @@ a.pgim:hover img{transform:scale(1.04)}
       <a href="/index.html#web">웹·체험 제작</a>
       <a href="/aiclass.html">AI 강의</a>
       <a href="/byeolbam.html">별밤사진관</a>
-      <a href="/media.html" aria-current="page">영상·사진 보기</a>
+      <a href="/media.html" aria-current="page">포트폴리오</a>
       <a href="/price.html">가격 안내</a>
       <a href="https://jajumap.com" target="_blank" rel="noopener">제주맵 ↗</a>
       <a href="/inquiry.html">문의</a>
@@ -249,7 +254,7 @@ a.pgim:hover img{transform:scale(1.04)}
     </dl>
   </div>
 
-  <a class="pback" href="/media.html#eco">← 영상 · 사진 보기로 돌아가기</a>
+  <a class="pback" href="/media.html#eco">← 포트폴리오로 돌아가기</a>
 </div></section>
 </main>
 <dialog id="yt" aria-label="영상 보기">
