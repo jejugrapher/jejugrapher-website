@@ -25,6 +25,8 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
 .tabs{display:flex;gap:8px;margin:18px 0}
 .tabs button{flex:1;padding:.6rem;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;color:var(--mute)}
 .tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.state.lock{background:#2E4A6B;color:#fff}
+.state.lock2{background:#EFE7D6;color:#6B5A3E;border:1px solid #DCCBA8}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px}
 .meta{display:flex;flex-wrap:wrap;gap:.5rem 1rem;font-size:.82rem;color:var(--mute);margin-bottom:.5rem}
 .tag{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:.1rem .6rem;font-size:.78rem}
@@ -87,6 +89,9 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
         <b>내리기</b>는 깃허브에서 실제로 페이지를 바꿉니다. 1~2분 걸리고, 사진 파일은 남습니다.<br>
         목록은 깃허브에서 그때그때 읽어 옵니다 — <b>새로 올린 페이지는 바로 여기 나타납니다.</b><br>
         촬영 기록을 최신순으로 위에 두고, 첫 화면·가격 같은 페이지는 아래에 모았습니다.<br>
+        <span class="state lock">🔒 비밀번호 · 본문 암호화</span> 는 비밀번호 없이는 <b>아무것도 보이지 않습니다</b>.
+        <span class="state lock2">🔑 비밀번호</span> 는 화면만 가리는 것이라, 사진 주소를 아는 사람은 볼 수 있습니다.
+        비밀번호 자체는 어디에도 저장하지 않습니다.<br>
 
       </p>
       <div style="display:flex;justify-content:flex-end;margin-bottom:.5rem">
@@ -237,6 +242,9 @@ const SKIP = /^(admin\.html|card\/|games\/|404\.html)/;
 const DATE = /(20\d\d)[.\-년\s]+(\d{1,2})[.\-월\s]+(\d{1,2})/;
 // 촬영 기록 페이지 — 이것만 날짜로 줄 세운다. 나머지(첫 화면·가격 등)는 아래에
 const SHOT = /^(story\/|spatial\/|eco\/g\/|eco\/pilot\/|byeolbam\/g\/|sound\/g\/|run\/g\/)/;
+// 비밀번호 가림막이 있는 페이지인지 — 가림막 자체를 집는다.
+// (문의 페이지의 '비밀글' 비밀번호 칸은 가림막이 아니므로 걸리지 않는다)
+const GATE = /class="(?:gate|gate-box|lockwrap)"|id="(?:pwf|lkf|locked)"/;
 
 async function fetchPages(force) {
   if (!force) {
@@ -266,7 +274,9 @@ async function fetchPages(force) {
         if (d > best) best = d;
       }
       it.date = best;
-    } catch (e) { it.title = it.path; it.date = ''; }
+      // PBKDF2 가 있으면 본문을 통째로 암호화한 것, 없으면 화면만 가리는 가림막
+      it.lock = /PBKDF2/.test(h) ? 'enc' : (GATE.test(h) ? 'gate' : '');
+    } catch (e) { it.title = it.path; it.date = ''; it.lock = ''; }
   }));
   list.forEach(it => { it.shot = SHOT.test(it.file); if (!it.shot) it.date = ''; });
   list.sort((a, b) => (b.shot - a.shot)
@@ -297,6 +307,8 @@ async function loadPages() {
     const s = STATE[p.path] || {};
     return sep + `<div class="card"><div class="row">
       <div><div class="t">${p.date ? `<span style="color:var(--mute);font-size:.82rem">${esc(p.date)}</span>  ` : ''}${esc(p.title)}
+        ${p.lock === 'enc' ? '<span class="state lock" title="비밀번호 없이는 내용이 보이지 않습니다 (본문 암호화)">🔒 비밀번호 · 본문 암호화</span>' : ''}
+        ${p.lock === 'gate' ? '<span class="state lock2" title="화면은 가리지만, 사진 주소 같은 일부는 소스에 남습니다">🔑 비밀번호</span>' : ''}
         ${s.hidden ? '<span class="state hid">가려짐</span>' : ''}
         ${s.down ? '<span class="state down">내려짐</span>' : ''}</div>
         <div class="p">/${esc(p.path)}</div></div>
