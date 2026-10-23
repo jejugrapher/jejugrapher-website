@@ -34,6 +34,7 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
 .pwrow{display:flex;gap:8px;align-items:center;margin-top:.7rem;padding-top:.7rem;border-top:1px dashed var(--line);flex-wrap:wrap}
 .pwrow .pwlab{font-size:.84rem;color:var(--mute)}
 .pwrow .pwval{font-family:ui-monospace,monospace;font-size:.95rem;background:var(--bg);padding:.2em .6em;border-radius:6px;border:1px solid var(--line)}
+.pwrow .pwnote{font-size:.76rem;color:var(--mute);background:#F2EFE8;padding:.15em .5em;border-radius:5px}
 .pwrow .pwin{flex:1;min-width:170px;padding:.45em .7em;border:1px solid var(--line);border-radius:8px;font:inherit}
 .pwrow .btn.open{margin-left:auto;background:var(--navy);color:#fff;border-color:var(--navy)}
 .pwrow .btn.open:disabled{background:#fff;color:var(--mute)}
@@ -307,7 +308,30 @@ async function fetchPages(force) {
       it.date = best;
       // PBKDF2 가 있으면 본문을 통째로 암호화한 것, 없으면 화면만 가리는 가림막
       it.lock = /PBKDF2/.test(h) ? 'enc' : (GATE.test(h) ? 'gate' : '');
-    } catch (e) { it.title = it.path; it.date = ''; it.lock = ''; }
+      // 사진첩 비밀번호는 대개 촬영 날짜입니다 — 페이지에 적힌 날짜를 맞춰 보고 맞으면 그대로 채웁니다.
+      // (페이지에 이미 보이는 값 하나를 확인하는 것이라, 비밀번호를 알아내는 게 아닙니다.)
+      it.pw = '';
+      if (it.lock === 'gate') {
+        const hm = h.match(/PW_HASH\s*=\s*"([0-9a-f]{64})"/);
+        if (hm) {
+          const cands = new Set();
+          // ① 페이지에 적힌 날짜 → YYMMDD
+          for (const m of h.matchAll(new RegExp(DATE, 'g'))) {
+            const mo = +m[2], da = +m[3];
+            if (mo < 1 || mo > 12 || da < 1 || da > 31) continue;
+            cands.add(`${m[1].slice(2)}${String(mo).padStart(2,'0')}${String(da).padStart(2,'0')}`);
+          }
+          // ② 페이지에 실제로 나오는 6자리·8자리 숫자 (gate 스크립트 자체의 값은 뺀다)
+          const body = h.replace(/<script[\s\S]*?<\/script>/g, ' ');
+          for (const m of body.matchAll(/(\d{8}|\d{6})/g)) {
+            const d = m[1]; cands.add(d.length === 8 ? d.slice(2) : d);
+          }
+          for (const c of cands) {
+            if ((await sha256('byeolbam-pw:' + c)) === hm[1]) { it.pw = c; break; }
+          }
+        }
+      }
+    } catch (e) { it.title = it.path; it.date = ''; it.lock = ''; it.pw = ''; }
   }));
   list.forEach(it => { it.shot = SHOT.test(it.file); if (!it.shot) it.date = ''; });
   list.sort((a, b) => (b.shot - a.shot)
@@ -366,9 +390,11 @@ function pwRow(p) {
   const kind = p.lock === 'enc'
     ? '본문이 암호화되어 있어 비밀번호가 있어야 열립니다'
     : '화면만 가리는 방식이라 비밀번호로 엽니다';
-  return `<div class="pwrow" data-pwpath="${esc(p.path)}" title="${kind}">
+  const auto = p.pw ? ` data-derived="${esc(p.pw)}"` : '';
+  return `<div class="pwrow" data-pwpath="${esc(p.path)}"${auto} title="${kind}">
     <span class="pwlab">비밀번호</span>
     <code class="pwval" data-role="val">—</code>
+    <span class="pwnote" data-role="note"></span>
     <input class="pwin" data-role="in" type="text" placeholder="여기에 한 번만 넣어 두세요" autocomplete="off">
     <button class="btn" data-role="see">보기</button>
     <button class="btn" data-role="save">저장</button>
@@ -376,17 +402,21 @@ function pwRow(p) {
     <button class="btn open" data-role="open">바로 열기 ↗</button>
   </div>`;
 }
-/* 저장 상태에 맞춰 각 줄의 보임/숨김을 칠한다 */
+/* 저장 상태에 맞춰 각 줄의 보임/숨김을 칠한다.
+   사진첩은 촬영 날짜에서 비밀번호를 자동으로 채우고(data-derived), 그 밖은 한 번 넣으면 기억한다. */
+function pwOf(row) { return pwBook()[row.dataset.pwpath] || row.dataset.derived || ''; }
 function paintPw() {
-  const book = pwBook();
   document.querySelectorAll('.pwrow').forEach(row => {
-    const path = row.dataset.pwpath, has = !!book[path], shown = row.dataset.shown === '1';
+    const pw = pwOf(row), has = !!pw, shown = row.dataset.shown === '1';
+    const saved = !!pwBook()[row.dataset.pwpath], auto = !saved && !!row.dataset.derived;
     const q = r => row.querySelector(`[data-role="${r}"]`);
-    q('val').textContent = has ? (shown ? book[path] : '•'.repeat(Math.min(book[path].length, 8))) : '—';
+    q('val').textContent = has ? (shown ? pw : '•'.repeat(Math.min(pw.length, 8))) : '—';
     q('val').style.display = has ? '' : 'none';
+    q('note').textContent = auto ? '촬영 날짜' : '';
+    q('note').style.display = auto ? '' : 'none';
     q('see').textContent = shown ? '숨기기' : '보기';
     q('see').style.display = has ? '' : 'none';
-    q('forget').style.display = has ? '' : 'none';
+    q('forget').style.display = saved ? '' : 'none';   /* 자동값은 지울 게 없다 */
     q('in').style.display = has ? 'none' : '';
     q('save').style.display = has ? 'none' : '';
     q('open').disabled = !has;
@@ -401,7 +431,7 @@ document.addEventListener('click', async e => {
   else if (role === 'forget') { pwSave(path, ''); row.dataset.shown = ''; paintPw(); }
   else if (role === 'see') { row.dataset.shown = row.dataset.shown === '1' ? '' : '1'; paintPw(); }
   else if (role === 'open') {
-    const pw = pwBook()[path]; if (!pw) { say('먼저 비밀번호를 넣어 주세요.'); return; }
+    const pw = pwOf(row); if (!pw) { say('먼저 비밀번호를 넣어 주세요.'); return; }
     try { await navigator.clipboard.writeText(pw); } catch (e) {}   /* 자동 입력이 막혀도 붙여넣기 한 번이면 되게 */
     window.open('/' + path + '#pw=' + encodeURIComponent(pw), '_blank', 'noopener');
   }
