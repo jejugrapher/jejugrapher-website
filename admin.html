@@ -31,6 +31,12 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
 .ck.warn{background:#FBF1E3;color:#8A5A1E}
 .ck.info{background:#F2EFE8;color:#6E675C}
 .ck.bad{background:#F7E6E2;color:#B3452F;font-weight:600}
+.pwrow{display:flex;gap:8px;align-items:center;margin-top:.7rem;padding-top:.7rem;border-top:1px dashed var(--line);flex-wrap:wrap}
+.pwrow .pwlab{font-size:.84rem;color:var(--mute)}
+.pwrow .pwval{font-family:ui-monospace,monospace;font-size:.95rem;background:var(--bg);padding:.2em .6em;border-radius:6px;border:1px solid var(--line)}
+.pwrow .pwin{flex:1;min-width:170px;padding:.45em .7em;border:1px solid var(--line);border-radius:8px;font:inherit}
+.pwrow .btn.open{margin-left:auto;background:var(--navy);color:#fff;border-color:var(--navy)}
+.pwrow .btn.open:disabled{background:#fff;color:var(--mute)}
 .pwtest{display:flex;gap:8px;align-items:center;margin-top:.7rem;flex-wrap:wrap}
 .pwtest input{flex:1;min-width:190px;padding:.5em .7em;border:1px solid var(--line);border-radius:8px;font:inherit}
 .pwtest .res{font-size:.88rem;color:var(--mute)}
@@ -341,9 +347,65 @@ async function loadPages() {
         <button class="btn" data-act="${s.hidden ? 'show' : 'hide'}" data-path="${esc(p.path)}">${s.hidden ? '다시 보이기' : '가리기'}</button>
         <button class="btn ${s.down ? '' : 'warn'}" data-act="${s.down ? 'republish' : 'unpublish'}" data-path="${esc(p.path)}">${s.down ? '되돌리기' : '내리기'}</button>
       </div></div>
+      ${p.lock ? pwRow(p) : ''}
       </div>`;
   }).join('');
+  paintPw();
 }
+
+/* ── 비밀번호 보관함 ──────────────────────────────────────────
+   비밀번호는 이 브라우저에만(localStorage) 저장합니다. 사이트 소스에는 들어가지 않습니다.
+   한 번 넣어 두면 다음부터는 찾지 않아도 보이고, 「바로 열기」로 한 번에 엽니다. */
+function pwBook() { try { return JSON.parse(localStorage.getItem('jg-pwbook') || '{}'); } catch (e) { return {}; } }
+function pwSave(path, v) {
+  const b = pwBook();
+  if (v) b[path] = v; else delete b[path];
+  try { localStorage.setItem('jg-pwbook', JSON.stringify(b)); } catch (e) {}
+}
+function pwRow(p) {
+  const kind = p.lock === 'enc'
+    ? '본문이 암호화되어 있어 비밀번호가 있어야 열립니다'
+    : '화면만 가리는 방식이라 비밀번호로 엽니다';
+  return `<div class="pwrow" data-pwpath="${esc(p.path)}" title="${kind}">
+    <span class="pwlab">비밀번호</span>
+    <code class="pwval" data-role="val">—</code>
+    <input class="pwin" data-role="in" type="text" placeholder="여기에 한 번만 넣어 두세요" autocomplete="off">
+    <button class="btn" data-role="see">보기</button>
+    <button class="btn" data-role="save">저장</button>
+    <button class="btn" data-role="forget">지우기</button>
+    <button class="btn open" data-role="open">바로 열기 ↗</button>
+  </div>`;
+}
+/* 저장 상태에 맞춰 각 줄의 보임/숨김을 칠한다 */
+function paintPw() {
+  const book = pwBook();
+  document.querySelectorAll('.pwrow').forEach(row => {
+    const path = row.dataset.pwpath, has = !!book[path], shown = row.dataset.shown === '1';
+    const q = r => row.querySelector(`[data-role="${r}"]`);
+    q('val').textContent = has ? (shown ? book[path] : '•'.repeat(Math.min(book[path].length, 8))) : '—';
+    q('val').style.display = has ? '' : 'none';
+    q('see').textContent = shown ? '숨기기' : '보기';
+    q('see').style.display = has ? '' : 'none';
+    q('forget').style.display = has ? '' : 'none';
+    q('in').style.display = has ? 'none' : '';
+    q('save').style.display = has ? 'none' : '';
+    q('open').disabled = !has;
+    q('open').title = has ? '' : '먼저 비밀번호를 한 번 넣어 주세요';
+  });
+}
+document.addEventListener('click', async e => {
+  const b = e.target.closest('.pwrow [data-role]'); if (!b) return;
+  const row = b.closest('.pwrow'), path = row.dataset.pwpath, role = b.dataset.role;
+  if (role === 'save') { const v = row.querySelector('[data-role="in"]').value.trim();
+    if (!v) { say('비밀번호를 넣어 주세요.'); return; } pwSave(path, v); say('이 브라우저에 저장했습니다.'); paintPw(); }
+  else if (role === 'forget') { pwSave(path, ''); row.dataset.shown = ''; paintPw(); }
+  else if (role === 'see') { row.dataset.shown = row.dataset.shown === '1' ? '' : '1'; paintPw(); }
+  else if (role === 'open') {
+    const pw = pwBook()[path]; if (!pw) { say('먼저 비밀번호를 넣어 주세요.'); return; }
+    try { await navigator.clipboard.writeText(pw); } catch (e) {}   /* 자동 입력이 막혀도 붙여넣기 한 번이면 되게 */
+    window.open('/' + path + '#pw=' + encodeURIComponent(pw), '_blank', 'noopener');
+  }
+});
 
 document.addEventListener('click', async e => {
   const b = e.target.closest('button[data-act]');
