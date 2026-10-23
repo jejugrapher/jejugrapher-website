@@ -29,6 +29,7 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
 .ck{font-size:.86rem;padding:.3em .6em;border-radius:7px}
 .ck.ok{background:#EAF3EE;color:#2E7D5B}
 .ck.warn{background:#FBF1E3;color:#8A5A1E}
+.ck.info{background:#F2EFE8;color:#6E675C}
 .ck.bad{background:#F7E6E2;color:#B3452F;font-weight:600}
 .pwtest{display:flex;gap:8px;align-items:center;margin-top:.7rem;flex-wrap:wrap}
 .pwtest input{flex:1;min-width:190px;padding:.5em .7em;border:1px solid var(--line);border-radius:8px;font:inherit}
@@ -97,7 +98,9 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
         비밀번호가 걸린 페이지를 <b>지금 올라가 있는 주소에서 직접 받아</b> 검사합니다. 보고를 믿지 않고 실제 파일을 봅니다.<br>
         <span class="state lock">🔒 본문 암호화</span> 는 암호문을 꺼내 <b>PBKDF2 20만 회 + AES-GCM 으로 실제로 풀어</b> 봅니다.
         <span class="state lock2">🔑 사진첩</span> 은 비밀번호 해시를 맞춰 봅니다.<br>
-        <b>비밀번호는 이 브라우저 밖으로 나가지 않습니다.</b> 서버로 보내지도, 저장하지도 않습니다.
+        <b>비밀번호는 이 브라우저 밖으로 나가지 않습니다.</b> 서버로 보내지도, 저장하지도 않습니다.<br>
+        두 가지는 지키는 수준이 다릅니다. <span class="state lock">🔒 본문 암호화</span> 는 새면 안 되는 것이라 어긋나면 경고로 올리고,
+        <span class="state lock2">🔑 사진첩</span> 은 함께한 분들만 보시라고 <b>가볍게 가리는 것</b>이라 사실만 회색으로 적습니다.
       </p>
       <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:.5rem">
         <button class="btn ghost" id="auditRun">점검 실행</button></div>
@@ -398,7 +401,7 @@ async function runAudit() {
   try { sitemap = await (await fetch('/sitemap.xml', {cache:'no-cache'})).text(); } catch (e) {}
 
   AUDIT_ROWS = await Promise.all(targets.map(async t => {
-    const r = { page: t, ok: [], warn: [], bad: [] };
+    const r = { page: t, ok: [], info: [], warn: [], bad: [] };
     let h = '';
     try { h = await (await fetch('/' + t.file, {cache:'no-cache'})).text(); }
     catch (e) { r.bad.push('페이지를 받지 못했습니다'); return r; }
@@ -429,18 +432,19 @@ async function runAudit() {
         }
         for (const v of seen) {
           if ((await sha256('byeolbam-pw:' + normDate(v))) !== hm[1]) continue;
-          r.bad.push(`비밀번호가 이 페이지에 적힌 촬영 날짜(${normDate(v)})와 같습니다 — 날짜를 아는 사람은 누구나 열 수 있습니다`);
+          r.info.push(`비밀번호 = 촬영 날짜 ${normDate(v)} — 함께한 분들이 기억하기 쉬운 값입니다`);
           break;
         }
       }
       else r.bad.push('가림막을 찾지 못했습니다 — 잠겨 있지 않을 수 있습니다');
       const ids = (h.match(DRIVERE) || []);
-      if (ids.length) r.warn.push(`사진 주소 ${new Set(ids).size}개가 소스에 그대로 있습니다 (화면만 가리는 방식)`);
+      if (ids.length) r.info.push(`사진 주소 ${new Set(ids).size}개가 소스에 있습니다 — 화면만 가리는 방식입니다`);
     }
 
     const url = '/' + t.path;
     if (sitemap) {
-      if (sitemap.includes(t.path)) r.warn.push('검색 목록(sitemap)에 올라가 있습니다');
+      if (sitemap.includes(t.path))
+        (t.lock === 'enc' ? r.warn : r.info).push('검색 목록(sitemap)에 올라가 있습니다');
       else r.ok.push('검색 목록에서 빠져 있습니다');
     }
     return r;
@@ -462,7 +466,7 @@ function auditCard(r, idx) {
   return `<div class="card">
     <div class="row"><div><div class="t">${esc(p.title)} ${badge}</div>
       <div class="p">/${esc(p.path)}</div></div></div>
-    <div class="cks">${li('bad', r.bad)}${li('warn', r.warn)}${li('ok', r.ok)}</div>
+    <div class="cks">${li('bad', r.bad)}${li('warn', r.warn)}${li('ok', r.ok)}${li('info', r.info)}</div>
     ${test}</div>`;
 }
 function renderAudit() {
@@ -471,7 +475,8 @@ function renderAudit() {
   $('#audit').innerHTML =
     `<p class="hint">${AUDIT_ROWS.length}곳을 봤습니다. ` +
     (bad ? `<b style="color:var(--warn)">문제 ${bad}곳</b> · ` : '문제 없음 · ') +
-    (warn ? `살펴볼 곳 ${warn}곳` : '살펴볼 곳 없음') + '</p>' +
+    (warn ? `살펴볼 곳 ${warn}곳` : '살펴볼 곳 없음') +
+    ' — 사진첩은 가볍게 가리는 것이 본래 의도이므로, 그쪽 설명은 회색으로만 적었습니다.</p>' +
     AUDIT_ROWS.map(auditCard).join('');
 }
 
