@@ -146,6 +146,7 @@ const API = "https://script.google.com/macros/s/AKfycbwYW8zN_7UyGnbeYpf3A5hSeSp4
 const REPO = 'jejugrapher/jejugrapher-website';
 let PAGES = [];
 let KEY = null;
+let PWSHEET = {};   // 「비밀번호」 시트에서 읽어 온 값 (문의와 같은 시트, 관리자 열쇠로만)
 
 const $ = s => document.querySelector(s);
 const say = t => { $('#say').textContent = t || ''; };
@@ -353,6 +354,10 @@ async function loadPages() {
     STATE = {};
     (d.items || []).forEach(r => { STATE[r.path.replace(/^\/+/, '')] = r; });
   } catch (e) {}
+  try {                                   // 비밀번호 시트 읽기 (문의와 같은 시트)
+    const d = await call('pw_list');
+    if (d && d.ok) PWSHEET = d.items || {};
+  } catch (e) {}
 
   let shown = true;
   $('#pages').innerHTML = PAGES.map(p => {
@@ -404,19 +409,21 @@ function pwRow(p) {
 }
 /* 저장 상태에 맞춰 각 줄의 보임/숨김을 칠한다.
    사진첩은 촬영 날짜에서 비밀번호를 자동으로 채우고(data-derived), 그 밖은 한 번 넣으면 기억한다. */
-function pwOf(row) { return pwBook()[row.dataset.pwpath] || row.dataset.derived || ''; }
+/* 값의 출처: 비밀번호 시트 > 이 브라우저 임시저장 > 촬영 날짜 자동 */
+function pwOf(row) { const p = row.dataset.pwpath; return PWSHEET[p] || pwBook()[p] || row.dataset.derived || ''; }
+function pwSrc(row) { const p = row.dataset.pwpath;
+  if (PWSHEET[p]) return 'sheet'; if (pwBook()[p]) return 'local'; if (row.dataset.derived) return 'date'; return ''; }
 function paintPw() {
   document.querySelectorAll('.pwrow').forEach(row => {
-    const pw = pwOf(row), has = !!pw, shown = row.dataset.shown === '1';
-    const saved = !!pwBook()[row.dataset.pwpath], auto = !saved && !!row.dataset.derived;
+    const pw = pwOf(row), has = !!pw, shown = row.dataset.shown === '1', src = pwSrc(row);
     const q = r => row.querySelector(`[data-role="${r}"]`);
     q('val').textContent = has ? (shown ? pw : '•'.repeat(Math.min(pw.length, 8))) : '—';
     q('val').style.display = has ? '' : 'none';
-    q('note').textContent = auto ? '촬영 날짜' : '';
-    q('note').style.display = auto ? '' : 'none';
+    q('note').textContent = src === 'date' ? '촬영 날짜' : src === 'local' ? '이 브라우저만 (저장 안 됨)' : '';
+    q('note').style.display = q('note').textContent ? '' : 'none';
     q('see').textContent = shown ? '숨기기' : '보기';
     q('see').style.display = has ? '' : 'none';
-    q('forget').style.display = saved ? '' : 'none';   /* 자동값은 지울 게 없다 */
+    q('forget').style.display = (src === 'sheet' || src === 'local') ? '' : 'none';
     q('in').style.display = has ? 'none' : '';
     q('save').style.display = has ? 'none' : '';
     q('open').disabled = !has;
@@ -427,8 +434,16 @@ document.addEventListener('click', async e => {
   const b = e.target.closest('.pwrow [data-role]'); if (!b) return;
   const row = b.closest('.pwrow'), path = row.dataset.pwpath, role = b.dataset.role;
   if (role === 'save') { const v = row.querySelector('[data-role="in"]').value.trim();
-    if (!v) { say('비밀번호를 넣어 주세요.'); return; } pwSave(path, v); say('이 브라우저에 저장했습니다.'); paintPw(); }
-  else if (role === 'forget') { pwSave(path, ''); row.dataset.shown = ''; paintPw(); }
+    if (!v) { say('비밀번호를 넣어 주세요.'); return; }
+    pwSave(path, v); PWSHEET[path] = v; paintPw();                /* 바로 보이게 */
+    say('저장하는 중…');
+    try { const d = await call('pw_set', { path: path, pw: v });
+      say(d && d.ok ? '비밀번호 시트에 저장했습니다.' : '시트 저장 실패 — 이 브라우저에만 남았습니다.'); }
+    catch (e) { say('시트 저장 실패 — 이 브라우저에만 남았습니다.'); }
+    paintPw(); }
+  else if (role === 'forget') {
+    pwSave(path, ''); delete PWSHEET[path]; row.dataset.shown = ''; paintPw();
+    try { await call('pw_set', { path: path, pw: '' }); } catch (e) {} }
   else if (role === 'see') { row.dataset.shown = row.dataset.shown === '1' ? '' : '1'; paintPw(); }
   else if (role === 'open') {
     const pw = pwOf(row); if (!pw) { say('먼저 비밀번호를 넣어 주세요.'); return; }
