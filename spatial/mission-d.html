@@ -4,12 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MISSION D · 농림수산업 — JEJUGRAPHER</title>
-<meta name="description" content="농업·임업·수산업 영역의 정량 데이터 컨설팅">
+<meta name="description" content="농업·임업·수산업 영역의 정량 데이터 컨설팅. 비접촉 계측으로 가축·작물·현장을 수치로 남깁니다.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./style.css">
-
+<style>
+  .d-area-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+  .d-area-card { display: block; padding: 0; background: var(--bg-main); border-radius: 14px; border: 1px solid var(--border-line); text-decoration: none; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; overflow: hidden; }
+  .d-area-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-deep); border-color: var(--accent-sage); color: inherit; }
+  .d-area-icon-row { padding: 1.5rem 1.75rem 1rem; display: flex; align-items: center; gap: 0.875rem; }
+  .d-area-icon { font-size: 1.75rem; line-height: 1; }
+  .d-area-num { font-family: 'Noto Serif KR', serif; font-size: 0.6875rem; letter-spacing: 0.18em; color: var(--accent-terracotta); font-weight: 600; }
+  .d-area-name { font-family: 'Noto Serif KR', serif; font-size: 1.1875rem; font-weight: 500; color: var(--text-main); margin-bottom: 0.625rem; padding: 0 1.75rem; }
+  .d-area-desc { font-size: 0.875rem; color: var(--text-soft); padding: 0 1.75rem; line-height: 1.65; margin-bottom: 1rem; }
+  .d-area-stats { padding: 1rem 1.75rem; background: var(--bg-soft); border-top: 1px solid var(--border-line); display: flex; gap: 1.25rem; flex-wrap: wrap; }
+  .d-area-stat { display: flex; flex-direction: column; gap: 0.125rem; }
+  .d-area-stat-label { font-size: 0.6875rem; letter-spacing: 0.06em; color: var(--text-mute); text-transform: uppercase; }
+  .d-area-stat-value { font-family: 'Noto Serif KR', serif; font-size: 0.875rem; font-weight: 500; color: var(--text-main); }
+  .d-area-tools { padding: 0.875rem 1.75rem; font-size: 0.75rem; color: var(--text-mute); border-top: 1px solid var(--border-line); line-height: 1.7; }
+  .d-area-tools strong { color: var(--accent-sage); font-weight: 500; }
+  .d-stage-tag { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.6875rem; font-weight: 600; background: var(--accent-gold); color: #fff; margin-left: auto; }
+  .d-lock-tag { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.6875rem; font-weight: 600; background: var(--bg-soft); color: var(--text-soft); border: 1px solid var(--border-line); margin-left: 0.4rem; }
+  .d-soon-card { padding: 1.5rem 1.75rem; background: var(--bg-soft); border: 1px dashed var(--border-soft); border-radius: 14px; }
+  .d-soon-num { font-family: 'Noto Serif KR', serif; font-size: 0.6875rem; letter-spacing: 0.18em; color: var(--text-mute); font-weight: 600; margin-bottom: 0.5rem; }
+  .d-soon-name { font-family: 'Noto Serif KR', serif; font-size: 1.0625rem; font-weight: 500; color: var(--text-soft); margin-bottom: 0.375rem; }
+  .d-soon-desc { font-size: 0.8125rem; color: var(--text-mute); line-height: 1.65; }
+</style>
 
 <!-- jg-seo -->
 <link rel="canonical" href="https://jejugrapher.com/spatial/mission-d.html">
@@ -18,11 +39,11 @@
 <meta property="og:locale" content="ko_KR">
 <meta property="og:url" content="https://jejugrapher.com/spatial/mission-d.html">
 <meta property="og:title" content="MISSION D · 농림수산업 — JEJUGRAPHER">
-<meta property="og:description" content="농업·임업·수산업 영역의 정량 데이터 컨설팅">
+<meta property="og:description" content="농업·임업·수산업 영역의 정량 데이터 컨설팅. 비접촉 계측으로 가축·작물·현장을 수치로 남깁니다.">
 <meta property="og:image" content="https://jejugrapher.com/cover.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="MISSION D · 농림수산업 — JEJUGRAPHER">
-<meta name="twitter:description" content="농업·임업·수산업 영역의 정량 데이터 컨설팅">
+<meta name="twitter:description" content="농업·임업·수산업 영역의 정량 데이터 컨설팅. 비접촉 계측으로 가축·작물·현장을 수치로 남깁니다.">
 <!-- /jg-seo -->
 </head>
 <body>
@@ -48,15 +69,47 @@
   <div class="container scenario-hero-content">
     <div class="scenario-letter">MISSION D</div>
     <h1 class="scenario-title">농림수산업</h1>
-    <p class="scenario-tagline">농업·임업·수산업 영역의 정량 데이터 컨설팅. 상세 콘텐츠 정리 중.</p>
+    <p class="scenario-tagline">농업·임업·수산업 영역의 정량 데이터 컨설팅. 재기 어려운 대상을 비접촉으로 측정해, 경험으로만 전해지던 것을 수치로 남깁니다.</p>
   </div>
 </header>
+
+<section class="section">
+  <div class="container">
+    <div class="eyebrow">AREAS</div>
+    <h2>영역</h2>
+    <p class="section-lead">현장에서 가장 자주 막히는 지점부터 하나씩 정리해 올립니다.</p>
+
+    <div class="d-area-grid">
+      <a href="./mission-d-1.html" class="d-area-card">
+        <div class="d-area-icon-row">
+          <div class="d-area-icon">🐎</div>
+          <div><div class="d-area-num">AREA D-1</div></div>
+          <span class="d-stage-tag">기획 단계</span><span class="d-lock-tag">🔒 비밀번호</span>
+        </div>
+        <div class="d-area-name">말 육성 정량 기록</div>
+        <div class="d-area-desc">말이 계측 스테이션을 한 번 지나가면 체위·체중·보행 스켈레톤이 자동으로 남습니다. 같은 개체를 몇 달간 따라가, 혈통표 밖의 근거를 만드는 일입니다. <b>비밀번호를 넣어야 열립니다.</b></div>
+        <div class="d-area-stats">
+          <div class="d-area-stat"><span class="d-area-stat-label">측정 방식</span><span class="d-area-stat-value">통과형 · 비접촉</span></div>
+          <div class="d-area-stat"><span class="d-area-stat-label">3D 복원 오차</span><span class="d-area-stat-value">평균 2 mm</span></div>
+          <div class="d-area-stat"><span class="d-area-stat-label">차별 축</span><span class="d-area-stat-value">종단 이력</span></div>
+        </div>
+        <div class="d-area-tools"><strong>구성</strong> 멀티캠 하드웨어 동기 촬영 + 로드셀 체중 플랫폼 + 상주 캘리브레이션<br><strong>산출물</strong> 3D 관절 스켈레톤 · 체고·체장·흉위·체중 · 개체 육성 성적표</div>
+      </a>
+
+      <div class="d-soon-card">
+        <div class="d-soon-num">AREA D-2 이후</div>
+        <div class="d-soon-name">작물·임상·수산 영역</div>
+        <div class="d-soon-desc">다중분광 작물 모니터링, 임상 구조 계측, 양식 시설 정량 기록. 수요가 확인된 영역부터 순차적으로 정리해 올립니다. 먼저 필요한 영역이 있으시면 문의로 알려주시면 우선 검토합니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section class="section section-alt">
   <div class="container">
     <div class="scn-cta">
-      <div class="scn-cta-title">상세 콘텐츠 정리 중</div>
-      <div class="scn-cta-sub">농림수산업 임무의 상세 콘텐츠를 정리하고 있습니다. 도입 문의는 메일·전화로 직접 보내 주시면 평균 1시간 내 응답해 드립니다.</div>
+      <div class="scn-cta-title">농림수산 현장의 정량 기록을 검토하시나요?</div>
+      <div class="scn-cta-sub">측정 대상과 현장 여건, 지금 가장 답답한 지점을 알려주시면 적용 범위와 단계 계획을 정리해 드립니다. 농가·연구기관·지자체 과제 모두 상담 가능합니다.</div>
       <a href="./index.html#contact" class="cta-primary">도입 문의 메일 보내기</a>
       <div class="cta-promise">평균 1시간 내 응답 · whipia@naver.com · 010-6778-9199</div>
     </div>
