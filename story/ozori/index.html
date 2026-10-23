@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>소금땅에 사는 식물 — 성산 오조리 염생식물 체험 | 제주그래퍼</title>
+<meta name="description" content="성산 오조리 내수면에서 잎 빙고, 염생식물 채집, 향 맡기로 해홍나물·갯쑥부쟁이·갯기름나물·곰솔·황근을 만난 체험 기록.">
+<meta property="og:title" content="소금땅에 사는 식물 — 성산 오조리 염생식물 체험">
+<meta property="og:description" content="잎 빙고판을 들고, 짝을 지어 채집하고, 잎을 비벼 향을 맡았습니다. 오조리 내수면의 염생식물 기록.">
+<meta property="og:image" content="https://jejugrapher.com/story/ozori/cover.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F8F4EC;--paper:#FFFDF8;--navy:#1F3A5F;--forest:#24452F;--moss:#5E7B4F;--deep:#132A1E;--terra:#C97B5B;--ink:#2C2825;--line:#E3DCCE;--mute:#6E675E;--soft:#EEE7D9;
+--serif:"Gowun Batang","Noto Serif KR",serif;--sans:"IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{font:400 1.02rem/1.85 var(--sans);background:var(--bg);color:var(--ink);word-break:keep-all;overflow-wrap:break-word}
+a{color:inherit} img{display:block;max-width:100%}
+h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.35}
+.wrap{width:min(1080px,100% - 2rem);margin-inline:auto}
+.narrow{width:min(760px,100% - 2rem);margin-inline:auto}
+nav{position:sticky;top:0;z-index:20;background:rgba(248,244,236,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
+.navin{height:58px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.logo{font-family:var(--serif);font-weight:700;font-size:18px;letter-spacing:2px;color:var(--navy);text-decoration:none}
+.back{font-size:14px;text-decoration:none;color:var(--mute)} .back:hover{color:var(--terra)}
+.hero{position:relative;isolation:isolate;min-height:min(80svh,740px);display:flex;align-items:flex-end;color:#F6F8F2;background:var(--deep);overflow:hidden}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 50%;z-index:-2}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(10,26,18,.05) 0%,rgba(10,26,18,.1) 45%,rgba(10,26,18,.86) 100%)}
+.hero .wrap{padding:6rem 0 3rem}
+.eyebrow{font-size:13px;letter-spacing:.14em;color:#B9DDBF;margin-bottom:.6rem}
+.hero h1{font-size:clamp(2.1rem,6vw,3.6rem);margin-bottom:1rem}
+.hero p{max-width:640px;font-size:1.05rem;color:#E6EEE4}
+section{padding:3.6rem 0}
+.sec-dark{background:var(--deep);color:#E8F0E6}
+.kicker{font-size:12px;letter-spacing:.16em;color:var(--terra);margin-bottom:.4rem}
+.sec-dark .kicker{color:#B9DDBF}
+h2{font-size:clamp(1.5rem,3.6vw,2.1rem);margin-bottom:1.1rem}
+p+p{margin-top:.8rem}
+.vid{position:relative;aspect-ratio:16/9;background:#000;border-radius:14px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vcap{margin-top:.9rem;font-size:.92rem;color:#B5C7B4}
+.chap{display:flex;flex-wrap:wrap;gap:8px;margin-top:1.2rem}
+.chap a{font-size:.85rem;text-decoration:none;padding:.3rem .75rem;border:1px solid rgba(255,255,255,.22);border-radius:999px;color:#DDE8DA}
+.chap a:hover{border-color:#B9DDBF;color:#fff}
+.steps{list-style:none;display:grid;gap:22px;margin-top:1.6rem}
+.steps li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:22px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px}
+.steps img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:10px}
+.steps time{font:500 .85rem var(--sans);color:var(--moss);letter-spacing:.1em}
+.steps h3{font-size:1.3rem;margin:.1rem 0 .4rem;color:var(--forest)}
+.say{font-family:var(--serif);color:var(--terra);font-size:1rem}
+.plants{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:1.6rem}
+.pl{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.pl img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.pl div{padding:1rem 1.05rem 1.15rem}
+.pl h3{font-size:1.15rem;color:var(--forest);margin-bottom:.3rem}
+.pl p{font-size:.94rem;color:var(--mute);line-height:1.7}
+.quote{border-left:3px solid var(--terra);padding:.2rem 0 .2rem 1.1rem;margin:1.4rem 0;font-family:var(--serif);font-size:1.15rem;line-height:1.75}
+.quote cite{display:block;font-family:var(--sans);font-style:normal;font-size:.85rem;color:var(--mute);margin-top:.4rem}
+.note{font-size:.88rem;color:var(--mute)}
+.place{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:22px;align-items:center}
+.place img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:12px}
+footer{padding:2.4rem 0 3rem;text-align:center;font-size:.88rem;color:var(--mute);border-top:1px solid var(--line)}
+footer a{color:var(--navy)}
+@media (max-width:760px){
+  .steps li,.place{grid-template-columns:1fr}
+  .plants{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:460px){ .plants{grid-template-columns:1fr} }
+</style>
+</head><body>
+<nav><div class="wrap navin"><a class="logo" href="/">JEJUGRAPHER</a><a class="back" href="/media.html#eco">← 포트폴리오</a></div></nav>
+
+<header class="hero"><img src="img/hero.jpg" alt="오조리 내수면 바닷가에서 식물을 찾는 참여자">
+<div class="wrap"><p class="eyebrow">성산 오조리 내수면 · 염생식물 체험</p>
+<h1>소금땅에 사는 식물</h1>
+<p>바닷물이 드나드는 오조리 내수면의 바위와 풀밭에서, 짠물을 견디며 사는 식물들을 찾아 나섰습니다.</p></div></header>
+
+<section class="sec-dark"><div class="wrap">
+<p class="kicker">VIDEO</p><h2>기록 영상</h2>
+<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/iNCghWdfA9M?rel=0" title="소금땅에 사는 식물 — 성산 오조리 염생식물 체험" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>
+<p class="vcap">9분 16초 · 강사와 참여자의 목소리를 살려 촬영 순서대로 엮었습니다.</p>
+<div class="chap">
+<a href="https://youtu.be/iNCghWdfA9M?t=8" target="_blank" rel="noopener">00:08 잎 빙고 미션</a>
+<a href="https://youtu.be/iNCghWdfA9M?t=171" target="_blank" rel="noopener">02:51 염생식물 채집</a>
+<a href="https://youtu.be/iNCghWdfA9M?t=242" target="_blank" rel="noopener">04:02 모아 보고, 향 맡기</a>
+<a href="https://youtu.be/iNCghWdfA9M?t=325" target="_blank" rel="noopener">05:25 바닷가 식물 이야기</a>
+<a href="https://youtu.be/iNCghWdfA9M?t=478" target="_blank" rel="noopener">07:58 소감과 마무리</a>
+</div></div></section>
+
+<section><div class="wrap">
+<p class="kicker">PROGRAM</p><h2>이렇게 만났습니다</h2>
+<ol class="steps">
+<li><figure><img src="img/s1.jpg" alt="" loading="lazy"></figure><div><time>01</time><h3>잎 빙고 미션</h3><p>5분 안에 빙고판의 잎을 찾아 붙이는 게임으로 시작했습니다. 가장자리에 톱니가 있는 잎, 털 없는 잎, 벌레 먹은 잎. 이름을 몰라도 괜찮고, 모양만 보면 됩니다.</p><p class="say">“한 번 만져 봐야 털이 있는지 없는지 알아요”</p></div></li>
+<li><figure><img src="img/s2.jpg" alt="" loading="lazy"></figure><div><time>02</time><h3>잎으로 식물 구분하기</h3><p>톱니가 있느냐 밋밋하냐, 털이 있느냐 없느냐가 식물을 나누는 특징입니다. 빙고판 두 번째 판은 염생식물 — 마디가 있는 갈대 닮은 식물, 줄기가 세모진 천일사초.</p><p class="say">“줄기가 세모진 식물은 천일사초를 말하는 거였어요”</p></div></li>
+<li><figure><img src="img/s3.jpg" alt="" loading="lazy"></figure><div><time>03</time><h3>염생식물 채집</h3><p>두 사람씩 짝을 지어 봉투와 가위를 받아 들고, 내수면 바닷가 바위와 풀밭에서 궁금한 식물을 10분 동안 모았습니다.</p><p class="say">“가능하면 아까 자료에 있던 염생식물로 채집해 오세요”</p></div></li>
+<li><figure><img src="img/s4.jpg" alt="" loading="lazy"></figure><div><time>04</time><h3>모아 보고, 향 맡기</h3><p>모은 식물을 하얀 천에 펼쳐 같은 것끼리 짝을 짓고, 잎을 비벼 향을 맡았습니다. 식물이 향을 가진 건 먹히지 않으려고 가진 것입니다.</p><p class="say">“조금 있으니까 짭짤한 맛이 나네”</p></div></li>
+</ol></div></section>
+
+<section style="background:var(--soft)"><div class="wrap">
+<p class="kicker">PLANTS</p><h2>오조리에서 만난 식물</h2>
+<p class="note">강사님이 현장에서 들려준 설명을 옮겼습니다.</p>
+<div class="plants">
+<article class="pl"><img src="img/p1.jpg" alt="해홍나물" loading="lazy"><div><h3>해홍나물</h3><p>퉁퉁마디와 닮았지만 다른 식물. 가을이 깊어지면 붉게 변해 갑니다.</p></div></article>
+<article class="pl"><img src="img/p2.jpg" alt="갯개미취 · 갯쑥부쟁이" loading="lazy"><div><h3>갯개미취 · 갯쑥부쟁이</h3><p>하나는 물 가까이, 하나는 좀 더 육지 쪽에 삽니다. 보라색 꽃이 50원·100원 동전만 하면 갯개미취, 500원 동전보다 크면 갯쑥부쟁이.</p></div></article>
+<article class="pl"><img src="img/p3.jpg" alt="갯기름나물" loading="lazy"><div><h3>갯기름나물</h3><p>흔히 방풍나물이라 부르는 바닷가 나물. “이거 엄청 맛있어요.”</p></div></article>
+<article class="pl"><img src="img/p4.jpg" alt="곰솔" loading="lazy"><div><h3>곰솔</h3><p>잎이 두 장씩 나면 소나무, 다섯 장이면 잣나무. 소나무 중에서도 바닷가에 사는 것이 곰솔입니다.</p></div></article>
+<article class="pl"><img src="img/p5.jpg" alt="황근" loading="lazy"><div><h3>황근</h3><p>노란 꽃이 피는 우리나라 자생 무궁화. 바닷가에서 자랍니다.</p></div></article>
+<article class="pl"><img src="img/p6.jpg" alt="천일사초" loading="lazy"><div><h3>천일사초</h3><p>줄기를 잘라 보면 세모난 사초. 빙고판에서 가장 찾기 어려웠던 식물입니다.</p></div></article>
+</div></div></section>
+
+<section><div class="narrow">
+<p class="kicker">VOICES</p><h2>현장의 말</h2>
+<blockquote class="quote">현장에서 직접 보니까 새로운 것들을 배웠습니다. 사진으로만 보면 몰라요.<cite>— 참여자</cite></blockquote>
+<blockquote class="quote">100년, 200년 동안 몸 안에 탄소를 차곡차곡 모아 두는 거예요.<cite>— 여러해살이 바닷가 식물에 대해, 강사</cite></blockquote>
+<blockquote class="quote">산에 있으면 소나무, 바닷가에 있으면 곰솔.<cite>— 참여자</cite></blockquote>
+</div></section>
+
+<section><div class="wrap">
+<p class="kicker">TOGETHER</p><h2>함께한 사람들</h2>
+<figure style="margin:1.2rem 0 0">
+<img src="img/group.jpg" alt="오조리 내수면 오름 앞에서 함께한 염생식물 체험 참여자들" loading="lazy" style="width:100%;height:auto;border-radius:10px;display:block">
+<figcaption class="note" style="margin-top:.7rem">성산 오조리 내수면에서 — 염생식물 체험에 함께한 분들</figcaption></figure>
+</div></section>
+
+<section style="background:var(--paper);border-top:1px solid var(--line)"><div class="wrap place">
+<img src="img/place.jpg" alt="오조리 양어장 둑길과 성산일출봉" loading="lazy">
+<div><p class="kicker">PLACE</p><h2>오조리 내수면</h2>
+<p>성산일출봉을 마주한 오조리 마을 앞, 바닷물이 드나드는 너른 물가입니다. 돌담 둑길을 따라 걸으면 소금기 머금은 풀밭과 바위틈에 염생식물이 자랍니다.</p>
+<p class="note">제주특별자치도 서귀포시 성산읍 오조리</p></div>
+</div></section>
+
+<footer>촬영·편집 제주그래퍼 JEJUGRAPHER<br><a href="/media.html#eco">포트폴리오로 돌아가기</a></footer>
+<!-- jg-copyright-notice -->
+<div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
+<div style="max-width:880px;margin:0 auto">
+<strong style="display:block;color:#F3D9A4;font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:.02em">⚠ 무단 복제 · 도용 금지 — 저작권 경고</strong>
+이 사이트의 모든 사진 · 영상 · 글 · 음악 · 디자인 · 프로그램은 <b style="color:#fff">제주그래퍼(JEJUGRAPHER)</b>와 원저작자에게 저작권이 있으며 「저작권법」의 보호를 받습니다.
+저작권자의 <b style="color:#fff">사전 서면 동의 없이</b> 복제 · 다운로드 후 재배포 · 전송 · 게시 · 편집 · 2차 가공 · 캡처 사용 · 상업적 이용 · AI 학습 데이터로 사용하는 행위를 <b style="color:#fff">엄격히 금지</b>합니다.
+사진과 영상 속 인물의 초상권도 함께 보호됩니다.
+무단 도용이 확인되면 사전 경고 없이 「저작권법」 제136조(5년 이하의 징역 또는 5천만 원 이하의 벌금)에 따른 <b style="color:#fff">형사 고소와 민사상 손해배상 청구</b>를 진행합니다.
+<span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
+</div></div>
+<!-- /jg-copyright-notice -->
+</body></html>
