@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>청소게임 — 내 폰</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;}
+  html,body{margin:0;height:100%;background:#0e1630;color:#fff;font-family:-apple-system,"Apple SD Gothic Neo",sans-serif;font-size:17px;overflow:hidden;}
+  .page{display:none;position:absolute;inset:0;padding:14px;flex-direction:column;overflow-y:auto;}
+  .page.on{display:flex;}
+  h2{font-size:22px;margin:4px 0 12px;text-align:center;}
+  .sub{text-align:center;opacity:.7;font-size:14px;margin:-6px 0 10px;}
+  .grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+  .seat{aspect-ratio:1;border:0;border-radius:14px;background:#22305c;color:#fff;font-size:22px;font-weight:800;}
+  .seat.on{background:#ffb703;color:#12203f;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0;}
+  .chip{border:3px solid #3a4d86;background:#1a2750;color:#fff;border-radius:999px;padding:10px 16px;font-size:16px;}
+  input{width:100%;font-size:20px;padding:12px;border-radius:12px;border:3px solid #3a4d86;background:#152046;color:#fff;text-align:center;}
+  .big{width:100%;border:0;border-radius:18px;padding:18px;font-size:22px;font-weight:800;background:#00c2a8;color:#04231e;margin-top:12px;}
+  .big.y{background:#ffb703;color:#3a2a00;} .big:disabled{opacity:.35;}
+  /* 캐릭터 카드 */
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .card{background:#152046;border:3px solid #2a3a6b;border-radius:16px;padding:8px;text-align:center;}
+  .card.on{border-color:#ffb703;background:#20305e;}
+  .card canvas{width:100%;aspect-ratio:1;background:#fff;border-radius:10px;}
+  .card .nm{font-size:17px;font-weight:800;margin-top:6px;}
+  .card .tr{font-size:12px;opacity:.8;line-height:1.3;margin-top:2px;min-height:32px;}
+  /* 장비 슬롯 */
+  .slot{margin-bottom:12px;}
+  .slot .lab{font-size:15px;opacity:.8;margin-bottom:6px;}
+  .opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .opt{background:#152046;border:3px solid #2a3a6b;border-radius:14px;padding:10px 6px;text-align:center;}
+  .opt.on{border-color:#00c2a8;background:#123a34;}
+  .opt.dis{opacity:.35;}
+  .opt .em{font-size:26px;} .opt .nm{font-size:14px;font-weight:700;margin-top:2px;}
+  #equipPrev{width:120px;height:120px;background:#fff;border-radius:12px;align-self:center;margin:4px 0 8px;}
+  #equipDesc{font-size:13px;opacity:.85;text-align:center;min-height:34px;margin-bottom:4px;}
+  #warn{color:#ff8a8a;text-align:center;font-size:14px;min-height:18px;}
+  /* 색칠 */
+  #colorWrap{flex:1;position:relative;background:#fff;border-radius:16px;overflow:hidden;touch-action:none;min-height:0;}
+  #colorWrap canvas{position:absolute;inset:0;width:100%;height:100%;}
+  .tools{display:flex;gap:6px;align-items:center;margin:8px 0;flex-wrap:wrap;justify-content:center;}
+  .sw{width:36px;height:36px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px #345;}
+  .sw.on{box-shadow:0 0 0 4px #ffb703;}
+  .szb,.tbtn{min-width:48px;height:44px;border:0;border-radius:10px;background:#22305c;color:#fff;font-size:15px;padding:0 10px;}
+  .szb.on{background:#ffb703;color:#12203f;}
+  /* 컨트롤러 */
+  #ctrlTop{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .badge{background:#152046;border-radius:12px;padding:8px 12px;font-size:15px;}
+  .badge b{font-size:20px;color:#ffb703;}
+  #gauge{height:10px;background:#223;border-radius:6px;overflow:hidden;margin:8px 0;display:none;}
+  #gauge.on{display:block;} #gaugeFill{height:100%;width:100%;background:#3ad;}
+  #pad{flex:1;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:10px;margin:10px 0;}
+  #pad button{border:0;border-radius:16px;background:#22305c;color:#fff;font-size:32px;font-weight:800;}
+  #pad button:active,#pad button.on{background:#3f57a8;}
+  #act{grid-column:2;grid-row:2;background:#ff6b3d !important;font-size:19px;}
+  #special{width:100%;border:0;border-radius:14px;padding:14px;font-size:18px;font-weight:800;background:#8338ec;color:#fff;display:none;}
+  #special.on{display:block;}
+  .msg{background:#152046;border-radius:12px;padding:12px;text-align:center;margin:8px 0;}
+</style>
+</head>
+<body>
+<div id="pWait" style="display:none;position:fixed;inset:0;background:#0b1020;z-index:900;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:18px">
+  <div style="font-size:52px">⏳</div>
+  <div id="waitMsg" style="font-size:20px;line-height:1.7"></div>
+  <div style="opacity:.6;font-size:14px">화면은 그대로 두세요. 자동으로 넘어가요.</div>
+</div>
+
+<!-- 1 입장 (번호 자동배정 + 별명) -->
+<div class="page on" id="pEnter">
+  <h2>🎮 청소 대작전</h2>
+  <div id="roomRow2" style="display:none">
+    <p class="sub">화면에 있는 방 코드를 입력해요</p>
+    <input id="roomIn" placeholder="예: ABCD" maxlength="6" style="text-transform:uppercase">
+    <button class="big" id="connectBtn">접속하기 ▶</button>
+  </div>
+  <div id="nickRow" style="display:none">
+    <div style="text-align:center;margin:6px 0 2px">당신은</div>
+    <div id="seatBig" style="text-align:center;font-size:52px;font-weight:900;color:#ffb703">?번</div>
+    <p class="sub">별명을 정해요 · 다른 친구와 겹치면 안 돼요</p>
+    <input id="nick" placeholder="별명을 써요" maxlength="8">
+    <div class="chips" id="nickChips"></div>
+    <input id="nickPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="🔒 별명 비밀번호 (숫자 4자리)" style="margin-top:8px;letter-spacing:6px">
+    <p class="sub" style="font-size:13px;opacity:.8;margin:6px 2px 0;text-align:center">나중에 <b>같은 별명으로 이어서</b> 하고, 내가 <b>1등이면 그 별명이 내 것</b>임을 증명할 때 필요해요. 꼭 기억하세요!</p>
+    <div id="nickWarn" style="color:#ff8a8a;text-align:center;min-height:20px"></div>
+    <button class="big y" id="startBtn">시작하기 ▶</button>
+  </div>
+  <div id="connMsg" class="sub" style="margin-top:12px"></div>
+</div>
+
+<!-- 2 캐릭터 선택 -->
+<div class="page" id="pChar">
+  <h2>어떤 캐릭터로 할까?</h2>
+  <p class="sub">맵은 시작할 때 랜덤! 잘 골라야 유리해요</p>
+  <div class="cards" id="charCards"></div>
+  <button class="big y" id="charNext" disabled>장비 고르기 ▶</button>
+</div>
+
+<!-- 3 장비 선택 -->
+<div class="page" id="pEquip">
+  <h2>장비 4가지를 골라요</h2>
+  <canvas id="equipPrev" width="240" height="240"></canvas>
+  <div id="equipDesc"></div>
+  <div class="slot"><div class="lab">🧹 줍는 도구</div><div class="opts" id="slotTool"></div></div>
+  <div class="slot"><div class="lab">🗑️ 담는 도구</div><div class="opts" id="slotContainer"></div></div>
+  <div class="slot"><div class="lab">👟 신발</div><div class="opts" id="slotFeet"></div></div>
+  <div class="slot"><div class="lab">🛡️ 방어·특기</div><div class="opts" id="slotGear"></div></div>
+  <div id="warn"></div>
+  <button class="big y" id="equipNext" disabled>준비 완료 ▶</button>
+</div>
+
+<!-- 4 색칠 -->
+<div class="page" id="pColor">
+  <h2>내 캐릭터를 색칠해요! 🎨</h2>
+  <div id="colorWrap"><canvas id="guideCv"></canvas><canvas id="paintCv"></canvas></div>
+  <div class="tools" id="palette"></div>
+  <div class="tools">
+    <button class="szb on" data-s="12">가늘게</button>
+    <button class="szb" data-s="28">굵게</button>
+    <button class="szb" data-s="54">채우기용</button>
+    <button class="tbtn" id="undo">되돌리기</button>
+    <button class="tbtn" id="clearPaint">다시</button>
+  </div>
+  <button class="big y" id="doneBtn">✅ 준비 완료!</button>
+</div>
+
+<!-- 5 컨트롤러 -->
+<div class="page" id="pPlay">
+  <div id="ctrlTop">
+    <div class="badge" id="meBadge">나</div>
+    <div class="badge">청소 <b id="myScore">0</b></div>
+    <div class="badge" id="phaseBadge">대기</div>
+  </div>
+  <div class="badge" id="carryBadge" style="text-align:center">가방 0 / 0</div>
+  <div id="gauge"><div id="gaugeFill"></div></div>
+  <div id="pad">
+    <button data-d="-1,-1" style="grid-column:1;grid-row:1">↖</button>
+    <button data-d="0,-1" style="grid-column:2;grid-row:1">▲</button>
+    <button data-d="1,-1" style="grid-column:3;grid-row:1">↗</button>
+    <button data-d="-1,0" style="grid-column:1;grid-row:2">◀</button>
+    <div id="carryMid" style="grid-column:2;grid-row:2;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#123a2b;border-radius:16px;line-height:1.1"><div style="font-size:22px">🧺</div><div id="carryNum" style="font-size:26px;font-weight:900;color:#b6ff7a">0/0</div></div>
+    <button data-d="1,0" style="grid-column:3;grid-row:2">▶</button>
+    <button data-d="-1,1" style="grid-column:1;grid-row:3">↙</button>
+    <button data-d="0,1" style="grid-column:2;grid-row:3">▼</button>
+    <button data-d="1,1" style="grid-column:3;grid-row:3">↘</button>
+  </div>
+  <div style="display:flex;gap:8px;margin-top:6px">
+    <button id="special" style="flex:1;width:auto;margin-top:0">🍢 뺏기!</button>
+    <button id="jumpBtn" style="flex:1;width:auto;border:0;border-radius:14px;padding:14px;font-size:18px;font-weight:800;background:#8bd329;color:#123">🦘 점프!</button>
+  </div>
+  <div style="display:flex;gap:8px;margin-top:6px;align-items:stretch">
+    <button id="aimL" style="flex:1;border:0;border-radius:14px;padding:14px;font-size:20px;font-weight:800;background:#3a4d86;color:#fff">◀ 포신</button>
+    <button id="fireBtn" style="flex:1.5;border:0;border-radius:14px;padding:14px;font-size:19px;font-weight:800;background:#ff6b6b;color:#fff">🎯 발사!</button>
+    <button id="aimR" style="flex:1;border:0;border-radius:14px;padding:14px;font-size:20px;font-weight:800;background:#3a4d86;color:#fff">포신 ▶</button>
+  </div>
+  <div style="text-align:center;opacity:.6;font-size:12px;margin-top:2px">포신을 돌려 조준 → 발사 (내 창고 보물 1개 소모)</div>
+  <button id="gearBtn" style="width:100%;border:0;border-radius:14px;padding:12px;font-size:17px;font-weight:800;background:#22c1e6;color:#062a33;display:none;margin-top:6px">🚀 부스트!</button>
+  <div class="msg" id="playMsg" style="display:none"></div>
+</div>
+
+<script>(function(){var v=Date.now();var net=/[?&]net=local/.test(location.search)?'game_rt.js':'net_fb.js';
+['../lib/'+net,'../lib/game_data.js','../lib/char_art.js'].forEach(function(f){document.write('<script src="'+f+'?v='+v+'"><\/script>');});})();</script>
+<script>
+var G=GameData;
+var seat=null, nick='', myId='', myChar=null, equip={tool:null,container:null,feet:null};
+var COLORS=['#111','#e63946','#ff9f1c','#ffd166','#2ec4b6','#1f6feb','#8338ec','#ff7ab6','#7a4b2a','#2a9d3f','#ffffff','#8fa3b8'];
+var NICKS=['번개','무지개','씩씩이','반짝','초코','왕눈이','통통','바다'];
+function show(id){document.querySelectorAll('.page').forEach(function(p){p.classList.toggle('on',p.id===id);var el=document.getElementById(id);});window.scrollTo(0,0);}
+/* ── 1 입장: 접속 → 번호 자동배정(접속 순서) → 별명(중복 불가) ── */
+var urlRoom=(/[?&]room=([A-Za-z0-9]+)/.exec(location.search)||[])[1];
+var cid=null;
+var nc=document.getElementById('nickChips');
+NICKS.forEach(function(n){var c=document.createElement('span');c.className='chip';c.textContent=n;c.onclick=function(){document.getElementById('nick').value=n;};nc.appendChild(c);});
+
+var joinedRound=false;
+function showNickEntry(){
+  document.getElementById('connMsg').textContent='';
+  document.getElementById('nickRow').style.display='';
+  document.getElementById('seatBig').textContent=seat+'번';
+  var saved=localStorage.getItem('cg_nick'); if(saved) document.getElementById('nick').value=saved;
+  var savedPin=localStorage.getItem('cg_pin'); if(savedPin) document.getElementById('nickPin').value=savedPin;   // 같은 기기면 비밀번호도 자동 채움(이어하기 편하게)
+}
+function beginConnect(rm){
+  document.getElementById('roomRow2').style.display='none';
+  document.getElementById('connMsg').textContent='접속 중…';
+  if(rm) window.CG_ROOM=rm;
+  var room=urlRoom||window.CG_ROOM;
+  cid=localStorage.getItem('cg_cid_'+room); if(!cid){ cid='c'+Date.now()+Math.floor(Math.random()*1000); localStorage.setItem('cg_cid_'+room,cid); }
+  myId=cid;
+  GameRT.connect('phone',cid,onMsg);
+  GameRT.ready.then(function(rr){
+    if(!rr){ document.getElementById('connMsg').textContent='연결 실패 — 방 코드를 확인하고 새로고침해요'; document.getElementById('roomRow2').style.display=urlRoom?'none':''; return; }
+    GameRT.dbGet('players/'+cid).then(function(p){          // 이번 라운드 참가 기록
+      if(p && p.nick){ seat=p.seat; nick=p.nick; document.getElementById('connMsg').textContent=''; afterNick(); return; }  // 재접속
+      GameRT.dbGet('game').then(function(g){
+        var ph=(g&&g.phase)||'lobby';
+        if(ph==='clean'||ph==='result'||ph==='setup'){ showWait('running'); return; }   // 게임 진행 중 → 다음 판 대기
+        enterLobby();                                                                   // 로비면 바로(10초과는 enterLobby가 대기 처리)
+      });
+    });
+  });
+}
+/* 로비 진입: 번호(접속순서) 배정 → 10 초과면 대기, 아니면 별명 */
+function enterLobby(){
+  GameRT.claimSeat().then(function(s){
+    if(s>10){ showWait('full'); return; }                 // 10명 초과 → 다음 판 대기
+    seat=s; GameRT.dbSet('players/'+cid,{seat:seat,ts:Date.now()}); showNickEntry();
+  });
+}
+/* 새 라운드 자동 재참가: 리로드/재입력 없이 같은 별명·캐릭터로 대기실 복귀 */
+function rejoinNextRound(){
+  if(!myChar||!nick){ enterLobby(); return; }
+  GameRT.claimSeat().then(function(s){
+    if(s>10){ showWait('full'); return; }                      // 다음 판이 이미 꽉 참
+    seat=s;
+    GameRT.dbUpdate('players/'+cid,{seat:seat,nick:nick,char:myChar,equip:equip,ts:Date.now()});
+    var mb=document.getElementById('meBadge'); if(mb) mb.textContent=seat+'번 '+nick;
+    GameRT.toScreen({type:'join',seat:seat,nick:nick,id:cid});
+    GameRT.toScreen({type:'creature',id:cid,seat:seat,nick:nick,char:myChar,equip:equip});
+    show('pPlay');
+    var msg=document.getElementById('playMsg'); if(msg){ msg.style.display=''; msg.innerHTML='🎮 <b>'+seat+'번 '+nick+'</b><br>다음 판을 기다리는 중… 곧 시작해요!'; }
+  });
+}
+var waitingForNext=false;
+function showWait(reason){
+  waitingForNext=true;
+  var el=document.getElementById('pWait'); el.style.display='flex';
+  document.getElementById('waitMsg').innerHTML = reason==='full'
+    ? '😅 지금은 <b>10명이 꽉 찼어요!</b><br>다음 판이 시작되면<br>자동으로 대기실로 들어가요.'
+    : '🎮 지금 게임이 <b>진행 중이에요!</b><br>다음 판이 곧 시작돼요.<br>잠깐만 기다리면<br>자동으로 대기실로 들어가요.';
+}
+document.getElementById('connectBtn').onclick=function(){ var rc=(document.getElementById('roomIn').value||'').trim().toUpperCase(); if(!rc){alert('방 코드를 입력해요');return;} beginConnect(rc); };
+/* 별명 비밀번호 → 해시(평문 저장 안 함). 별명키로 소금 처리. crypto 없으면 간단 해시 폴백 */
+function hashPin(nk,pin){
+  var raw='cg1|'+GameRT.nickKey(nk)+'|'+pin;
+  try{
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw)).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf),function(b){return ('0'+b.toString(16)).slice(-2);}).join('').slice(0,16);
+    });
+  }catch(e){
+    var h=5381; for(var i=0;i<raw.length;i++){ h=((h<<5)+h+raw.charCodeAt(i))>>>0; }
+    return Promise.resolve(('00000000'+h.toString(16)).slice(-8));
+  }
+}
+document.getElementById('startBtn').onclick=function(){
+  var v=document.getElementById('nick').value.trim();
+  var pin=(document.getElementById('nickPin').value||'').trim();
+  if(!v){ document.getElementById('nickWarn').textContent='별명을 써요'; return; }
+  if(!/^[0-9]{4}$/.test(pin)){ document.getElementById('nickWarn').textContent='🔒 별명 비밀번호를 숫자 4자리로 정해요'; return; }
+  document.getElementById('nickWarn').textContent='확인 중…';
+  hashPin(v,pin).then(function(ph){ return GameRT.claimNick(v,ph); }).then(function(r){
+    if(!r.ok){
+      document.getElementById('nickWarn').textContent = (r.reason==='wrongpin')
+        ? '🔒 이 별명은 비밀번호가 달라요. 본인이면 정확히, 아니면 다른 별명으로!'
+        : '😅 이미 있는 별명이에요. 다른 별명으로!';
+      return;
+    }
+    nick=v; try{localStorage.setItem('cg_nick',nick); localStorage.setItem('cg_pin',pin);}catch(e){}
+    GameRT.dbUpdate('players/'+cid,{seat:seat,nick:nick});
+    afterNick();
+  });
+};
+function afterNick(){
+  joinedRound=true;
+  document.getElementById('meBadge').textContent=seat+'번 '+nick;
+  GameRT.toScreen({type:'join',seat:seat,nick:nick,id:cid});
+  buildCharCards(); show('pChar');
+}
+/* 자동 시작: QR(?room=) 있으면 바로 접속, 없으면 코드 입력칸 */
+if(urlRoom) beginConnect(); else document.getElementById('roomRow2').style.display='';
+
+/* ── 2 캐릭터 선택 (이모지 카드) ── */
+function buildCharCards(){
+  var box=document.getElementById('charCards');box.innerHTML='';
+  G.CHAR_ORDER.forEach(function(k){var ch=G.CHARACTERS[k];
+    var d=document.createElement('div');d.className='card';d.dataset.k=k;
+    d.innerHTML='<div style="font-size:56px;line-height:1.1">'+ch.emoji+'</div><div class="nm">'+ch.name+'</div><div class="tr">'+(ch.trait||'')+'</div>';
+    d.onclick=function(){myChar=k;box.querySelectorAll('.card').forEach(function(x){x.classList.toggle('on',x===d);});document.getElementById('charNext').disabled=false;};
+    box.appendChild(d);});
+}
+document.getElementById('charNext').onclick=function(){ if(!myChar)return; buildEquip(); show('pEquip'); };
+
+/* ── 3 장비 선택 ── */
+function opt(slot,key,data){var d=document.createElement('div');d.className='opt';d.dataset.k=key;
+  d.innerHTML='<div class="em">'+data.emoji+'</div><div class="nm">'+data.name+'</div>';
+  d.onclick=function(){ equip[slot]=key; refreshEquip(); }; return d;}
+function buildEquip(){
+  var st=document.getElementById('slotTool');st.innerHTML='';G.TOOL_ORDER.forEach(function(k){st.appendChild(opt('tool',k,G.TOOLS[k]));});
+  var sc=document.getElementById('slotContainer');sc.innerHTML='';G.CONTAINER_ORDER.forEach(function(k){sc.appendChild(opt('container',k,G.CONTAINERS[k]));});
+  var sf=document.getElementById('slotFeet');sf.innerHTML='';G.FEET_ORDER.forEach(function(k){sf.appendChild(opt('feet',k,G.FEET[k]));});
+  var sg=document.getElementById('slotGear');sg.innerHTML='';G.GEAR_ORDER.forEach(function(k){sg.appendChild(opt('gear',k,G.GEAR[k]));});
+  equip={tool:'tongs',container:'basket',feet:'sneakers',gear:'alarm'}; refreshEquip();
+}
+function refreshEquip(){
+  [['slotTool','tool'],['slotContainer','container'],['slotFeet','feet'],['slotGear','gear']].forEach(function(p){
+    document.querySelectorAll('#'+p[0]+' .opt').forEach(function(o){o.classList.toggle('on',equip[p[1]]===o.dataset.k);});
+  });
+  document.getElementById('equipNext').disabled=false;
+  // 미리보기: 캐릭터 이모지 + 장비 이모지
+  var pv=document.getElementById('equipPrev');var g=pv.getContext('2d');g.clearRect(0,0,240,240);
+  g.font='120px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText((G.CHARACTERS[myChar]||{}).emoji||'🙂',120,96);
+  g.font='36px sans-serif';g.fillText((G.TOOLS[equip.tool]||{}).emoji+(G.CONTAINERS[equip.container]||{}).emoji+(G.FEET[equip.feet]||{}).emoji+(G.GEAR[equip.gear]||{}).emoji,120,180);
+  var desc=[];if(equip.gear)desc.push((G.GEAR[equip.gear]||{}).desc);
+  document.getElementById('equipDesc').textContent=desc.join(' · ');
+}
+function statSummary(){
+  var ch=G.CHARACTERS[myChar]||{}, st=G.finalStats?G.finalStats(myChar,equip,ch.mul?Object.keys(ch.mul)[0]:'village'):{}, tool=G.TOOLS[equip.tool]||{}, gear=G.GEAR[equip.gear]||{};
+  var parts=[];
+  parts.push('가방 '+(st.capacity||ch.cap||5)+'칸'); if(ch.role)parts.push(ch.role);
+  if(ch.pv==='superArmor') parts.push('💪 한 번 안 뺏김');
+  if(ch.pv==='homeTurf') parts.push('🏠 내 창고서 강함');
+  if(ch.pv==='hAccel') parts.push('↔ 가로로 빠름');
+  if(ch.fly) parts.push('🕊️ 벽·물 비행');
+  if(ch.moisture) parts.push('⚠️ 마르면 기절');
+  if(tool.canSteal) parts.push('작살로 뺏기');
+  if(gear.name) parts.push(gear.emoji+gear.name);
+  return parts.join(' · ');
+}
+document.getElementById('equipNext').onclick=function(){
+  GameRT.toScreen({type:'creature',id:myId,seat:seat,nick:nick,char:myChar,equip:equip});   // 이미지 없이 선택만 전송
+  var sp=document.getElementById('special'); sp.style.display='block'; sp.textContent = equip.tool==='spear' ? '🔱 작살로 뺏기!' : '💥 밀치기!';
+  document.getElementById('gearBtn').style.display = (equip.gear==='boost') ? 'block' : 'none';
+  document.getElementById('jumpBtn').style.display = (myChar==='gull') ? 'none' : 'block';   // 갈매기는 날아서 회피 → 점프 불필요
+  show('pPlay');
+  var msg=document.getElementById('playMsg');msg.style.display='';
+  msg.innerHTML='<b>'+(G.CHARACTERS[myChar].emoji)+' '+seat+'번 '+nick+'</b><br>'+(G.CHARACTERS[myChar].trait||'')+'<br><span style="opacity:.85">'+statSummary()+'</span><br><br>대기실이에요. 곧 시작해요! (혼자여도 60초 뒤 시작)';
+};
+
+/* ── 5 컨트롤러 ── */
+var pressDir=null, sendTimer=null;
+function startSend(){ if(sendTimer)return; sendTimer=setInterval(function(){ if(pressDir) GameRT.toScreen({type:'ctrl',id:myId,dx:pressDir[0],dy:pressDir[1]}); },100); }
+document.querySelectorAll('#pad [data-d]').forEach(function(b){
+  var d=b.dataset.d.split(',').map(Number);
+  var on=function(e){e.preventDefault();try{b.setPointerCapture(e.pointerId);}catch(_){}  // 손가락이 버튼 밖으로 살짝 밀려도 계속 홀드
+    pressDir=d;b.classList.add('on');GameRT.toScreen({type:'ctrl',id:myId,dx:d[0],dy:d[1]});startSend();};
+  var off=function(e){e.preventDefault();pressDir=null;b.classList.remove('on');GameRT.toScreen({type:'ctrl',id:myId,dx:0,dy:0});};
+  // pointerleave 는 제외(홀드 중 손가락 미세이동에 멈춤 방지). 캡처 덕분에 pointerup 은 이 버튼에서 확실히 발생
+  b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointercancel',off);
+});
+/* 줍기는 자동 — 별도 버튼 없음 */
+document.getElementById('special').addEventListener('pointerdown',function(e){e.preventDefault();this.style.filter='brightness(1.3)';GameRT.toScreen({type:'ctrl',id:myId,act:'bump'});});
+document.getElementById('special').addEventListener('pointerup',function(e){e.preventDefault();this.style.filter='';});
+document.getElementById('jumpBtn').addEventListener('pointerdown',function(e){e.preventDefault();this.style.filter='brightness(1.2)';GameRT.toScreen({type:'ctrl',id:myId,act:'jump'});});
+document.getElementById('jumpBtn').addEventListener('pointerup',function(e){e.preventDefault();this.style.filter='';});
+document.getElementById('fireBtn').addEventListener('pointerdown',function(e){e.preventDefault();this.style.filter='brightness(1.25)';GameRT.toScreen({type:'ctrl',id:myId,act:'fire'});});
+document.getElementById('fireBtn').addEventListener('pointerup',function(e){e.preventDefault();this.style.filter='';});
+/* 포신 회전: 누르는 동안 계속 회전 */
+var aimTimer=null;
+function aimHold(dir,btn){ btn.style.filter='brightness(1.3)'; if(aimTimer)clearInterval(aimTimer); GameRT.toScreen({type:'ctrl',id:myId,act:dir}); aimTimer=setInterval(function(){ GameRT.toScreen({type:'ctrl',id:myId,act:dir}); },70); }
+function aimRelease(btn){ btn.style.filter=''; if(aimTimer){clearInterval(aimTimer);aimTimer=null;} }
+['aimL','aimR'].forEach(function(idb){ var b=document.getElementById(idb); var dir=idb==='aimL'?'aimL':'aimR';
+  b.addEventListener('pointerdown',function(e){e.preventDefault();aimHold(dir,b);});
+  b.addEventListener('pointerup',function(e){e.preventDefault();aimRelease(b);});
+  b.addEventListener('pointercancel',function(e){e.preventDefault();aimRelease(b);});
+  b.addEventListener('pointerleave',function(e){e.preventDefault();aimRelease(b);});
+});
+document.getElementById('gearBtn').addEventListener('pointerdown',function(e){e.preventDefault();this.style.filter='brightness(1.3)';GameRT.toScreen({type:'ctrl',id:myId,act:'gear'});});
+document.getElementById('gearBtn').addEventListener('pointerup',function(e){e.preventDefault();this.style.filter='';});
+
+/* ── 화면 → 폰 ── */
+function onMsg(m){
+  if(m.type==='state'||m.type==='phase'){
+    var ph=m.phase||'lobby';
+    // 대기 중이던 폰: 로비가 열리면 자동 진입(캐릭터 있으면 같은 신분 재참가, 없으면 신규)
+    if(waitingForNext && ph==='lobby'){ waitingForNext=false; document.getElementById('pWait').style.display='none'; if(myChar) rejoinNextRound(); else enterLobby(); return; }
+    // 이전 판을 뛴 폰: 새 라운드(lobby)면 리로드 없이 같은 별명·캐릭터로 자동 재참가
+    if(joinedRound && ph==='lobby' && window._wasPlaying){ window._wasPlaying=false; rejoinNextRound(); return; }
+    if(ph==='clean'||ph==='setup') window._wasPlaying=true;
+    var label={lobby:'대기',setup:'준비',clean:'보물 대작전!',result:'결과'}[ph]||ph;
+    document.getElementById('phaseBadge').textContent=label + (m.map&&G.MAPS[m.map]?(' · '+G.MAPS[m.map].emoji+G.MAPS[m.map].name):'');
+  }
+  if(m.type==='score'&&m.score){ var s=m.score[myId]; if(s!=null) document.getElementById('myScore').textContent=s; }
+  if(m.type==='alarm'&&m.id===myId){ if(navigator.vibrate)navigator.vibrate([80,50,80]); document.body.style.boxShadow='inset 0 0 0 6px #ff5a5a'; setTimeout(function(){document.body.style.boxShadow='';},900); }
+  if(m.type==='me'&&m.id===myId){
+    if(m.carry!=null){ document.getElementById('carryBadge').textContent='🧺 주운 쓰레기 '+m.carry+' / '+m.cap; var cn=document.getElementById('carryNum'); if(cn){ cn.textContent=m.carry+'/'+m.cap; cn.style.color=(m.carry>=m.cap)?'#ffb3b3':'#b6ff7a'; } }
+    if(m.moist!=null){ var gg=document.getElementById('gauge');gg.classList.add('on');document.getElementById('gaugeFill').style.width=Math.max(0,m.moist)+'%';document.getElementById('gaugeFill').style.background=m.moist<25?'#ff5a5a':'#3ad'; }
+    if(m.stun){ var msg=document.getElementById('playMsg');msg.style.display='';msg.innerHTML='😵 기절! 쓰레기를 놓쳤어요…'; setTimeout(function(){msg.style.display='none';},2500);}
+  }
+}
+</script>
+</body>
+</html>

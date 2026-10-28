@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns:media="http://search.yahoo.com/mrss/" xmlns="http://www.w3.org/2005/Atom">
+ <link rel="self" href="http://www.youtube.com/feeds/videos.xml?channel_id=UCq-F1n2gJb0ueNR8A_q6KOQ"/>
+ <id>yt:channel:q-F1n2gJb0ueNR8A_q6KOQ</id>
+ <yt:channelId>q-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+ <title>제주그래퍼</title>
+ <link rel="alternate" href="https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ"/>
+ <author>
+  <name>제주그래퍼</name>
+  <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+ </author>
+ <published>2011-05-06T18:30:14+00:00</published>
+ <entry>
+  <id>yt:video:ZTBZ0LIq-MY</id>
+  <yt:videoId>ZTBZ0LIq-MY</yt:videoId>
+  <yt:channelId>UCq-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+  <title>새벽녘의 함덕 비오는 아침</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=ZTBZ0LIq-MY"/>
+  <author>
+   <name>제주그래퍼</name>
+   <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+  </author>
+  <published>2020-07-27T20:39:55+00:00</published>
+  <updated>2026-10-05T17:46:06+00:00</updated>
+  <media:group>
+   <media:title>새벽녘의 함덕 비오는 아침</media:title>
+   <media:content url="https://www.youtube.com/v/ZTBZ0LIq-MY?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i3.ytimg.com/vi/ZTBZ0LIq-MY/hqdefault.jpg" width="480" height="360"/>
+   <media:description></media:description>
+   <media:community>
+    <media:starRating count="0" average="0.00" min="1" max="5"/>
+    <media:statistics views="0"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:MqCz_UxpxIA</id>
+  <yt:videoId>MqCz_UxpxIA</yt:videoId>
+  <yt:channelId>UCq-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+  <title>QooCamStream</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=MqCz_UxpxIA"/>
+  <author>
+   <name>제주그래퍼</name>
+   <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+  </author>
+  <published>2020-06-15T18:20:59+00:00</published>
+  <updated>2026-10-03T16:45:48+00:00</updated>
+  <media:group>
+   <media:title>QooCamStream</media:title>
+   <media:content url="https://www.youtube.com/v/MqCz_UxpxIA?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i2.ytimg.com/vi/MqCz_UxpxIA/hqdefault.jpg" width="480" height="360"/>
+   <media:description></media:description>
+   <media:community>
+    <media:starRating count="0" average="0.00" min="1" max="5"/>
+    <media:statistics views="0"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:28DjJVWvmK4</id>
+  <yt:videoId>28DjJVWvmK4</yt:videoId>
+  <yt:channelId>UCq-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+  <title>MobizenLiveStream</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=28DjJVWvmK4"/>
+  <author>
+   <name>제주그래퍼</name>
+   <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+  </author>
+  <published>2020-02-16T15:47:28+00:00</published>
+  <updated>2026-10-04T11:54:49+00:00</updated>
+  <media:group>
+   <media:title>MobizenLiveStream</media:title>
+   <media:content url="https://www.youtube.com/v/28DjJVWvmK4?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i3.ytimg.com/vi/28DjJVWvmK4/hqdefault.jpg" width="480" height="360"/>
+   <media:description></media:description>
+   <media:community>
+    <media:starRating count="0" average="0.00" min="1" max="5"/>
+    <media:statistics views="0"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:f2FCwoKxtW4</id>
+  <yt:videoId>f2FCwoKxtW4</yt:videoId>
+  <yt:channelId>UCq-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+  <title>[제주인생사진] 새별오름에서의 별밤사진관</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=f2FCwoKxtW4"/>
+  <author>
+   <name>제주그래퍼</name>
+   <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+  </author>
+  <published>2020-02-05T20:32:53+00:00</published>
+  <updated>2026-10-05T08:13:31+00:00</updated>
+  <media:group>
+   <media:title>[제주인생사진] 새별오름에서의 별밤사진관</media:title>
+   <media:content url="https://www.youtube.com/v/f2FCwoKxtW4?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i3.ytimg.com/vi/f2FCwoKxtW4/hqdefault.jpg" width="480" height="360"/>
+   <media:description>다양한 장소에서의 진행을 위해 다른 장소에서 진행해 봅니다.
+이번엔 새별오름 이었어요.</media:description>
+   <media:community>
+    <media:starRating count="4" average="5.00" min="1" max="5"/>
+    <media:statistics views="153"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:uoJ7hFiVOOg</id>
+  <yt:videoId>uoJ7hFiVOOg</yt:videoId>
+  <yt:channelId>UCq-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+  <title>제주항공360VR - drone360vr - 제주 드라마2015 리조트</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=uoJ7hFiVOOg"/>
+  <author>
+   <name>제주그래퍼</name>
+   <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+  </author>
+  <published>2019-11-17T11:48:57+00:00</published>
+  <updated>2026-10-04T18:49:19+00:00</updated>
+  <media:group>
+   <media:title>제주항공360VR - drone360vr - 제주 드라마2015 리조트</media:title>
+   <media:content url="https://www.youtube.com/v/uoJ7hFiVOOg?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i2.ytimg.com/vi/uoJ7hFiVOOg/hqdefault.jpg" width="480" height="360"/>
+   <media:description>아름다운 제주의 곽지해수욕장에 위치한 드라마 2015 리조트에서 드론을 활용한 항공 360 VR 영상을 촬영하였어요.
+아름다운 곽지해수욕장에 위치한 바다가 바로 보이는 리조트에서 하루종일 놀고 싶어요^^
+
+https://skfb.ly/6OMOX
+드라마2015 3d scan(photogrammetry)
+
+https://my.matterport.com/show/?m=hQL1AoMKLAi
+객실보기 01
+
+https://my.matterport.com/show/?m=Tx4zTh25Mk8
+객실보기 02</media:description>
+   <media:community>
+    <media:starRating count="7" average="5.00" min="1" max="5"/>
+    <media:statistics views="452"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:RFnXrPe20Sc</id>
+  <yt:videoId>RFnXrPe20Sc</yt:videoId>
+  <yt:channelId>UCq-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+  <title>곽지해수욕장에 위치한 리조트 '드라마2015'에서 영상 촬영했습니다.</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=RFnXrPe20Sc"/>
+  <author>
+   <name>제주그래퍼</name>
+   <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+  </author>
+  <published>2019-11-16T04:43:08+00:00</published>
+  <updated>2026-10-01T06:22:40+00:00</updated>
+  <media:group>
+   <media:title>곽지해수욕장에 위치한 리조트 '드라마2015'에서 영상 촬영했습니다.</media:title>
+   <media:content url="https://www.youtube.com/v/RFnXrPe20Sc?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i3.ytimg.com/vi/RFnXrPe20Sc/hqdefault.jpg" width="480" height="360"/>
+   <media:description>진짜 이쁩니다.
+날씨도 워낙 좋았지만, 
+인스타각인 천국의계단도 있네요.
+
+
+https://my.matterport.com/show/?m=hQL1AoMKLAi
+
+https://my.matterport.com/show/?m=Tx4zTh25Mk8</media:description>
+   <media:community>
+    <media:starRating count="5" average="5.00" min="1" max="5"/>
+    <media:statistics views="358"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:fXWZI72ipQA</id>
+  <yt:videoId>fXWZI72ipQA</yt:videoId>
+  <yt:channelId>UCq-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+  <title>제주 1100로 드라이브 4k 360 VR</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=fXWZI72ipQA"/>
+  <author>
+   <name>제주그래퍼</name>
+   <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+  </author>
+  <published>2019-11-15T18:45:58+00:00</published>
+  <updated>2026-10-04T15:10:54+00:00</updated>
+  <media:group>
+   <media:title>제주 1100로 드라이브 4k 360 VR</media:title>
+   <media:content url="https://www.youtube.com/v/fXWZI72ipQA?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i3.ytimg.com/vi/fXWZI72ipQA/hqdefault.jpg" width="480" height="360"/>
+   <media:description>제주1100고지로 가는길 
+숲을 가로지르는 제주의 아름다운 도로를 360 VR로 감상해 보세요.</media:description>
+   <media:community>
+    <media:starRating count="3" average="5.00" min="1" max="5"/>
+    <media:statistics views="218"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:GwvSHINNDo0</id>
+  <yt:videoId>GwvSHINNDo0</yt:videoId>
+  <yt:channelId>UCq-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+  <title>제주의 밤 빛나는 별과 함께한 별밤사진관</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GwvSHINNDo0"/>
+  <author>
+   <name>제주그래퍼</name>
+   <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+  </author>
+  <published>2019-11-12T21:35:57+00:00</published>
+  <updated>2026-10-01T15:06:57+00:00</updated>
+  <media:group>
+   <media:title>제주의 밤 빛나는 별과 함께한 별밤사진관</media:title>
+   <media:content url="https://www.youtube.com/v/GwvSHINNDo0?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i4.ytimg.com/vi/GwvSHINNDo0/hqdefault.jpg" width="480" height="360"/>
+   <media:description>제주의 밤 밤하늘에 빛나는 별과 함께해온 별밤사진관
+제주의 빛나는 아름다운 밤하늘에 빛으로 그림을 그리머 특별한 추억과 행복한 시간 선물하는 제주 별밤사진관입니다.</media:description>
+   <media:community>
+    <media:starRating count="2" average="5.00" min="1" max="5"/>
+    <media:statistics views="65"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:nyXB_9_wKdc</id>
+  <yt:videoId>nyXB_9_wKdc</yt:videoId>
+  <yt:channelId>UCq-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+  <title>Autumn in JEJU. Aerial 360 VR video</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=nyXB_9_wKdc"/>
+  <author>
+   <name>제주그래퍼</name>
+   <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+  </author>
+  <published>2019-11-10T15:11:06+00:00</published>
+  <updated>2026-10-05T04:04:08+00:00</updated>
+  <media:group>
+   <media:title>Autumn in JEJU. Aerial 360 VR video</media:title>
+   <media:content url="https://www.youtube.com/v/nyXB_9_wKdc?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i3.ytimg.com/vi/nyXB_9_wKdc/hqdefault.jpg" width="480" height="360"/>
+   <media:description>아름다운 제주의 가을입니다.
+유난히 짧게 느껴지는 제주의 단풍
+이제야 소개하고 보여드리지만,  벌써 막바지...
+아쉬운 제주의 가을이지만,
+그래도 재미있게 제주의 가을을 감상해 보세요.
+위아래 두개의 카메라를 연결하여 촬영하였어요.
+재미있게 감상해 주세요^^
+
+
+drone : DJI inspire 2
+camera : insta360
+BGM : DidYouSeeTheLeavesFalling_by_JonGegelman_Artlist</media:description>
+   <media:community>
+    <media:starRating count="0" average="0.00" min="1" max="5"/>
+    <media:statistics views="133"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:2RvYP0irbjM</id>
+  <yt:videoId>2RvYP0irbjM</yt:videoId>
+  <yt:channelId>UCq-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+  <title>아름다운제주 360 VR 한담, 곽지, 중문</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=2RvYP0irbjM"/>
+  <author>
+   <name>제주그래퍼</name>
+   <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+  </author>
+  <published>2019-11-03T15:22:41+00:00</published>
+  <updated>2026-10-03T15:17:57+00:00</updated>
+  <media:group>
+   <media:title>아름다운제주 360 VR 한담, 곽지, 중문</media:title>
+   <media:content url="https://www.youtube.com/v/2RvYP0irbjM?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i3.ytimg.com/vi/2RvYP0irbjM/hqdefault.jpg" width="480" height="360"/>
+   <media:description>아름다운 제주의 바다를 하늘에서 360 VR로 담아갑니다.
+
+영상은 
+
+아름다운 제주의 산책길 '한담해안로'
+
+아름다운 모래사장이 있는 '곽지해수욕장'
+
+그리고 서퍼들의 천국 '중문색달해변'
+
+을 담았습니다.
+
+이날은 바람이 좀 센 날이었어요.
+
+가능한 진동등을 잡기 위해 노력하였으나 떨림이 있네요.
+
+개선해 나갈 것입니다. 그럼 즐겨 주세요.^^
+
+앞으로도 360으로 돌려보며, 아름다운 제주의 바다를 보여드릴께요.
+
+앞으로 더 멋진 영상으로 찾아뵙겠습니다.
+
+
+
+제주그래퍼는 새롭고 멋진 360 영상 제작을 위해
+
+직접 카메라 브라켓을 제조 제작하여 촬영을 진행합니다.
+
+추후 저희의 브라켓과 사용법 편집법등에 대해서도 영상을 올릴 예정이니 많은 관심 부탁드립니다.
+
+
+camera : insta360 (위, 아래 두대)
+drone : inspire 2
+bracket : self-production 360 bracket
+(3d 프린터로 직접 제작)
+
+BGM
+
+Boundless_by_TristanBarton_Artlist
+
+Motion_by_TristanBarton_Artlist
+
+RoamingFree_by_TristanBarton_Artlist
+
+Wings_by_TristanBarton_Artlist
+
+그리고 제주의 밤하늘을 배경삼아 빛으로 하늘에 그림을 그리며 인생사진 담아가는 제주그래퍼의 야간 여행 프로그램 '별밤사진관'도 많이 찾아주세요^^</media:description>
+   <media:community>
+    <media:starRating count="6" average="5.00" min="1" max="5"/>
+    <media:statistics views="380"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:BgYj8OXmbTo</id>
+  <yt:videoId>BgYj8OXmbTo</yt:videoId>
+  <yt:channelId>UCq-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+  <title>제주다운 제주스러운 제주바다</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=BgYj8OXmbTo"/>
+  <author>
+   <name>제주그래퍼</name>
+   <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+  </author>
+  <published>2019-09-29T14:40:19+00:00</published>
+  <updated>2026-10-04T05:06:04+00:00</updated>
+  <media:group>
+   <media:title>제주다운 제주스러운 제주바다</media:title>
+   <media:content url="https://www.youtube.com/v/BgYj8OXmbTo?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i3.ytimg.com/vi/BgYj8OXmbTo/hqdefault.jpg" width="480" height="360"/>
+   <media:description></media:description>
+   <media:community>
+    <media:starRating count="1" average="5.00" min="1" max="5"/>
+    <media:statistics views="40"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:GLKb-KMqsXY</id>
+  <yt:videoId>GLKb-KMqsXY</yt:videoId>
+  <yt:channelId>UCq-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+  <title>서산고5차편집</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GLKb-KMqsXY"/>
+  <author>
+   <name>제주그래퍼</name>
+   <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+  </author>
+  <published>2019-09-04T05:21:45+00:00</published>
+  <updated>2026-10-03T23:25:21+00:00</updated>
+  <media:group>
+   <media:title>서산고5차편집</media:title>
+   <media:content url="https://www.youtube.com/v/GLKb-KMqsXY?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i4.ytimg.com/vi/GLKb-KMqsXY/hqdefault.jpg" width="480" height="360"/>
+   <media:description></media:description>
+   <media:community>
+    <media:starRating count="2" average="5.00" min="1" max="5"/>
+    <media:statistics views="191"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:JAjuCuRj-l8</id>
+  <yt:videoId>JAjuCuRj-l8</yt:videoId>
+  <yt:channelId>UCq-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+  <title>아름다운 제주 항공 360 촬영</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=JAjuCuRj-l8"/>
+  <author>
+   <name>제주그래퍼</name>
+   <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+  </author>
+  <published>2019-08-21T04:01:52+00:00</published>
+  <updated>2026-10-03T23:55:11+00:00</updated>
+  <media:group>
+   <media:title>아름다운 제주 항공 360 촬영</media:title>
+   <media:content url="https://www.youtube.com/v/JAjuCuRj-l8?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i3.ytimg.com/vi/JAjuCuRj-l8/hqdefault.jpg" width="480" height="360"/>
+   <media:description>아름다운 제주를 하늘에서 바라보아요.
+360 영상입니다.
+직접 돌려보실수 있어요.</media:description>
+   <media:community>
+    <media:starRating count="1" average="5.00" min="1" max="5"/>
+    <media:statistics views="67"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:gjOd6XB_5BA</id>
+  <yt:videoId>gjOd6XB_5BA</yt:videoId>
+  <yt:channelId>UCq-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+  <title>2019년 8월 16일 별밤사진관 360</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=gjOd6XB_5BA"/>
+  <author>
+   <name>제주그래퍼</name>
+   <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+  </author>
+  <published>2019-08-18T02:47:10+00:00</published>
+  <updated>2026-10-04T12:37:00+00:00</updated>
+  <media:group>
+   <media:title>2019년 8월 16일 별밤사진관 360</media:title>
+   <media:content url="https://www.youtube.com/v/gjOd6XB_5BA?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i4.ytimg.com/vi/gjOd6XB_5BA/hqdefault.jpg" width="480" height="360"/>
+   <media:description>오랜만에 별밤사진관 하면서 촬영한 360 영상입니다.</media:description>
+   <media:community>
+    <media:starRating count="3" average="5.00" min="1" max="5"/>
+    <media:statistics views="71"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:EBu3eBpC1W8</id>
+  <yt:videoId>EBu3eBpC1W8</yt:videoId>
+  <yt:channelId>UCq-F1n2gJb0ueNR8A_q6KOQ</yt:channelId>
+  <title>8K 3d360 NightSky Beautiful JEJU 190715</title>
+  <link rel="alternate" href="https://www.youtube.com/shorts/EBu3eBpC1W8"/>
+  <author>
+   <name>제주그래퍼</name>
+   <uri>https://www.youtube.com/channel/UCq-F1n2gJb0ueNR8A_q6KOQ</uri>
+  </author>
+  <published>2019-07-17T16:50:26+00:00</published>
+  <updated>2026-10-01T03:49:20+00:00</updated>
+  <media:group>
+   <media:title>8K 3d360 NightSky Beautiful JEJU 190715</media:title>
+   <media:content url="https://www.youtube.com/v/EBu3eBpC1W8?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i2.ytimg.com/vi/EBu3eBpC1W8/hqdefault.jpg" width="480" height="360"/>
+   <media:description>아름다운 제주의 밤하늘
+8k 3d 360
+테스트촬영
+
+다음엔 더 멋진 영상으로...</media:description>
+   <media:community>
+    <media:starRating count="7" average="5.00" min="1" max="5"/>
+    <media:statistics views="357"/>
+   </media:community>
+  </media:group>
+ </entry>
+</feed>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns:media="http://search.yahoo.com/mrss/" xmlns="http://www.w3.org/2005/Atom">
+ <link rel="self" href="http://www.youtube.com/feeds/videos.xml?channel_id=UC1MDY8toIdAQcaer8xgqPmw"/>
+ <id>yt:channel:1MDY8toIdAQcaer8xgqPmw</id>
+ <yt:channelId>1MDY8toIdAQcaer8xgqPmw</yt:channelId>
+ <title>CurioEpic 큐리오에픽</title>
+ <link rel="alternate" href="https://www.youtube.com/channel/UC1MDY8toIdAQcaer8xgqPmw"/>
+ <author>
+  <name>CurioEpic 큐리오에픽</name>
+  <uri>https://www.youtube.com/channel/UC1MDY8toIdAQcaer8xgqPmw</uri>
+ </author>
+ <published>2026-04-05T16:51:41+00:00</published>
+</feed>

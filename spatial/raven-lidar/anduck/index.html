@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>안덕계곡 LiDAR 측량 — raven 점군 분석 | JEJUGRAPHER 제주그래퍼</title>
+<meta name="description" content="raven LiDAR 로 안덕계곡을(를) 걸으며 스캔하고 세션 간 겹침으로 정합한 뒤, 점 수·스캔 범위·높이를 점군에서 직접 잰 측량·분석.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="안덕계곡 LiDAR 측량 — raven 점군 분석">
+<meta property="og:description" content="raven LiDAR 로 안덕계곡을(를) 걸으며 스캔하고 세션 간 겹침으로 정합한 뒤, 점 수·스캔 범위·높이를 점군에서 직접 잰 측량·분석.">
+<meta property="og:image" content="https://jejugrapher.com/spatial/raven-lidar/cover_ad.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/spatial/style.css">
+<style>
+  body{background:var(--bg-main);color:var(--text-main);font-family:'Noto Sans KR',sans-serif;margin:0;line-height:1.7}
+  .rlnav{position:sticky;top:0;z-index:60;background:rgba(254,252,247,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border-line)}
+  .rlnav .in{max-width:1080px;margin:0 auto;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .rlnav a{color:var(--text-soft);text-decoration:none}
+  .rlnav .logo{font-family:'Noto Serif KR',serif;font-weight:700;letter-spacing:2px;font-size:16px;color:var(--text-main)}
+  .rlnav .lk{display:flex;gap:16px;font-size:14px;flex-wrap:wrap}
+  .rlnav .lk a:hover{color:var(--accent-sage)} .rlnav .lk a.on{color:var(--accent-terracotta);font-weight:500}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+  .hero{padding:4.4rem 0 2.4rem;background:linear-gradient(135deg,var(--bg-soft) 0%,var(--bg-accent) 100%)}
+  .crumb{font-size:13px;color:var(--text-mute);margin-bottom:1rem}.crumb a{color:var(--text-mute);text-decoration:none;border-bottom:1px solid transparent}.crumb a:hover{border-color:var(--text-mute)}
+  .eyebrow{font-family:'Noto Serif KR',serif;font-size:13px;letter-spacing:.2em;color:var(--accent-terracotta);font-weight:600;margin-bottom:12px}
+  h1{font-family:'Noto Serif KR',serif;font-size:clamp(1.9rem,5vw,2.9rem);font-weight:700;letter-spacing:-.01em;margin:0 0 .7rem;line-height:1.25}
+  .lede{font-size:1.06rem;color:var(--text-soft);font-weight:300;max-width:64ch}
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-top:2.1rem}
+  .stat{background:var(--bg-main);border:1px solid var(--border-line);border-radius:14px;padding:1.05rem 1.15rem}
+  .stat b{display:block;font-family:'Noto Serif KR',serif;font-size:1.55rem;color:var(--accent-sage);line-height:1.1}
+  .stat span{font-size:.8rem;color:var(--text-mute);display:block;margin-top:.35rem}
+  section.sec{padding:2.8rem 0;border-top:1px solid var(--border-line)}
+  section.sec:nth-of-type(even){background:var(--bg-soft)}
+  .kicker{font-family:'Noto Serif KR',serif;font-size:12px;letter-spacing:.2em;color:var(--accent-terracotta);font-weight:600;margin-bottom:.5rem}
+  h2{font-family:'Noto Serif KR',serif;font-size:1.55rem;font-weight:700;margin:.1rem 0 .5rem}
+  h3{font-size:1.02rem;font-weight:700;margin:1.5rem 0 .5rem}
+  p{color:var(--text-soft)} .lead{font-size:1.0rem;max-width:64ch}
+  figure{margin:1.2rem 0 0}figure img{width:100%;height:auto;display:block;border:1px solid var(--border-line);border-radius:12px;background:var(--bg-main)}
+  figcaption{font-size:.85rem;color:var(--text-mute);margin-top:.5rem}
+  .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem}
+  table.m{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:1.2rem;background:var(--bg-main);border:1px solid var(--border-line);border-radius:12px;overflow:hidden}
+  table.m th,table.m td{border-bottom:1px solid var(--border-line);padding:.55em .6em;text-align:right;white-space:nowrap}
+  table.m th:first-child,table.m td:first-child{text-align:left;white-space:normal}
+  table.m thead th{background:var(--bg-soft);color:var(--text-soft);font-weight:500;font-size:.82rem}
+  table.m tbody tr:last-child td{border-bottom:0}
+  .num{font-family:'Noto Serif KR',serif}
+  .note{font-size:.9rem;color:var(--text-mute);line-height:1.8;border-left:3px solid var(--border-soft);padding:.2rem 0 .2rem 1rem;margin:1.2rem 0}
+  .tool{background:var(--bg-accent);border:1px solid var(--border-line);border-radius:16px;padding:1.4rem 1.6rem;margin-top:1.2rem}
+  .tool ul{margin:.5rem 0 0;padding-left:1.1rem;color:var(--text-soft)} .tool li{margin:.3rem 0}
+  .cta{display:inline-block;margin-top:1.1rem;background:var(--accent-sage);color:#fff;text-decoration:none;font-weight:500;padding:.7em 1.4em;border-radius:10px}
+  .cta:hover{background:var(--accent-terracotta)}
+  .limits li{margin:.45rem 0;color:var(--text-soft)}
+  .sibs{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin-top:1.2rem}
+  .sibs a{display:block;background:var(--bg-main);border:1px solid var(--border-line);border-radius:12px;padding:.9rem 1rem;text-decoration:none}
+  .sibs a:hover{border-color:var(--accent-sage)} .sibs .s{font-family:'Noto Serif KR',serif;font-weight:700;color:var(--text-main)} .sibs .m{font-size:.8rem;color:var(--text-mute);margin-top:.2rem}
+  .foot{max-width:1080px;margin:0 auto;padding:2.2rem 20px 3.2rem;border-top:1px solid var(--border-line);color:var(--text-mute);font-size:14px;line-height:1.85}
+  .foot a{color:var(--accent-sage)}.foot .go{display:inline-block;margin-top:.9rem;border-bottom:1px solid;color:var(--accent-terracotta)}
+</style>
+</head>
+<body>
+<nav class="rlnav"><div class="in"><a class="logo" href="/">JEJUGRAPHER</a><span class="lk"><a href="/spatial/index.html">공간데이터</a><a href="/media.html">포트폴리오</a><a href="../manjang/">만장굴</a><a href="../gwandeokjeong/">관덕정</a><a href="../bulrari/">벌라리굴</a><a href="../anduck/" class="on">안덕계곡</a><a href="/inquiry.html">문의</a></span></div></nav>
+<header class="hero"><div class="wrap">
+  <div class="crumb"><a href="/spatial/index.html">공간데이터</a> · <a href="../">제주 동굴·유적 LiDAR 측량</a> · 안덕계곡</div>
+  <div class="eyebrow">SITE 04 · 안덕계곡 · FOREST VALLEY · 565만 점</div>
+  <h1>숲에 덮인 계곡을<br>통째로 측정하다</h1>
+  <p class="lede">안덕계곡 계곡부를 6개 세션으로 나눠 걸으며 스캔해 하나의 좌표로 통합했습니다. 숲에 가려 GPS가 약한 계곡이라, 야외에서도 여러 번의 스캔을 하나로 맞춰 통째로 측정했습니다.</p>
+  <div class="stat-row"><div class="stat"><b class="num">565만</b><span>점 수 (5 cm 간격)</span></div><div class="stat"><b class="num">6개</b><span>세션</span></div><div class="stat"><b class="num">16,476 m²</b><span>스캔 평면 면적</span></div><div class="stat"><b class="num">836 m</b><span>걸은 거리 합계</span></div><div class="stat"><b class="num">40.9 m</b><span>점군 수직 범위</span></div></div>
+</div></header>
+
+<section class="sec"><div class="wrap">
+  <div class="kicker">METHOD · 안덕계곡</div>
+  <h2>이 현장은 이렇게 측량했습니다</h2>
+  <p class="lead">안덕계곡 계곡부를 6개 세션으로 나눠 걸으며 스캔해, 하나의 좌표로 통합했습니다.</p><h3>숲 캐노피 아래, GPS가 닿지 않는 계곡</h3><p>울창한 숲에 가려 위성 신호가 약한 계곡입니다. 이런 환경에서도 여러 번의 스캔을 하나로 맞춰, 야외 계곡을 통째로 측정했습니다.</p><div class="note">합본 점군은 5 cm 간격 <b>5,647,748 점</b>입니다. 아래 세션표의 점 수는 세션별 기준입니다.</div>
+  <table class="m"><thead><tr><th>세션</th><th>구분</th><th>시간</th><th>이동 거리</th><th>점 수</th></tr></thead><tbody><tr><td>06-18 12:53</td><td>계곡 아래로 내려감</td><td class="num">3.1 분</td><td class="num">167 m</td><td class="num">1,067,323</td></tr><tr><td>06-18 13:05</td><td>같은 길 되올라옴</td><td class="num">2.5 분</td><td class="num">122 m</td><td class="num">845,121</td></tr><tr><td>06-18 13:08</td><td>동쪽 구간</td><td class="num">2.3 분</td><td class="num">138 m</td><td class="num">939,286</td></tr><tr><td>06-18 13:11</td><td>동쪽 구간</td><td class="num">2.7 분</td><td class="num">115 m</td><td class="num">915,875</td></tr><tr><td>06-18 13:23</td><td>동쪽 구간</td><td class="num">3.0 분</td><td class="num">120 m</td><td class="num">1,119,679</td></tr><tr><td>06-18 13:27</td><td>가장 긴 세션 · 정합 기준</td><td class="num">3.1 분</td><td class="num">174 m</td><td class="num">1,036,419</td></tr></tbody></table>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="kicker">ANALYSIS</div>
+  <h2>점군에서 직접 잰 수치</h2>
+  <p class="note">합친 점군 <b>5,647,748 점</b>(5 cm 간격) · 스캔 범위 동서 <b>290.9 m</b> × 남북 <b>194.0 m</b> · 1 m 격자 점유 평면 <b>16,476 m²</b> · 점군 수직 범위 <b>40.9 m</b>. 스캔 범위·면적·높이차는 점군에서 직접 잰 값입니다.</p>
+  
+  <table class="m"><thead><tr><th>항목</th><th>값</th></tr></thead><tbody><tr><td>합친 점군</td><td class="num">5,647,748 점 (5 cm 간격)</td></tr><tr><td>스캔 범위</td><td class="num">동서 290.9 m × 남북 194.0 m</td></tr><tr><td>점군 수직 범위</td><td class="num">40.9 m</td></tr><tr><td>스캔 평면 면적 (1 m 격자 점유)</td><td class="num">16,476 m²</td></tr><tr><td>1 m 격자별 바닥~최상단 높이차</td><td class="num">중앙 8.6 m · p90 17.8 m · 최대 31.6 m</td></tr><tr><td>계곡 횡단면 — 바닥 폭</td><td class="num">중앙 8.5 m</td></tr><tr><td>계곡 바닥 낙차 (종단)</td><td class="num">8.1 m</td></tr></tbody></table><p class="note">마지막 줄은 계곡 깊이가 아니라, 1 m 격자마다 점군의 바닥부터 가장 높은 점까지의 높이차입니다. 숲이라 나무 수관이 함께 잡힙니다.</p>
+  <div class="figs"><figure><img src="../img/ad_plan.webp" alt="안덕계곡 평면 — 계곡 전체를 떠낸 점군. 색은 높이(상대), 범위 290.9 × 194.0 m" loading="lazy"><figcaption>평면 — 계곡 전체를 떠낸 점군. 색은 높이(상대), 범위 290.9 × 194.0 m</figcaption></figure><figure><img src="../img/ad_sections.webp" alt="안덕계곡 대표 횡단면 — 계곡을 가로질러 자른 여덟 곳. 평평한 바닥과 양쪽 암벽, 그 위는 나무 수관" loading="lazy"><figcaption>대표 횡단면 — 계곡을 가로질러 자른 여덟 곳. 평평한 바닥과 양쪽 암벽, 그 위는 나무 수관</figcaption></figure><figure><img src="../img/ad_profile.webp" alt="안덕계곡 계곡을 따라 본 변화 — 바닥 표고 · 바닥 폭 · 상단까지 높이" loading="lazy"><figcaption>계곡을 따라 본 변화 — 바닥 표고 · 바닥 폭 · 상단까지 높이</figcaption></figure></div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="kicker">INTERACTIVE</div>
+  <h2>점군 위에서 직접 재는 측정 도구</h2>
+  <p class="lead">3D 점군과 지도를 브라우저에서 돌려 보며, 단면 · 폭 · 천장고 · 단면적 · 체적을 <b>위치 · 각도 · 길이 · 넓이까지 자유롭게 조절</b>하며 직접 잴 수 있는 측정 페이지로 만들었습니다.</p><p class="note">야외 계곡이라 단면의 「천장」은 동굴 천장이 아니라 계곡 벽 위쪽과 나무 수관입니다. 천장고·단면적을 동굴 수치처럼 읽으면 틀립니다.</p>
+  <div class="tool"><ul>
+    <li><b>단면</b> — 지도에서 끌거나 숫자(중심·각도·길이·두께)로, 원하는 자리·방향의 단면을 자유롭게</li>
+    <li><b>구간</b> — 중심선이나 직접 그린 경로를 간격마다 훑어 체적 · 경사 · 종단면 · CSV</li>
+    <li><b>선 단면 · 면적</b> — 끝점·꼭짓점을 끌어 세로 단면, 면적·둘레(사각형 수치 입력)</li>
+    <li><b>부피</b> — 다각형으로 쌓인 것 · 파인 곳 · 빈 공간(바닥~천장)의 체적</li>
+  </ul>
+  <a class="cta" href="map/">▶ 안덕계곡 측정 페이지 열기</a></div>
+  <p class="note">저용량 점군으로 몇 초 안에 열리고, 필요하면 [원본]으로 정밀하게 다시 잽니다. 자동 측정값은 사람·장비·난간에 영향을 받으니, 정확한 값은 '직접 재기'로 확인하세요.</p>
+</div></section>
+<section class="sec"><div class="wrap">
+  <div class="kicker">MORE</div>
+  <h2>다른 현장</h2>
+  <div class="sibs"><a href="../manjang/"><span class="s">만장굴</span><span class="m">1,000 m · 62,815 m³</span></a><a href="../gwandeokjeong/"><span class="s">관덕정</span><span class="m">1,792만 · 7개</span></a><a href="../bulrari/"><span class="s">벌라리굴</span><span class="m">311 m · 2,849 m³</span></a></div>
+</div></section>
+
+<div class="foot">
+  측량 · 처리 · 분석 제주그래퍼 JEJUGRAPHER · 3DMakerpro raven LiDAR · RayStudio(3DMakerpro) 처리 · 2026년 10월<br>
+  점군에서 잰 길이 · 면적 · 체적은 상대 측정으로 유효합니다. 점군 · 그림 · 수치와 글의 저작권은 제주그래퍼에 있습니다.
+  <a class="go" href="../">네 현장 한눈에 보기 →</a> · <a href="/media.html">포트폴리오</a> · <a href="/inquiry.html">측량 문의</a>
+</div>
+<!-- jg-copyright-notice -->
+<div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
+<div style="max-width:880px;margin:0 auto">
+<strong style="display:block;color:#F3D9A4;font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:.02em">⚠ 무단 복제 · 도용 금지 — 저작권 경고</strong>
+이 사이트의 모든 사진 · 영상 · 글 · 음악 · 디자인 · 프로그램은 <b style="color:#fff">제주그래퍼(JEJUGRAPHER)</b>와 원저작자에게 저작권이 있으며 「저작권법」의 보호를 받습니다.
+저작권자의 <b style="color:#fff">사전 서면 동의 없이</b> 복제 · 다운로드 후 재배포 · 전송 · 게시 · 편집 · 2차 가공 · 캡처 사용 · 상업적 이용 · AI 학습 데이터로 사용하는 행위를 <b style="color:#fff">엄격히 금지</b>합니다.
+사진과 영상 속 인물의 초상권도 함께 보호됩니다.
+무단 도용이 확인되면 사전 경고 없이 「저작권법」 제136조(5년 이하의 징역 또는 5천만 원 이하의 벌금)에 따른 <b style="color:#fff">형사 고소와 민사상 손해배상 청구</b>를 진행합니다.
+<span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
+</div></div>
+<!-- /jg-copyright-notice -->
+</body>
+</html>

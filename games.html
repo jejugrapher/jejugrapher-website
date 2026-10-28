@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>체험 게임 · JEJUGRAPHER</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="제주그래퍼가 직접 만든 체험 게임. 아이가 폰으로 고른 캐릭터로 대형화면에서 함께 청소 경쟁을 벌이는 '청소 대작전' 등, 계정 없이 QR로 바로 즐기는 멀티플레이 게임입니다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F8F4EC;--navy:#1F3A5F;--terra:#C97B5B;--ink:#2C2825;--line:#E3DCCE}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans KR',sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;background:rgba(248,244,236,.94);border-bottom:1px solid var(--line);z-index:100;backdrop-filter:blur(8px)}
+.navin{max-width:1180px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Gowun Batang',serif;font-weight:700;font-size:19px;letter-spacing:2px;color:var(--navy)}
+.menu{display:flex;gap:22px;font-size:14px}
+.menu a{color:var(--ink)}.menu a:hover{color:var(--terra)}.menu .cur{color:var(--terra);font-weight:500}
+main{max-width:1180px;margin:0 auto;padding:0 24px}
+.hero{padding:130px 0 40px}
+.ey{font-size:13px;letter-spacing:3px;color:var(--terra);font-weight:500;margin-bottom:14px}
+.hero h1{font-size:40px;line-height:1.45;color:var(--navy);font-weight:700;margin-bottom:20px}
+.hero p{font-size:17px;color:var(--ink);max-width:720px}
+section{padding:44px 0;border-top:1px solid var(--line)}
+.shead .n{font-family:'Gowun Batang',serif;font-size:14px;color:var(--terra);letter-spacing:2px}
+.shead h2{font-size:28px;color:var(--navy);font-weight:700;line-height:1.45;margin-top:6px}
+.gamecard{display:grid;grid-template-columns:1fr;gap:0;border:1px solid var(--line);background:#fff;overflow:hidden;margin-top:26px}
+.gamecard .top{padding:34px 30px;background:linear-gradient(120deg,#0b3d91,#03132b);color:#fff}
+.gamecard .top .badge{display:inline-block;font-size:12px;letter-spacing:1px;background:rgba(255,255,255,.18);padding:4px 12px;border-radius:999px;margin-bottom:14px}
+.gamecard .top h3{font-size:30px;font-weight:700;margin-bottom:10px}
+.gamecard .top p{font-size:15.5px;opacity:.92;max-width:640px}
+.gamecard .body{padding:26px 30px}
+.gamecard .flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:10px;align-items:center;margin-bottom:22px}
+.fcard{border:1px solid var(--line);background:var(--bg);padding:14px 10px;text-align:center;border-radius:8px}
+.fcard b{display:block;color:var(--navy);font-size:15px;margin-bottom:4px}
+.fcard span{font-size:12.5px;color:var(--ink)}
+.farr{color:var(--terra);font-size:20px;text-align:center}
+.chips{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.chip{border:1px solid var(--navy);color:var(--navy);padding:12px 24px;font-size:15px;background:transparent;transition:.15s}
+.chip:hover{background:var(--navy);color:#fff}
+.chip.p{background:var(--navy);color:#fff}.chip.p:hover{background:#16293f}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.tag{border:1px solid var(--line);background:var(--bg);padding:7px 14px;font-size:13px;color:var(--navy);border-radius:6px}
+.note{font-size:13.5px;color:#6b6257;margin-top:18px;line-height:1.7}
+.gamecard .shot{display:block;width:100%;height:auto;border-bottom:1px solid var(--line)}
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.shots figure{margin:0}
+.shots img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:8px}
+.shots figcaption{font-size:12.5px;color:#6b6257;text-align:center;margin-top:6px}
+@media(max-width:620px){.shots{grid-template-columns:1fr}}
+footer{border-top:1px solid var(--line);padding:40px 24px;text-align:center;color:#6b6257;font-size:13.5px;margin-top:40px}
+footer b{color:var(--navy);font-weight:500}
+@media(max-width:820px){.gamecard .flow{grid-template-columns:1fr;gap:8px}.farr{transform:rotate(90deg)}}
+@media(max-width:760px){.hero h1{font-size:30px}}
+
+/* 휴대폰: ☰ 메뉴 버튼 → 누르면 메뉴 목록이 아래로 펼쳐짐 (모든 메뉴를 한눈에, 크게 눌러지게) */
+.mtog{display:none}
+@media (max-width:860px){
+  html{scroll-padding-top:76px}
+  .mtog{display:inline-flex;align-items:center;gap:6px;height:42px;padding:0 16px;border:1px solid rgba(26,43,74,.25);border-radius:999px;background:#fff;color:#1A2B4A;font:500 15px/1 inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .mtog[aria-expanded="true"]{background:#1A2B4A;color:#fff}
+  .menu{display:none!important;position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:0!important;background:#F8F4EC;border-bottom:1px solid rgba(0,0,0,.1);box-shadow:0 14px 28px rgba(0,0,0,.12);padding:4px 0 10px;max-height:calc(100vh - 64px);max-height:calc(100dvh - 64px);overflow-y:auto;font-size:16px!important}
+  .menu.open{display:flex!important}
+  .menu a{display:block;padding:15px 24px;border-top:1px solid rgba(0,0,0,.07);font-size:16px}
+  .menu a:first-child{border-top:0}
+}
+</style>
+
+
+<!-- jg-seo -->
+<link rel="canonical" href="https://jejugrapher.com/games.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://jejugrapher.com/games.html">
+<meta property="og:title" content="체험 게임 · JEJUGRAPHER">
+<meta property="og:description" content="제주그래퍼가 직접 만든 체험 게임. 아이가 폰으로 고른 캐릭터로 대형화면에서 함께 청소 경쟁을 벌이는">
+<meta property="og:image" content="https://jejugrapher.com/games/cleanup/assets/promo/play.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="체험 게임 · JEJUGRAPHER">
+<meta name="twitter:description" content="제주그래퍼가 직접 만든 체험 게임. 아이가 폰으로 고른 캐릭터로 대형화면에서 함께 청소 경쟁을 벌이는">
+<!-- /jg-seo -->
+</head>
+<body>
+<nav><div class="navin">
+  <a class="logo" href="index.html">JEJUGRAPHER</a>
+  <button class="mtog" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="siteMenu">☰ 메뉴</button>
+    <div class="menu" id="siteMenu">
+      <a href="spatial/index.html">공간데이터</a>
+      <a href="index.html#filming">영상 제작</a>
+      <a class="cur" aria-current="page" href="index.html#web">웹·체험 제작</a>
+      <a href="aiclass.html">AI 강의</a>
+      <a href="byeolbam.html">별밤사진관</a>
+      <a href="media.html">포트폴리오</a>
+      <a href="price.html">가격 안내</a>
+      <a href="https://jajumap.com" target="_blank" rel="noopener">제주맵 ↗</a>
+      <a href="inquiry.html">문의</a>
+  </div>
+</div></nav>
+
+<main>
+  <div class="hero">
+    <div class="ey">JEJUGRAPHER가 만든 체험 게임</div>
+    <h1>QR 하나로 다 함께,<br>대형화면에서 즐기는 멀티플레이</h1>
+    <p>계정도 앱 설치도 없이, 폰으로 QR을 찍으면 바로 참여합니다. 제주그래퍼가 직접 기획·제작한 체험형 웹 게임 모음입니다. 행사장·교실·전시장 대형화면에 띄우고 여럿이 함께 즐겨 보세요.</p>
+  </div>
+
+  <section>
+    <div class="shead"><div class="n">GAME 01</div><h2>🧹 청소 대작전</h2></div>
+    <div class="gamecard">
+      <img class="shot" src="games/cleanup/assets/promo/play.jpg" alt="청소 대작전 플레이 화면 — 제주 해변 맵에서 캐릭터들이 쓰레기를 모아 저장소에 쌓고 발사로 겨루는 모습" loading="lazy">
+      <div class="top">
+        <span class="badge">최대 10명 · 멀티플레이</span>
+        <h3>내가 고른 캐릭터로 함께 청소!</h3>
+        <p>캐릭터를 고르고 장비를 갖춰 나만의 캐릭터를 완성해, 랜덤으로 정해지는 제주 맵(마을·해변·계곡·곶자왈)을 누비며 쓰레기를 치우는 청소 경쟁 게임. 이동 속도는 모두 같고, 캐릭터·장비마다 담는 양과 특기가 달라 "잘 골랐나?"를 겨루는 재미가 있습니다.</p>
+      </div>
+      <div class="body">
+        <div class="flow">
+          <div class="fcard"><b>① 접속</b><span>QR 찍고 번호·별명</span></div><div class="farr">→</div>
+          <div class="fcard"><b>② 고르기</b><span>캐릭터·장비 선택</span></div><div class="farr">→</div>
+          <div class="fcard"><b>③ 청소</b><span>랜덤 맵 경쟁</span></div><div class="farr">→</div>
+          <div class="fcard"><b>④ 시상</b><span>청소왕·순위</span></div>
+        </div>
+        <div class="chips">
+          <a class="chip p" href="games/cleanup/" target="_blank" rel="noopener">대형화면으로 게임 열기 ↗</a>
+          <a class="chip" href="games/cleanup/phone/" target="_blank" rel="noopener">폰 화면 미리보기 ↗</a>
+        </div>
+        <div class="tags">
+          <span class="tag">🦭 물개</span><span class="tag">🦀 게</span><span class="tag">🐎 조랑말</span><span class="tag">🐦 갈매기</span><span class="tag">🧜 해녀</span><span class="tag">🥕 구좌당근</span><span class="tag">🐢 세화바다거북</span>
+          <span class="tag">🧹 빗자루·집게·꼬챙이</span><span class="tag">🛍️ 담는 도구</span><span class="tag">👟 신발</span>
+        </div>
+        <div class="shots">
+          <figure><img src="games/cleanup/assets/promo/lobby.jpg" alt="대기 화면 — QR 접속과 핵심 플레이 설명" loading="lazy"><figcaption>대기 화면 · QR 접속</figcaption></figure>
+          <figure><img src="games/cleanup/assets/promo/play2.jpg" alt="플레이 화면 — 제주 해변에서 쓰레기 수집 경쟁" loading="lazy"><figcaption>플레이 · 제주 해변</figcaption></figure>
+          <figure><img src="games/cleanup/assets/promo/characters.jpg" alt="캐릭터 선택 — 제주 캐릭터 7종" loading="lazy"><figcaption>캐릭터 7종 선택</figcaption></figure>
+        </div>
+        <p class="note">사용법: 대형화면(PC·프로젝터)에서 <b>‘대형화면으로 게임 열기’</b>를 열면 방 코드·QR과 함께 <b>‘🕹️ 컨트롤 화면 열기’</b> 링크가 뜹니다. 아이들은 폰으로 QR을 찍어 참여(같은 인터넷망 필요), 진행자는 컨트롤 화면(노트북)에서 인원 확인·시작·맵 선택·초기화를 조작합니다. <b>10명이 차면 자동 시작</b>되고, 끝나면 점수·별명이 저장된 뒤 자동으로 초기화되어 다음 팀을 받습니다.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>© JEJUGRAPHER · 제주그래퍼가 직접 기획·제작한 체험 게임입니다. 문의는 <b>상단 메뉴 › 문의</b>로.</footer>
+<script>/* ☰ 메뉴 (휴대폰) */
+(function(){var b=document.querySelector('.mtog'),m=document.getElementById('siteMenu');if(!b||!m)return;
+function set(o){m.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.innerHTML=o?'✕ 닫기':'☰ 메뉴';}
+b.addEventListener('click',function(e){e.stopPropagation();set(!m.classList.contains('open'));});
+m.addEventListener('click',function(e){if(e.target.closest('a'))set(false);});
+document.addEventListener('click',function(e){if(m.classList.contains('open')&&!m.contains(e.target))set(false);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false);});})();
+</script>
+<!-- jg-copyright-notice -->
+<div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
+<div style="max-width:880px;margin:0 auto">
+<strong style="display:block;color:#F3D9A4;font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:.02em">⚠ 무단 복제 · 도용 금지 — 저작권 경고</strong>
+이 사이트의 모든 사진 · 영상 · 글 · 음악 · 디자인 · 프로그램은 <b style="color:#fff">제주그래퍼(JEJUGRAPHER)</b>와 원저작자에게 저작권이 있으며 「저작권법」의 보호를 받습니다.
+저작권자의 <b style="color:#fff">사전 서면 동의 없이</b> 복제 · 다운로드 후 재배포 · 전송 · 게시 · 편집 · 2차 가공 · 캡처 사용 · 상업적 이용 · AI 학습 데이터로 사용하는 행위를 <b style="color:#fff">엄격히 금지</b>합니다.
+사진과 영상 속 인물의 초상권도 함께 보호됩니다.
+무단 도용이 확인되면 사전 경고 없이 「저작권법」 제136조(5년 이하의 징역 또는 5천만 원 이하의 벌금)에 따른 <b style="color:#fff">형사 고소와 민사상 손해배상 청구</b>를 진행합니다.
+<span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
+</div></div>
+<!-- /jg-copyright-notice -->
+</body>
+</html>

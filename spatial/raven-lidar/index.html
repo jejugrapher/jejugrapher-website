@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>제주 동굴·유적 LiDAR 측량 — 만장굴 · 관덕정 · 벌라리굴 · 안덕계곡 | JEJUGRAPHER 제주그래퍼</title>
+<meta name="description" content="3DMakerpro raven LiDAR · RayStudio(3DMakerpro) 로 만장굴·관덕정·벌라리굴·안덕계곡을 통째로 떠, 길이·폭·천장고·단면적·체적과 범위·높이를 점군에서 직접 잰 측량·분석. 현장별 페이지로 봅니다.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
+<meta property="og:title" content="제주 동굴·유적 LiDAR 측량 — 만장굴 · 관덕정 · 벌라리굴 · 안덕계곡">
+<meta property="og:description" content="LiDAR 점군에서 길이·폭·천장고·단면적·체적을 직접 잰 측량·분석. 현장별 페이지.">
+<meta property="og:image" content="https://jejugrapher.com/spatial/raven-lidar/cover.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/spatial/style.css">
+<style>
+  body{background:var(--bg-main);color:var(--text-main);font-family:'Noto Sans KR',sans-serif;margin:0;line-height:1.7}
+  .rlnav{position:sticky;top:0;z-index:60;background:rgba(254,252,247,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border-line)}
+  .rlnav .in{max-width:1080px;margin:0 auto;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .rlnav a{color:var(--text-soft);text-decoration:none}
+  .rlnav .logo{font-family:'Noto Serif KR',serif;font-weight:700;letter-spacing:2px;font-size:16px;color:var(--text-main)}
+  .rlnav .lk{display:flex;gap:16px;font-size:14px;flex-wrap:wrap}
+  .rlnav .lk a:hover{color:var(--accent-sage)} .rlnav .lk a.on{color:var(--accent-terracotta);font-weight:500}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+  .hero{padding:4.4rem 0 2.4rem;background:linear-gradient(135deg,var(--bg-soft) 0%,var(--bg-accent) 100%)}
+  .crumb{font-size:13px;color:var(--text-mute);margin-bottom:1rem}.crumb a{color:var(--text-mute);text-decoration:none;border-bottom:1px solid transparent}.crumb a:hover{border-color:var(--text-mute)}
+  .eyebrow{font-family:'Noto Serif KR',serif;font-size:13px;letter-spacing:.2em;color:var(--accent-terracotta);font-weight:600;margin-bottom:12px}
+  h1{font-family:'Noto Serif KR',serif;font-size:clamp(1.9rem,5vw,2.9rem);font-weight:700;letter-spacing:-.01em;margin:0 0 .7rem;line-height:1.25}
+  .lede{font-size:1.06rem;color:var(--text-soft);font-weight:300;max-width:64ch}
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-top:2.1rem}
+  .stat{background:var(--bg-main);border:1px solid var(--border-line);border-radius:14px;padding:1.05rem 1.15rem}
+  .stat b{display:block;font-family:'Noto Serif KR',serif;font-size:1.55rem;color:var(--accent-sage);line-height:1.1}
+  .stat span{font-size:.8rem;color:var(--text-mute);display:block;margin-top:.35rem}
+  section.sec{padding:2.8rem 0;border-top:1px solid var(--border-line)}
+  section.sec:nth-of-type(even){background:var(--bg-soft)}
+  .kicker{font-family:'Noto Serif KR',serif;font-size:12px;letter-spacing:.2em;color:var(--accent-terracotta);font-weight:600;margin-bottom:.5rem}
+  h2{font-family:'Noto Serif KR',serif;font-size:1.55rem;font-weight:700;margin:.1rem 0 .5rem}
+  h3{font-size:1.02rem;font-weight:700;margin:1.5rem 0 .5rem}
+  p{color:var(--text-soft)} .lead{font-size:1.0rem;max-width:64ch}
+  figure{margin:1.2rem 0 0}figure img{width:100%;height:auto;display:block;border:1px solid var(--border-line);border-radius:12px;background:var(--bg-main)}
+  figcaption{font-size:.85rem;color:var(--text-mute);margin-top:.5rem}
+  .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem}
+  table.m{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:1.2rem;background:var(--bg-main);border:1px solid var(--border-line);border-radius:12px;overflow:hidden}
+  table.m th,table.m td{border-bottom:1px solid var(--border-line);padding:.55em .6em;text-align:right;white-space:nowrap}
+  table.m th:first-child,table.m td:first-child{text-align:left;white-space:normal}
+  table.m thead th{background:var(--bg-soft);color:var(--text-soft);font-weight:500;font-size:.82rem}
+  table.m tbody tr:last-child td{border-bottom:0}
+  .num{font-family:'Noto Serif KR',serif}
+  .note{font-size:.9rem;color:var(--text-mute);line-height:1.8;border-left:3px solid var(--border-soft);padding:.2rem 0 .2rem 1rem;margin:1.2rem 0}
+  .tool{background:var(--bg-accent);border:1px solid var(--border-line);border-radius:16px;padding:1.4rem 1.6rem;margin-top:1.2rem}
+  .tool ul{margin:.5rem 0 0;padding-left:1.1rem;color:var(--text-soft)} .tool li{margin:.3rem 0}
+  .cta{display:inline-block;margin-top:1.1rem;background:var(--accent-sage);color:#fff;text-decoration:none;font-weight:500;padding:.7em 1.4em;border-radius:10px}
+  .cta:hover{background:var(--accent-terracotta)}
+  .limits li{margin:.45rem 0;color:var(--text-soft)}
+  .sibs{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin-top:1.2rem}
+  .sibs a{display:block;background:var(--bg-main);border:1px solid var(--border-line);border-radius:12px;padding:.9rem 1rem;text-decoration:none}
+  .sibs a:hover{border-color:var(--accent-sage)} .sibs .s{font-family:'Noto Serif KR',serif;font-weight:700;color:var(--text-main)} .sibs .m{font-size:.8rem;color:var(--text-mute);margin-top:.2rem}
+  .foot{max-width:1080px;margin:0 auto;padding:2.2rem 20px 3.2rem;border-top:1px solid var(--border-line);color:var(--text-mute);font-size:14px;line-height:1.85}
+  .foot a{color:var(--accent-sage)}.foot .go{display:inline-block;margin-top:.9rem;border-bottom:1px solid;color:var(--accent-terracotta)}
+
+  .hubgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.3rem;margin-top:2rem}
+  a.hub{display:block;text-decoration:none;background:var(--bg-main);border:1px solid var(--border-line);border-radius:14px;overflow:hidden;transition:transform .2s,border-color .2s}
+  a.hub:hover{transform:translateY(-4px);border-color:var(--accent-sage)}
+  a.hub img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;background:var(--bg-soft)}
+  .hb{padding:1rem 1.15rem}.hn{font-family:'Noto Serif KR',serif;font-weight:700;font-size:1.15rem;color:var(--text-main)}.hs{font-size:.85rem;color:var(--text-mute);margin-top:.3rem}
+</style>
+</head>
+<body>
+<nav class="rlnav"><div class="in"><a class="logo" href="/">JEJUGRAPHER</a><span class="lk"><a href="/spatial/index.html">공간데이터</a><a href="/media.html">포트폴리오</a><a href="../manjang/">만장굴</a><a href="../gwandeokjeong/">관덕정</a><a href="../bulrari/">벌라리굴</a><a href="../anduck/">안덕계곡</a><a href="/inquiry.html">문의</a></span></div></nav>
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">LiDAR SURVEY · POINT CLOUD ANALYSIS</div>
+  <h1>동굴과 유적을 통째로 떠서,<br>자로 잰 것처럼 분석합니다</h1>
+  <p class="lede">3DMakerpro raven LiDAR로 네 현장을 걸으며 통째로 스캔했습니다. RayStudio(3DMakerpro) 로 여러 번의 촬영을 하나의 좌표로 정합하고, 점군에서 길이 · 폭 · 천장고 · 단면적 · 체적을 직접 쟀습니다. 현장마다 분석이 다릅니다 — 하나씩 보세요.</p>
+  <div class="hubgrid"><a class="hub" href="manjang/"><img src="cover_mj.webp" alt="" loading="lazy"><div class="hb"><div class="hn">만장굴</div><div class="hs">1,000 m · 62,815 m³ · 6.5 m</div></div></a><a class="hub" href="gwandeokjeong/"><img src="cover_gw.webp" alt="" loading="lazy"><div class="hb"><div class="hn">관덕정</div><div class="hs">1,792만 · 7개 · 0.11 m</div></div></a><a class="hub" href="bulrari/"><img src="cover_bl.webp" alt="" loading="lazy"><div class="hb"><div class="hn">벌라리굴</div><div class="hs">311 m · 2,849 m³ · 3.0 m</div></div></a><a class="hub" href="anduck/"><img src="cover_ad.webp" alt="" loading="lazy"><div class="hb"><div class="hn">안덕계곡</div><div class="hs">565만 · 6개 · 16,476 m²</div></div></a></div>
+</div></header>
+<section class="sec"><div class="wrap">
+  <div class="kicker">METHOD</div>
+  <h2>걸으면서 스캔하고, 여러 번을 하나로 맞춥니다</h2>
+  <p class="lead">raven LiDAR로 현장을 걸으며 통째로 스캔하고, 여러 번의 촬영을 하나의 정밀 좌표로 통합합니다. GPS가 닿지 않는 동굴·숲에서도 측정할 수 있고, 점군에서 길이·폭·천장고·단면적·체적을 직접 잽니다. 만장굴은 위경도·해발 표고까지 붙여, 땅속 동굴을 위성지도 위에서 함께 볼 수 있습니다.</p>
+</div></section>
+<div class="foot">
+  측량 · 처리 · 분석 제주그래퍼 JEJUGRAPHER · 3DMakerpro raven LiDAR · RayStudio(3DMakerpro) 처리 · 2026년 10월<br>
+  점군 · 그림 · 수치와 글의 저작권은 제주그래퍼에 있습니다.
+  <a class="go" href="/media.html">포트폴리오로 →</a> · <a href="/inquiry.html">측량 문의</a>
+</div>
+<!-- jg-copyright-notice -->
+<div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
+<div style="max-width:880px;margin:0 auto">
+<strong style="display:block;color:#F3D9A4;font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:.02em">⚠ 무단 복제 · 도용 금지 — 저작권 경고</strong>
+이 사이트의 모든 사진 · 영상 · 글 · 음악 · 디자인 · 프로그램은 <b style="color:#fff">제주그래퍼(JEJUGRAPHER)</b>와 원저작자에게 저작권이 있으며 「저작권법」의 보호를 받습니다.
+저작권자의 <b style="color:#fff">사전 서면 동의 없이</b> 복제 · 다운로드 후 재배포 · 전송 · 게시 · 편집 · 2차 가공 · 캡처 사용 · 상업적 이용 · AI 학습 데이터로 사용하는 행위를 <b style="color:#fff">엄격히 금지</b>합니다.
+사진과 영상 속 인물의 초상권도 함께 보호됩니다.
+무단 도용이 확인되면 사전 경고 없이 「저작권법」 제136조(5년 이하의 징역 또는 5천만 원 이하의 벌금)에 따른 <b style="color:#fff">형사 고소와 민사상 손해배상 청구</b>를 진행합니다.
+<span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
+</div></div>
+<!-- /jg-copyright-notice -->
+</body>
+</html>

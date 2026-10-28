@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>가격 안내 — JEJUGRAPHER</title>
+<meta name="description" content="제주그래퍼 촬영·편집·별밤사진관·홈페이지 제작·강의·3D 공간데이터 기준 가격 안내">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F8F4EC;--navy:#1F3A5F;--terra:#C97B5B;--ink:#2C2825;--line:#E3DCCE}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7}
+h1,h2,h3{font-family:'Gowun Batang',serif;color:var(--navy)}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;background:rgba(248,244,236,.94);border-bottom:1px solid var(--line);z-index:100;backdrop-filter:blur(8px)}
+.navin{max-width:1180px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Gowun Batang',serif;font-weight:700;font-size:19px;letter-spacing:2px;color:var(--navy)}
+.back{font-size:14px;color:var(--terra)}
+.wrap{max-width:860px;margin:0 auto;padding:150px 24px 120px}
+h1{font-size:30px;margin-bottom:14px}
+.lead{font-size:15px;color:#5a544c;margin-bottom:34px}
+.note{background:#fff;border:1px solid var(--line);padding:18px 20px;font-size:13.8px;color:#5a544c;margin-bottom:46px}
+.note b{color:var(--navy)}
+.note ul{margin:8px 0 0 18px}
+.note li{margin:3px 0}
+h2{font-size:21px;margin:64px 0 4px;padding-top:18px;border-top:2px solid var(--navy)}
+h2 .en{font-family:'IBM Plex Sans KR',sans-serif;font-size:12px;font-weight:400;color:var(--terra);letter-spacing:1.5px;display:block;margin-bottom:2px}
+.sub{font-size:14px;color:#6b645b;margin-bottom:18px}
+h3{font-size:16px;margin:30px 0 8px}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:14.2px}
+caption{text-align:left;font-size:13px;color:#6b645b;padding:0 0 6px}
+th,td{border-bottom:1px solid var(--line);padding:11px 13px;text-align:left;vertical-align:top}
+th{background:#F2ECE0;color:var(--navy);font-weight:500;font-size:13.4px}
+td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+.tag{display:inline-block;font-size:11px;color:#fff;background:var(--terra);padding:1px 6px;border-radius:2px;margin-left:5px;vertical-align:2px}
+.small{font-size:12.8px;color:#6b645b;margin-top:8px}
+.foot{margin-top:76px;border-top:1px solid var(--line);padding-top:26px;font-size:14px;color:#5a544c}
+.foot a{color:var(--terra)}
+.callout{background:#FBF6EC;border:1px solid var(--terra);border-left:4px solid var(--terra);padding:16px 18px;font-size:14.2px;color:#4a443c;margin-bottom:34px;line-height:1.75}
+.callout b{color:var(--navy)}
+#ask{background:#fff;border:1px solid var(--line);padding:30px 28px;margin-top:22px}
+#ask label{display:block;font-size:13.4px;font-weight:500;color:var(--navy);margin:20px 0 6px}
+#ask label:first-of-type{margin-top:0}
+#ask input,#ask select,#ask textarea{width:100%;border:1px solid var(--line);background:var(--bg);padding:11px 13px;font-family:inherit;font-size:14.3px;color:var(--ink)}
+#ask textarea{min-height:140px;resize:vertical}
+#ask input:focus,#ask select:focus,#ask textarea:focus{outline:1px solid var(--terra)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btns{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+.cta{background:var(--navy);color:#fff;border:0;padding:13px 26px;font-family:inherit;font-size:14.5px;cursor:pointer}
+.cta.sec{background:transparent;color:var(--navy);border:1px solid var(--navy)}
+.cta:disabled{opacity:.5;cursor:default}
+.msg{margin-top:14px;font-size:13.6px}
+.msg.ok{color:#2e6b43} .msg.err{color:#b4452f}
+.done{background:#F2F6F1;border:1px solid #cfe0d2;padding:22px;font-size:14.3px;color:#2e4a35}
+@media(max-width:620px){
+ .row2{grid-template-columns:1fr}
+
+ .wrap{padding:110px 16px 80px}
+ table{font-size:13.2px} th,td{padding:9px 9px}
+ h2{font-size:19px}
+}
+</style>
+
+<!-- jg-seo -->
+<link rel="canonical" href="https://jejugrapher.com/price.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://jejugrapher.com/price.html">
+<meta property="og:title" content="가격 안내 — JEJUGRAPHER">
+<meta property="og:description" content="제주그래퍼 촬영·편집·별밤사진관·홈페이지 제작·강의·3D 공간데이터 기준 가격 안내">
+<meta property="og:image" content="https://jejugrapher.com/cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="가격 안내 — JEJUGRAPHER">
+<meta name="twitter:description" content="제주그래퍼 촬영·편집·별밤사진관·홈페이지 제작·강의·3D 공간데이터 기준 가격 안내">
+<!-- /jg-seo -->
+</head>
+<body>
+<!-- jg-nav -->
+<style>
+#jgnav{position:sticky;top:0;z-index:60;background:rgba(248,244,236,.96);border-bottom:1px solid #E3DCCE;backdrop-filter:blur(8px);font-family:'IBM Plex Sans KR','Apple SD Gothic Neo',sans-serif}
+#jgnav .in{max-width:1180px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:relative}
+#jgnav a{color:#1F3A5F;text-decoration:none}
+#jgnav .lg{font-family:'Gowun Batang',serif;font-weight:700;font-size:18px;letter-spacing:2px;white-space:nowrap}
+#jgnav .mn{display:flex;gap:20px;font-size:14px}
+#jgnav .mn a:hover{color:#C97B5B}
+#jgnav .mn a[aria-current]{color:#C97B5B;font-weight:500}
+#jgnav .tg{display:none;align-items:center;gap:6px;height:40px;padding:0 15px;border:1px solid #E3DCCE;border-radius:999px;background:transparent;color:#1F3A5F;font:500 15px/1 inherit;cursor:pointer}
+@media (max-width:900px){
+ #jgnav .tg{display:inline-flex}
+ #jgnav .mn{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:0;background:#F8F4EC;border-bottom:1px solid #E3DCCE}
+ #jgnav .mn.open{display:flex}
+ #jgnav .mn a{padding:15px 24px;border-top:1px solid #E3DCCE;font-size:16px}
+}
+</style>
+<nav id="jgnav"><div class="in">
+<a class="lg" href="index.html">JEJUGRAPHER</a>
+<button class="tg" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="jgmenu">☰ 메뉴</button>
+<div class="mn" id="jgmenu"><a href="spatial/index.html">공간데이터</a>
+<a href="index.html#filming">영상 제작</a>
+<a href="index.html#web">웹·체험 제작</a>
+<a href="aiclass.html">AI 강의</a>
+<a href="byeolbam.html">별밤사진관</a>
+<a href="media.html">포트폴리오</a>
+<a href="price.html" aria-current="page">가격 안내</a>
+<a href="https://jajumap.com" target="_blank" rel="noopener">제주맵 ↗</a>
+<a href="inquiry.html">문의</a></div>
+</div></nav>
+<script>(function(){var b=document.querySelector('#jgnav .tg'),m=document.getElementById('jgmenu');
+b.addEventListener('click',function(){var o=m.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false');});})();</script>
+<!-- /jg-nav -->
+
+
+
+
+
+<div class="wrap">
+<h1>가격 안내</h1>
+<p class="lead">제주그래퍼가 하는 일의 <b>기준 가격</b>입니다.</p>
+<div class="callout"><b>이 표는 참고용입니다.</b> 적어 둔 금액은 일을 가늠해 보시라고 올린 기준일 뿐이고, <b>모든 항목은 협의할 수 있습니다.</b> 범위를 줄이거나 나눠서 진행하는 방법, 예산에 맞춰 구성을 바꾸는 방법도 함께 찾습니다. 표에 없는 일도 많으니 편하게 물어봐 주세요.</div>
+
+<div class="note">
+<b>공통 기준</b>
+<ul>
+<li>모든 금액은 <b>공급가액</b>이며 부가세 10%는 별도입니다.</li>
+<li>제주 도내 기준입니다. 도외 출장은 출장 수당(1인 1일 200,000원)과 항공·숙박·렌터카 실비가 더해집니다.</li>
+<li>기본 수정 1회가 포함됩니다. 영상은 추가 수정 시 클립당 50,000원, 3D·문서는 건당 200,000원입니다.</li>
+<li>드론 촬영은 비행 승인이 필요한 구역일 경우 허가 대행료(사이트당 150,000원)와 처리 기간이 추가됩니다.</li>
+<li><span class="tag">협의</span> 표시는 범위에 따라 편차가 커 상담 후 확정하는 항목입니다.</li>
+<li>아래 금액은 <b>확정가가 아닙니다.</b> 일정·분량·사용 범위에 따라 올라가기도, 내려가기도 합니다.</li>
+</ul>
+</div>
+
+<h2><span class="en">FILMING</span>촬영</h2>
+<p class="sub">촬영 당일 기준입니다. 원본 제공·편집은 아래 「편집·후반」에서 따로 산정합니다.</p>
+
+<h3>드론 항공촬영</h3>
+<table>
+<tr><th>항목</th><th>내용</th><th>기준가</th></tr>
+<tr><td>시네마 드론 1일</td><td>Mavic 3 Cine · 4K/5.1K 항공 영상</td><td class="num">800,000원</td></tr>
+<tr><td>FPV 드론 1일</td><td>Avata 2 · Avata 360 · 좁은 공간·저공 추적 비행</td><td class="num">600,000원</td></tr>
+<tr><td>간이 촬영 1일</td><td>Mini 4 Pro · 소규모 현장·답사</td><td class="num">400,000원</td></tr>
+<tr><td>정밀 측량 비행 1일</td><td>M3M RTK · 측량·분석용 데이터 취득</td><td class="num">1,200,000원</td></tr>
+</table>
+
+<h3>지상 촬영</h3>
+<table>
+<tr><th>항목</th><th>내용</th><th>기준가</th></tr>
+<tr><td>본격 촬영 1일</td><td>Sony A1 / ZV-E1 · 인터뷰·행사·제품</td><td class="num">600,000원</td></tr>
+<tr><td>반일 촬영</td><td>4시간 이내 · Sony A1 8K 촬영</td><td class="num">400,000원</td></tr>
+<tr><td>360° VR 촬영</td><td>Insta360 X5 · Osmo 360 · 포인트 단위</td><td class="num">160,000원 / 포인트</td></tr>
+<tr><td>초고해상도 360 사진 <span class="tag">제안</span></td><td>Sony A1 + 12mm · 분할 촬영·스티칭·보정 포함</td><td class="num">350,000원 / 포인트</td></tr>
+<tr><td>멀티캠 동시 촬영</td><td>5대 이상 동시 수록 · 행사·공연</td><td class="num">협의<span class="tag">협의</span></td></tr>
+</table>
+
+<h2><span class="en">EDITING</span>편집 · 후반</h2>
+<p class="sub">촬영본이 있는 경우의 편집 단가입니다. 촬영까지 함께 맡기시면 묶음 할인이 적용됩니다.</p>
+<table>
+<tr><th>항목</th><th>내용</th><th>기준가</th></tr>
+<tr><td>숏폼 1편</td><td>9:16 · 45~60초 · 자막·음악 포함</td><td class="num">300,000~500,000원</td></tr>
+<tr><td>유튜브 영상 1편 <span class="tag">제안</span></td><td>10분 내외 · 컷편집·자막·썸네일</td><td class="num">300,000~500,000원</td></tr>
+<tr><td>행사 기록 영상 1편 <span class="tag">제안</span></td><td>3~5분 · 인터뷰·현장음 정리 포함</td><td class="num">800,000~1,500,000원</td></tr>
+<tr><td>360° VR 영상 편집 <span class="tag">제안</span></td><td>스티칭·안정화·나딜 지도 합성</td><td class="num">600,000~1,500,000원</td></tr>
+<tr><td>다국어 자막</td><td>언어당 · 번역·싱크 포함</td><td class="num">100,000원 / 언어</td></tr>
+<tr><td>추가 수정</td><td>기본 1회 초과분</td><td class="num">50,000원 / 클립</td></tr>
+</table>
+
+<h2><span class="en">AI FILM</span>AI 영상 제작</h2>
+<p class="sub">기획·시나리오부터 AI 이미지·클립 생성, 나레이션·음악, 편집까지 포함한 가격입니다.</p>
+<table>
+<tr><th>영상 길이</th><th>구성</th><th>기준가</th></tr>
+<tr><td>30초~1분</td><td>키프레임 15 · 클립 10</td><td class="num">1,200,000원</td></tr>
+<tr><td>1~1분 30초</td><td>키프레임 22 · 클립 17 <b>(표준)</b></td><td class="num">1,800,000원</td></tr>
+<tr><td>1분 30초~2분</td><td>키프레임 30 · 클립 20</td><td class="num">2,000,000원</td></tr>
+<tr><td>2~3분</td><td>키프레임 35 · 클립 25</td><td class="num">2,200,000원</td></tr>
+<tr><td>3~5분</td><td>키프레임 50 · 클립 35</td><td class="num">3,500,000원</td></tr>
+</table>
+<p class="small">단위 단가 — AI 키프레임 1컷 12,000원 · AI 영상 클립 1개 20,000원 · 인포그래픽 1컷 50,000원</p>
+
+<h2><span class="en">STARRY NIGHT</span>별밤사진관</h2>
+<p class="sub">밤하늘 아래에서 빛으로 그림을 그려 담는 라이트 페인팅 촬영입니다. <b>팀 단위로 진행</b>하기 때문에 한 팀(1~2인)이 기본 단위입니다.<br>빛그림은 <b>보정본 수의 두 배</b>로 그립니다 — 그날 그린 것 중 가장 잘 나온 것을 골라 보정해 드립니다.<br>달이 밝거나 구름이 많으면 별이 담기지 않아, <b>달과 날씨를 보고 날짜를 함께 정합니다.</b></p>
+<table>
+<caption>※ 표시 금액은 모두 <b>부가세 포함</b>입니다. 시간은 현장 세팅·철수를 뺀 <b>촬영 진행 시간</b> 기준입니다.</caption>
+<tr><th>항목</th><th>내용</th><th>기준가</th></tr>
+<tr><td>기본 (1~2인)</td><td>30분 · 빛그림 6종 · 보정본 3컷</td><td class="num">100,000원</td></tr>
+<tr><td>3인</td><td>40분 · 빛그림 8종 · 보정본 4컷</td><td class="num">130,000원</td></tr>
+<tr><td>4인</td><td>50분 · 빛그림 10종 · 보정본 5컷</td><td class="num">160,000원</td></tr>
+<tr><td>5인</td><td>60분 · 빛그림 12종 · 보정본 6컷</td><td class="num">190,000원</td></tr>
+<tr><td>6인</td><td>70분 · 빛그림 14종 · 보정본 7컷</td><td class="num">220,000원</td></tr>
+<tr><td>7인</td><td>80분 · 빛그림 16종 · 보정본 8컷</td><td class="num">250,000원</td></tr>
+<tr><td>8인</td><td>90분 · 빛그림 18종 · 보정본 9컷</td><td class="num">280,000원</td></tr>
+<tr><td>단체 (9인 이상)</td><td>진행 방식 협의 · 회차 운영 · 현장 출장</td><td class="num">300,000원~</td></tr>
+<tr><td>보정 추가</td><td>1컷당</td><td class="num">15,000원</td></tr>
+<tr><td>잠금 사진첩 제공</td><td>참가자용 비밀번호 사진첩 · 원본 내려받기</td><td class="num">포함</td></tr>
+</table>
+<p class="small">· <b>3인부터는 1인이 늘 때마다 30,000원 · 10분 · 빛그림 2종 · 보정본 1컷</b>이 더해집니다.<br>
+· 1인이 참여하셔도 기본가는 같습니다 — 한 팀을 단위로 진행하기 때문입니다.<br>
+· <b>단체(9인 이상)는 기본 300,000원부터</b>이며, 인원·회차 구성·장소에 따라 가격과 진행 방식이 달라집니다. 한 번에 다 함께 할지, 팀을 나눠 회차로 돌릴지 먼저 상의해 정합니다.<br>
+· 예약 후 기상 악화로 촬영이 어려우면 일정을 다시 잡습니다.</p>
+
+<h2><span class="en">WEB</span>홈페이지 · 웹 제작</h2>
+<table>
+<tr><th>항목</th><th>내용</th><th>기준가</th></tr>
+<tr><td>랜딩 페이지 (기본)</td><td>단일 페이지 · 이미지 3~5컷</td><td class="num">500,000~1,000,000원</td></tr>
+<tr><td>랜딩 페이지 (표준)</td><td>3~5섹션 · 이미지 8~12컷</td><td class="num">1,000,000~2,000,000원</td></tr>
+<tr><td>랜딩 페이지 (프리미엄)</td><td>7섹션 이상 · 이미지 15컷 이상</td><td class="num">2,000,000~4,000,000원</td></tr>
+<tr><td>다페이지 사이트 <span class="tag">제안</span></td><td>5~8페이지 · 반응형 · 모바일 최적화</td><td class="num">2,500,000~5,000,000원</td></tr>
+<tr><td>사진첩·갤러리 시스템 <span class="tag">제안</span></td><td>비밀번호 열람 · 드라이브 연동 · 내려받기</td><td class="num">800,000~1,500,000원</td></tr>
+<tr><td>지도·데이터 웹앱 <span class="tag">제안</span></td><td>스팟 DB · 필터·검색 · 다국어</td><td class="num">3,000,000~8,000,000원</td></tr>
+<tr><td>기존 사이트 개편·업데이트</td><td>구조 개편 + 콘텐츠 반영 1회</td><td class="num">1,200,000원~</td></tr>
+<tr><td>유지·관리 <span class="tag">제안</span></td><td>콘텐츠 갱신·오류 대응 (월 단위)</td><td class="num">100,000~300,000원 / 월</td></tr>
+<tr><td>VR 투어 (3D Vista)</td><td>360 촬영본 기반 공간 투어</td><td class="num">1,500,000~4,000,000원</td></tr>
+</table>
+
+<h2><span class="en">LECTURE</span>강의 · 교육</h2>
+<p class="sub">AI 영상 제작, 드론·360 촬영, 공간 데이터 활용을 다룹니다. 어린이 수업은 직접 만든 교구와 웹 도구를 씁니다.</p>
+<table>
+<caption>※ 공공기관은 기관 자체의 강사수당 지급기준을 우선 적용합니다.</caption>
+<tr><th>항목</th><th>내용</th><th>기준가</th></tr>
+<tr><td>특강 <span class="tag">제안</span></td><td>1~2시간 · 성인·기관 대상</td><td class="num">300,000~500,000원 / 시간</td></tr>
+<tr><td>반일 워크숍 <span class="tag">제안</span></td><td>4시간 · 실습 포함</td><td class="num">800,000~1,200,000원</td></tr>
+<tr><td>종일 워크숍 <span class="tag">제안</span></td><td>8시간 · 실습·결과물 제작</td><td class="num">1,500,000~2,500,000원</td></tr>
+<tr><td>어린이 수업 <span class="tag">제안</span></td><td>2시간 · 교구·웹 도구 제공 · 회차당</td><td class="num">400,000~600,000원</td></tr>
+<tr><td>커리큘럼 설계</td><td>교육 과정 1세트 구성</td><td class="num">500,000~1,500,000원</td></tr>
+<tr><td>교육 자료 제작</td><td>슬라이드 1장 기준</td><td class="num">10,000~30,000원</td></tr>
+</table>
+
+<h2><span class="en">3D · SPATIAL</span>3D 모델링 · 공간 데이터</h2>
+<h3>실사 기반 3D (포토그래메트리)</h3>
+<table>
+<tr><th>규모</th><th>면적</th><th>기준가</th></tr>
+<tr><td>소형 — 단일 건축물</td><td>500㎡ 이하</td><td class="num">3,000,000원</td></tr>
+<tr><td>중형 — 마을 단위</td><td>500~5,000㎡</td><td class="num">6,500,000원</td></tr>
+<tr><td>대형 — 광역 지형</td><td>5,000㎡ 이상</td><td class="num">12,000,000원</td></tr>
+</table>
+<p class="small">드론 비행, 메쉬 정리, PBR 4K 텍스처, 1회 무상 수정 포함</p>
+
+<h3>3D 가우시안 스플래팅 · GIS</h3>
+<table>
+<tr><th>항목</th><th>내용</th><th>기준가</th></tr>
+<tr><td>3DGS 단독</td><td>소형 스팟·오브젝트 1사이트</td><td class="num">4,000,000원</td></tr>
+<tr><td>하이브리드</td><td>포토그래메트리 + 3DGS</td><td class="num">5,500,000원</td></tr>
+<tr><td>UE5 변환·셋업</td><td>엔진 통합 (별도 의뢰)</td><td class="num">1,500,000원</td></tr>
+<tr><td>GIS 통합 패키지</td><td>정사영상 + DSM + DTM (1㎢)</td><td class="num">2,000,000원</td></tr>
+<tr><td>정사영상 단독</td><td>GSD 2cm</td><td class="num">800,000원</td></tr>
+</table>
+
+<h3>보유 자산 사용권</h3>
+<table>
+<tr><th>구분</th><th>일반 사용</th><th>단독 사용</th></tr>
+<tr><td>공개 자산 (일반)</td><td class="num">50,000원</td><td class="num">500,000원</td></tr>
+<tr><td>공개 자산 (광역 지형)</td><td class="num">100,000원</td><td class="num">1,000,000원</td></tr>
+<tr><td>비공개 자산 (일반)</td><td class="num">100,000원</td><td class="num">1,000,000원</td></tr>
+<tr><td>비공개 자산 (광역 지형)</td><td class="num">200,000원</td><td class="num">2,000,000원</td></tr>
+</table>
+<p class="small">신규 제작 모델의 사용 범위 — 단일 프로젝트 ×1.0 · 영구 재사용 ×2.5 · 단독 독점 ×10.0</p>
+
+<h2><span class="en">DOCUMENT</span>문서 · 자료 제작</h2>
+<table>
+<tr><th>항목</th><th>분량</th><th>기준가</th></tr>
+<tr><td>사업계획서·제안서 (기본)</td><td>10~15페이지</td><td class="num">500,000~1,000,000원</td></tr>
+<tr><td>사업계획서·제안서 (표준)</td><td>20~30페이지</td><td class="num">1,000,000~2,000,000원</td></tr>
+<tr><td>보고서·백서</td><td>20~50페이지</td><td class="num">800,000~3,000,000원</td></tr>
+<tr><td>발표자료 (PPT·Keynote)</td><td>10~30장</td><td class="num">300,000~1,200,000원</td></tr>
+</table>
+
+<h2><span class="en">TERMS</span>추가 비용 · 할인 · 결제</h2>
+<h3>추가 비용</h3>
+<table>
+<tr><th>항목</th><th>기준가</th></tr>
+<tr><td>도외 출장 수당 (1인 1일)</td><td class="num">200,000원</td></tr>
+<tr><td>항공·숙박·렌터카</td><td class="num">실비</td></tr>
+<tr><td>장비 항공 운송</td><td class="num">150,000원 / 왕복</td></tr>
+<tr><td>비행 허가 대행</td><td class="num">150,000원 / 사이트</td></tr>
+<tr><td>급행 작업 (긴급 발주)</td><td class="num">공급가 20~50% 가산</td></tr>
+</table>
+
+<h3>할인</h3>
+<table>
+<tr><th>구분</th><th>할인율</th><th>조건</th></tr>
+<tr><td>제주 지역</td><td class="num">10~15%</td><td>제주 소재 사업자·단체</td></tr>
+<tr><td>교육기관</td><td class="num">15~20%</td><td>학교·대학·연구기관</td></tr>
+<tr><td>연속 계약</td><td class="num">10%</td><td>직전 6개월 내 계약 이력</td></tr>
+<tr><td>묶음 발주</td><td class="num">10~15%</td><td>3건 이상 동시 의뢰</td></tr>
+</table>
+
+<h3>결제</h3>
+<table>
+<tr><th>규모</th><th>계약금</th><th>잔금</th></tr>
+<tr><td>100만원 미만</td><td class="num">50%</td><td class="num">납품 시 50%</td></tr>
+<tr><td>일반</td><td class="num">30~50%</td><td class="num">납품 시 잔액</td></tr>
+<tr><td>500만원 이상</td><td class="num">30%</td><td class="num">중도금 50% · 납품 시 20%</td></tr>
+</table>
+
+<h2 id="ask-h"><span class="en">ASK</span>견적 문의</h2>
+<p class="sub">하시려는 일을 적어 주시면 범위를 잡아 견적서를 보내 드립니다. 금액·일정 모두 협의할 수 있습니다.</p>
+
+<div id="ask">
+ <form id="askForm">
+  <div class="row2">
+   <div><label for="q-name">성함 · 업체명</label><input id="q-name" name="name" type="text" placeholder="홍길동 / ○○협동조합"></div>
+   <div><label for="q-contact">연락처 <span style="color:var(--terra)">*</span></label><input id="q-contact" name="contact" type="text" placeholder="메일 또는 전화번호" required></div>
+  </div>
+  <label for="q-kind">문의 분야</label>
+  <select id="q-kind" name="kind">
+   <option>촬영 (드론·지상·360)</option>
+   <option>편집 · 후반</option>
+   <option>AI 영상 제작</option>
+   <option>별밤사진관 촬영</option>
+   <option>홈페이지 · 웹 제작</option>
+   <option>강의 · 교육</option>
+   <option>3D 모델링 · 공간 데이터</option>
+   <option>사진 수정 · 삭제 요청</option>
+   <option>그 밖의 문의</option>
+  </select>
+  <div class="row2">
+   <div><label for="q-when">희망 일정</label><input id="q-when" name="when" type="text" placeholder="예: 11월 중순 / 미정"></div>
+   <div><label for="q-budget">예산 (선택)</label><input id="q-budget" name="budget" type="text" placeholder="예: 200만원 안팎 / 상담 후"></div>
+  </div>
+  <label for="q-msg">내용 <span style="color:var(--terra)">*</span></label>
+  <textarea id="q-msg" name="message" placeholder="어떤 일인지, 어디에 쓰실 건지 적어 주시면 범위를 잡기 쉽습니다. 올라가 있는 사진·영상에 대한 수정이나 내림 요청도 여기로 보내 주세요." required></textarea>
+  <div class="btns">
+   <button type="submit" class="cta" id="q-send">문의 남기기</button>
+   <button type="button" class="cta sec" id="q-mail">메일로 보내기</button>
+  </div>
+  <p class="msg" id="q-msgbox"></p>
+ </form>
+ <div class="done" id="askDone" hidden>문의가 접수됐습니다. 확인하는 대로 남겨 주신 연락처로 회신드리겠습니다.</div>
+</div>
+
+<script>
+(function(){
+ var ENDPOINT = "https://script.google.com/macros/s/AKfycbwYW8zN_7UyGnbeYpf3A5hSeSp4GVTc3N3Rj3c28WgnOiAZHVDuovvn4WvN5zHE6_WV/exec";
+ var MAILTO = "whipia@naver.com";
+ var f = document.getElementById('askForm'), box = document.getElementById('q-msgbox'), btn = document.getElementById('q-send');
+ function collect(){
+  return { type:'견적문의', session:'quote', kind:f.kind.value, name:f.name.value.trim(),
+           contact:f.contact.value.trim(), when:f.when.value.trim(), budget:f.budget.value.trim(),
+           message:f.message.value.trim(), page:'price.html', at:new Date().toISOString() };
+ }
+ f.addEventListener('submit', function(e){
+  e.preventDefault();
+  var d = collect();
+  if(!d.contact || !d.message){ box.className='msg err'; box.textContent='연락처와 내용을 적어 주세요.'; return; }
+  btn.disabled = true; box.className='msg'; box.textContent='보내는 중…';
+  try{
+   fetch(ENDPOINT, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(d) });
+   f.hidden = true; document.getElementById('askDone').hidden = false;
+  }catch(err){
+   box.className='msg err'; box.textContent='보내지 못했어요. 「메일로 보내기」로 보내 주시면 확인하겠습니다.';
+   btn.disabled = false;
+  }
+ });
+ document.getElementById('q-mail').addEventListener('click', function(){
+  var d = collect();
+  var sub = '[견적문의] ' + d.kind + (d.name ? ' — ' + d.name : '');
+  var body = ['성함·업체: '+(d.name||'-'), '연락처: '+(d.contact||'-'), '분야: '+d.kind,
+              '희망 일정: '+(d.when||'-'), '예산: '+(d.budget||'-'), '', '내용:', d.message||''].join('\n');
+  location.href = 'mailto:' + MAILTO + '?subject=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(body);
+ });
+})();
+</script>
+
+<div class="foot">
+<p>표에 없는 작업도 많습니다. 하시려는 일을 알려 주시면 범위를 잡아 견적서를 보내 드립니다.</p>
+<p style="margin-top:10px"><a href="inquiry.html">일반 문의 남기기 →</a></p>
+<p class="small" style="margin-top:18px">기준일 2026년 10월 · 금액은 사전 고지 없이 조정될 수 있습니다.</p>
+</div>
+</div>
+<!-- jg-copyright-notice -->
+<div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
+<div style="max-width:880px;margin:0 auto">
+<strong style="display:block;color:#F3D9A4;font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:.02em">⚠ 무단 복제 · 도용 금지 — 저작권 경고</strong>
+이 사이트의 모든 사진 · 영상 · 글 · 음악 · 디자인 · 프로그램은 <b style="color:#fff">제주그래퍼(JEJUGRAPHER)</b>와 원저작자에게 저작권이 있으며 「저작권법」의 보호를 받습니다.
+저작권자의 <b style="color:#fff">사전 서면 동의 없이</b> 복제 · 다운로드 후 재배포 · 전송 · 게시 · 편집 · 2차 가공 · 캡처 사용 · 상업적 이용 · AI 학습 데이터로 사용하는 행위를 <b style="color:#fff">엄격히 금지</b>합니다.
+사진과 영상 속 인물의 초상권도 함께 보호됩니다.
+무단 도용이 확인되면 사전 경고 없이 「저작권법」 제136조(5년 이하의 징역 또는 5천만 원 이하의 벌금)에 따른 <b style="color:#fff">형사 고소와 민사상 손해배상 청구</b>를 진행합니다.
+<span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
+</div></div>
+<!-- /jg-copyright-notice -->
+</body>
+</html>

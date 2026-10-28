@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>만장굴 LiDAR 측량 — raven 점군 분석 | JEJUGRAPHER 제주그래퍼</title>
+<meta name="description" content="raven LiDAR 로 만장굴을(를) 통째로 떠 통로 길이·폭·천장고·단면적·체적을 점군에서 직접 잰 측량·분석.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="만장굴 LiDAR 측량 — raven 점군 분석">
+<meta property="og:description" content="raven LiDAR 로 만장굴을(를) 통째로 떠 통로 길이·폭·천장고·단면적·체적을 점군에서 직접 잰 측량·분석.">
+<meta property="og:image" content="https://jejugrapher.com/spatial/raven-lidar/cover_mj.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/spatial/style.css">
+<style>
+  body{background:var(--bg-main);color:var(--text-main);font-family:'Noto Sans KR',sans-serif;margin:0;line-height:1.7}
+  .rlnav{position:sticky;top:0;z-index:60;background:rgba(254,252,247,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border-line)}
+  .rlnav .in{max-width:1080px;margin:0 auto;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .rlnav a{color:var(--text-soft);text-decoration:none}
+  .rlnav .logo{font-family:'Noto Serif KR',serif;font-weight:700;letter-spacing:2px;font-size:16px;color:var(--text-main)}
+  .rlnav .lk{display:flex;gap:16px;font-size:14px;flex-wrap:wrap}
+  .rlnav .lk a:hover{color:var(--accent-sage)} .rlnav .lk a.on{color:var(--accent-terracotta);font-weight:500}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+  .hero{padding:4.4rem 0 2.4rem;background:linear-gradient(135deg,var(--bg-soft) 0%,var(--bg-accent) 100%)}
+  .crumb{font-size:13px;color:var(--text-mute);margin-bottom:1rem}.crumb a{color:var(--text-mute);text-decoration:none;border-bottom:1px solid transparent}.crumb a:hover{border-color:var(--text-mute)}
+  .eyebrow{font-family:'Noto Serif KR',serif;font-size:13px;letter-spacing:.2em;color:var(--accent-terracotta);font-weight:600;margin-bottom:12px}
+  h1{font-family:'Noto Serif KR',serif;font-size:clamp(1.9rem,5vw,2.9rem);font-weight:700;letter-spacing:-.01em;margin:0 0 .7rem;line-height:1.25}
+  .lede{font-size:1.06rem;color:var(--text-soft);font-weight:300;max-width:64ch}
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-top:2.1rem}
+  .stat{background:var(--bg-main);border:1px solid var(--border-line);border-radius:14px;padding:1.05rem 1.15rem}
+  .stat b{display:block;font-family:'Noto Serif KR',serif;font-size:1.55rem;color:var(--accent-sage);line-height:1.1}
+  .stat span{font-size:.8rem;color:var(--text-mute);display:block;margin-top:.35rem}
+  section.sec{padding:2.8rem 0;border-top:1px solid var(--border-line)}
+  section.sec:nth-of-type(even){background:var(--bg-soft)}
+  .kicker{font-family:'Noto Serif KR',serif;font-size:12px;letter-spacing:.2em;color:var(--accent-terracotta);font-weight:600;margin-bottom:.5rem}
+  h2{font-family:'Noto Serif KR',serif;font-size:1.55rem;font-weight:700;margin:.1rem 0 .5rem}
+  h3{font-size:1.02rem;font-weight:700;margin:1.5rem 0 .5rem}
+  p{color:var(--text-soft)} .lead{font-size:1.0rem;max-width:64ch}
+  figure{margin:1.2rem 0 0}figure img{width:100%;height:auto;display:block;border:1px solid var(--border-line);border-radius:12px;background:var(--bg-main)}
+  figcaption{font-size:.85rem;color:var(--text-mute);margin-top:.5rem}
+  .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem}
+  table.m{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:1.2rem;background:var(--bg-main);border:1px solid var(--border-line);border-radius:12px;overflow:hidden}
+  table.m th,table.m td{border-bottom:1px solid var(--border-line);padding:.55em .6em;text-align:right;white-space:nowrap}
+  table.m th:first-child,table.m td:first-child{text-align:left;white-space:normal}
+  table.m thead th{background:var(--bg-soft);color:var(--text-soft);font-weight:500;font-size:.82rem}
+  table.m tbody tr:last-child td{border-bottom:0}
+  .num{font-family:'Noto Serif KR',serif}
+  .note{font-size:.9rem;color:var(--text-mute);line-height:1.8;border-left:3px solid var(--border-soft);padding:.2rem 0 .2rem 1rem;margin:1.2rem 0}
+  .tool{background:var(--bg-accent);border:1px solid var(--border-line);border-radius:16px;padding:1.4rem 1.6rem;margin-top:1.2rem}
+  .tool ul{margin:.5rem 0 0;padding-left:1.1rem;color:var(--text-soft)} .tool li{margin:.3rem 0}
+  .cta{display:inline-block;margin-top:1.1rem;background:var(--accent-sage);color:#fff;text-decoration:none;font-weight:500;padding:.7em 1.4em;border-radius:10px}
+  .cta:hover{background:var(--accent-terracotta)}
+  .limits li{margin:.45rem 0;color:var(--text-soft)}
+  .sibs{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin-top:1.2rem}
+  .sibs a{display:block;background:var(--bg-main);border:1px solid var(--border-line);border-radius:12px;padding:.9rem 1rem;text-decoration:none}
+  .sibs a:hover{border-color:var(--accent-sage)} .sibs .s{font-family:'Noto Serif KR',serif;font-weight:700;color:var(--text-main)} .sibs .m{font-size:.8rem;color:var(--text-mute);margin-top:.2rem}
+  .foot{max-width:1080px;margin:0 auto;padding:2.2rem 20px 3.2rem;border-top:1px solid var(--border-line);color:var(--text-mute);font-size:14px;line-height:1.85}
+  .foot a{color:var(--accent-sage)}.foot .go{display:inline-block;margin-top:.9rem;border-bottom:1px solid;color:var(--accent-terracotta)}
+</style>
+</head>
+<body>
+<nav class="rlnav"><div class="in"><a class="logo" href="/">JEJUGRAPHER</a><span class="lk"><a href="/spatial/index.html">공간데이터</a><a href="/media.html">포트폴리오</a><a href="../manjang/" class="on">만장굴</a><a href="../gwandeokjeong/">관덕정</a><a href="../bulrari/">벌라리굴</a><a href="../anduck/">안덕계곡</a><a href="/inquiry.html">문의</a></span></div></nav>
+<header class="hero"><div class="wrap">
+  <div class="crumb"><a href="/spatial/index.html">공간데이터</a> · <a href="../">제주 동굴·유적 LiDAR 측량</a> · 만장굴</div>
+  <div class="eyebrow">SITE 01 · 만장굴 · LAVA TUBE · 1 km</div>
+  <h1>1 km 용암동굴을<br>끝에서 끝까지</h1>
+  <p class="lede">만장굴 입구에서 1,000 m 지점까지 왕복하며 스캔한 뒤, 입구 지상과 함께 하나의 좌표로 통합했습니다. 세 현장 중 유일하게 위경도·해발 표고를 붙여, 땅속 동굴을 위성지도 위에서 함께 볼 수 있습니다.</p>
+  <div class="stat-row"><div class="stat"><b class="num">1,000 m</b><span>통로 길이</span></div><div class="stat"><b class="num">62,815 m³</b><span>동굴 체적</span></div><div class="stat"><b class="num">6.5 m</b><span>천장고 중앙</span></div><div class="stat"><b class="num">10.4 m</b><span>폭 중앙</span></div></div>
+</div></header>
+
+<section class="sec"><div class="wrap">
+  <div class="kicker">METHOD · 만장굴</div>
+  <h2>이 현장은 이렇게 측량했습니다</h2>
+  <p class="lead">세션 4개 — 동굴 1 km 왕복, 동굴+입구 지상, 동굴 앞 350 m, 입구 지상 — 을 하나의 좌표로 통합했습니다.</p><div class="note"><b>위경도·해발 표고.</b> 세 현장 중 유일하게 위경도·해발 표고를 붙여, 땅속 동굴을 위성사진(Esri) 지도 위에서 함께 볼 수 있습니다.</div>
+  <table class="m"><thead><tr><th>세션</th><th>구분</th><th>시간</th><th>이동 거리</th><th>점 수</th></tr></thead><tbody><tr><td>08-05 14:52</td><td>동굴 1 km 왕복</td><td class="num">51 분</td><td class="num">3,032 m</td><td class="num">7,854,344</td></tr><tr><td>09-02 13:37</td><td>동굴 + 입구 지상</td><td class="num">61 분</td><td class="num">4,035 m</td><td class="num">9,179,408</td></tr><tr><td>09-02 13:02</td><td>동굴 앞 350 m</td><td class="num">32 분</td><td class="num">1,995 m</td><td class="num">4,668,858</td></tr><tr><td>08-05 14:42</td><td>입구 지상</td><td class="num">7 분</td><td class="num">354 m</td><td class="num">1,985,995</td></tr></tbody></table>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="kicker">ANALYSIS</div>
+  <h2>점군에서 직접 잰 수치</h2>
+  <p class="note">통로 길이 <b>1,000 m</b> · 체적(단면적×1 m) <b>62,815 m³</b> · 평면 면적 <b>11,042 m²</b>. 모든 수치는 점군에서 직접 잰 값입니다.</p>
+  <table class="m"><thead><tr><th>항목 (1 m 간격 단면)</th><th>중앙값</th><th>최소</th><th>최대</th><th>10~90 %</th></tr></thead><tbody><tr><td>폭 — 벽 사이 (바닥+1.5 m)</td><td class="num">10.37 m</td><td class="num">2.24</td><td class="num">22.53</td><td class="num">6.4~13.9</td></tr><tr><td>통행 폭 (가장 가까운 장애물)</td><td class="num">8.75 m</td><td class="num">1.00</td><td class="num">19.30</td><td class="num">3.0~12.7</td></tr><tr><td>천장고 (중앙)</td><td class="num">6.53 m</td><td class="num">2.29</td><td class="num">14.35</td><td class="num">3.9~9.9</td></tr><tr><td>단면적</td><td class="num">60.5 m²</td><td class="num">4.1</td><td class="num">195.8</td><td class="num">20~106</td></tr><tr><td>지표→천장 깊이 (지형 기준)</td><td class="num">19.6 m</td><td class="num">8.9</td><td class="num">30.4</td><td class="num">—</td></tr></tbody></table>
+  
+  <div class="figs"><figure><img src="../img/mj_plan.webp" alt="만장굴 평면도 — 입구부터 100 m 간격으로 거리를 표시한 동굴 통로" loading="lazy"><figcaption>평면도 — 입구부터 100 m 간격으로 거리를 표시한 동굴 통로</figcaption></figure><figure><img src="../img/mj_sections.webp" alt="만장굴 대표 단면 — 구간마다 바뀌는 통로의 폭과 천장고" loading="lazy"><figcaption>대표 단면 — 구간마다 바뀌는 통로의 폭과 천장고</figcaption></figure><figure><img src="../img/mj_profile.webp" alt="만장굴 통로를 따라 본 천장고 · 폭 · 단면적의 변화(2 m 간격)" loading="lazy"><figcaption>통로를 따라 본 천장고 · 폭 · 단면적의 변화(2 m 간격)</figcaption></figure></div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="kicker">INTERACTIVE</div>
+  <h2>점군 위에서 직접 재는 측정 도구</h2>
+  <p class="lead">3D 점군과 지도를 브라우저에서 돌려 보며, 단면 · 폭 · 천장고 · 단면적 · 체적을 <b>위치 · 각도 · 길이 · 넓이까지 자유롭게 조절</b>하며 직접 잴 수 있는 측정 페이지로 만들었습니다.</p>
+  <div class="tool"><ul>
+    <li><b>단면</b> — 지도에서 끌거나 숫자(중심·각도·길이·두께)로, 원하는 자리·방향의 단면을 자유롭게</li>
+    <li><b>구간</b> — 중심선이나 직접 그린 경로를 간격마다 훑어 체적 · 경사 · 종단면 · CSV</li>
+    <li><b>선 단면 · 면적</b> — 끝점·꼭짓점을 끌어 세로 단면, 면적·둘레(사각형 수치 입력)</li>
+    <li><b>부피</b> — 다각형으로 쌓인 것 · 파인 곳 · 빈 공간(바닥~천장)의 체적</li>
+  </ul>
+  <a class="cta" href="map/">▶ 만장굴 측정 페이지 열기</a></div>
+  <p class="note">저용량 점군으로 몇 초 안에 열리고, 필요하면 [원본]으로 정밀하게 다시 잽니다. 자동 측정값은 사람·장비·난간에 영향을 받으니, 정확한 값은 '직접 재기'로 확인하세요.</p>
+</div></section>
+<section class="sec"><div class="wrap">
+  <div class="kicker">MORE</div>
+  <h2>다른 현장</h2>
+  <div class="sibs"><a href="../gwandeokjeong/"><span class="s">관덕정</span><span class="m">1,792만 · 7개</span></a><a href="../bulrari/"><span class="s">벌라리굴</span><span class="m">311 m · 2,849 m³</span></a><a href="../anduck/"><span class="s">안덕계곡</span><span class="m">565만 · 6개</span></a></div>
+</div></section>
+
+<div class="foot">
+  측량 · 처리 · 분석 제주그래퍼 JEJUGRAPHER · 3DMakerpro raven LiDAR · RayStudio(3DMakerpro) 처리 · 2026년 10월<br>
+  점군에서 잰 길이 · 면적 · 체적은 상대 측정으로 유효합니다. 점군 · 그림 · 수치와 글의 저작권은 제주그래퍼에 있습니다.
+  <a class="go" href="../">네 현장 한눈에 보기 →</a> · <a href="/media.html">포트폴리오</a> · <a href="/inquiry.html">측량 문의</a>
+</div>
+<!-- jg-copyright-notice -->
+<div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
+<div style="max-width:880px;margin:0 auto">
+<strong style="display:block;color:#F3D9A4;font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:.02em">⚠ 무단 복제 · 도용 금지 — 저작권 경고</strong>
+이 사이트의 모든 사진 · 영상 · 글 · 음악 · 디자인 · 프로그램은 <b style="color:#fff">제주그래퍼(JEJUGRAPHER)</b>와 원저작자에게 저작권이 있으며 「저작권법」의 보호를 받습니다.
+저작권자의 <b style="color:#fff">사전 서면 동의 없이</b> 복제 · 다운로드 후 재배포 · 전송 · 게시 · 편집 · 2차 가공 · 캡처 사용 · 상업적 이용 · AI 학습 데이터로 사용하는 행위를 <b style="color:#fff">엄격히 금지</b>합니다.
+사진과 영상 속 인물의 초상권도 함께 보호됩니다.
+무단 도용이 확인되면 사전 경고 없이 「저작권법」 제136조(5년 이하의 징역 또는 5천만 원 이하의 벌금)에 따른 <b style="color:#fff">형사 고소와 민사상 손해배상 청구</b>를 진행합니다.
+<span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
+</div></div>
+<!-- /jg-copyright-notice -->
+</body>
+</html>

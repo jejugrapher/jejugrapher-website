@@ -1,0 +1,11 @@
+# macOS 메타데이터 (exFAT 드라이브에서 생성되는 쓰레기)
+._*
+.DS_Store
+
+# 배포 제외 — 작업 중 산출물·스크래치 (웹에 올리지 않음)
+/s/
+/업로드_안내.txt
+/읽어주세요.txt
+/spatial/whanhae-wall/report/print.html
+/spatial/whanhae-wall/report/rimg/
+/spatial/whanhae-wall/*.pdf

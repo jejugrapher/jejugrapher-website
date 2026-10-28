@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>관리자 — JEJUGRAPHER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6F1E7;--card:#FFFDF8;--ink:#1B2430;--mute:#7A7267;--line:#E3DCCE;--navy:#1F3A5F;--terra:#C97B5B;--ok:#2E7D5B;--warn:#B3452F}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font:400 16px/1.7 "IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif;background:var(--bg);color:var(--ink);word-break:keep-all}
+.wrap{max-width:900px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:14px 0;border-bottom:1px solid var(--line)}
+header a{color:var(--mute);text-decoration:none;font-size:.9rem}
+h1{font-family:"Gowun Batang",serif;font-size:1.3rem;letter-spacing:.04em}
+.gate{max-width:380px;margin:12vh auto;text-align:center}
+.gate p{color:var(--mute);font-size:.94rem;margin:.6rem 0 1.4rem}
+input,button{font:inherit}
+input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px solid var(--line);border-radius:9px;background:#fff}
+.btn{padding:.55rem 1rem;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);cursor:pointer}
+.btn.pri{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.warn{background:var(--warn);color:#fff;border-color:var(--warn)}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.45;cursor:default}
+.tabs{display:flex;gap:8px;margin:18px 0}
+.tabs button{flex:1;padding:.6rem;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;color:var(--mute)}
+.tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.cks{margin-top:.6rem;display:grid;gap:4px}
+.ck{font-size:.86rem;padding:.3em .6em;border-radius:7px}
+.ck.ok{background:#EAF3EE;color:#2E7D5B}
+.ck.warn{background:#FBF1E3;color:#8A5A1E}
+.ck.info{background:#F2EFE8;color:#6E675C}
+.ck.bad{background:#F7E6E2;color:#B3452F;font-weight:600}
+.pwrow{display:flex;gap:8px;align-items:center;margin-top:.7rem;padding-top:.7rem;border-top:1px dashed var(--line);flex-wrap:wrap}
+.pwrow .pwlab{font-size:.84rem;color:var(--mute)}
+.pwrow .pwval{font-family:ui-monospace,monospace;font-size:.95rem;background:var(--bg);padding:.2em .6em;border-radius:6px;border:1px solid var(--line)}
+.pwrow .pwnote{font-size:.76rem;color:var(--mute);background:#F2EFE8;padding:.15em .5em;border-radius:5px}
+.pwrow .pwin{flex:1;min-width:170px;padding:.45em .7em;border:1px solid var(--line);border-radius:8px;font:inherit}
+.pwrow .btn.open{margin-left:auto;background:var(--navy);color:#fff;border-color:var(--navy)}
+.pwrow .btn.open:disabled{background:#fff;color:var(--mute)}
+.pwtest{display:flex;gap:8px;align-items:center;margin-top:.7rem;flex-wrap:wrap}
+.pwtest input{flex:1;min-width:190px;padding:.5em .7em;border:1px solid var(--line);border-radius:8px;font:inherit}
+.pwtest .res{font-size:.88rem;color:var(--mute)}
+.state.lock{background:#2E4A6B;color:#fff}
+.state.lock2{background:#EFE7D6;color:#6B5A3E;border:1px solid #DCCBA8}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.meta{display:flex;flex-wrap:wrap;gap:.5rem 1rem;font-size:.82rem;color:var(--mute);margin-bottom:.5rem}
+.tag{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:.1rem .6rem;font-size:.78rem}
+.tag.lock{border-color:var(--terra);color:var(--terra)}
+.msg{white-space:pre-wrap;font-size:.95rem}
+.row{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.row .t{font-size:.95rem}
+.row .p{font-size:.8rem;color:var(--mute);font-family:ui-monospace,monospace}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.state{font-size:.78rem;padding:.1rem .55rem;border-radius:999px;border:1px solid var(--line);color:var(--mute)}
+.state.hid{border-color:var(--terra);color:var(--terra)}
+.state.down{border-color:var(--warn);color:var(--warn)}
+.sub2x{margin:1.4rem 0 .6rem;font-size:.85rem;letter-spacing:.08em;color:var(--mute);
+  border-top:1px solid var(--line);padding-top:1rem}
+#say{position:sticky;bottom:0;padding:.7rem 0;color:var(--mute);font-size:.9rem;background:linear-gradient(transparent,var(--bg) 40%)}
+.hint{color:var(--mute);font-size:.86rem;margin:.2rem 0 1rem}
+.rep{margin-top:.8rem;border-top:1px solid var(--line);padding-top:.7rem}
+.rep summary{cursor:pointer;color:var(--navy);font-size:.9rem;font-weight:500;list-style:none}
+.rep summary::-webkit-details-marker{display:none}
+.rep summary::before{content:"✎ ";color:var(--terra)}
+.rep .f{display:flex;gap:8px;flex-wrap:wrap;margin-top:.7rem;align-items:center}
+.rep select,.rep input[type=text]{padding:.45rem .6rem;border:1px solid var(--line);border-radius:8px;background:#fff}
+.rep input[type=text]{flex:1;min-width:160px}
+.rep textarea{width:100%;min-height:110px;margin-top:.7rem;padding:.6rem .7rem;border:1px solid var(--line);
+  border-radius:9px;background:#fff;font:inherit;resize:vertical}
+.rep label{font-size:.88rem;color:var(--mute);display:flex;align-items:center;gap:.35rem}
+.done{background:var(--bg);border-left:3px solid var(--ok);padding:.5rem .7rem;margin-top:.6rem;
+  font-size:.9rem;white-space:pre-wrap;color:var(--ink)}
+.done b{color:var(--ok);font-weight:500}
+</style></head><body>
+<div class="wrap">
+  <div id="gate" class="gate">
+    <h1>관리자</h1>
+    <p>비밀번호를 넣어 주세요.</p>
+    <form id="gf" autocomplete="off">
+      <input id="pw" type="password" placeholder="비밀번호" aria-label="비밀번호" required>
+      <button class="btn pri" style="width:100%;margin-top:.7rem" type="submit">들어가기</button>
+    </form>
+    <p id="gerr" role="status" style="min-height:1.4em;color:var(--warn)"></p>
+  </div>
+
+  <div id="app" hidden>
+    <header>
+      <h1>관리자</h1>
+      <div><a href="/">← 홈페이지</a> &nbsp; <button class="btn ghost" id="lock">잠그기</button></div>
+    </header>
+    <div class="tabs">
+      <button id="t1" class="on">문의</button>
+      <button id="t2">페이지 공개 관리</button>
+      <button id="t3">잠금 점검</button>
+    </div>
+
+    <section id="p1">
+      <p class="hint">비밀글 내용까지 모두 보입니다. 연락처가 있으면 함께 나옵니다.</p>
+      <div id="asks">불러오는 중…</div>
+    </section>
+
+    <section id="p3" hidden>
+      <p class="hint">
+        비밀번호가 걸린 페이지를 <b>지금 올라가 있는 주소에서 직접 받아</b> 검사합니다. 보고를 믿지 않고 실제 파일을 봅니다.<br>
+        <span class="state lock">🔒 본문 암호화</span> 는 암호문을 꺼내 <b>PBKDF2 20만 회 + AES-GCM 으로 실제로 풀어</b> 봅니다.
+        <span class="state lock2">🔑 사진첩</span> 은 비밀번호 해시를 맞춰 봅니다.<br>
+        <b>비밀번호는 이 브라우저 밖으로 나가지 않습니다.</b> 서버로 보내지도, 저장하지도 않습니다.<br>
+        두 가지는 지키는 수준이 다릅니다. <span class="state lock">🔒 본문 암호화</span> 는 새면 안 되는 것이라 어긋나면 경고로 올리고,
+        <span class="state lock2">🔑 사진첩</span> 은 함께한 분들만 보시라고 <b>가볍게 가리는 것</b>이라 사실만 회색으로 적습니다.
+      </p>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:.5rem">
+        <button class="btn ghost" id="auditRun">점검 실행</button></div>
+      <div id="audit">「점검 실행」을 누르면 시작합니다.</div>
+    </section>
+
+    <section id="p2" hidden>
+      <p class="hint">
+        <b>가리기</b>는 몇 초 안에 화면에서 사라집니다. 파일은 서버에 남아 있어, 주소를 아는 사람은 볼 수 있습니다.<br>
+        <b>내리기</b>는 깃허브에서 실제로 페이지를 바꿉니다. 1~2분 걸리고, 사진 파일은 남습니다.<br>
+        목록은 깃허브에서 그때그때 읽어 옵니다 — <b>새로 올린 페이지는 바로 여기 나타납니다.</b><br>
+        촬영 기록을 최신순으로 위에 두고, 첫 화면·가격 같은 페이지는 아래에 모았습니다.<br>
+        <span class="state lock">🔒 비밀번호 · 본문 암호화</span> 는 비밀번호 없이는 <b>아무것도 보이지 않습니다</b>.
+        <span class="state lock2">🔑 비밀번호</span> 는 화면만 가리는 것이라, 사진 주소를 아는 사람은 볼 수 있습니다.
+        비밀번호 자체는 어디에도 저장하지 않습니다.<br>
+
+      </p>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:.5rem">
+        <button class="btn ghost" id="refresh">목록 새로고침</button></div>
+      <div id="pages"></div>
+      <div class="card">
+        <div class="row"><span class="t">목록에 없는 주소</span></div>
+        <div style="display:flex;gap:8px;margin-top:.6rem">
+          <input id="custom" type="text" placeholder="예: story/lucky/">
+          <button class="btn" data-act="hide" data-custom="1">가리기</button>
+          <button class="btn" data-act="show" data-custom="1">보이기</button>
+        </div>
+      </div>
+    </section>
+    <div id="say"></div>
+  </div>
+</div>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbwYW8zN_7UyGnbeYpf3A5hSeSp4GVTc3N3Rj3c28WgnOiAZHVDuovvn4WvN5zHE6_WV/exec";
+const REPO = 'jejugrapher/jejugrapher-website';
+let PAGES = [];
+let KEY = null;
+let PWSHEET = {};   // 「비밀번호」 시트에서 읽어 온 값 (문의와 같은 시트, 관리자 열쇠로만)
+
+const $ = s => document.querySelector(s);
+const say = t => { $('#say').textContent = t || ''; };
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+async function call(mode, extra) {
+  const u = new URL(API);
+  u.searchParams.set('mode', mode);
+  if (KEY) u.searchParams.set('key', KEY);
+  Object.entries(extra || {}).forEach(([k, v]) => u.searchParams.set(k, v));
+  const r = await fetch(u.toString(), { redirect: 'follow' });
+  return r.json();
+}
+
+/* ── 탭 ── */
+function setTab(n) {
+  for (const i of [1, 2, 3]) {
+    $('#t' + i).classList.toggle('on', n === i);
+    $('#p' + i).hidden = n !== i;
+  }
+}
+$('#t1').addEventListener('click', () => setTab(1));
+$('#t2').addEventListener('click', () => setTab(2));
+$('#t3').addEventListener('click', () => { setTab(3); });
+$('#refresh').addEventListener('click', async () => {
+  PAGES = []; try { sessionStorage.removeItem('jg-pages'); } catch (e) {}
+  $('#pages').textContent = '다시 읽는 중…'; await loadPages(); say('목록을 다시 읽었습니다.');
+});
+
+/* ── 들어가기 ── */
+$('#gf').addEventListener('submit', async e => {
+  e.preventDefault();
+  $('#gerr').textContent = '확인 중…';
+  KEY = $('#pw').value;
+  try {
+    const d = await call('admin_state');
+    if (!d.ok) { KEY = null; $('#gerr').textContent = '비밀번호가 맞지 않습니다.'; return; }
+    try { sessionStorage.setItem('jg-admin', KEY); } catch (e) {}
+    enter();
+  } catch (err) {
+    KEY = null;
+    $('#gerr').textContent = '서버에 닿지 못했습니다. Apps Script 설치·배포를 확인해 주세요.';
+  }
+});
+$('#lock').addEventListener('click', () => {
+  KEY = null; try { sessionStorage.removeItem('jg-admin'); } catch (e) {}
+  location.reload();
+});
+
+function enter() {
+  $('#gate').hidden = true; $('#app').hidden = false;
+  loadAsks(); loadPages();
+}
+
+/* ── 문의 ── */
+async function loadAsks() {
+  try {
+    const d = await call('admin_list');
+    if (!d.ok) { $('#asks').textContent = '불러오지 못했습니다.'; return; }
+    if (!d.items.length) { $('#asks').textContent = '아직 문의가 없습니다.'; return; }
+    $('#asks').innerHTML = d.items.map(it => `
+      <div class="card">
+        <div class="meta">
+          <span>${esc(new Date(it.at).toLocaleString('ko-KR'))}</span>
+          ${it.kind ? `<span class="tag">${esc(it.kind)}</span>` : ''}
+          ${it.locked ? '<span class="tag lock">비밀글</span>' : ''}
+          ${it.status ? `<span class="tag">${esc(it.status)}</span>` : ''}
+        </div>
+        <div style="font-weight:500">${esc(it.name) || '(이름 없음)'}
+          ${it.contact ? `<span style="color:var(--mute);font-weight:400"> · ${esc(it.contact)}</span>` : ''}</div>
+        <div class="msg" style="margin-top:.5rem">${esc(it.message)}</div>
+        ${it.reply ? `<div class="done"><b>보낸 답변</b>
+${esc(it.reply)}</div>` : ''}
+        ${replyBox(it)}
+      </div>`).join('');
+  } catch (e) { $('#asks').textContent = '서버에 닿지 못했습니다.'; }
+}
+
+/* ── 답변하기 ── */
+const isMail = s => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(s || '').trim());
+
+function replyBox(it) {
+  const mail = isMail(it.contact);
+  return `<details class="rep" data-row="${it.row}" data-to="${esc(it.contact)}">
+    <summary>답변하기</summary>
+    <div class="f">
+      <select data-f="status">
+        ${['접수', '답변완료', '보류', '종결'].map(v =>
+          `<option${v === (it.status || '접수') ? ' selected' : ''}>${v}</option>`).join('')}
+      </select>
+      <input type="text" data-f="memo" placeholder="내부 메모 (상대에게 안 보입니다)" value="${esc(it.memo)}">
+    </div>
+    <textarea data-f="reply" placeholder="${mail ? '답변 내용 — 메일로 그대로 갑니다' : '답변 내용 (기록만 됩니다)'}">${esc(it.reply)}</textarea>
+    <div class="f">
+      ${mail
+        ? `<label><input type="checkbox" data-f="send" checked> ${esc(it.contact)} 로 메일 보내기</label>`
+        : `<label>연락처가 메일이 아니라 기록만 됩니다 — ${esc(it.contact) || '연락처 없음'}</label>`}
+      <button class="btn pri" data-reply="1" style="margin-left:auto">저장</button>
+    </div>
+  </details>`;
+}
+
+document.addEventListener('click', async e => {
+  const b = e.target.closest('button[data-reply]');
+  if (!b) return;
+  const box = b.closest('.rep');
+  const g = f => { const el = box.querySelector(`[data-f="${f}"]`); return el ? el.value : ''; };
+  const sendEl = box.querySelector('[data-f="send"]');
+  const reply = g('reply').trim();
+  if (reply.length > 1500) { say('답변이 너무 깁니다. 1500자 안으로 줄여 주세요.'); return; }
+  if (sendEl && sendEl.checked && !reply) { say('보낼 내용이 비어 있습니다.'); return; }
+  b.disabled = true; say('저장하는 중…');
+  try {
+    const d = await call('ask_reply', {
+      row: box.dataset.row, status: g('status'), memo: g('memo'),
+      reply: reply, send: sendEl && sendEl.checked ? '1' : '0', to: box.dataset.to
+    });
+    say(d.ok ? ('저장했습니다' + (d.sent ? ' · 메일 ' + d.sent : '')) : ('실패: ' + (d.why || '알 수 없음')));
+    if (d.ok) loadAsks();
+  } catch (err) { say('서버에 닿지 못했습니다.'); }
+  b.disabled = false;
+});
+
+/* ── 페이지 목록 — 깃허브에서 그때그때 읽어 온다 (올리면 바로 보임) ── */
+const SKIP = /^(admin\.html|card\/|games\/|404\.html)/;
+const DATE = /(20\d\d)[.\-년\s]+(\d{1,2})[.\-월\s]+(\d{1,2})/;
+// 촬영 기록 페이지 — 이것만 날짜로 줄 세운다. 나머지(첫 화면·가격 등)는 아래에
+const SHOT = /^(story\/|spatial\/|eco\/g\/|eco\/pilot\/|byeolbam\/g\/|sound\/g\/|run\/g\/)/;
+// 비밀번호 가림막이 있는 페이지인지 — 가림막 자체를 집는다.
+// (문의 페이지의 '비밀글' 비밀번호 칸은 가림막이 아니므로 걸리지 않는다)
+const GATE = /class="(?:gate|gate-box|lockwrap)"|id="(?:pwf|lkf|locked)"/;
+
+async function fetchPages(force) {
+  if (!force) {
+    try {
+      const c = JSON.parse(sessionStorage.getItem('jg-pages') || 'null');
+      if (c && c.t > Date.now() - 30*60*1000) return c.v;
+    } catch (e) {}
+  }
+  const r = await fetch(`https://api.github.com/repos/${REPO}/git/trees/main?recursive=1`);
+  const t = (await r.json()).tree || [];
+  const paths = t.map(x => x.path)
+    .filter(p => p.endsWith('.html') && !p.includes('원본') && !SKIP.test(p));
+  // 페이지 주소로 바꾸기 — index.html 은 폴더로
+  const list = paths.map(p => ({ file: p, path: p.replace(/index\.html$/, '') }));
+  // 각 페이지에서 제목과 촬영 날짜를 읽어 최신 촬영이 위로
+  await Promise.all(list.map(async it => {
+    try {
+      const h = await (await fetch('/' + it.file, {cache:'no-cache'})).text();
+      const t = h.match(/<title>([^<]*)<\/title>/);
+      it.title = t ? t[1].replace(/\s*\|.*$/, '').trim() : it.path;
+      // 페이지 전체에서 가장 늦은 날짜를 촬영일로 본다 (크레딧이 글 끝에 있는 경우가 많다)
+      let best = '';
+      for (const m of h.matchAll(new RegExp(DATE, 'g'))) {
+        const mo = +m[2], da = +m[3];
+        if (mo < 1 || mo > 12 || da < 1 || da > 31) continue;
+        const d = `${m[1]}-${String(mo).padStart(2,'0')}-${String(da).padStart(2,'0')}`;
+        if (d > best) best = d;
+      }
+      it.date = best;
+      // PBKDF2 가 있으면 본문을 통째로 암호화한 것, 없으면 화면만 가리는 가림막
+      it.lock = /PBKDF2/.test(h) ? 'enc' : (GATE.test(h) ? 'gate' : '');
+      // 사진첩 비밀번호는 대개 촬영 날짜입니다 — 페이지에 적힌 날짜를 맞춰 보고 맞으면 그대로 채웁니다.
+      // (페이지에 이미 보이는 값 하나를 확인하는 것이라, 비밀번호를 알아내는 게 아닙니다.)
+      it.pw = '';
+      if (it.lock === 'gate') {
+        const hm = h.match(/PW_HASH\s*=\s*"([0-9a-f]{64})"/);
+        if (hm) {
+          const cands = new Set();
+          // ① 페이지에 적힌 날짜 → YYMMDD
+          for (const m of h.matchAll(new RegExp(DATE, 'g'))) {
+            const mo = +m[2], da = +m[3];
+            if (mo < 1 || mo > 12 || da < 1 || da > 31) continue;
+            cands.add(`${m[1].slice(2)}${String(mo).padStart(2,'0')}${String(da).padStart(2,'0')}`);
+          }
+          // ② 페이지에 실제로 나오는 6자리·8자리 숫자 (gate 스크립트 자체의 값은 뺀다)
+          const body = h.replace(/<script[\s\S]*?<\/script>/g, ' ');
+          for (const m of body.matchAll(/(\d{8}|\d{6})/g)) {
+            const d = m[1]; cands.add(d.length === 8 ? d.slice(2) : d);
+          }
+          for (const c of cands) {
+            if ((await sha256('byeolbam-pw:' + c)) === hm[1]) { it.pw = c; break; }
+          }
+        }
+      }
+    } catch (e) { it.title = it.path; it.date = ''; it.lock = ''; it.pw = ''; }
+  }));
+  list.forEach(it => { it.shot = SHOT.test(it.file); if (!it.shot) it.date = ''; });
+  list.sort((a, b) => (b.shot - a.shot)
+    || (b.date || '').localeCompare(a.date || '')
+    || a.path.localeCompare(b.path));
+  try { sessionStorage.setItem('jg-pages', JSON.stringify({t: Date.now(), v: list})); } catch (e) {}
+  return list;
+}
+
+let STATE = {};
+async function loadPages() {
+  if (!PAGES.length) {
+    $('#pages').textContent = '페이지 목록을 불러오는 중…';
+    try { PAGES = await fetchPages(); }
+    catch (e) { $('#pages').textContent = '깃허브에서 목록을 읽지 못했습니다.'; return; }
+  }
+  try {
+    const d = await call('admin_state');
+    STATE = {};
+    (d.items || []).forEach(r => { STATE[r.path.replace(/^\/+/, '')] = r; });
+  } catch (e) {}
+  try {                                   // 비밀번호 시트 읽기 (문의와 같은 시트)
+    const d = await call('pw_list');
+    if (d && d.ok) PWSHEET = d.items || {};
+  } catch (e) {}
+
+  let shown = true;
+  $('#pages').innerHTML = PAGES.map(p => {
+    let sep = '';
+    if (shown && !p.shot) { shown = false;
+      sep = '<div class="sub2x">그 밖의 페이지</div>'; }
+    const s = STATE[p.path] || {};
+    return sep + `<div class="card"><div class="row">
+      <div><div class="t">${p.date ? `<span style="color:var(--mute);font-size:.82rem">${esc(p.date)}</span>  ` : ''}${esc(p.title)}
+        ${p.lock === 'enc' ? '<span class="state lock" title="비밀번호 없이는 내용이 보이지 않습니다 (본문 암호화)">🔒 비밀번호 · 본문 암호화</span>' : ''}
+        ${p.lock === 'gate' ? '<span class="state lock2" title="화면은 가리지만, 사진 주소 같은 일부는 소스에 남습니다">🔑 비밀번호</span>' : ''}
+        ${s.hidden ? '<span class="state hid">가려짐</span>' : ''}
+        ${s.down ? '<span class="state down">내려짐</span>' : ''}</div>
+        <div class="p">/${esc(p.path)}</div></div>
+      <div class="acts">
+        <button class="btn" data-act="${s.hidden ? 'show' : 'hide'}" data-path="${esc(p.path)}">${s.hidden ? '다시 보이기' : '가리기'}</button>
+        <button class="btn ${s.down ? '' : 'warn'}" data-act="${s.down ? 'republish' : 'unpublish'}" data-path="${esc(p.path)}">${s.down ? '되돌리기' : '내리기'}</button>
+      </div></div>
+      ${p.lock ? pwRow(p) : ''}
+      </div>`;
+  }).join('');
+  paintPw();
+}
+
+/* ── 비밀번호 보관함 ──────────────────────────────────────────
+   비밀번호는 이 브라우저에만(localStorage) 저장합니다. 사이트 소스에는 들어가지 않습니다.
+   한 번 넣어 두면 다음부터는 찾지 않아도 보이고, 「바로 열기」로 한 번에 엽니다. */
+function pwBook() { try { return JSON.parse(localStorage.getItem('jg-pwbook') || '{}'); } catch (e) { return {}; } }
+function pwSave(path, v) {
+  const b = pwBook();
+  if (v) b[path] = v; else delete b[path];
+  try { localStorage.setItem('jg-pwbook', JSON.stringify(b)); } catch (e) {}
+}
+function pwRow(p) {
+  const kind = p.lock === 'enc'
+    ? '본문이 암호화되어 있어 비밀번호가 있어야 열립니다'
+    : '화면만 가리는 방식이라 비밀번호로 엽니다';
+  const auto = p.pw ? ` data-derived="${esc(p.pw)}"` : '';
+  return `<div class="pwrow" data-pwpath="${esc(p.path)}"${auto} title="${kind}">
+    <span class="pwlab">비밀번호</span>
+    <code class="pwval" data-role="val">—</code>
+    <span class="pwnote" data-role="note"></span>
+    <input class="pwin" data-role="in" type="text" placeholder="여기에 한 번만 넣어 두세요" autocomplete="off">
+    <button class="btn" data-role="see">보기</button>
+    <button class="btn" data-role="save">저장</button>
+    <button class="btn" data-role="forget">지우기</button>
+    <button class="btn open" data-role="open">바로 열기 ↗</button>
+  </div>`;
+}
+/* 저장 상태에 맞춰 각 줄의 보임/숨김을 칠한다.
+   사진첩은 촬영 날짜에서 비밀번호를 자동으로 채우고(data-derived), 그 밖은 한 번 넣으면 기억한다. */
+/* 값의 출처: 비밀번호 시트 > 이 브라우저 임시저장 > 촬영 날짜 자동 */
+function pwOf(row) { const p = row.dataset.pwpath; return PWSHEET[p] || pwBook()[p] || row.dataset.derived || ''; }
+function pwSrc(row) { const p = row.dataset.pwpath;
+  if (PWSHEET[p]) return 'sheet'; if (pwBook()[p]) return 'local'; if (row.dataset.derived) return 'date'; return ''; }
+function paintPw() {
+  document.querySelectorAll('.pwrow').forEach(row => {
+    const pw = pwOf(row), has = !!pw, shown = row.dataset.shown === '1', src = pwSrc(row);
+    const q = r => row.querySelector(`[data-role="${r}"]`);
+    q('val').textContent = has ? (shown ? pw : '•'.repeat(Math.min(pw.length, 8))) : '—';
+    q('val').style.display = has ? '' : 'none';
+    q('note').textContent = src === 'date' ? '촬영 날짜' : src === 'local' ? '이 브라우저만 (저장 안 됨)' : '';
+    q('note').style.display = q('note').textContent ? '' : 'none';
+    q('see').textContent = shown ? '숨기기' : '보기';
+    q('see').style.display = has ? '' : 'none';
+    q('forget').style.display = (src === 'sheet' || src === 'local') ? '' : 'none';
+    q('in').style.display = has ? 'none' : '';
+    q('save').style.display = has ? 'none' : '';
+    q('open').disabled = !has;
+    q('open').title = has ? '' : '먼저 비밀번호를 한 번 넣어 주세요';
+  });
+}
+document.addEventListener('click', async e => {
+  const b = e.target.closest('.pwrow [data-role]'); if (!b) return;
+  const row = b.closest('.pwrow'), path = row.dataset.pwpath, role = b.dataset.role;
+  if (role === 'save') { const v = row.querySelector('[data-role="in"]').value.trim();
+    if (!v) { say('비밀번호를 넣어 주세요.'); return; }
+    pwSave(path, v); PWSHEET[path] = v; paintPw();                /* 바로 보이게 */
+    say('저장하는 중…');
+    try { const d = await call('pw_set', { path: path, pw: v });
+      say(d && d.ok ? '비밀번호 시트에 저장했습니다.' : '시트 저장 실패 — 이 브라우저에만 남았습니다.'); }
+    catch (e) { say('시트 저장 실패 — 이 브라우저에만 남았습니다.'); }
+    paintPw(); }
+  else if (role === 'forget') {
+    pwSave(path, ''); delete PWSHEET[path]; row.dataset.shown = ''; paintPw();
+    try { await call('pw_set', { path: path, pw: '' }); } catch (e) {} }
+  else if (role === 'see') { row.dataset.shown = row.dataset.shown === '1' ? '' : '1'; paintPw(); }
+  else if (role === 'open') {
+    const pw = pwOf(row); if (!pw) { say('먼저 비밀번호를 넣어 주세요.'); return; }
+    try { await navigator.clipboard.writeText(pw); } catch (e) {}   /* 자동 입력이 막혀도 붙여넣기 한 번이면 되게 */
+    window.open('/' + path + '#pw=' + encodeURIComponent(pw), '_blank', 'noopener');
+  }
+});
+
+document.addEventListener('click', async e => {
+  const b = e.target.closest('button[data-act]');
+  if (!b) return;
+  const act = b.dataset.act;
+  const path = b.dataset.custom ? $('#custom').value.trim().replace(/^\/+/, '') : b.dataset.path;
+  if (!path) { say('주소를 적어 주세요.'); return; }
+  const names = { hide: '가리기', show: '다시 보이기', unpublish: '내리기', republish: '되돌리기' };
+  if (act === 'unpublish' && !confirm(`/${path} 을(를) 깃허브에서 실제로 내립니다.\n1~2분 뒤 반영됩니다. 진행할까요?`)) return;
+  b.disabled = true; say(`${names[act]} 하는 중…`);
+  try {
+    const d = await call(act, { path });
+    say(d.ok ? `${names[act]} 했습니다 — /${path}` : `실패: ${d.why || '알 수 없음'}`);
+  } catch (err) { say('서버에 닿지 못했습니다.'); }
+  b.disabled = false;
+  loadPages();
+});
+
+/* 새로고침해도 다시 묻지 않게 */
+try { const k = sessionStorage.getItem('jg-admin'); if (k) { KEY = k; enter(); } } catch (e) {}
+
+/* ── 잠금 점검 ─────────────────────────────────────────────
+   올라가 있는 페이지를 직접 받아, 가림막이 실제로 걸려 있는지 확인한다.
+   비밀번호는 이 브라우저 안에서만 쓰고 어디에도 남기지 않는다. */
+const ENCRE  = /(?:var|const)\s+(?:ENC|L)\s*=\s*\{s:"([^"]+)",i:"([^"]+)",c:"([^"]+)",n:(\d+)\}/;
+const HASHRE = /PW_HASH\s*=\s*"([0-9a-f]{64})"/;
+const DRIVERE = /"1[A-Za-z0-9_\-]{25,}"/g;
+const u8 = b => Uint8Array.from(atob(b), c => c.charCodeAt(0));
+
+async function sha256(t) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+async function tryDecrypt(E, pw) {
+  const k0 = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+  const k  = await crypto.subtle.deriveKey({name:'PBKDF2', salt:u8(E.s), iterations:E.n, hash:'SHA-256'},
+                                           k0, {name:'AES-GCM', length:256}, false, ['decrypt']);
+  return new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:u8(E.i)}, k, u8(E.c)));
+}
+/* 사진첩은 날짜 여섯 자리를 해시로 맞춘다 (페이지와 같은 방식) */
+const normDate = v => { const d = String(v).replace(/\D/g, ''); return d.length === 8 ? d.slice(2) : d; };
+
+let AUDIT_ROWS = [];
+async function runAudit() {
+  const box = $('#audit');
+  if (!PAGES.length) {
+    box.textContent = '페이지 목록을 먼저 읽는 중…';
+    try { PAGES = await fetchPages(); } catch (e) { box.textContent = '목록을 읽지 못했습니다.'; return; }
+  }
+  const targets = PAGES.filter(p => p.lock);
+  if (!targets.length) { box.textContent = '비밀번호가 걸린 페이지가 없습니다.'; return; }
+  box.textContent = `${targets.length}곳을 받아 보는 중…`;
+
+  let sitemap = '';
+  try { sitemap = await (await fetch('/sitemap.xml', {cache:'no-cache'})).text(); } catch (e) {}
+
+  AUDIT_ROWS = await Promise.all(targets.map(async t => {
+    const r = { page: t, ok: [], info: [], warn: [], bad: [] };
+    let h = '';
+    try { h = await (await fetch('/' + t.file, {cache:'no-cache'})).text(); }
+    catch (e) { r.bad.push('페이지를 받지 못했습니다'); return r; }
+    r.size = h.length;
+
+    const m = h.match(ENCRE);
+    if (m) {
+      r.enc = { s:m[1], i:m[2], c:m[3], n:+m[4] };
+      r.ok.push(`암호문 ${r.enc.c.length.toLocaleString()}자 · 반복 ${(+m[4]).toLocaleString()}회`);
+      /* 가림막 밖에 본문이 남아 있지 않은지 — 글자 수로 본다 */
+      const outside = h.replace(/<script[\s\S]*?<\/script>/g, '')
+                       .replace(/<style[\s\S]*?<\/style>/g, '')
+                       .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      r.plain = outside.length;
+      if (outside.length > 1200) r.warn.push(`가림막 밖 글자가 ${outside.length}자로 많습니다 — 살펴보세요`);
+      else r.ok.push(`가림막 밖 글자 ${outside.length}자 (메뉴·회사 정보 수준)`);
+    } else {
+      const hm = h.match(HASHRE);
+      if (hm) {
+        r.hash = hm[1]; r.ok.push('비밀번호 해시가 걸려 있습니다');
+        /* 페이지에 적힌 날짜가 그대로 비밀번호면 잠금 구실을 못 한다.
+           촬영 날짜는 포트폴리오 카드와 이 목록에도 나오므로 사실상 공개된 값이다. */
+        const seen = new Set();
+        for (const d of h.matchAll(/(20\d\d)[.\-년\s]*(\d{1,2})[.\-월\s]*(\d{1,2})/g)) {
+          const mo = +d[2], da = +d[3];
+          if (mo < 1 || mo > 12 || da < 1 || da > 31) continue;
+          seen.add(`${d[1]}${String(mo).padStart(2,'0')}${String(da).padStart(2,'0')}`);
+        }
+        for (const v of seen) {
+          if ((await sha256('byeolbam-pw:' + normDate(v))) !== hm[1]) continue;
+          r.info.push(`비밀번호 = 촬영 날짜 ${normDate(v)} — 함께한 분들이 기억하기 쉬운 값입니다`);
+          break;
+        }
+      }
+      else r.bad.push('가림막을 찾지 못했습니다 — 잠겨 있지 않을 수 있습니다');
+      const ids = (h.match(DRIVERE) || []);
+      if (ids.length) r.info.push(`사진 주소 ${new Set(ids).size}개가 소스에 있습니다 — 화면만 가리는 방식입니다`);
+    }
+
+    const url = '/' + t.path;
+    if (sitemap) {
+      if (sitemap.includes(t.path))
+        (t.lock === 'enc' ? r.warn : r.info).push('검색 목록(sitemap)에 올라가 있습니다');
+      else r.ok.push('검색 목록에서 빠져 있습니다');
+    }
+    return r;
+  }));
+  renderAudit();
+}
+
+function auditCard(r, idx) {
+  const p = r.page;
+  const badge = p.lock === 'enc'
+    ? '<span class="state lock">🔒 본문 암호화</span>' : '<span class="state lock2">🔑 사진첩</span>';
+  const li = (cls, arr) => arr.map(x => `<div class="ck ${cls}">${esc(x)}</div>`).join('');
+  const test = r.enc || r.hash ? `
+    <div class="pwtest">
+      <input type="password" placeholder="비밀번호를 넣어 실제로 열리는지 확인" data-i="${idx}" autocomplete="off">
+      <button class="btn" data-audit="${idx}">확인</button>
+      <span class="res" data-res="${idx}"></span>
+    </div>` : '';
+  return `<div class="card">
+    <div class="row"><div><div class="t">${esc(p.title)} ${badge}</div>
+      <div class="p">/${esc(p.path)}</div></div></div>
+    <div class="cks">${li('bad', r.bad)}${li('warn', r.warn)}${li('ok', r.ok)}${li('info', r.info)}</div>
+    ${test}</div>`;
+}
+function renderAudit() {
+  const bad = AUDIT_ROWS.filter(r => r.bad.length).length;
+  const warn = AUDIT_ROWS.filter(r => r.warn.length).length;
+  $('#audit').innerHTML =
+    `<p class="hint">${AUDIT_ROWS.length}곳을 봤습니다. ` +
+    (bad ? `<b style="color:var(--warn)">문제 ${bad}곳</b> · ` : '문제 없음 · ') +
+    (warn ? `살펴볼 곳 ${warn}곳` : '살펴볼 곳 없음') +
+    ' — 사진첩은 가볍게 가리는 것이 본래 의도이므로, 그쪽 설명은 회색으로만 적었습니다.</p>' +
+    AUDIT_ROWS.map(auditCard).join('');
+}
+
+$('#auditRun').addEventListener('click', runAudit);
+document.addEventListener('click', async e => {
+  const b = e.target.closest('button[data-audit]');
+  if (!b) return;
+  const i = +b.dataset.audit, r = AUDIT_ROWS[i];
+  const inp = document.querySelector(`input[data-i="${i}"]`);
+  const out = document.querySelector(`span[data-res="${i}"]`);
+  const pw = inp.value.trim();
+  if (!pw) { out.textContent = '비밀번호를 넣어 주세요.'; return; }
+  out.textContent = '확인하는 중…';
+  try {
+    if (r.enc) {
+      const html = await tryDecrypt(r.enc, pw);
+      const secs = (html.match(/<section/g) || []).length;
+      out.innerHTML = `<b style="color:var(--ok)">열립니다</b> — ${html.length.toLocaleString()}자 · 섹션 ${secs}개`;
+    } else {
+      const okh = (await sha256('byeolbam-pw:' + normDate(pw))) === r.hash;
+      out.innerHTML = okh ? '<b style="color:var(--ok)">맞습니다</b>'
+                          : '<b style="color:var(--warn)">맞지 않습니다</b>';
+    }
+  } catch (err) {
+    out.innerHTML = '<b style="color:var(--warn)">맞지 않습니다</b>';
+  }
+  inp.value = '';                     /* 넣은 비밀번호는 바로 지운다 */
+});
+
+</script>
+</body></html>

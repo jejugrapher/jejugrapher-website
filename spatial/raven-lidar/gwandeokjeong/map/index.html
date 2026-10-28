@@ -1,0 +1,1077 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>raven 점군지도</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1216; --panel:#161a20; --panel2:#1c2129; --line:#2a313b; --text:#e6e9ee; --mute:#8d97a5;
+  --acc:#f2b33d; --acc2:#4cc3ff; --red:#ff5d5d; --ok:#5fd38d; --vio:#be8cff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:13px/1.45 'Noto Sans KR',system-ui,sans-serif}
+body{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+header{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;padding:7px 14px;background:var(--panel);border-bottom:1px solid var(--line)}
+header h1{font-size:15px;margin:0 6px 0 0;font-weight:700;letter-spacing:-.2px}
+header h1 small{color:var(--mute);font-weight:400;margin-left:6px}
+.grp{display:flex;gap:4px;align-items:center}
+.grp label{color:var(--mute);font-size:12px;margin-right:2px}
+button,select{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:5px 9px;font:inherit;cursor:pointer}
+button:hover{border-color:#3b4552}
+button.on{background:var(--acc);color:#111;border-color:var(--acc);font-weight:700}
+button:disabled{opacity:.5;cursor:default}
+input[type=range]{width:90px;accent-color:var(--acc)}
+input[type=number],input[type=text]{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:4px 6px;font:inherit;width:84px;font-variant-numeric:tabular-nums}
+.chk{display:flex;gap:4px;align-items:center;color:var(--text);font-size:12px;cursor:pointer}
+#lodMsg{font-size:12px}#lodbar{width:90px;height:5px;background:var(--panel2);border-radius:3px;overflow:hidden;display:none}#lodbar i{display:block;height:100%;width:0;background:var(--acc2)}
+main{display:flex;flex:1.55 1 0;min-height:260px}
+#v3d{position:relative;flex:1.35;min-width:0;border-right:1px solid var(--line)}
+#v3d canvas{display:block}
+#map{flex:1;min-width:0;background:#1a1d22}
+.hud{position:absolute;left:10px;top:10px;background:rgba(15,18,22,.82);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--mute);pointer-events:none;max-width:62%}
+.hud b{color:var(--text)}
+#loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(15,18,22,.9);z-index:5;font-size:14px;gap:10px}
+#loading .bar{width:280px;height:6px;background:var(--panel2);border-radius:3px;overflow:hidden}
+#loading .bar i{display:block;height:100%;width:0;background:var(--acc)}
+#hint{position:absolute;right:10px;bottom:10px;background:rgba(15,18,22,.86);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--acc);pointer-events:none;max-width:70%}
+#panel{flex:1 1 0;min-height:250px;display:flex;flex-direction:column;background:var(--panel);border-top:1px solid var(--line)}
+.tabs{display:flex;gap:2px;padding:6px 10px 0;border-bottom:1px solid var(--line)}
+.tabs button{border-radius:6px 6px 0 0;border-bottom:none;background:transparent;color:var(--mute)}
+.tabs button.on{background:var(--panel2);color:var(--text);font-weight:700;border-color:var(--line)}
+.tabbody{flex:1;min-height:0;display:none;padding:8px 10px;gap:10px}
+.tabbody.on{display:flex}
+.cv{flex:1;min-width:0;position:relative;background:#0b0e12;border:1px solid var(--line);border-radius:8px}
+.cv canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
+.cards{width:340px;flex:none;overflow:auto;display:flex;flex-direction:column;gap:6px}
+.card{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.card h3{margin:0 0 5px;font-size:12px;color:var(--mute);font-weight:500}
+.card.edit{border-color:#3a4a5c}
+.kv{display:grid;grid-template-columns:1fr auto;gap:2px 10px;font-variant-numeric:tabular-nums}
+.kv span:nth-child(odd){color:var(--mute)}
+.kv span:nth-child(even){text-align:right;font-weight:500}
+.ed{display:grid;grid-template-columns:auto 1fr;gap:4px 8px;align-items:center}
+.ed label{color:var(--mute);font-size:12px}
+.ed .row{display:flex;gap:6px;align-items:center}
+.ed .row input[type=range]{flex:1;width:auto}
+.big{font-size:20px;font-weight:700;color:var(--acc)}
+.charts{flex:1;min-width:0;display:grid;grid-template-rows:1fr 1fr 1fr;gap:6px}
+.muted{color:var(--mute)}
+.btnrow{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.note{font-size:12px;color:var(--mute)}
+.warn{font-size:12px;color:var(--acc)}
+.info{overflow:auto;max-width:920px}
+.info p{margin:4px 0}
+.leaflet-container{background:#1a1d22;font:inherit}
+.leaflet-control-layers{background:var(--panel2);color:var(--text)}
+.lbl{background:rgba(15,18,22,.85);border:1px solid var(--line);color:var(--text);padding:1px 5px;border-radius:4px;font-size:11px;white-space:nowrap}
+.hd{width:100%;height:100%;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #000,0 0 6px rgba(0,0,0,.6);cursor:grab}
+.hd.sq{border-radius:3px}.hd.mid{opacity:.55}
+#intro{position:fixed;inset:0;z-index:2000;background:rgba(8,10,13,.72);display:flex;align-items:center;justify-content:center;padding:16px}
+.ibox{max-width:780px;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.ieb{font-size:12px;letter-spacing:.18em;color:var(--acc);font-weight:700}.ibox h2{font-size:24px;margin:6px 0 8px;line-height:1.3}.ibox p{color:#c4cad3;margin:0 0 12px}
+.istats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:10px 0}.istats div{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px}.istats b{display:block;font-size:19px;color:var(--acc)}.istats span{font-size:12px;color:var(--mute)}
+.ihow{font-size:13px;color:var(--mute)}.ihow b{color:var(--text)}
+@media (max-width:900px){body{height:auto;overflow:auto}main{flex-direction:column;flex:none}#panel{flex:none;height:90vh}#v3d,#map{height:45vh;flex:none}.tabbody.on{flex-direction:column}.cards{width:auto}}
+</style>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<header>
+  <h1 id="title">raven 점군지도<small id="subtitle"></small></h1>
+  <div class="grp"><button id="introBtn" title="이 현장 소개 다시 보기">현장 소개</button></div>
+  <div class="grp" id="dsgrp"><label>데이터</label><select id="ds"></select></div>
+  <div class="grp" id="lodgrp"><label>점군</label><button data-lod="lite" class="on" title="빠르게 보기 — 점을 성기게 줄인 판">저용량</button><button data-lod="full" title="정밀 측정 — 원본 점군 전체">원본</button><span id="lodbar"><i></i></span><span id="lodMsg" class="muted"></span></div>
+  <div class="grp"><label>도구</label>
+    <button data-mode="point" class="on" title="단면: 위치·각도·길이·두께를 직접 조절">단면</button>
+    <button data-mode="range" title="구간: 경로를 따라 일정 간격 단면 → 폭·높이·단면적·체적">구간</button>
+    <button data-mode="line" title="선 단면: 두 끝점을 옮겨 세로 단면">선 단면</button>
+    <button data-mode="area" title="면적: 꼭짓점을 찍고 옮겨 다각형 면적">면적</button>
+    <button data-mode="vol" title="부피: 다각형 안 기준면 위·아래 또는 동굴 내부 부피">부피</button>
+    <button id="clear" title="지금 도구의 선택 지우기 (Esc)">지우기</button>
+  </div>
+  <div class="grp" id="viewgrp"><label>보기</label>
+    <button data-view="3d" class="on" title="기본 3D (원근)">3D</button><button data-view="top" title="위에서 (북쪽이 위)">위</button><button data-view="left" title="왼쪽(서쪽)에서 동쪽을 봄">왼쪽</button><button data-view="right" title="오른쪽(동쪽)에서 서쪽을 봄">오른쪽</button><button data-view="front" title="정면(남쪽)에서 북쪽을 봄">정면</button><button data-view="back" title="후면(북쪽)에서 남쪽을 봄">후면</button>
+    <label class="chk" title="고른 단면·선·영역 주변만 맞춰 봄"><input type="checkbox" id="viewSel">선택 주변</label>
+  </div>
+  <div class="grp"><label>색</label><select id="color"><option value="z">높이</option><option value="i">반사강도</option><option value="k">동굴/지상</option><option value="s">세션</option></select></div>
+  <div class="grp"><label class="chk"><input type="checkbox" id="showCave" checked>동굴</label><label class="chk"><input type="checkbox" id="showSurf" checked>지상</label><label class="chk"><input type="checkbox" id="showTraj">궤적</label><label class="chk" title="3D 에서 단면·선 주변 ±2 m 만 보기"><input type="checkbox" id="clip">단면 주변만</label></div>
+  <div class="grp" id="gndgrp" style="display:none"><label class="chk" title="위성사진을 지형 위에 입혀 3D 에 함께 표시"><input type="checkbox" id="showGnd" checked>지상지도</label><input type="range" id="gndOp" min="0" max="1" step="0.05" value="0.55" title="지상지도 투명도"><span id="gndMsg" class="muted"></span></div>
+  <div class="grp"><label>점 크기</label><input type="range" id="psize" min="0.3" max="3" step="0.1" value="1"></div>
+</header>
+<div id="intro" style="display:none"><div class="ibox">
+  <div class="ieb" id="iEb"></div><h2 id="iTitle"></h2><p id="iLede"></p><div class="istats" id="iStats"></div>
+  <div class="ihow" id="iHow"></div>
+  <div class="btnrow" style="margin-top:14px"><button id="iGo" class="on">측정 시작</button><a id="iLink" target="_blank" rel="noopener" class="muted"></a></div></div></div>
+<main>
+  <div id="v3d"><div class="hud" id="hud">불러오는 중…</div><div id="hint"></div>
+    <div id="loading"><div id="ltext">점군 불러오는 중…</div><div class="bar"><i id="lbar"></i></div></div></div>
+  <div id="map"></div>
+</main>
+<section id="panel">
+  <div class="tabs">
+    <button data-tab="sec" class="on">단면</button><button data-tab="rng">구간</button><button data-tab="lin">선 단면</button><button data-tab="are">면적</button><button data-tab="vol">부피</button><button data-tab="inf">정보</button>
+  </div>
+  <!-- 단면 -->
+  <div class="tabbody on" id="tab-sec">
+    <div class="cv"><canvas id="secCv"></canvas></div>
+    <div class="cards">
+      <div class="card edit"><h3>단면 조절 — 지도의 ● 끌기 · 숫자 입력 · ← → 키</h3>
+        <div class="ed">
+          <label>중심 동·북</label><div class="row"><input type="number" id="secX" step="0.1"><input type="number" id="secY" step="0.1"></div>
+          <label>각도</label><div class="row"><input type="range" id="secAngR" min="-180" max="180" step="1"><input type="number" id="secAng" step="1" style="width:64px">°</div>
+          <label>길이</label><div class="row"><input type="range" id="secLenR" min="2" max="120" step="0.5"><input type="number" id="secLen" step="0.5" style="width:64px">m</div>
+          <label>두께</label><div class="row"><input type="range" id="secThR" min="0.05" max="3" step="0.05"><input type="number" id="secTh" step="0.05" style="width:64px">m</div>
+          <label id="secSlbl">중심선 위치</label><div class="row" id="secSrow"><input type="range" id="secS" min="0" max="1" step="1"><input type="number" id="secSnum" step="0.5" style="width:64px">m</div>
+        </div>
+        <div class="btnrow" style="margin-top:6px"><label class="chk" id="secSnapL"><input type="checkbox" id="secSnap" checked>동굴 중심선에 붙이기</label><button id="secPerp" title="동굴 진행 방향에 직각으로">직각</button>
+          <button data-mv="-5">◀◀5</button><button data-mv="-0.5">◀0.5</button><button data-mv="0.5">0.5▶</button><button data-mv="5">5▶▶</button></div>
+      </div>
+      <div class="card"><h3>단면 측정 (자동)</h3><div class="kv" id="secKv"><span>지도나 3D 를 클릭하세요</span><span></span></div></div>
+      <div class="card"><h3>선택 지점</h3><div class="kv" id="secPos"><span>—</span><span></span></div></div>
+      <div class="card"><h3>직접 재기</h3><div class="muted" id="secMeas">단면 그림에서 두 점을 클릭하면 거리·높이차를 잽니다. 휠 = 확대.</div></div>
+      <div class="card btnrow"><button id="secFly">3D 로 보기</button><button id="secPng">PNG 저장</button></div>
+    </div>
+  </div>
+  <!-- 구간 -->
+  <div class="tabbody" id="tab-rng">
+    <div class="cards">
+      <div class="card edit"><h3>구간 조절</h3>
+        <div class="btnrow" style="margin-bottom:6px"><label class="chk" id="rngClL"><input type="checkbox" id="rngCl" checked>동굴 중심선 따라</label><button id="rngNew">경로 새로</button></div>
+        <div class="ed">
+          <label id="rngS0l">시작 · 끝</label><div class="row" id="rngSrow"><input type="number" id="rngS0" step="0.5"><input type="number" id="rngS1" step="0.5">m</div>
+          <label>간격</label><div class="row"><select id="rngStep"><option>0.25</option><option selected>0.5</option><option>1</option><option>2</option><option>5</option></select>m</div>
+          <label>단면 길이</label><div class="row"><input type="range" id="rngLenR" min="2" max="120" step="1"><input type="number" id="rngLen" step="1" style="width:64px">m</div>
+          <label>두께</label><div class="row"><input type="range" id="rngThR" min="0.05" max="2" step="0.05"><input type="number" id="rngTh" step="0.05" style="width:64px">m</div>
+        </div>
+        <div class="note" id="rngHelp" style="margin-top:6px"></div>
+      </div>
+      <div class="card"><h3>구간</h3><div class="big" id="rngLen2">—</div><div class="muted" id="rngWhere"></div></div>
+      <div class="card"><h3>구간 통계</h3><div class="kv" id="rngKv"><span>—</span><span></span></div></div>
+      <div class="card btnrow"><button id="rngCsv">CSV 저장</button><span class="muted" id="rngProg"></span></div>
+    </div>
+    <div class="charts"><div class="cv"><canvas id="chProf"></canvas></div><div class="cv"><canvas id="chWid"></canvas></div><div class="cv"><canvas id="chArea"></canvas></div></div>
+  </div>
+  <!-- 선 단면 -->
+  <div class="tabbody" id="tab-lin">
+    <div class="cv"><canvas id="linCv"></canvas></div>
+    <div class="cards">
+      <div class="card edit"><h3>선 단면 조절 — 지도의 끝점 ● 과 가운데 ■ 끌기</h3>
+        <div class="ed">
+          <label>시작 동·북</label><div class="row"><input type="number" id="linAx" step="0.1"><input type="number" id="linAy" step="0.1"></div>
+          <label>끝 동·북</label><div class="row"><input type="number" id="linBx" step="0.1"><input type="number" id="linBy" step="0.1"></div>
+          <label>각도</label><div class="row"><input type="range" id="linAngR" min="-180" max="180" step="1"><input type="number" id="linAng" step="1" style="width:64px">°</div>
+          <label>길이</label><div class="row"><input type="range" id="linLenR" min="1" max="600" step="1"><input type="number" id="linLen" step="0.5" style="width:64px">m</div>
+          <label>두께</label><div class="row"><input type="range" id="linThR" min="0.05" max="5" step="0.05"><input type="number" id="linTh" step="0.05" style="width:64px">m</div>
+        </div>
+      </div>
+      <div class="card"><h3>선 단면</h3><div class="kv" id="linKv"><span>지도나 3D 에서 두 점을 클릭하세요</span><span></span></div></div>
+      <div class="card"><h3>직접 재기</h3><div class="muted" id="linMeas">단면 그림에서 두 점을 클릭하면 거리·높이차를 잽니다.</div></div>
+      <div class="card btnrow"><label class="chk"><input type="checkbox" id="linEq" checked>가로·세로 같은 축척</label><button id="linPng">PNG 저장</button></div>
+    </div>
+  </div>
+  <!-- 면적 -->
+  <div class="tabbody" id="tab-are">
+    <div class="cards" style="width:380px">
+      <div class="card edit"><h3>영역 조절 — 클릭 = 꼭짓점 추가 · ● 끌기 · 반투명 ● 끌면 꼭짓점 끼움 · 우클릭 = 삭제</h3>
+        <div class="ed">
+          <label>사각형 중심</label><div class="row"><input type="number" id="rcX" step="0.5"><input type="number" id="rcY" step="0.5"></div>
+          <label>가로 · 세로</label><div class="row"><input type="number" id="rcW" step="0.5" value="20"><input type="number" id="rcH" step="0.5" value="20">m</div>
+          <label>각도</label><div class="row"><input type="number" id="rcA" step="1" value="0" style="width:64px">°</div>
+        </div>
+        <div class="btnrow" style="margin-top:6px"><button id="rcMake">사각형으로</button><button id="areNew">새로 그리기</button></div>
+      </div>
+      <div class="card"><h3>면적</h3><div class="big" id="areBig">—</div><div class="kv" id="areKv"><span>—</span><span></span></div></div>
+    </div>
+    <div class="cv"><canvas id="areCv"></canvas></div>
+  </div>
+  <!-- 부피 -->
+  <div class="tabbody" id="tab-vol">
+    <div class="cards" style="width:380px">
+      <div class="card edit"><h3>부피 조절 — 영역은 [면적] 과 같은 다각형을 씁니다</h3>
+        <div class="ed">
+          <label>계산 방식</label><div class="row"><select id="volMode"><option value="above">기준면 위 (건물·쌓인 것)</option><option value="below">기준면 아래 (파인 곳)</option><option value="both">기준면 위 + 아래</option><option value="void">바닥~천장 빈 공간 (동굴·실내)</option></select></div>
+          <label>기준면 표고</label><div class="row"><input type="range" id="volRefR" step="0.05"><input type="number" id="volRef" step="0.05" style="width:74px">m</div>
+          <label>격자</label><div class="row"><select id="volGrid"><option>0.1</option><option selected>0.25</option><option>0.5</option><option>1</option></select>m</div>
+        </div>
+        <div class="btnrow" style="margin-top:6px"><button id="volGround" title="영역 안 가장 낮은 지면(2 %)으로">기준면 = 지면</button><button id="volEdge" title="영역 테두리 지면 평균으로">기준면 = 테두리</button></div>
+      </div>
+      <div class="card"><h3>부피</h3><div class="big" id="volBig">—</div><div class="kv" id="volKv"><span>[면적] 탭이나 여기서 지도에 영역을 그리세요</span><span></span></div></div>
+    </div>
+    <div class="cv"><canvas id="volCv"></canvas></div>
+  </div>
+  <div class="tabbody" id="tab-inf"><div class="info" id="infoBox"></div></div>
+</section>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const $ = id => document.getElementById(id);
+const fmt = (v, d = 2, u = ' m') => (v == null || !isFinite(v)) ? '—' : v.toFixed(d) + u;
+const kvHtml = rows => rows.map(([a, b]) => `<span>${a}</span><span>${b}</span>`).join('');
+const sleep0 = () => new Promise(r => setTimeout(r, 0));
+function rafThrottle(fn) { let pend = false, args; return (...a) => { args = a; if (pend) return; pend = true; requestAnimationFrame(() => { pend = false; fn(...args); }); }; }
+function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+
+// ───────── 데이터 목록 · 현장 문구 ─────────
+const DS = await (await fetch('datasets.json', { cache: 'no-cache' })).json();
+let dsi = +(new URLSearchParams(location.search).get('ds') || 0); if (!DS[dsi]) dsi = 0;
+DS.forEach((d, i) => { const o = document.createElement('option'); o.value = i; o.textContent = d.name; $('ds').appendChild(o); });
+$('ds').value = dsi; if (DS.length < 2) $('dsgrp').style.display = 'none';
+$('ds').onchange = () => { location.search = '?ds=' + $('ds').value; };
+const base = DS[dsi].dir + '/';
+const meta = await (await fetch(base + 'meta.json', { cache: 'no-cache' })).json();
+const SITE = await fetch('site.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null);
+document.title = SITE ? `${SITE.name} — ${SITE.short} | raven LiDAR 측정` : meta.name + ' · raven 점군지도';
+$('title').firstChild.textContent = SITE ? `${SITE.name} · ${SITE.short}` : meta.name + ' raven 점군지도';
+$('subtitle').textContent = DS[dsi].name;
+if (SITE) {
+  $('iEb').textContent = SITE.eyebrow; $('iTitle').innerHTML = SITE.title; $('iLede').textContent = SITE.lede;
+  $('iStats').innerHTML = SITE.stats.map(([v, l]) => `<div><b>${v}</b><span>${l}</span></div>`).join('');
+  $('iHow').innerHTML = SITE.how; if (SITE.intro_url) { $('iLink').href = SITE.intro_url; $('iLink').textContent = '현장 소개 페이지 ↗'; }
+  $('intro').style.display = 'flex';
+}
+$('iGo').onclick = () => { $('intro').style.display = 'none'; };
+$('intro').onclick = e => { if (e.target.id === 'intro') $('intro').style.display = 'none'; };
+$('introBtn').onclick = () => { if (SITE) $('intro').style.display = 'flex'; };
+if (!SITE) $('introBtn').style.display = 'none';
+
+// ───────── 점군 불러오기: 저용량 먼저, 원본은 요청 시 ─────────
+async function fetchBin(url, onp) {
+  const r = await fetch(url); if (!r.ok) throw new Error(url + ' ' + r.status); const total = +r.headers.get('content-length') || 0;
+  if (!r.body) return await r.arrayBuffer();
+  const rd = r.body.getReader(); const chunks = []; let received = 0;
+  for (;;) { const { done, value } = await rd.read(); if (done) break; chunks.push(value); received += value.length; if (total) onp(Math.min(received / total, 1)); }
+  const buf = new Uint8Array(received); let off = 0; for (const c of chunks) { buf.set(c, off); off += c.length; }
+  return buf.buffer;
+}
+async function fetchParts(parts, single, onp) {
+  if (!parts) return fetchBin(base + single, onp);
+  const tot = parts.reduce((a, p) => a + p.size, 0), out = new Uint8Array(tot); let off = 0;
+  for (const p of parts) { const b = new Uint8Array(await fetchBin(base + p.name, f => onp((off + f * p.size) / tot))); out.set(b, off); off += b.length; }
+  return out.buffer;
+}
+const NX = meta.nx, NY = meta.ny, CELL = meta.cell;
+const MN = meta.min, MX = meta.max, EXT = [MX[0] - MN[0], MX[1] - MN[1], MX[2] - MN[2]];
+const O = [(MN[0] + MX[0]) / 2, (MN[1] + MX[1]) / 2, MN[2]];          // 로컬 원점 (bbox 중심, 최저 z)
+async function decode(buf, n, onp) {      // 화면이 멈추지 않게 나눠서 풂
+  const q = new Uint16Array(buf, 0, n * 3), at = new Uint8Array(buf, n * 6, n * 4);
+  const D = { n, pos: new Float32Array(n * 3), cls: new Uint8Array(n), ses: new Uint8Array(n), inten: new Uint8Array(n), cellStart: new Uint32Array(buf.slice(n * 10, n * 10 + (NX * NY + 1) * 4)) };
+  const sx = EXT[0] / 65535, sy = EXT[1] / 65535, sz = EXT[2] / 65535, ox = MN[0] - O[0], oy = MN[1] - O[1], oz = MN[2] - O[2];
+  for (let s = 0; s < n; s += 600000) { const e = Math.min(n, s + 600000);
+    for (let i = s; i < e; i++) { D.pos[3 * i] = ox + q[3 * i] * sx; D.pos[3 * i + 1] = oy + q[3 * i + 1] * sy; D.pos[3 * i + 2] = oz + q[3 * i + 2] * sz; D.inten[i] = at[4 * i]; D.cls[i] = at[4 * i + 1]; D.ses[i] = at[4 * i + 2]; }
+    onp && onp(e / n); await sleep0(); }
+  return D;
+}
+const LODS = {}; let LOD = meta.lite ? 'lite' : 'full';
+const mb = b => (b / 1e6).toFixed(0) + ' MB';
+const fullN = meta.n, fullSize = meta.full_size || (meta.parts ? meta.parts.reduce((a, p) => a + p.size, 0) : 0);
+{ const first = LOD === 'lite' ? meta.lite : { n: meta.n, parts: meta.parts };
+  const buf = await fetchParts(first.parts, 'cloud.bin', p => { $('lbar').style.width = (p * 100).toFixed(0) + '%'; $('ltext').textContent = `${LOD === 'lite' ? '저용량' : '원본'} 점군 불러오는 중… ${(p * 100).toFixed(0)}%`; });
+  $('ltext').textContent = '점군 푸는 중…';
+  LODS[LOD] = await decode(buf, first.n, p => { $('lbar').style.width = (p * 100).toFixed(0) + '%'; }); }
+let N, pos, cls, ses, inten, cellStart;
+function useLod(k) { const D = LODS[k]; LOD = k; N = D.n; pos = D.pos; cls = D.cls; ses = D.ses; inten = D.inten; cellStart = D.cellStart; }
+useLod(LOD);
+if (!meta.lite) $('lodgrp').style.display = 'none';
+else { document.querySelector('[data-lod=lite]').title += ` (${meta.lite.n.toLocaleString()} 점 · ${mb(meta.lite.size)})`; document.querySelector('[data-lod=full]').title += ` (${fullN.toLocaleString()} 점 · ${mb(fullSize)})`; }
+
+// 좌표 변환: ENU(m) ↔ 로컬, ENU ↔ 위경도
+const R_E = 6378137, GEO = meta.geo;
+const toLL = (e, n) => GEO ? [GEO.lat0 + n / R_E * 180 / Math.PI, GEO.lon0 + e / (R_E * Math.cos(GEO.lat0 * Math.PI / 180)) * 180 / Math.PI] : [n, e];
+const fromLL = ll => GEO ? [(ll.lng - GEO.lon0) * Math.PI / 180 * R_E * Math.cos(GEO.lat0 * Math.PI / 180), (ll.lat - GEO.lat0) * Math.PI / 180 * R_E] : [ll.lng, ll.lat];
+const llOf = p => toLL(p[0] + O[0], p[1] + O[1]);
+const locOf = ll => { const [e, n] = fromLL(ll); return [e - O[0], n - O[1]]; };
+let ZOFF = 0;                                        // 지형(해발)에 맞춘 높이 보정
+const elev = zl => zl + O[2] - ZOFF;                 // 로컬 z → 표고
+const zloc = ze => ze - O[2] + ZOFF;                 // 표고 → 로컬 z
+const E2 = p => [+(p[0] + O[0]).toFixed(2), +(p[1] + O[1]).toFixed(2)];   // 로컬 → 화면 표시용 동·북
+const L2 = (e, n) => [e - O[0], n - O[1]];
+
+// 중심선 (동굴)
+const CLN = meta.centerline;
+let ST = null;
+if (CLN) ST = CLN.s.map((s, i) => ({ s, x: CLN.x[i] - O[0], y: CLN.y[i] - O[1], z: CLN.z[i] - O[2], tx: CLN.tx[i], ty: CLN.ty[i], inside: CLN.inside[i] }));
+const TRJ = (meta.trajs || []).map(t => t.x.map((x, i) => [x - O[0], t.y[i] - O[1], t.z[i] - O[2]]));
+
+// ───────── 공간 질의 (1 m 격자) ─────────
+function cellOf(x, y) { const cx = Math.floor((x + O[0] - MN[0]) / CELL), cy = Math.floor((y + O[1] - MN[1]) / CELL); return (cx < 0 || cy < 0 || cx >= NX || cy >= NY) ? -1 : cy * NX + cx; }
+function cellsAlongSeg(x0, y0, x1, y1, pad) {   // 선분(+좌우 pad) 이 지나는 셀
+  const S = new Set(); const L = Math.hypot(x1 - x0, y1 - y0); const n = Math.max(1, Math.ceil(L / (CELL * 0.5)));
+  const nx = -(y1 - y0) / (L || 1), ny = (x1 - x0) / (L || 1); const np = Math.max(1, Math.ceil(pad / (CELL * 0.5)));
+  for (let k = 0; k <= n; k++) { const x = x0 + (x1 - x0) * k / n, y = y0 + (y1 - y0) * k / n;
+    for (let j = -np; j <= np; j++) { const o = pad * j / np; const c = cellOf(x + nx * o, y + ny * o); if (c >= 0) S.add(c); } }
+  return S;
+}
+let SU = new Float32Array(1 << 20), SV = new Float32Array(1 << 20), SK = new Uint8Array(1 << 20);
+function grow(n) { if (n <= SU.length) return; const m = Math.max(n, SU.length * 2); const a = new Float32Array(m), b = new Float32Array(m), c = new Uint8Array(m); a.set(SU); b.set(SV); c.set(SK); SU = a; SV = b; SK = c; }
+let showCave = true, showSurf = true;
+const visible = i => (cls[i] === 0 ? showCave : showSurf);
+// 단면: 중심 c(로컬), 수평 진행방향 t(단면의 법선) → 두께 ±h 구간의 (u: 자르는 선 방향, v: c.z 기준 높이)
+function slice(c, t, R, h) {
+  const nx = -t[1], ny = t[0]; let m = 0;
+  const cells = cellsAlongSeg(c[0] - nx * R, c[1] - ny * R, c[0] + nx * R, c[1] + ny * R, h + CELL * 0.75);
+  for (const ci of cells) {
+    const a = cellStart[ci], b = cellStart[ci + 1];
+    for (let i = a; i < b; i++) {
+      if (!visible(i)) continue;
+      const dx = pos[3 * i] - c[0], dy = pos[3 * i + 1] - c[1];
+      const al = dx * t[0] + dy * t[1]; if (al > h || al < -h) continue;
+      const u = dx * nx + dy * ny; if (u > R || u < -R) continue;
+      const v = pos[3 * i + 2] - c[2]; if (v < -40 || v > 60) continue;
+      grow(m + 1); SU[m] = u; SV[m] = v; SK[m] = cls[i]; m++;
+    }
+  }
+  return { u: SU.slice(0, m), v: SV.slice(0, m), k: SK.slice(0, m), n: m, c, t, R, h };
+}
+function pct(arr, p) { if (!arr.length) return NaN; const a = Float32Array.from(arr).sort(); return a[Math.min(a.length - 1, Math.max(0, Math.round(p / 100 * (a.length - 1))))]; }
+// 방사 거리: 중심 (0, vc) 에서 2° 칸마다 두 번째로 가까운 점(없으면 가장 가까운 점)
+const NB = 180;
+function radialOf(S, vc) {
+  const { u, v, n } = S; const r1 = new Float32Array(NB).fill(Infinity), r2 = new Float32Array(NB).fill(Infinity);
+  for (let i = 0; i < n; i++) { const dx = u[i], dy = v[i] - vc; const rr = Math.hypot(dx, dy); if (rr < 0.05) continue;
+    let b = Math.floor((Math.atan2(dy, dx) + Math.PI) / (2 * Math.PI) * NB); if (b >= NB) b = 0;
+    if (rr < r1[b]) { r2[b] = r1[b]; r1[b] = rr; } else if (rr < r2[b]) r2[b] = rr; }
+  const rr0 = new Float32Array(NB); for (let b = 0; b < NB; b++) rr0[b] = isFinite(r2[b]) ? r2[b] : (isFinite(r1[b]) ? r1[b] : NaN);
+  return rr0;
+}
+// 동굴 중심선 단면: 앞뒤 ±2 m 단면 5개의 방사 거리 중앙값 → 사람·장비 같은 순간 장애물에 흔들리지 않는 윤곽
+const radCache = new Map();
+function stationSlice(i, h, R = 30) { const s = ST[i]; return slice([s.x, s.y, s.z], [s.tx, s.ty], R, h); }
+function stationRad(i, h, R) { const key = `${i}|${h}|${R}`; let r = radCache.get(key); if (!r) { r = radialOf(stationSlice(i, h, R), 0); if (radCache.size > 8000) radCache.clear(); radCache.set(key, r); } return r; }
+function measureStation(i, h, S, R = 30) {
+  S = S || stationSlice(i, h, R); const own = radialOf(S, 0); radCache.set(`${i}|${h}|${R}`, own);
+  const rs = [own]; for (const k of [-4, -2, 2, 4]) { const j = i + k; if (j >= 0 && j < ST.length) rs.push(stationRad(j, h, R)); }
+  const med = new Float32Array(NB); const w = [];
+  for (let b = 0; b < NB; b++) { w.length = 0; for (const r of rs) if (isFinite(r[b])) w.push(r[b]); w.sort((a, c) => a - c); med[b] = w.length >= Math.min(3, rs.length) ? w[w.length >> 1] : NaN; }
+  const M = measure(S, med, 0); M.robust = rs.length; return M;
+}
+// 자동 측정: 바닥·천장(중심 ±0.75 m), 바닥+1.5 m 높이에서 벽 사이 폭, 방사 다각형(최대폭·단면적)
+function measure(S, radIn, vcIn) {
+  const { u, v, n } = S; const r = { n };
+  const cen = []; for (let i = 0; i < n; i++) if (Math.abs(u[i]) < 0.75) cen.push(v[i]);
+  r.floor = cen.length >= 3 ? pct(cen, 2) : NaN;
+  if (!isFinite(r.floor)) { const all = []; for (let i = 0; i < n; i++) if (Math.abs(u[i]) < 3) all.push(v[i]); r.floor = all.length ? pct(all, 2) : NaN; }
+  const up = cen.filter(x => x > r.floor + 1.8);
+  r.ceil = up.length >= 3 ? pct(up, 5) : NaN; r.height = r.ceil - r.floor;
+  r.band = r.floor + 1.5; const BW = 0.05, nb = Math.ceil(S.R / BW);
+  const L = new Uint16Array(nb + 1), Rr = new Uint16Array(nb + 1);
+  for (let i = 0; i < n; i++) { if (Math.abs(v[i] - r.band) > 0.15) continue; const b = Math.floor(Math.abs(u[i]) / BW); if (b > nb) continue; (u[i] < 0 ? L : Rr)[b]++; }
+  const walk = H => { for (let b = 10; b <= nb - 3; b++) { if (H[b] < 2) continue; let k = 0; for (let j = 0; j < 4; j++) if (H[b + j] >= 1) k++; if (k >= 3) return b * BW; } return NaN; };
+  r.wl = walk(L); r.wr = walk(Rr); r.w15 = r.wl + r.wr;
+  const vc = vcIn != null ? vcIn : (isFinite(r.floor) ? r.floor + Math.min(1.5, isFinite(r.height) ? r.height / 2 : 1.5) : 0);
+  const rr0 = radIn || radialOf(S, vc);
+  const rad = new Float32Array(NB); let open = 0;
+  for (let b = 0; b < NB; b++) { const w = []; for (let k = -2; k <= 2; k++) { const x = rr0[(b + k + NB) % NB]; if (isFinite(x)) w.push(x); } w.sort((a, c) => a - c); rad[b] = w.length >= 2 ? w[w.length >> 1] : NaN; }
+  for (let b = 0; b < NB; b++) if (!isFinite(rad[b])) { let l = 1, rr = 1; while (l < 9 && !isFinite(rad[(b - l + NB) % NB])) l++; while (rr < 9 && !isFinite(rad[(b + rr) % NB])) rr++;
+    const a0 = rad[(b - l + NB) % NB], a1 = rad[(b + rr) % NB]; open++; if (isFinite(a0) && isFinite(a1) && l + rr <= 9) rad[b] = a0 + (a1 - a0) * l / (l + rr); }
+  const poly = []; for (let b = 0; b < NB; b++) { if (!isFinite(rad[b])) continue; const a = (b + 0.5) / NB * 2 * Math.PI - Math.PI; poly.push([rad[b] * Math.cos(a), vc + rad[b] * Math.sin(a)]); }
+  const b90 = Math.floor(0.75 * NB); const cp = isFinite(rad[b90]) ? vc + rad[b90] : NaN;
+  if (radIn && isFinite(cp) && cp > r.floor + 1.0) { r.ceil = cp; r.height = r.ceil - r.floor; }
+  r.poly = poly; r.closed = open <= 8 && isFinite(r.height) && poly.length >= NB - 2; r.vc = vc;
+  if (poly.length > 3) { let mn = Infinity, mx = -Infinity; for (const p of poly) { mn = Math.min(mn, p[0]); mx = Math.max(mx, p[0]); } r.wmax = mx - mn;
+    if (r.closed) { let A = 0, P = 0; for (let i = 0; i < poly.length; i++) { const p = poly[i], q2 = poly[(i + 1) % poly.length]; A += p[0] * q2[1] - q2[0] * p[1]; P += Math.hypot(q2[0] - p[0], q2[1] - p[1]); } r.area = Math.abs(A) / 2; r.perim = P; } }
+  if (poly.length > 3) { let pl = 0, pr = 0; for (const p of poly) { if (Math.abs(p[1] - r.band) < 1.5) { pl = Math.min(pl, p[0]); pr = Math.max(pr, p[0]); } }
+    const bl = [], br = []; for (let i = 0; i < n; i++) { if (Math.abs(v[i] - r.band) > 0.15) continue; if (u[i] < 0 && u[i] >= pl - 0.3) bl.push(u[i]); else if (u[i] > 0 && u[i] <= pr + 0.3) br.push(u[i]); }
+    r.wwl = bl.length >= 3 ? -pct(bl, 1) : NaN; r.wwr = br.length >= 3 ? pct(br, 99) : NaN; r.ww = r.wwl + r.wwr; }
+  else r.ww = NaN;
+  r.floorZ = elev(S.c[2] + r.floor); r.ceilZ = elev(S.c[2] + r.ceil); r.zoff = ZOFF;
+  return r;
+}
+function groundAt(x, y) {   // 로컬 xy 주변 칸의 점 → (z: 아래쪽 10 %, 구분)
+  let zs = [], kc = 0; for (const [dx, dy] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]]) { const ci = cellOf(x + dx * CELL, y + dy * CELL); if (ci < 0) continue;
+    for (let i = cellStart[ci]; i < cellStart[ci + 1]; i++) { if (!visible(i)) continue; zs.push(pos[3 * i + 2]); if (cls[i] === 0) kc++; } }
+  if (!zs.length) return null; return { z: pct(zs, 10), k: kc > zs.length * 0.3 ? 0 : 1 };
+}
+function nearestStation(x, y, needInside, maxD = 45) { if (!ST) return -1; let b = -1, bd = Infinity; for (let i = 0; i < ST.length; i++) { if (needInside && !ST[i].inside) continue; const d = (ST[i].x - x) ** 2 + (ST[i].y - y) ** 2; if (d < bd) { bd = d; b = i; } } return Math.sqrt(bd) < maxD ? b : -1; }
+function trajDir(x, y) { let best = null, bd = Infinity; for (const t of TRJ) for (let i = 1; i < t.length; i++) { const d = (t[i][0] - x) ** 2 + (t[i][1] - y) ** 2; if (d < bd) { bd = d; best = [t[i][0] - t[i - 1][0], t[i][1] - t[i - 1][1]]; } }
+  if (!best) return [1, 0]; const L = Math.hypot(best[0], best[1]) || 1; return [best[0] / L, best[1] / L]; }
+function zRef(x, y) {   // 단면 중심 높이: 동굴 중심선 근처면 그 높이, 아니면 지면 +1.2 m
+  if (ST) { const i = nearestStation(x, y, true, 12); if (i >= 0) return ST[i].z; }
+  const g = groundAt(x, y); return g ? g.z + 1.2 : (TRJ.length ? TRJ[0][0][2] : 0);
+}
+
+// ───────── 3D ─────────
+const host = $('v3d');
+const renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+host.prepend(renderer.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0f1216);
+const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 20000); camera.up.set(0, 0, 1);
+const controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.screenSpacePanning = true;
+const ocam = new THREE.OrthographicCamera(-1, 1, 1, -1, -20000, 20000); ocam.up.set(0, 0, 1);
+const ocontrols = new OrbitControls(ocam, renderer.domElement); ocontrols.enableDamping = true; ocontrols.screenSpacePanning = true; ocontrols.enabled = false;
+let cam = camera, ctl = controls, oHalf = 50;
+const U = { uSize: { value: 0.09 }, uScale: { value: 500 }, uOrtho: { value: 0 }, uOScale: { value: 1 }, uShowCave: { value: 1 }, uShowSurf: { value: 1 }, uPlane: { value: new THREE.Vector4(1, 0, 0, 0) }, uSlab: { value: 0 } };
+const mat = new THREE.ShaderMaterial({ uniforms: U,
+  vertexShader: `attribute vec3 acol; attribute float acls; uniform float uSize,uScale,uShowCave,uShowSurf,uSlab,uOrtho,uOScale; uniform vec4 uPlane; varying vec3 vc;
+  void main(){ vc=acol; bool hide=(acls<0.5&&uShowCave<0.5)||(acls>0.5&&uShowSurf<0.5);
+    if(uSlab>0.0&&abs(dot(uPlane.xyz,position)+uPlane.w)>uSlab) hide=true;
+    vec4 mv=modelViewMatrix*vec4(position,1.0); gl_Position=projectionMatrix*mv;
+    gl_PointSize=uOrtho>0.5?clamp(uSize*uOScale,1.0,14.0):clamp(uSize*uScale/-mv.z,1.0,14.0); if(hide){gl_Position=vec4(2.0,2.0,2.0,1.0);gl_PointSize=0.0;} }`,
+  fragmentShader: `varying vec3 vc; void main(){ vec2 c=gl_PointCoord-0.5; if(dot(c,c)>0.25) discard; gl_FragColor=vec4(vc,1.0); }` });
+let col, geom = null; const cloud = new THREE.Points(new THREE.BufferGeometry(), mat); cloud.frustumCulled = false; scene.add(cloud);
+function turbo(t) { t = Math.min(1, Math.max(0, t));
+  const r = 0.13572138 + t * (4.61539260 + t * (-42.66032258 + t * (132.13108234 + t * (-152.94239396 + t * 59.28637943))));
+  const g = 0.09140261 + t * (2.19418839 + t * (4.84296658 + t * (-14.18503333 + t * (4.27729857 + t * 2.82956604))));
+  const b = 0.10667330 + t * (12.64194608 + t * (-60.58204836 + t * (110.36276771 + t * (-89.90310912 + t * 27.34824973))));
+  return [Math.min(1, Math.max(0, r)), Math.min(1, Math.max(0, g)), Math.min(1, Math.max(0, b))]; }
+const SESC = [[242, 179, 61], [76, 195, 255], [95, 211, 141], [255, 93, 93], [190, 140, 255], [255, 150, 210], [200, 200, 120], [120, 220, 220], [255, 200, 140]];
+function zRange(k) { const s = []; const st = Math.max(1, Math.floor(N / 200000)); for (let i = 0; i < N; i += st) if (k < 0 || cls[i] === k) s.push(pos[3 * i + 2]); s.sort((a, b) => a - b); return s.length ? [s[Math.floor(s.length * 0.01)], s[Math.floor(s.length * 0.99)]] : [0, 1]; }
+const ZC = zRange(meta.ncave > 0 ? 0 : -1), ZS = zRange(1);
+let colorMode = 'z';
+function recolor() {
+  const Lt = new Array(256); for (let k = 0; k < 256; k++) Lt[k] = turbo(0.08 + 0.87 * k / 255);
+  for (let i = 0; i < N; i++) { let r, g, b;
+    if (colorMode === 'i') { r = g = b = 40 + inten[i] * 0.84; }
+    else if (colorMode === 's') { [r, g, b] = SESC[ses[i] % SESC.length]; }
+    else if (colorMode === 'k') { if (cls[i] === 0) { const t = (pos[3 * i + 2] - ZC[0]) / (ZC[1] - ZC[0]); const c = Lt[Math.max(0, Math.min(255, (t * 255) | 0))]; r = c[0] * 255; g = c[1] * 255; b = c[2] * 255; } else { const t = Math.max(0, Math.min(1, (pos[3 * i + 2] - ZS[0]) / (ZS[1] - ZS[0] || 1))); r = 70 + 90 * t; g = 110 + 90 * t; b = 70 + 60 * t; } }
+    else if (meta.ncave === 0) { const t = (pos[3 * i + 2] - ZS[0]) / (ZS[1] - ZS[0] || 1); const c = Lt[Math.max(0, Math.min(255, (t * 255) | 0))]; const f = 0.75 + inten[i] / 1020; r = c[0] * 255 * f; g = c[1] * 255 * f; b = c[2] * 255 * f; }
+    else { const zr = cls[i] === 0 ? ZC : ZS; const t = (pos[3 * i + 2] - zr[0]) / (zr[1] - zr[0] || 1); const c = Lt[Math.max(0, Math.min(255, (t * 255) | 0))];
+      if (cls[i] === 0) { r = c[0] * 255; g = c[1] * 255; b = c[2] * 255; } else { const sh = 0.55 + 0.45 * Math.max(0, Math.min(1, t)); r = 150 * sh + inten[i] * 0.25; g = 155 * sh + inten[i] * 0.25; b = 150 * sh + inten[i] * 0.2; } }
+    col[3 * i] = r; col[3 * i + 1] = g; col[3 * i + 2] = b; }
+  geom.attributes.acol.needsUpdate = true;
+}
+function buildGeom() {
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  col = new Uint8Array(N * 3); g.setAttribute('acol', new THREE.BufferAttribute(col, 3, true)); g.setAttribute('acls', new THREE.BufferAttribute(cls, 1, false));
+  const old = cloud.geometry; geom = g; cloud.geometry = g; old.dispose(); recolor();
+}
+buildGeom();
+const trajGroup = new THREE.Group(); trajGroup.visible = false; scene.add(trajGroup);
+TRJ.forEach((t, k) => { const g = new THREE.BufferGeometry().setFromPoints(t.map(p => new THREE.Vector3(p[0], p[1], p[2]))); const c = SESC[k % SESC.length]; trajGroup.add(new THREE.Line(g, new THREE.LineBasicMaterial({ color: new THREE.Color(c[0] / 255, c[1] / 255, c[2] / 255) }))); });
+if (ST) { const g = new THREE.BufferGeometry().setFromPoints(ST.filter((s, i) => i % 2 === 0).map(s => new THREE.Vector3(s.x, s.y, s.z))); scene.add(new THREE.Line(g, new THREE.LineBasicMaterial({ color: 0xf2b33d, transparent: true, opacity: 0.55 }))); }
+const selGroup = new THREE.Group(); scene.add(selGroup);
+function clearSel3D() { while (selGroup.children.length) { const o = selGroup.children.pop(); o.geometry?.dispose(); o.material?.dispose(); } }
+function addLine3D(pts, color, opacity = 1) { const g = new THREE.BufferGeometry().setFromPoints(pts.map(p => new THREE.Vector3(p[0], p[1], p[2]))); const l = new THREE.Line(g, new THREE.LineBasicMaterial({ color, transparent: opacity < 1, opacity, depthTest: false })); l.renderOrder = 10; selGroup.add(l); return l; }
+function addQuad3D(P, color, op = 0.16) {
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array([...P[0], ...P[1], ...P[2], ...P[0], ...P[2], ...P[3]]), 3));
+  selGroup.add(new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color, transparent: true, opacity: op, side: THREE.DoubleSide, depthWrite: false }))); addLine3D([...P, P[0]], color, 0.9);
+}
+function addPlane3D(c, t, R, zlo, zhi, color) { const nx = -t[1], ny = t[0]; addQuad3D([[c[0] - nx * R, c[1] - ny * R, zlo], [c[0] + nx * R, c[1] + ny * R, zlo], [c[0] + nx * R, c[1] + ny * R, zhi], [c[0] - nx * R, c[1] - ny * R, zhi]], color); }
+function addPoly3D(P, z, color, op = 0.18) {   // 수평 다각형 (부피 기준면)
+  if (P.length < 3) return; const sh = new THREE.Shape(P.map(p => new THREE.Vector2(p[0], p[1]))); const g = new THREE.ShapeGeometry(sh); g.translate(0, 0, z);
+  selGroup.add(new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color, transparent: true, opacity: op, side: THREE.DoubleSide, depthWrite: false })));
+}
+function addDot3D(p, color, r = 0.35) { const m = new THREE.Mesh(new THREE.SphereGeometry(r, 12, 8), new THREE.MeshBasicMaterial({ color, depthTest: false })); m.position.set(p[0], p[1], p[2]); m.renderOrder = 11; selGroup.add(m); }
+function resize() { const w = host.clientWidth, h = host.clientHeight; renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix(); ocam.left = -oHalf * w / h; ocam.right = oHalf * w / h; ocam.top = oHalf; ocam.bottom = -oHalf; ocam.updateProjectionMatrix(); U.uScale.value = h * renderer.getPixelRatio() / (2 * Math.tan(camera.fov * Math.PI / 360)); }
+new ResizeObserver(resize).observe(host); resize();
+// 보기 방향: 3D(원근) · 위/왼쪽/오른쪽/정면/후면 (정사영 — 축척이 맞는 평면·입면)
+let selBoxFn = null;
+function setView(v, box) {
+  const b = box || { c: [0, 0, (ZC[0] + ZC[1]) / 2], ex: EXT[0], ey: EXT[1], ez: Math.max(5, (meta.ncave ? ZC[1] - ZC[0] : ZS[1] - ZS[0]) * 1.3) };
+  document.querySelectorAll('[data-view]').forEach(x => x.classList.toggle('on', x.dataset.view === v));
+  const [cx, cy, cz] = b.c, asp = host.clientWidth / host.clientHeight;
+  if (v === '3d') { cam = camera; ctl = controls; controls.enabled = true; ocontrols.enabled = false; U.uOrtho.value = 0;
+    const D = Math.max(b.ex, b.ey) * 0.75; controls.target.set(cx, cy, cz); camera.position.set(cx - D * 0.35, cy - D * 0.55, cz + D * 0.75); controls.update(); return; }
+  cam = ocam; ctl = ocontrols; controls.enabled = false; ocontrols.enabled = true; U.uOrtho.value = 1;
+  const D = Math.max(b.ex, b.ey, b.ez) * 2 + 100; let w, h, P;
+  if (v === 'top') { w = b.ex; h = b.ey; P = [cx, cy - D * 1e-4, cz + D]; }
+  else if (v === 'left') { w = b.ey; h = b.ez; P = [cx - D, cy, cz]; }
+  else if (v === 'right') { w = b.ey; h = b.ez; P = [cx + D, cy, cz]; }
+  else if (v === 'front') { w = b.ex; h = b.ez; P = [cx, cy - D, cz]; }
+  else { w = b.ex; h = b.ez; P = [cx, cy + D, cz]; }
+  oHalf = Math.max(h / 2, w / 2 / asp) * 1.08; ocam.zoom = 1; resize();
+  ocontrols.target.set(cx, cy, cz); ocam.position.set(...P); ocam.lookAt(cx, cy, cz); ocontrols.update();
+}
+document.querySelectorAll('[data-view]').forEach(bt => bt.onclick = () => setView(bt.dataset.view, $('viewSel').checked && selBoxFn ? selBoxFn() : null));
+setView('3d');
+(function loop() { requestAnimationFrame(loop); ctl.update(); if (cam === ocam) U.uOScale.value = renderer.domElement.height * ocam.zoom / (ocam.top - ocam.bottom); renderer.render(scene, cam); })();
+$('loading').style.display = 'none';
+
+// 3D 클릭 → 점 고르기
+const ray = new THREE.Raycaster();
+function pick3D(ev) {
+  const rc = renderer.domElement.getBoundingClientRect();
+  ray.setFromCamera(new THREE.Vector2((ev.clientX - rc.left) / rc.width * 2 - 1, -(ev.clientY - rc.top) / rc.height * 2 + 1), cam);
+  const ortho = cam === ocam, tolO = 8 * (ocam.top - ocam.bottom) / ocam.zoom / rc.height;
+  const o = ray.ray.origin, d = ray.ray.direction; const tanT = 6 * 2 * Math.tan(camera.fov * Math.PI / 360) / rc.height;
+  const step = Math.max(1, Math.floor(N / 4e6)); let best = -1, bt = Infinity; const slab = U.uSlab.value, pl = U.uPlane.value;
+  for (let i = 0; i < N; i += step) {
+    if (!visible(i)) continue;
+    const x = pos[3 * i] - o.x, y = pos[3 * i + 1] - o.y, z = pos[3 * i + 2] - o.z; const t = x * d.x + y * d.y + z * d.z; if ((!ortho && t <= 0) || t > bt) continue;
+    if (slab > 0 && Math.abs(pl.x * pos[3 * i] + pl.y * pos[3 * i + 1] + pl.z * pos[3 * i + 2] + pl.w) > slab) continue;
+    const d2 = x * x + y * y + z * z - t * t; const tol = ortho ? tolO : t * tanT; if (d2 < tol * tol) { bt = t; best = i; }
+  }
+  return best < 0 ? null : { p: [pos[3 * best], pos[3 * best + 1], pos[3 * best + 2]], k: cls[best] };
+}
+let downXY = null;
+renderer.domElement.addEventListener('pointerdown', e => { downXY = [e.clientX, e.clientY]; });
+renderer.domElement.addEventListener('pointerup', e => {
+  if (!downXY || Math.hypot(e.clientX - downXY[0], e.clientY - downXY[1]) > 4 || e.button !== 0) return;
+  const h = pick3D(e); if (h) onPick(h.p, h.k);
+});
+
+// ───────── 지도 ─────────
+const map = L.map('map', GEO ? { zoomControl: true, maxZoom: 23, preferCanvas: false } : { crs: L.CRS.Simple, minZoom: -6, maxZoom: 7, zoomSnap: 0.25 });
+const PB = meta.plan; const planBounds = L.latLngBounds([toLL(PB.x0, PB.y0), toLL(PB.x1, PB.y1)]);
+const planLayer = L.imageOverlay(base + 'plan.png', planBounds, { opacity: 0.9 });
+if (GEO) {
+  const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxNativeZoom: 19, maxZoom: 23, attribution: 'Esri World Imagery' }).addTo(map);
+  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxNativeZoom: 19, maxZoom: 23, attribution: '© OpenStreetMap' });
+  planLayer.addTo(map);
+  L.control.layers({ '위성 (지상)': sat, '일반 지도': osm }, { 'raven 점군 평면': planLayer }, { collapsed: true }).addTo(map);
+} else { planLayer.addTo(map); }
+map.fitBounds(planBounds);
+if (ST) L.polyline(ST.filter((s, i) => i % 4 === 0).map(s => llOf([s.x, s.y])), { color: '#f2b33d', weight: 2, opacity: 0.8, dashArray: '4 4', interactive: false }).addTo(map);
+if (ST) for (let s = 0; s <= ST[ST.length - 1].s; s += 100) { const i = Math.round(s / 0.5); if (!ST[i]) continue; L.marker(llOf([ST[i].x, ST[i].y]), { interactive: false, icon: L.divIcon({ className: '', html: `<div class="lbl">${s} m</div>`, iconSize: null }) }).addTo(map); }
+const trajMap = L.layerGroup(); TRJ.forEach((t, k) => { const c = SESC[k % SESC.length]; L.polyline(t.map(p => llOf(p)), { color: `rgb(${c})`, weight: 1.5, opacity: 0.9, interactive: false }).addTo(trajMap); });
+const ovl = L.layerGroup().addTo(map);      // 선택 도형 (다시 그림)
+const hdl = L.layerGroup().addTo(map);      // 끌 수 있는 손잡이
+L.control.scale({ imperial: false }).addTo(map);
+map.doubleClickZoom.disable();
+let DRAG = null; const HM = new Map();   // 끄는 중에는 손잡이를 새로 만들지 않고 자리만 옮김
+function mkHandle(key, p, color, onDrag, onEnd, opt = {}) {
+  if (DRAG) { const m0 = HM.get(key); if (m0 && m0 !== DRAG) m0.setLatLng(llOf(p)); return m0; }
+  const sz = opt.size || 14;
+  const m = L.marker(llOf(p), { draggable: true, autoPan: true, zIndexOffset: 1000, icon: L.divIcon({ className: '', html: `<div class="hd ${opt.cls || ''}" style="background:${color}"></div>`, iconSize: [sz, sz], iconAnchor: [sz / 2, sz / 2] }) });
+  if (opt.title) m.bindTooltip(opt.title, { direction: 'top', offset: [0, -8] });
+  m.on('dragstart', () => { DRAG = m; }); m.on('drag', e => onDrag(locOf(e.target.getLatLng()), m));
+  m.on('dragend', e => { DRAG = null; if (onEnd) onEnd(locOf(e.target.getLatLng()), m); setTimeout(redrawSel, 0); });
+  if (opt.onRight) m.on('contextmenu', e => { L.DomEvent.stop(e); opt.onRight(m); });
+  m.addTo(hdl); HM.set(key, m); return m;
+}
+map.on('click', e => { const [x, y] = locOf(e.latlng); const g = groundAt(x, y); onPick([x, y, g ? g.z : zRef(x, y)], g ? g.k : (ST ? 0 : 1)); });
+map.on('dblclick', () => {});
+
+// ───────── 모드 ─────────
+let mode = 'point';
+const HINT = {
+  point: '단면: 지도/3D 클릭 = 그 자리 · 지도의 빨간 ● 끌기 = 이동 · 흰 ● 끌기 = 각도·길이 · 단면 탭에서 숫자로도 조절',
+  range: '구간: 동굴은 시작·끝 클릭(중심선 따라) · 자유 경로는 [동굴 중심선 따라] 끄고 여러 점 클릭 · ● 끌어서 조절',
+  line: '선 단면: 두 점 클릭 · 끝점 ● · 가운데 ■ 끌기 · 숫자로 각도·길이·두께',
+  area: '면적: 클릭 = 꼭짓점 추가 · ● 끌기 = 이동 · 반투명 ● 끌기 = 꼭짓점 끼움 · 우클릭 = 삭제 · 사각형 입력도 가능',
+  vol: '부피: [면적] 과 같은 다각형 — 클릭으로 꼭짓점 · 기준면 높이를 막대/숫자로 조절' };
+function setMode(m) {
+  mode = m; document.querySelectorAll('[data-mode]').forEach(x => x.classList.toggle('on', x.dataset.mode === m));
+  $('hint').textContent = HINT[m]; showTab({ point: 'sec', range: 'rng', line: 'lin', area: 'are', vol: 'vol' }[m]); redrawSel();
+}
+document.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => setMode(b.dataset.mode));
+function showTab(t) { document.querySelectorAll('[data-tab]').forEach(x => x.classList.toggle('on', x.dataset.tab === t)); document.querySelectorAll('.tabbody').forEach(x => x.classList.toggle('on', x.id === 'tab-' + t)); requestAnimationFrame(redrawAll); }
+document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { const t = b.dataset.tab; const m = { sec: 'point', rng: 'range', lin: 'line', are: 'area', vol: 'vol' }[t]; if (m) setMode(m); else showTab(t); });
+$('clear').onclick = () => { if (mode === 'point') SEC.c = null; if (mode === 'range') RNG.pts = [], RNG.i0 = RNG.i1 = -1, RNG.R = null; if (mode === 'line') LIN.a = LIN.b = null, LIN.res = null; if (mode === 'area' || mode === 'vol') POLY.pts = [], AREA.res = VOL.res = null; U.uSlab.value = 0; $('clip').checked = false; redrawSel(); redrawAll(); };
+$('color').onchange = e => { colorMode = e.target.value; recolor(); };
+$('showCave').onchange = e => { radCache.clear(); showCave = e.target.checked; U.uShowCave.value = +showCave; recomputeActive(); };
+$('showSurf').onchange = e => { radCache.clear(); showSurf = e.target.checked; U.uShowSurf.value = +showSurf; recomputeActive(); };
+$('showTraj').onchange = e => { trajGroup.visible = e.target.checked; e.target.checked ? trajMap.addTo(map) : map.removeLayer(trajMap); };
+$('psize').oninput = e => { U.uSize.value = 0.09 * +e.target.value; };
+$('clip').onchange = () => applyClip();
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' && e.target.type !== 'range' && e.target.type !== 'checkbox') return;
+  if (e.key === 'Escape') $('clear').click();
+  if (mode === 'point' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { e.preventDefault(); moveSection((e.key === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 5 : 0.5)); }
+  if (mode === 'point' && (e.key === 'ArrowUp' || e.key === 'ArrowDown') && SEC.c) { e.preventDefault(); SEC.ang += (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 10 : 1); runSection(); }
+});
+if (meta.ncave === 0) { $('showCave').parentElement.style.display = 'none'; [...$('color').options].find(o => o.value === 'k').remove(); }
+if (meta.nsurf === 0) $('showSurf').parentElement.style.display = 'none';
+function onPick(p, k) {
+  if (mode === 'point') secPick(p, k);
+  else if (mode === 'range') rngPick(p);
+  else if (mode === 'line') linPick(p);
+  else polyPick(p);
+}
+function redrawSel() {   // 지금 도구의 도형·손잡이만 보이게
+  ovl.clearLayers(); if (!DRAG) { hdl.clearLayers(); HM.clear(); } clearSel3D(); selBoxFn = null;
+  if (mode === 'point') drawSecSel(); else if (mode === 'range') drawRngSel(); else if (mode === 'line') drawLinSel(); else drawPolySel();
+  applyClip();
+}
+function recomputeActive() { if (mode === 'point' && SEC.c) runSection(); else if (mode === 'line' && LIN.a && LIN.b) runLine(); else if ((mode === 'area' || mode === 'vol') && POLY.pts.length >= 3) runPoly(); else if (mode === 'range') runRange(); }
+// 숫자 입력 ↔ 막대 짝짓기
+function pair(rid, nid, onSet) { const r = $(rid), n = $(nid); r.oninput = () => { n.value = r.value; onSet(+r.value, true); }; n.onchange = () => { r.value = n.value; onSet(+n.value, false); }; return v => { r.value = v; n.value = (+v).toFixed(n.step && +n.step < 1 ? (String(n.step).split('.')[1] || '').length : 0); }; }
+
+// ───────── 단면 (위치·각도·길이·두께 자유) ─────────
+const SEC = { c: null, ang: 0, L: ST ? 50 : 60, th: 0.3, snap: !!ST, station: -1, off: 0, view: null, meas: [] };
+let curSec = null;
+const secT = () => { const a = SEC.ang * Math.PI / 180; return [Math.sin(a), -Math.cos(a)]; };   // 단면 법선(진행 방향)
+const secN = () => { const a = SEC.ang * Math.PI / 180; return [Math.cos(a), Math.sin(a)]; };    // 자르는 선 방향
+const stAng = i => Math.atan2(ST[i].tx, -ST[i].ty) * 180 / Math.PI;
+const normAng = a => ((a + 180) % 360 + 360) % 360 - 180;
+if (!ST) { $('secSnapL').style.display = 'none'; $('secPerp').style.display = 'none'; $('secSlbl').style.display = 'none'; $('secSrow').style.display = 'none'; }
+else { $('secS').max = ST.length - 1; $('secSnum').max = ST[ST.length - 1].s; $('secSnum').min = 0; }
+const setAngUI = pair('secAngR', 'secAng', v => { SEC.ang = v; if (SEC.station >= 0) SEC.off = normAng(v - stAng(SEC.station)); runSectionT(); });
+const setLenUI = pair('secLenR', 'secLen', v => { SEC.L = Math.max(1, v); runSectionT(); });
+const setThUI = pair('secThR', 'secTh', v => { SEC.th = Math.max(0.02, v); radCache.clear(); runSectionT(); });
+$('secSnap').onchange = e => { SEC.snap = e.target.checked; if (SEC.c) placeSec(SEC.c[0], SEC.c[1]); };
+$('secPerp').onclick = () => { if (SEC.station >= 0) { SEC.off = 0; SEC.ang = stAng(SEC.station); runSection(); } };
+$('secX').onchange = $('secY').onchange = () => { const [x, y] = L2(+$('secX').value, +$('secY').value); placeSec(x, y); };
+{ let raf = 0; $('secS').oninput = e => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => gotoStation(+e.target.value)); }; }
+$('secSnum').onchange = e => gotoStation(Math.round(+e.target.value / 0.5));
+document.querySelectorAll('[data-mv]').forEach(b => b.onclick = () => moveSection(+b.dataset.mv));
+function placeSec(x, y, keepAng) {   // 중심 놓기 (붙이기 켜져 있고 동굴 근처면 중심선에)
+  let st = -1;
+  if (SEC.snap && ST) { st = nearestStation(x, y, true, 30); }
+  if (st >= 0) { const s = ST[st]; SEC.c = [s.x, s.y, s.z]; SEC.station = st; SEC.ang = normAng(stAng(st) + SEC.off); }
+  else { SEC.station = -1; SEC.c = [x, y, zRef(x, y)]; if (!keepAng && SEC.c0 == null) { const t = trajDir(x, y); SEC.ang = Math.atan2(t[0], -t[1]) * 180 / Math.PI; } }
+  SEC.c0 = 1; runSection();
+}
+function secPick(p, k) { SEC.view = null; if (!(SEC.snap && ST && k === 0)) SEC.off = 0; placeSec(p[0], p[1], !!SEC.c); }
+function gotoStation(i) { if (!ST) return; i = Math.max(0, Math.min(ST.length - 1, i)); const s = ST[i]; SEC.snap = true; $('secSnap').checked = true; SEC.c = [s.x, s.y, s.z]; SEC.station = i; SEC.ang = normAng(stAng(i) + SEC.off); runSection(); drawCharts(); }
+function moveSection(ds) {
+  if (!SEC.c) { if (ST) gotoStation(0); return; }
+  if (SEC.station >= 0) { gotoStation(SEC.station + Math.round(ds / 0.5)); return; }
+  const t = secT(); const x = SEC.c[0] + t[0] * ds, y = SEC.c[1] + t[1] * ds; SEC.c = [x, y, zRef(x, y)]; runSection();
+}
+function runSection() {
+  if (!SEC.c) { curSec = null; redrawSel(); drawSection(); $('secKv').innerHTML = kvHtml([['지도나 3D 를 클릭하세요', '']]); return; }
+  const t = secT(), R = SEC.L / 2, h = SEC.th / 2;
+  const S = slice(SEC.c, t, R, h);
+  const robust = SEC.station >= 0 && Math.abs(SEC.off) < 0.5;
+  const M = robust ? measureStation(SEC.station, h, S, R) : measure(S);
+  curSec = { c: SEC.c, t, station: SEC.station, S, M };
+  SEC.meas = [];
+  setAngUI(SEC.ang); setLenUI(SEC.L); setThUI(SEC.th); const e = E2(SEC.c); $('secX').value = e[0]; $('secY').value = e[1];
+  if (ST && SEC.station >= 0) { $('secS').value = SEC.station; $('secSnum').value = ST[SEC.station].s.toFixed(1); }
+  if (mode === 'point') redrawSel();
+  const ll = toLL(SEC.c[0] + O[0], SEC.c[1] + O[1]);
+  const posKv = [];
+  if (SEC.station >= 0) posKv.push(['중심선 거리', ST[SEC.station].s.toFixed(1) + ' m' + (Math.abs(SEC.off) >= 0.5 ? ` (직각에서 ${SEC.off.toFixed(0)}°)` : '')]);
+  posKv.push(['동·북 (m)', `${e[0].toFixed(1)}, ${e[1].toFixed(1)}`]);
+  if (GEO) posKv.push(['위도·경도', `${ll[0].toFixed(6)}, ${ll[1].toFixed(6)}`]);
+  posKv.push(['각도 · 길이 · 두께', `${SEC.ang.toFixed(0)}° · ${SEC.L.toFixed(1)} m · ${SEC.th.toFixed(2)} m`]);
+  posKv.push(['바닥 표고', fmt(M.floorZ)]);
+  { const gz = demAt(SEC.c[0], SEC.c[1]); if (isFinite(gz)) { posKv.push(['지표 표고 (지형)', fmt(gz)]); posKv.push(['지표 → 천장 깊이', fmt(gz - (isFinite(M.ceilZ) ? M.ceilZ : M.floorZ))]); } }
+  $('secPos').innerHTML = kvHtml(posKv);
+  const cave = isFinite(M.height);
+  $('secKv').innerHTML = kvHtml([
+    ['폭 — 벽 사이 (바닥+1.5 m)', fmt(M.ww)], ['  중심에서 왼쪽 / 오른쪽', `${fmt(M.wwl, 2, '')} / ${fmt(M.wwr, 2, ' m')}`], ['통행 폭 (가장 가까운 장애물)', fmt(M.w15)],
+    ['최대 폭', fmt(M.wmax)], [cave ? '천장고 (중앙)' : '위 막힘 높이', fmt(M.height)],
+    ['단면적', M.closed ? fmt(M.area, 2, ' m²') : '— (위가 열림)'], ['단면 둘레', M.closed ? fmt(M.perim) : '—'],
+    ['단면 점 수', M.n.toLocaleString() + (LOD === 'lite' ? ' <span class="warn">(저용량)</span>' : '')], ['윤곽 계산', robust ? `앞뒤 ±2 m 단면 ${M.robust}개 중앙값` : '이 단면만']]);
+  $('secMeas').textContent = '단면 그림에서 두 점을 클릭하면 거리·높이차를 잽니다. 휠 = 확대.';
+  $('hud').innerHTML = `<b>${meta.name}</b> · ${SEC.station >= 0 ? `중심선 <b>${ST[SEC.station].s.toFixed(1)} m</b> · ` : ''}폭 <b>${fmt(isFinite(M.ww) ? M.ww : M.w15)}</b> · 높이 <b>${fmt(M.height)}</b>${M.closed ? ` · 단면적 <b>${fmt(M.area, 1, ' m²')}</b>` : ''}${LOD === 'lite' ? ' · <span style="color:var(--acc)">저용량</span>' : ''}`;
+  drawSection();
+}
+const runSectionT = rafThrottle(runSection);
+function drawSecSel() {
+  if (!SEC.c) return; const c = SEC.c, n = secN(), t = secT(), R = SEC.L / 2;
+  const A = [c[0] - n[0] * R, c[1] - n[1] * R], B = [c[0] + n[0] * R, c[1] + n[1] * R];
+  L.polygon([A, B].flatMap(p => [[p[0] - t[0] * SEC.th / 2, p[1] - t[1] * SEC.th / 2], [p[0] + t[0] * SEC.th / 2, p[1] + t[1] * SEC.th / 2]]).map((p, i, a) => a[[0, 2, 3, 1][i]]).map(llOf), { color: '#ff5d5d', weight: 1, fillOpacity: 0.15, interactive: false }).addTo(ovl);
+  L.polyline([llOf(A), llOf(B)], { color: '#ff5d5d', weight: 3, interactive: false }).addTo(ovl);
+  L.polyline([llOf(c), llOf([c[0] + t[0] * Math.min(6, R), c[1] + t[1] * Math.min(6, R)])], { color: '#ff5d5d', weight: 1.5, dashArray: '3 3', interactive: false }).addTo(ovl);
+  mkHandle('sc', c, '#ff5d5d', p => { SEC.view = null; if (SEC.snap && ST) { const st = nearestStation(p[0], p[1], true, 30); if (st >= 0) { SEC.station = st; const s = ST[st]; SEC.c = [s.x, s.y, s.z]; SEC.ang = normAng(stAng(st) + SEC.off); runSectionT(); return; } }
+    SEC.station = -1; SEC.c = [p[0], p[1], zRef(p[0], p[1])]; runSectionT(); }, null, { title: '끌어서 단면 이동' });
+  const endDrag = sgn => p => { const dx = (p[0] - SEC.c[0]) * sgn, dy = (p[1] - SEC.c[1]) * sgn; SEC.L = Math.max(1, 2 * Math.hypot(dx, dy)); SEC.ang = Math.atan2(dy, dx) * 180 / Math.PI; if (SEC.station >= 0) SEC.off = normAng(SEC.ang - stAng(SEC.station)); runSectionT(); };
+  mkHandle('sa', A, '#ffffff', endDrag(-1), null, { size: 12, title: '끌어서 각도·길이' }); mkHandle('sb', B, '#ffffff', endDrag(1), null, { size: 12, title: '끌어서 각도·길이' });
+  if (curSec) { const M = curSec.M; const zlo = c[2] + (isFinite(M.floor) ? M.floor - 1 : -5), zhi = c[2] + (isFinite(M.ceil) ? M.ceil + 1 : 15); addPlane3D(c, t, R, zlo, zhi, 0xff5d5d); }
+  selBoxFn = () => { const M = curSec?.M || {}; return { c: [c[0], c[1], c[2] + (isFinite(M.floor) ? M.floor + 3 : 0)], ex: SEC.L + 6, ey: SEC.L + 6, ez: isFinite(M.height) ? M.height + 6 : 25 }; };
+}
+function applyClip() {
+  let n = null, c = null;
+  if (mode === 'point' && SEC.c) { n = secT(); c = SEC.c; } else if (mode === 'line' && LIN.a && LIN.b) { const d = [LIN.b[0] - LIN.a[0], LIN.b[1] - LIN.a[1]], L0 = Math.hypot(...d) || 1; n = [-d[1] / L0, d[0] / L0]; c = LIN.a; }
+  if ($('clip').checked && n) { U.uPlane.value.set(n[0], n[1], 0, -(n[0] * c[0] + n[1] * c[1])); U.uSlab.value = Math.max(2, (mode === 'point' ? SEC.th : LIN.th) / 2); } else U.uSlab.value = 0;
+}
+$('secFly').onclick = () => { if (!curSec) return; setView('3d'); const { c, t, M } = curSec; const D = Math.max(12, (M.wmax || SEC.L) * 1.1); const z = c[2] + (isFinite(M.floor) ? M.floor + 1.5 : 0);
+  controls.target.set(c[0], c[1], z); camera.position.set(c[0] - t[0] * D, c[1] - t[1] * D, z + D * 0.15); controls.update(); };
+
+// 그림 공통
+function fitCanvas(cv) { const r = cv.getBoundingClientRect(); const dpr = devicePixelRatio || 1; if (cv.width !== Math.round(r.width * dpr) || cv.height !== Math.round(r.height * dpr)) { cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr); } const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); return [g, r.width, r.height]; }
+function niceStep(range, px) { const raw = range / Math.max(2, px / 70); const p = Math.pow(10, Math.floor(Math.log10(raw))); for (const m of [1, 2, 5, 10]) if (m * p >= raw) return m * p; return 10 * p; }
+function makeView(W, H, x0, x1, y0, y1, equal, pad = 34) {
+  let sx = (W - pad - 12) / (x1 - x0), sy = (H - pad - 12) / (y1 - y0);
+  if (equal) { const s = Math.min(sx, sy); sx = sy = s; }
+  const ox = pad + ((W - pad - 12) - (x1 - x0) * sx) / 2, oy = 12 + ((H - pad - 12) - (y1 - y0) * sy) / 2;
+  return { X: x => ox + (x - x0) * sx, Y: y => oy + (y1 - y) * sy, IX: X => x0 + (X - ox) / sx, IY: Y => y1 - (Y - oy) / sy, x0, x1, y0, y1, W, H, pad };
+}
+function drawGrid(g, v, xl, yl, yOff = 0) {
+  g.strokeStyle = '#1f252d'; g.fillStyle = '#6f7a88'; g.lineWidth = 1; g.font = '11px Noto Sans KR';
+  const sx = niceStep(v.x1 - v.x0, v.W), sy = niceStep(v.y1 - v.y0, v.H);
+  for (let x = Math.ceil(v.x0 / sx) * sx; x <= v.x1; x += sx) { g.beginPath(); g.moveTo(v.X(x), v.Y(v.y0)); g.lineTo(v.X(x), v.Y(v.y1)); g.stroke(); g.fillText(+x.toFixed(2) + '', v.X(x) - 8, v.H - 6); }
+  for (let y = Math.ceil(v.y0 / sy) * sy; y <= v.y1; y += sy) { g.beginPath(); g.moveTo(v.X(v.x0), v.Y(y)); g.lineTo(v.X(v.x1), v.Y(y)); g.stroke(); g.fillText(+(y + yOff).toFixed(1) + '', 2, v.Y(y) + 4); }
+  g.fillStyle = '#8d97a5'; g.fillText(xl, v.W - 8 - g.measureText(xl).width, v.H - 20); g.save(); g.translate(12, 16); g.fillText(yl, 0, 0); g.restore();
+}
+function arrow(g, x0, y0, x1, y1, color, label) {
+  g.strokeStyle = color; g.fillStyle = color; g.lineWidth = 2; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
+  for (const [ax, ay, bx, by] of [[x0, y0, x1, y1], [x1, y1, x0, y0]]) { const a = Math.atan2(by - ay, bx - ax); g.beginPath(); g.moveTo(ax, ay); g.lineTo(ax + 8 * Math.cos(a + 0.4), ay + 8 * Math.sin(a + 0.4)); g.lineTo(ax + 8 * Math.cos(a - 0.4), ay + 8 * Math.sin(a - 0.4)); g.fill(); }
+  if (label) { g.font = 'bold 12px Noto Sans KR'; const w = g.measureText(label).width; const mx = (x0 + x1) / 2, my = (y0 + y1) / 2; g.fillStyle = 'rgba(11,14,18,.85)'; g.fillRect(mx - w / 2 - 4, my - 9, w + 8, 18); g.fillStyle = color; g.fillText(label, mx - w / 2, my + 4); }
+}
+function drawMeas(g, v, pts) { if (!pts.length) return; g.fillStyle = '#4cc3ff'; for (const p of pts) { g.beginPath(); g.arc(v.X(p[0]), v.Y(p[1]), 4, 0, 7); g.fill(); }
+  if (pts.length === 2) { const [a, b] = pts; const d = Math.hypot(b[0] - a[0], b[1] - a[1]); arrow(g, v.X(a[0]), v.Y(a[1]), v.X(b[0]), v.Y(b[1]), '#4cc3ff', d.toFixed(2) + ' m'); } }
+function measText(pts) { if (pts.length < 2) return '두 번째 점을 클릭하세요'; const [a, b] = pts; const dx = b[0] - a[0], dz = b[1] - a[1];
+  return `거리 ${Math.hypot(dx, dz).toFixed(2)} m · 수평 ${Math.abs(dx).toFixed(2)} m · 높이차 ${Math.abs(dz).toFixed(2)} m · 경사 ${(Math.atan2(Math.abs(dz), Math.abs(dx)) * 180 / Math.PI).toFixed(1)}°`; }
+function savePng(cv, name) { const a = document.createElement('a'); a.href = cv.toDataURL('image/png'); a.download = name; a.click(); }
+function wheelZoom(cv, getV, setView0, redraw) { cv.addEventListener('wheel', e => { const v = getV(); if (!v) return; e.preventDefault(); const r = cv.getBoundingClientRect(); const cx = v.IX(e.clientX - r.left), cy = v.IY(e.clientY - r.top); const f = e.deltaY > 0 ? 1.2 : 1 / 1.2;
+  setView0([cx + (v.x0 - cx) * f, cx + (v.x1 - cx) * f, cy + (v.y0 - cy) * f, cy + (v.y1 - cy) * f]); redraw(); }, { passive: false }); }
+
+function drawSection() {
+  const cv = $('secCv'); const [g, W, H] = fitCanvas(cv); g.clearRect(0, 0, W, H);
+  if (!curSec) { g.fillStyle = '#6f7a88'; g.font = '13px Noto Sans KR'; g.fillText('지도나 3D 를 클릭하면 이곳에 단면이 그려집니다. 지도의 ● 을 끌어 위치·각도·길이를 조절하세요.', 20, 30); return; }
+  const { S, M, c } = curSec;
+  if (!SEC.view) { let x0 = -S.R, x1 = S.R, y0 = (isFinite(M.floor) ? M.floor : -2) - 1.5, y1 = (isFinite(M.ceil) ? M.ceil : (isFinite(M.floor) ? M.floor + 12 : 12)) + 1.5;
+    if (!isFinite(M.height) || curSec.station < 0) { const vs = []; for (let i = 0; i < S.n; i += 3) vs.push(S.v[i]); if (vs.length > 10) { y0 = Math.min(pct(vs, 0.5), isFinite(M.floor) ? M.floor : 1e9) - 1; y1 = pct(vs, 99.8) + 1; } }
+    SEC.view = [x0, x1, y0, y1]; }
+  const v = makeView(W, H, ...SEC.view, true); curSec.v = v;
+  drawGrid(g, v, `자르는 선 방향 (m) · 각도 ${SEC.ang.toFixed(0)}°`, '높이 (표고 m)', c[2] + O[2] - ZOFF);
+  for (let i = 0; i < S.n; i++) { const X = v.X(S.u[i]), Y = v.Y(S.v[i]); if (X < 0 || X > W || Y < 0 || Y > H) continue; g.fillStyle = S.k[i] === 0 ? '#d9dee6' : '#7fbf7f'; g.fillRect(X - 0.9, Y - 0.9, 1.8, 1.8); }
+  if (M.closed && M.poly.length > 3) { g.beginPath(); M.poly.forEach((p, i) => i ? g.lineTo(v.X(p[0]), v.Y(p[1])) : g.moveTo(v.X(p[0]), v.Y(p[1]))); g.closePath(); g.fillStyle = 'rgba(242,179,61,.10)'; g.fill(); g.strokeStyle = 'rgba(242,179,61,.75)'; g.lineWidth = 1.5; g.stroke(); }
+  if (isFinite(M.floor)) { g.setLineDash([5, 4]); g.strokeStyle = '#5fd38d'; g.lineWidth = 1; g.beginPath(); g.moveTo(v.X(v.x0), v.Y(M.floor)); g.lineTo(v.X(v.x1), v.Y(M.floor)); g.stroke(); g.setLineDash([]);
+    g.fillStyle = '#5fd38d'; g.font = '11px Noto Sans KR'; g.fillText(`바닥 ${M.floorZ.toFixed(2)} m`, v.X(v.x0) + 4, v.Y(M.floor) - 4); }
+  if (isFinite(M.ww)) arrow(g, v.X(-M.wwl), v.Y(M.band), v.X(M.wwr), v.Y(M.band), '#f2b33d', `폭 ${M.ww.toFixed(2)} m`);
+  if (isFinite(M.w15) && isFinite(M.ww) && M.w15 < M.ww - 0.3) arrow(g, v.X(-M.wl), v.Y(M.band - 0.35), v.X(M.wr), v.Y(M.band - 0.35), '#4cc3ff', `통행 ${M.w15.toFixed(2)} m`);
+  if (isFinite(M.height)) arrow(g, v.X(0), v.Y(M.floor), v.X(0), v.Y(M.ceil), '#ff5d5d', `높이 ${M.height.toFixed(2)} m`);
+  if (M.closed) { g.fillStyle = '#f2b33d'; g.font = 'bold 12px Noto Sans KR'; g.fillText(`단면적 ${M.area.toFixed(2)} m²`, W - 150, 24); }
+  drawMeas(g, v, SEC.meas);
+}
+$('secCv').addEventListener('click', e => { if (!curSec?.v) return; const r = e.target.getBoundingClientRect(); const v = curSec.v; const p = [v.IX(e.clientX - r.left), v.IY(e.clientY - r.top)];
+  if (SEC.meas.length >= 2) SEC.meas = []; SEC.meas.push(p); $('secMeas').textContent = measText(SEC.meas); drawSection(); });
+wheelZoom($('secCv'), () => curSec?.v, x => SEC.view = x, drawSection);
+$('secPng').onclick = () => curSec && savePng($('secCv'), `${meta.name}_단면${curSec.station >= 0 ? '_' + ST[curSec.station].s.toFixed(1) + 'm' : ''}.png`);
+
+// ───────── 구간 (경로를 따라 간격마다 단면) ─────────
+const RNG = { cl: !!ST, i0: -1, i1: -1, pts: [], step: 0.5, L: ST ? 50 : 30, th: 0.3, R: null, token: 0 };
+let prof = null;
+if (!ST) { $('rngClL').style.display = 'none'; $('rngS0l').style.display = 'none'; $('rngSrow').style.display = 'none'; RNG.cl = false; }
+const setRLenUI = pair('rngLenR', 'rngLen', v => { RNG.L = Math.max(1, v); runRangeD(); });
+const setRThUI = pair('rngThR', 'rngTh', v => { RNG.th = Math.max(0.02, v); radCache.clear(); runRangeD(); });
+setRLenUI(RNG.L); setRThUI(RNG.th);
+$('rngStep').onchange = e => { RNG.step = +e.target.value; runRangeD(); };
+$('rngCl').onchange = e => { RNG.cl = e.target.checked; RNG.R = null; redrawSel(); updRngHelp(); runRangeD(); };
+$('rngNew').onclick = () => { RNG.pts = []; RNG.i0 = RNG.i1 = -1; RNG.R = null; redrawSel(); redrawAll(); updRngHelp(); };
+$('rngS0').onchange = $('rngS1').onchange = () => { if (!ST) return; RNG.i0 = Math.max(0, Math.min(ST.length - 1, Math.round(+$('rngS0').value / 0.5))); RNG.i1 = Math.max(0, Math.min(ST.length - 1, Math.round(+$('rngS1').value / 0.5))); redrawSel(); runRangeD(); };
+function updRngHelp() { $('rngHelp').textContent = RNG.cl ? '동굴 중심선 위에서 시작·끝을 클릭하세요. 지도의 초록·빨강 ● 을 끌면 중심선을 따라 옮겨집니다.' : '지도/3D 를 차례로 클릭해 경로를 만드세요(2점 이상). ● 끌기 = 이동, 우클릭 = 삭제. 경로에 수직인 단면을 간격마다 잽니다.'; }
+updRngHelp();
+function rngPick(p) {
+  if (RNG.cl) { const i = nearestStation(p[0], p[1], false); if (i < 0) { $('rngWhere').textContent = '동굴 중심선에서 45 m 안을 클릭하세요.'; return; }
+    if (RNG.i0 < 0 || RNG.i1 >= 0) { RNG.i0 = i; RNG.i1 = -1; RNG.R = null; } else RNG.i1 = i;
+  } else RNG.pts.push([p[0], p[1]]);
+  redrawSel(); runRangeD();
+}
+function rngPath() {   // [{s, c:[x,y,z], t:[tx,ty], i(중심선 번호 or -1)}]
+  if (RNG.cl) { if (RNG.i0 < 0 || RNG.i1 < 0) return null; let a = RNG.i0, b = RNG.i1; if (a > b) [a, b] = [b, a]; const k = Math.max(1, Math.round(RNG.step / 0.5)); const out = [];
+    for (let i = a; i <= b; i += k) { const s = ST[i]; out.push({ s: s.s - ST[a].s, sAbs: s.s, c: [s.x, s.y, s.z], t: [s.tx, s.ty], i }); } return out; }
+  const P = RNG.pts; if (P.length < 2) return null; const out = []; let acc = 0, next = 0;
+  for (let j = 1; j < P.length; j++) { const d = [P[j][0] - P[j - 1][0], P[j][1] - P[j - 1][1]], L0 = Math.hypot(...d); if (L0 < 1e-6) continue; const t = [d[0] / L0, d[1] / L0];
+    while (next <= acc + L0 + 1e-9) { const f = (next - acc) / L0, x = P[j - 1][0] + d[0] * f, y = P[j - 1][1] + d[1] * f; out.push({ s: next, c: [x, y, zRef(x, y)], t, i: -1 }); next += RNG.step; }
+    acc += L0; }
+  return out;
+}
+async function runRange() {
+  const path = rngPath(); const tok = ++RNG.token;
+  if (!path || path.length < 2) { RNG.R = null; $('rngLen2').textContent = '—'; $('rngWhere').textContent = ''; $('rngKv').innerHTML = kvHtml([['—', '']]); drawCharts(); return; }
+  const R = RNG.L / 2, h = RNG.th / 2, out = [];
+  for (let k = 0; k < path.length; k++) { const p = path[k]; const S = slice(p.c, p.t, R, h); const M = (p.i >= 0) ? measureStation(p.i, h, S, R) : measure(S);
+    out.push({ s: p.s, sAbs: p.sAbs, c: p.c, i: p.i, M }); if (k % 20 === 19) { $('rngProg').textContent = `계산 중 ${((k + 1) / path.length * 100).toFixed(0)}%`; await sleep0(); if (tok !== RNG.token) return; } }
+  $('rngProg').textContent = ''; RNG.R = out; fixZ(out);
+  const len = path[path.length - 1].s, step = RNG.step;
+  const val = f => out.map(r => r.M[f]).filter(x => isFinite(x));
+  const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : NaN, mn = a => a.length ? Math.min(...a) : NaN, mx = a => a.length ? Math.max(...a) : NaN;
+  const w = val('ww'), wp = val('w15'), wm = val('wmax'), hh = val('height'), ar = val('area'), fz = val('floorZ');
+  const vol = out.reduce((s, r) => s + (isFinite(r.M.area) ? r.M.area * step : 0), 0), planA = out.reduce((s, r) => s + (isFinite(r.M.wmax) ? r.M.wmax * step : 0), 0);
+  const covered = out.filter(r => isFinite(r.M.area)).length / out.length;
+  const z0 = out[0].M.floorZ, z1 = out[out.length - 1].M.floorZ;
+  $('rngLen2').textContent = `${len.toFixed(1)} m`;
+  $('rngWhere').textContent = RNG.cl ? `중심선 ${out[0].sAbs.toFixed(1)} → ${out[out.length - 1].sAbs.toFixed(1)} m · 단면 ${out.length}개 (${step} m 간격, 길이 ${RNG.L} m, 두께 ${RNG.th} m)` : `자유 경로 ${RNG.pts.length}점 · 단면 ${out.length}개 (${step} m 간격, 길이 ${RNG.L} m)`;
+  if (RNG.cl) { $('rngS0').value = ST[Math.min(RNG.i0, RNG.i1)].s.toFixed(1); $('rngS1').value = ST[Math.max(RNG.i0, RNG.i1)].s.toFixed(1); }
+  $('rngKv').innerHTML = kvHtml([
+    ['폭 벽 사이 (바닥+1.5 m) 평균', fmt(avg(w))], ['  최소 / 최대', `${fmt(mn(w), 2, '')} / ${fmt(mx(w))}`], ['통행 폭 평균 / 최소', `${fmt(avg(wp), 2, '')} / ${fmt(mn(wp))}`], ['최대 폭 평균', fmt(avg(wm))],
+    ['천장고 평균', fmt(avg(hh))], ['  최소 / 최대', `${fmt(mn(hh), 2, '')} / ${fmt(mx(hh))}`],
+    ['단면적 평균', fmt(avg(ar), 1, ' m²')], ['  최소 / 최대', `${fmt(mn(ar), 1, '')} / ${fmt(mx(ar), 1, ' m²')}`],
+    ['체적 (단면적×간격)', fmt(vol, 0, ' m³')], ['평면 면적 (최대폭×간격)', fmt(planA, 0, ' m²')], ['띠 면적 (단면 길이×구간)', fmt(RNG.L * len, 0, ' m²')],
+    ['바닥 표고 시작 → 끝', `${fmt(z0, 2, '')} → ${fmt(z1)}`], ['바닥 최저 / 최고', `${fmt(mn(fz), 2, '')} / ${fmt(mx(fz))}`],
+    ['평균 경사', isFinite(z1 - z0) ? ((z1 - z0) / len * 100).toFixed(1) + ' %' : '—'], ['닫힌 단면 비율', (covered * 100).toFixed(0) + ' %'], ['점군', LOD === 'lite' ? '<span class="warn">저용량 (근사)</span>' : '원본']]);
+  if (mode === 'range') redrawSel();
+  drawCharts();
+}
+const runRangeD = debounce(runRange, 250);
+function drawRngSel() {
+  if (RNG.cl && ST) {
+    const ids = [RNG.i0, RNG.i1].filter(i => i >= 0);
+    if (ids.length === 2) { let a = Math.min(...ids), b = Math.max(...ids); const pts = ST.slice(a, b + 1).map(s => [s.x, s.y, s.z]); L.polyline(pts.map(llOf), { color: '#f2b33d', weight: 6, opacity: 0.85, interactive: false }).addTo(ovl); addLine3D(pts, 0xf2b33d);
+      [ST[a], ST[b]].forEach((s, j) => addPlane3D([s.x, s.y, s.z], [s.tx, s.ty], RNG.L / 2, s.z - 5, s.z + 10, j ? 0xff5d5d : 0x5fd38d));
+      selBoxFn = () => { const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]); return { c: [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2, pts[0][2]], ex: Math.max(...xs) - Math.min(...xs) + RNG.L, ey: Math.max(...ys) - Math.min(...ys) + RNG.L, ez: 25 }; }; }
+    ['i0', 'i1'].forEach((key, j) => { const i = RNG[key]; if (i < 0) return; const s = ST[i];
+      mkHandle('r' + key, [s.x, s.y], j ? '#ff5d5d' : '#5fd38d', p => { const k = nearestStation(p[0], p[1], false); if (k >= 0) { RNG[key] = k; } }, () => { runRangeD(); }, { title: j ? '끝 — 끌면 중심선 따라 이동' : '시작 — 끌면 중심선 따라 이동' }); });
+  } else {
+    const P = RNG.pts; if (P.length >= 2) { L.polyline(P.map(llOf), { color: '#f2b33d', weight: 4, interactive: false }).addTo(ovl); const P3 = P.map(p => [p[0], p[1], zRef(p[0], p[1])]); addLine3D(P3, 0xf2b33d);
+      for (let j = 1; j < P.length; j++) { const d = [P[j][0] - P[j - 1][0], P[j][1] - P[j - 1][1]], L0 = Math.hypot(...d) || 1, n = [-d[1] / L0, d[0] / L0], R = RNG.L / 2;
+        L.polygon([[P[j - 1][0] + n[0] * R, P[j - 1][1] + n[1] * R], [P[j][0] + n[0] * R, P[j][1] + n[1] * R], [P[j][0] - n[0] * R, P[j][1] - n[1] * R], [P[j - 1][0] - n[0] * R, P[j - 1][1] - n[1] * R]].map(llOf), { color: '#f2b33d', weight: 1, fillOpacity: 0.08, interactive: false }).addTo(ovl); } }
+    P.forEach((p, j) => mkHandle('rp' + j, p, j === 0 ? '#5fd38d' : (j === P.length - 1 ? '#ff5d5d' : '#f2b33d'), q => { RNG.pts[j] = q; }, () => { runRangeD(); }, { title: '끌기 · 우클릭 = 삭제', onRight: () => { RNG.pts.splice(j, 1); redrawSel(); runRangeD(); } }));
+  }
+}
+function chart(cv, series, opt) {
+  const [g, W, H] = fitCanvas(cv); g.clearRect(0, 0, W, H);
+  const xs = series.flatMap(s => s.x), ys = series.flatMap(s => s.y).filter(isFinite); if (!ys.length) { g.fillStyle = '#6f7a88'; g.font = '12px Noto Sans KR'; g.fillText(opt.empty || '', 14, 22); return; }
+  let y0 = Math.min(...ys), y1 = Math.max(...ys); if (y1 - y0 < 1e-3) { y0 -= 1; y1 += 1; } const pd = (y1 - y0) * 0.08; y0 -= pd; y1 += pd;
+  const v = makeView(W, H, Math.min(...xs), Math.max(...xs), y0, y1, false, 40); cv._v = v;
+  drawGrid(g, v, opt.xl, opt.yl);
+  if (opt.hl) { g.fillStyle = 'rgba(242,179,61,.10)'; g.fillRect(v.X(opt.hl[0]), 12, v.X(opt.hl[1]) - v.X(opt.hl[0]), H - 46); }
+  if (opt.fill) { const [a, b] = opt.fill; g.beginPath(); let st = false; a.x.forEach((x, i) => { if (!isFinite(a.y[i])) return; st ? g.lineTo(v.X(x), v.Y(a.y[i])) : g.moveTo(v.X(x), v.Y(a.y[i])); st = true; });
+    for (let i = b.x.length - 1; i >= 0; i--) if (isFinite(b.y[i])) g.lineTo(v.X(b.x[i]), v.Y(b.y[i])); g.closePath(); g.fillStyle = 'rgba(141,151,165,.16)'; g.fill(); }
+  for (const s of series) { g.strokeStyle = s.c; g.lineWidth = 1.6; g.beginPath(); let st = false; s.x.forEach((x, i) => { if (!isFinite(s.y[i])) { st = false; return; } st ? g.lineTo(v.X(x), v.Y(s.y[i])) : g.moveTo(v.X(x), v.Y(s.y[i])); st = true; }); g.stroke(); }
+  let lx = W - 12; g.font = '11px Noto Sans KR'; for (const s of [...series].reverse()) { const w = g.measureText(s.n).width; lx -= w + 22; g.fillStyle = s.c; g.fillRect(lx, 8, 12, 3); g.fillStyle = '#c9d0d9'; g.fillText(s.n, lx + 16, 13); }
+  if (opt.mark != null) { g.strokeStyle = '#ff5d5d'; g.beginPath(); g.moveTo(v.X(opt.mark), 12); g.lineTo(v.X(opt.mark), H - 34); g.stroke(); }
+}
+function fixZ(Lst) { if (!Lst) return; for (const r of Lst) { const d = ZOFF - (r.M.zoff || 0); if (d) { r.M.floorZ -= d; r.M.ceilZ -= d; r.M.zoff = ZOFF; } } }
+function drawCharts() {
+  fixZ(prof); fixZ(RNG.R);
+  const D = RNG.R || prof; const empty = ST ? '전체 종단면 계산 중… 또는 구간을 고르세요' : '지도에서 경로를 그리면 경로를 따라 단면 변화가 그려집니다';
+  if (!D || !D.length) { chart($('chProf'), [], { empty }); chart($('chWid'), [], {}); chart($('chArea'), [], {}); return; }
+  const useAbs = D === prof || RNG.cl; const X = r => useAbs ? (r.sAbs != null ? r.sAbs : r.s) : r.s;
+  const x = D.map(X);
+  const hl = RNG.R && RNG.cl && prof ? [RNG.R[0].sAbs, RNG.R[RNG.R.length - 1].sAbs] : null;
+  const P = hl ? prof : D; const xp = P.map(X);
+  const fl = { n: '바닥 표고', c: '#5fd38d', x: xp, y: P.map(r => r.M.floorZ) }, ce = { n: '천장 표고', c: '#ff5d5d', x: xp, y: P.map(r => r.M.ceilZ) };
+  const mark = (SEC.station >= 0 && useAbs) ? ST[SEC.station].s : null;
+  const gs = DEM ? [{ n: '지표 (지형)', c: '#a0c878', x: xp, y: P.map(r => demAt(r.c[0], r.c[1])) }] : [];
+  const xl = useAbs ? '중심선 거리 (m)' : '경로 거리 (m)';
+  chart($('chProf'), [fl, ce, ...gs], { xl, yl: '표고 (m) — 종단면', fill: [ce, fl], hl, mark });
+  chart($('chWid'), [{ n: '폭 벽 사이', c: '#f2b33d', x, y: D.map(r => r.M.ww) }, { n: '최대 폭', c: '#4cc3ff', x, y: D.map(r => r.M.wmax) }, { n: '천장고', c: '#ff5d5d', x, y: D.map(r => r.M.height) }], { xl, yl: '폭·높이 (m)', mark });
+  chart($('chArea'), [{ n: '단면적 (m²)', c: '#be8cff', x, y: D.map(r => r.M.area) }], { xl, yl: '단면적 (m²)', mark });
+}
+['chProf', 'chWid', 'chArea'].forEach(id => $(id).addEventListener('click', e => { const v = e.target._v; const D = RNG.R || prof; if (!v || !D) return; const r = e.target.getBoundingClientRect(); const xv = v.IX(e.clientX - r.left);
+  let best = null, bd = Infinity; for (const q of (RNG.R && RNG.cl && prof ? prof : D)) { const xx = (RNG.cl || !RNG.R) ? (q.sAbs != null ? q.sAbs : q.s) : q.s; if (Math.abs(xx - xv) < bd) { bd = Math.abs(xx - xv); best = q; } }
+  if (!best) return; if (best.i >= 0) { setMode('point'); gotoStation(best.i); } else { setMode('point'); SEC.station = -1; SEC.snap = false; $('secSnap').checked = false; SEC.c = best.c; runSection(); } }));
+$('rngCsv').onclick = () => { const D = RNG.R || prof; if (!D) return; const rows = [['거리_m', '동_m', '북_m', '바닥표고_m', '천장표고_m', '천장고_m', '폭_벽사이_바닥1.5m', '통행폭_m', '최대폭_m', '단면적_m2']];
+  D.forEach(r => rows.push([(r.sAbs != null ? r.sAbs : r.s).toFixed(2), ...E2(r.c).map(v => v.toFixed(2)), ...[r.M.floorZ, r.M.ceilZ, r.M.height, r.M.ww, r.M.w15, r.M.wmax, r.M.area].map(x => isFinite(x) ? x.toFixed(3) : '')]));
+  const blob = new Blob(['﻿' + rows.map(r => r.join(',')).join('\n')], { type: 'text/csv' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${meta.name}_구간단면.csv`; a.click(); };
+
+// ───────── 선 단면 (끝점·각도·길이·두께 자유) ─────────
+const LIN = { a: null, b: null, th: 0.5, res: null, view: null, meas: [], pend: false };
+const setLAngUI = pair('linAngR', 'linAng', v => { if (!LIN.a) return; linSetAL(v, null); });
+const setLLenUI = pair('linLenR', 'linLen', v => { if (!LIN.a) return; linSetAL(null, Math.max(0.5, v)); });
+const setLThUI = pair('linThR', 'linTh', v => { LIN.th = Math.max(0.02, v); runLineT(); });
+setLThUI(LIN.th);
+['linAx', 'linAy', 'linBx', 'linBy'].forEach(id => $(id).onchange = () => { LIN.a = L2(+$('linAx').value, +$('linAy').value); LIN.b = L2(+$('linBx').value, +$('linBy').value); LIN.view = null; runLine(); });
+function linSetAL(ang, len) {   // 가운데 고정, 각도·길이 바꾸기
+  const m = [(LIN.a[0] + LIN.b[0]) / 2, (LIN.a[1] + LIN.b[1]) / 2], d = [LIN.b[0] - LIN.a[0], LIN.b[1] - LIN.a[1]];
+  const a0 = ang != null ? ang * Math.PI / 180 : Math.atan2(d[1], d[0]), L0 = len != null ? len : Math.hypot(...d);
+  LIN.a = [m[0] - Math.cos(a0) * L0 / 2, m[1] - Math.sin(a0) * L0 / 2]; LIN.b = [m[0] + Math.cos(a0) * L0 / 2, m[1] + Math.sin(a0) * L0 / 2]; LIN.view = null; runLineT();
+}
+function linPick(p) { if (!LIN.a || (LIN.a && LIN.b)) { LIN.a = [p[0], p[1]]; LIN.b = null; LIN.res = null; redrawSel(); drawLine(); $('linKv').innerHTML = kvHtml([['끝점을 클릭하세요', '']]); return; } LIN.b = [p[0], p[1]]; LIN.view = null; runLine(); }
+function runLine() {
+  if (!LIN.a || !LIN.b) return; const a = LIN.a, b = LIN.b;
+  const dx = b[0] - a[0], dy = b[1] - a[1], Lh = Math.hypot(dx, dy); if (Lh < 0.2) return; const t = [dx / Lh, dy / Lh], nx = -t[1], ny = t[0]; const h = LIN.th / 2;
+  const U2 = [], V2 = [], K2 = [];
+  for (const ci of cellsAlongSeg(a[0], a[1], b[0], b[1], h + CELL)) for (let i = cellStart[ci]; i < cellStart[ci + 1]; i++) { if (!visible(i)) continue;
+    const px = pos[3 * i] - a[0], py = pos[3 * i + 1] - a[1]; const al = px * t[0] + py * t[1]; if (al < 0 || al > Lh) continue; const cr = px * nx + py * ny; if (Math.abs(cr) > h) continue;
+    U2.push(al); V2.push(pos[3 * i + 2]); K2.push(cls[i]); }
+  const bw = Math.max(0.25, Lh / 800), nb = Math.ceil(Lh / bw), lo = new Array(nb).fill(null).map(() => []); for (let i = 0; i < U2.length; i++) lo[Math.min(nb - 1, Math.floor(U2[i] / bw))].push(V2[i]);
+  const gnd = lo.map(a2 => a2.length >= 2 ? pct(a2, 3) : NaN), top = lo.map(a2 => a2.length >= 2 ? pct(a2, 99) : NaN);
+  const gi = gnd.map((g2, i) => [i, g2]).filter(x => isFinite(x[1])); const g0 = gi.length ? gi[0][1] : NaN, g1 = gi.length ? gi[gi.length - 1][1] : NaN;
+  let L3 = 0; for (let i = 1; i < gi.length; i++) L3 += Math.hypot((gi[i][0] - gi[i - 1][0]) * bw, gi[i][1] - gi[i - 1][1]);
+  let hmax = NaN; top.forEach((tp, i) => { if (isFinite(tp) && isFinite(gnd[i])) hmax = Math.max(isFinite(hmax) ? hmax : -1, tp - gnd[i]); });
+  let zmin = Infinity, zmax = -Infinity; for (let i = 0; i < V2.length; i += 5) { zmin = Math.min(zmin, V2[i]); zmax = Math.max(zmax, V2[i]); }
+  LIN.res = { Lh, u: U2, v: V2, k: K2, gnd, top, bw, zmin, zmax }; LIN.meas = [];
+  const ang = Math.atan2(dy, dx) * 180 / Math.PI; setLAngUI(ang); setLLenUI(Lh); setLThUI(LIN.th);
+  const ea = E2(a), eb = E2(b); $('linAx').value = ea[0]; $('linAy').value = ea[1]; $('linBx').value = eb[0]; $('linBy').value = eb[1];
+  $('linKv').innerHTML = kvHtml([['수평 길이', fmt(Lh)], ['각도', ang.toFixed(1) + '°'], ['바닥을 따른 길이', fmt(L3)], ['시작 바닥 표고', fmt(elev(g0))], ['끝 바닥 표고', fmt(elev(g1))], ['높이차', fmt(g1 - g0)], ['평균 경사', isFinite(g1 - g0) ? ((g1 - g0) / Lh * 100).toFixed(1) + ' %' : '—'],
+    ['바닥 위 최고 높이', fmt(hmax)], ['표고 범위', `${fmt(elev(zmin), 2, '')} ~ ${fmt(elev(zmax))}`], ['단면 점 수', U2.length.toLocaleString() + (LOD === 'lite' ? ' <span class="warn">(저용량)</span>' : '')]]);
+  $('linMeas').textContent = '단면 그림에서 두 점을 클릭하면 거리·높이차를 잽니다. 휠 = 확대.';
+  if (mode === 'line') redrawSel(); drawLine();
+}
+const runLineT = rafThrottle(runLine);
+function drawLinSel() {
+  if (!LIN.a) return; const a = LIN.a;
+  if (!LIN.b) { mkHandle('la0', a, '#5fd38d', q => { LIN.a = q; }, null, { title: '시작점' }); return; }
+  const b = LIN.b, d = [b[0] - a[0], b[1] - a[1]], L0 = Math.hypot(...d) || 1, n = [-d[1] / L0 * LIN.th / 2, d[0] / L0 * LIN.th / 2];
+  L.polygon([[a[0] + n[0], a[1] + n[1]], [b[0] + n[0], b[1] + n[1]], [b[0] - n[0], b[1] - n[1]], [a[0] - n[0], a[1] - n[1]]].map(llOf), { color: '#4cc3ff', weight: 1, fillOpacity: 0.15, interactive: false }).addTo(ovl);
+  L.polyline([llOf(a), llOf(b)], { color: '#4cc3ff', weight: 3, interactive: false }).addTo(ovl);
+  mkHandle('la', a, '#5fd38d', q => { LIN.a = q; LIN.view = null; runLineT(); }, null, { title: '시작점 끌기' });
+  mkHandle('lb', b, '#ff5d5d', q => { LIN.b = q; LIN.view = null; runLineT(); }, null, { title: '끝점 끌기' });
+  const mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; let start = null;
+  mkHandle('lm', mid, '#4cc3ff', q => { if (!start) start = { m: mid, a: LIN.a.slice(), b: LIN.b.slice() }; const dx = q[0] - start.m[0], dy = q[1] - start.m[1]; LIN.a = [start.a[0] + dx, start.a[1] + dy]; LIN.b = [start.b[0] + dx, start.b[1] + dy]; LIN.view = null; runLineT(); }, () => { start = null; }, { cls: 'sq', title: '선 전체 옮기기' });
+  if (LIN.res) { const z0 = LIN.res.zmin - 1, z1 = LIN.res.zmax + 1; addQuad3D([[a[0], a[1], z0], [b[0], b[1], z0], [b[0], b[1], z1], [a[0], a[1], z1]], 0x4cc3ff);
+    selBoxFn = () => ({ c: [mid[0], mid[1], (z0 + z1) / 2], ex: Math.abs(d[0]) + 10, ey: Math.abs(d[1]) + 10, ez: z1 - z0 + 4 }); }
+}
+function drawLine() {
+  const cv = $('linCv'); const [g, W, H] = fitCanvas(cv); g.clearRect(0, 0, W, H);
+  const R = LIN.res; if (!R) { g.fillStyle = '#6f7a88'; g.font = '13px Noto Sans KR'; g.fillText('지도나 3D 에서 두 점을 클릭하세요. 끝점 ● · 가운데 ■ 를 끌어 조절합니다.', 20, 30); return; }
+  const view = LIN.view || [-1, R.Lh + 1, R.zmin - 1, R.zmax + 1];
+  const v = makeView(W, H, ...view, $('linEq').checked, 40); R.v2 = v;
+  drawGrid(g, v, '선을 따른 거리 (m)', '표고 (m)', O[2] - ZOFF);
+  for (let i = 0; i < R.u.length; i++) { const X = v.X(R.u[i]), Y = v.Y(R.v[i]); if (X < 0 || X > W || Y < 0 || Y > H) continue; g.fillStyle = R.k[i] === 0 ? '#d9dee6' : '#7fbf7f'; g.fillRect(X - 0.9, Y - 0.9, 1.8, 1.8); }
+  g.strokeStyle = '#5fd38d'; g.lineWidth = 1.5; g.beginPath(); let st = false; R.gnd.forEach((z, i) => { if (!isFinite(z)) { st = false; return; } const X = v.X((i + 0.5) * R.bw), Y = v.Y(z); st ? g.lineTo(X, Y) : g.moveTo(X, Y); st = true; }); g.stroke();
+  drawMeas(g, v, LIN.meas);
+}
+$('linCv').addEventListener('click', e => { const R = LIN.res; if (!R?.v2) return; const r = e.target.getBoundingClientRect(); const p = [R.v2.IX(e.clientX - r.left), R.v2.IY(e.clientY - r.top)]; if (LIN.meas.length >= 2) LIN.meas = []; LIN.meas.push(p); $('linMeas').textContent = measText(LIN.meas); drawLine(); });
+wheelZoom($('linCv'), () => LIN.res?.v2, x => LIN.view = x, drawLine);
+$('linEq').onchange = () => drawLine();
+$('linPng').onclick = () => LIN.res && savePng($('linCv'), `${meta.name}_선단면.png`);
+
+// ───────── 면적 · 부피 (같은 다각형) ─────────
+const POLY = { pts: [] }, AREA = { res: null }, VOL = { res: null, mode: 'above', ref: null, grid: 0.25 };
+function polyPick(p) { POLY.pts.push([p[0], p[1]]); redrawSel(); runPolyD(); }
+$('areNew').onclick = () => { POLY.pts = []; AREA.res = VOL.res = null; VOL.ref = null; redrawSel(); redrawAll(); };
+$('rcMake').onclick = () => { const [cx, cy] = L2(+$('rcX').value, +$('rcY').value), w = +$('rcW').value / 2, hh = +$('rcH').value / 2, a = +$('rcA').value * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
+  POLY.pts = [[-w, -hh], [w, -hh], [w, hh], [-w, hh]].map(([x, y]) => [cx + x * c - y * s, cy + x * s + y * c]); VOL.ref = null; redrawSel(); runPoly(); };
+{ const c = map.getCenter(); const e = locOf(c), ee = E2(e); $('rcX').value = ee[0].toFixed(1); $('rcY').value = ee[1].toFixed(1); }
+map.on('moveend', () => { if (POLY.pts.length) return; const ee = E2(locOf(map.getCenter())); $('rcX').value = ee[0].toFixed(1); $('rcY').value = ee[1].toFixed(1); });
+function inPoly(P) { return (x, y) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) { if (((P[i][1] > y) !== (P[j][1] > y)) && (x < (P[j][0] - P[i][0]) * (y - P[i][1]) / (P[j][1] - P[i][1]) + P[i][0])) c = !c; } return c; }; }
+function polyPoints(P, fn) {   // 다각형 안 보이는 점마다 fn(i)
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity; for (const p of P) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); }
+  const ins = inPoly(P);
+  for (let y = y0 - CELL; y <= y1 + CELL; y += CELL) for (let x = x0 - CELL; x <= x1 + CELL; x += CELL) { const ci = cellOf(x, y); if (ci < 0) continue;
+    for (let i = cellStart[ci]; i < cellStart[ci + 1]; i++) { if (!visible(i)) continue; const px = pos[3 * i], py = pos[3 * i + 1]; if (px < x0 || px > x1 || py < y0 || py > y1 || !ins(px, py)) continue; fn(i); } }
+  return { x0, x1, y0, y1 };
+}
+function runPoly() {
+  const P = POLY.pts; if (P.length < 3) { AREA.res = VOL.res = null; $('areBig').textContent = P.length ? `꼭짓점 ${P.length}개 — 3개 이상 찍으세요` : '—'; $('areKv').innerHTML = ''; $('volBig').textContent = '—'; drawAreaHist(); drawVol(); return; }
+  // 면적
+  let A = 0, per = 0; for (let i = 0; i < P.length; i++) { const p = P[i], q2 = P[(i + 1) % P.length]; A += p[0] * q2[1] - q2[0] * p[1]; per += Math.hypot(q2[0] - p[0], q2[1] - p[1]); } A = Math.abs(A) / 2;
+  const zs = [], occ = new Set(), occC = new Set(); let nc = 0, ns = 0; const GR = 0.25;
+  // 부피용 격자
+  const gs = VOL.grid; const bb = (() => { let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity; for (const p of P) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); } return { x0, x1, y0, y1 }; })();
+  const gw = Math.max(1, Math.ceil((bb.x1 - bb.x0) / gs)), gh = Math.max(1, Math.ceil((bb.y1 - bb.y0) / gs)); const big = gw * gh > 4e6;
+  const zmin = big ? null : new Float32Array(gw * gh).fill(Infinity), zmax = big ? null : new Float32Array(gw * gh).fill(-Infinity);
+  polyPoints(P, i => { const px = pos[3 * i], py = pos[3 * i + 1], z = pos[3 * i + 2]; zs.push(z); const key = Math.floor(px / GR) * 100003 + Math.floor(py / GR); occ.add(key); if (cls[i] === 0) { nc++; occC.add(key); } else ns++;
+    if (!big) { const gx = Math.min(gw - 1, Math.floor((px - bb.x0) / gs)), gy = Math.min(gh - 1, Math.floor((py - bb.y0) / gs)), k = gy * gw + gx; if (z < zmin[k]) zmin[k] = z; if (z > zmax[k]) zmax[k] = z; } });
+  const zlo = pct(zs, 2), zhi = pct(zs, 99.5);
+  AREA.res = { A, per, zs, nc, ns, occ: occ.size * GR * GR, occC: occC.size * GR * GR, zlo, zhi };
+  $('areBig').textContent = `${A.toFixed(1)} m²`;
+  $('areKv').innerHTML = kvHtml([['둘레', fmt(per)], ['꼭짓점', P.length + '개'], ['점 수 (동굴 / 지상)', `${nc.toLocaleString()} / ${ns.toLocaleString()}`], ['점군이 덮은 면적 (0.25 m 칸)', fmt(AREA.res.occ, 1, ' m²')],
+    ['  그중 동굴', fmt(AREA.res.occC, 1, ' m²')], ['최저 표고 (2 %)', fmt(elev(zlo))], ['최고 표고 (99.5 %)', fmt(elev(zhi))], ['높이 범위', fmt(zhi - zlo)], ['점군', LOD === 'lite' ? '<span class="warn">저용량 (근사)</span>' : '원본']]);
+  // 부피
+  if (VOL.ref == null && isFinite(zlo)) VOL.ref = elev(zlo);
+  if (isFinite(zlo)) { $('volRefR').min = (elev(zlo) - 5).toFixed(1); $('volRefR').max = (elev(zhi) + 5).toFixed(1); }
+  setVRefUI(VOL.ref ?? 0);
+  if (!big) {
+    const ref = zloc(VOL.ref), ca = gs * gs, ins = inPoly(P); let up = 0, dn = 0, vd = 0, cells = 0, maxT = 0; const val = new Float32Array(gw * gh).fill(NaN);
+    for (let gy = 0; gy < gh; gy++) for (let gx = 0; gx < gw; gx++) { const k = gy * gw + gx; if (!isFinite(zmax[k])) continue; const cx = bb.x0 + (gx + 0.5) * gs, cy = bb.y0 + (gy + 0.5) * gs; if (!ins(cx, cy)) continue; cells++;
+      const a1 = Math.max(0, zmax[k] - ref), b1 = Math.max(0, ref - zmin[k]), vv = zmax[k] - zmin[k] > 0.3 ? zmax[k] - zmin[k] : 0; up += a1 * ca; dn += b1 * ca; vd += vv * ca;
+      const t = VOL.mode === 'above' ? a1 : VOL.mode === 'below' ? b1 : VOL.mode === 'both' ? a1 + b1 : vv; val[k] = t; maxT = Math.max(maxT, t); }
+    const V = VOL.mode === 'above' ? up : VOL.mode === 'below' ? dn : VOL.mode === 'both' ? up + dn : vd;
+    VOL.res = { V, up, dn, vd, cells, cov: cells * ca, A, val, gw, gh, bb, gs, maxT };
+    $('volBig').textContent = `${V.toFixed(V < 100 ? 2 : 0)} m³`;
+    $('volKv').innerHTML = kvHtml([['기준면 위', fmt(up, 1, ' m³')], ['기준면 아래', fmt(dn, 1, ' m³')], ['바닥~천장 빈 공간', fmt(vd, 1, ' m³')], ['기준면 표고', fmt(VOL.ref)], ['영역 면적 / 점군 덮은 면적', `${A.toFixed(1)} / ${(cells * ca).toFixed(1)} m²`],
+      ['평균 두께 (부피÷덮은 면적)', fmt(cells ? V / (cells * ca) : NaN)], ['최대 두께', fmt(maxT)], ['격자', `${gs} m (${cells.toLocaleString()} 칸)`], ['점군', LOD === 'lite' ? '<span class="warn">저용량 (근사)</span>' : '원본']]);
+  } else { VOL.res = null; $('volBig').textContent = '영역이 너무 큽니다 — 격자를 키우세요'; }
+  if (mode === 'area' || mode === 'vol') redrawSel();
+  drawAreaHist(); drawVol();
+}
+const runPolyD = debounce(runPoly, 150);
+const setVRefUI = pair('volRefR', 'volRef', v => { VOL.ref = v; runPolyD(); });
+$('volMode').onchange = e => { VOL.mode = e.target.value; runPoly(); };
+$('volGrid').onchange = e => { VOL.grid = +e.target.value; runPoly(); };
+$('volGround').onclick = () => { if (AREA.res) { VOL.ref = elev(AREA.res.zlo); runPoly(); } };
+$('volEdge').onclick = () => { const P = POLY.pts; if (P.length < 3) return; const zs = []; for (let j = 0; j < P.length; j++) { const a = P[j], b = P[(j + 1) % P.length]; for (let f = 0; f <= 1; f += 0.1) { const g = groundAt(a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f); if (g) zs.push(g.z); } } if (zs.length) { VOL.ref = elev(pct(zs, 50)); runPoly(); } };
+function drawPolySel() {
+  const P = POLY.pts; if (!P.length) return;
+  if (P.length >= 3) L.polygon(P.map(llOf), { color: mode === 'vol' ? '#4cc3ff' : '#be8cff', weight: 2.5, fillOpacity: 0.14, interactive: false }).addTo(ovl);
+  else L.polyline(P.map(llOf), { color: '#be8cff', weight: 2.5, interactive: false }).addTo(ovl);
+  const z3 = P.map(p => { const g = groundAt(p[0], p[1]); return g ? g.z : zRef(p[0], p[1]); });
+  addLine3D(P.length >= 3 ? [...P.map((p, i) => [p[0], p[1], z3[i]]), [P[0][0], P[0][1], z3[0]]] : P.map((p, i) => [p[0], p[1], z3[i]]), 0xbe8cff);
+  if (mode === 'vol' && VOL.ref != null && P.length >= 3) addPoly3D(P, zloc(VOL.ref), 0x4cc3ff, 0.22);
+  P.forEach((p, j) => mkHandle('p' + j, p, '#be8cff', q => { POLY.pts[j] = q; runPolyD(); }, null, { size: 13, title: '끌기 · 우클릭 = 삭제', onRight: () => { POLY.pts.splice(j, 1); redrawSel(); runPolyD(); } }));
+  if (P.length >= 2) for (let j = 0; j < P.length; j++) { if (P.length < 3 && j === P.length - 1) break; const a = P[j], b = P[(j + 1) % P.length]; let ins = -1;
+    mkHandle('pm' + j, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], '#be8cff', q => { if (ins < 0) { POLY.pts.splice(j + 1, 0, q); ins = j + 1; } else POLY.pts[ins] = q; runPolyD(); }, null, { size: 10, cls: 'mid', title: '끌면 꼭짓점 추가' }); }
+  if (P.length >= 3) { const xs = P.map(p => p[0]), ys = P.map(p => p[1]); selBoxFn = () => ({ c: [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2, z3[0] + 3], ex: Math.max(...xs) - Math.min(...xs) + 6, ey: Math.max(...ys) - Math.min(...ys) + 6, ez: 25 }); }
+}
+function drawAreaHist() {
+  const cv = $('areCv'); const [g, W, H] = fitCanvas(cv); g.clearRect(0, 0, W, H);
+  if (!AREA.res || !AREA.res.zs.length) { g.fillStyle = '#6f7a88'; g.font = '13px Noto Sans KR'; g.fillText('지도/3D 를 클릭해 꼭짓점을 찍거나 [사각형으로] 를 누르세요. 영역 안 표고 분포가 그려집니다.', 20, 30); return; }
+  const zs = AREA.res.zs, lo = pct(zs, 0.5), hi = pct(zs, 99.5), nb = 60, h = new Array(nb).fill(0); for (const z of zs) { const b = Math.floor((z - lo) / (hi - lo + 1e-6) * nb); if (b >= 0 && b < nb) h[b]++; }
+  chart(cv, [{ n: '표고별 점 수', c: '#be8cff', x: h.map((_, i) => elev(lo + (i + 0.5) / nb * (hi - lo))), y: h }], { xl: '표고 (m)', yl: '점 수' });
+}
+function drawVol() {
+  const cv = $('volCv'); const [g, W, H] = fitCanvas(cv); g.clearRect(0, 0, W, H); const R = VOL.res;
+  if (!R) { g.fillStyle = '#6f7a88'; g.font = '13px Noto Sans KR'; g.fillText('지도/3D 를 클릭해 영역을 그리세요. 칸마다 두께(기준면과의 높이차)를 위에서 본 그림으로 보여 줍니다.', 20, 30); return; }
+  const pad = 30, sc = Math.min((W - pad * 2 - 60) / (R.gw * R.gs), (H - pad * 2) / (R.gh * R.gs)), ox = pad, oy = pad;
+  const im = g.createImageData(R.gw, R.gh); for (let gy = 0; gy < R.gh; gy++) for (let gx = 0; gx < R.gw; gx++) { const v = R.val[gy * R.gw + gx], k = ((R.gh - 1 - gy) * R.gw + gx) * 4; if (!isFinite(v)) continue; const c = turbo(0.05 + 0.9 * Math.min(1, v / (R.maxT || 1))); im.data[k] = c[0] * 255; im.data[k + 1] = c[1] * 255; im.data[k + 2] = c[2] * 255; im.data[k + 3] = 255; }
+  const tmp = document.createElement('canvas'); tmp.width = R.gw; tmp.height = R.gh; tmp.getContext('2d').putImageData(im, 0, 0); g.imageSmoothingEnabled = false; g.drawImage(tmp, ox, oy, R.gw * R.gs * sc, R.gh * R.gs * sc);
+  g.strokeStyle = '#4cc3ff'; g.lineWidth = 1.5; g.beginPath(); POLY.pts.forEach((p, i) => { const X = ox + (p[0] - R.bb.x0) * sc, Y = oy + (R.bb.y0 + R.gh * R.gs - p[1]) * sc; i ? g.lineTo(X, Y) : g.moveTo(X, Y); }); g.closePath(); g.stroke();
+  const bx = ox + R.gw * R.gs * sc + 16; for (let i = 0; i < 100; i++) { const c = turbo(0.05 + 0.9 * (1 - i / 99)); g.fillStyle = `rgb(${c.map(x => x * 255 | 0)})`; g.fillRect(bx, oy + i * (H - pad * 2) / 100, 12, (H - pad * 2) / 100 + 1); }
+  g.fillStyle = '#c9d0d9'; g.font = '11px Noto Sans KR'; g.fillText(`${R.maxT.toFixed(1)} m`, bx + 16, oy + 8); g.fillText('0', bx + 16, H - pad); g.fillText({ above: '기준면 위 두께', below: '기준면 아래 깊이', both: '기준면과의 차', void: '바닥~천장 높이' }[VOL.mode], ox, 18);
+  const sb = niceStep(R.gw * R.gs, 200); g.fillRect(ox, H - 12, sb * sc, 3); g.fillText(`${sb} m`, ox + sb * sc + 6, H - 8);
+}
+
+// ───────── 저용량 ↔ 원본 ─────────
+async function switchLod(k) {
+  if (k === LOD) return;
+  document.querySelectorAll('[data-lod]').forEach(b => b.disabled = true);
+  try {
+    if (!LODS[k]) {
+      const info = k === 'lite' ? meta.lite : { n: meta.n, parts: meta.parts };
+      $('lodbar').style.display = 'inline-block';
+      const buf = await fetchParts(info.parts, 'cloud.bin', p => { $('lodbar').firstChild.style.width = (p * 90).toFixed(0) + '%'; $('lodMsg').textContent = `원본 받는 중 ${(p * 100).toFixed(0)}% (${mb(fullSize * p)} / ${mb(fullSize)})`; });
+      $('lodMsg').textContent = '원본 푸는 중…';
+      LODS[k] = await decode(buf, info.n, p => { $('lodbar').firstChild.style.width = (90 + p * 10).toFixed(0) + '%'; });
+      $('lodbar').style.display = 'none';
+    }
+    useLod(k); buildGeom(); radCache.clear();
+    document.querySelectorAll('[data-lod]').forEach(b => b.classList.toggle('on', b.dataset.lod === k));
+    lodStatus(); recomputeActive(); if (ST) computeProfile();
+  } catch (err) { $('lodMsg').textContent = '원본을 불러오지 못했습니다: ' + err.message; $('lodbar').style.display = 'none'; }
+  document.querySelectorAll('[data-lod]').forEach(b => b.disabled = false);
+}
+function lodStatus() { if (!meta.lite) return; $('lodMsg').innerHTML = LOD === 'lite' ? `저용량 ${meta.lite.n.toLocaleString()} 점 · 측정은 근사 — 정밀 측정은 [원본] (${mb(fullSize)})` : `원본 ${fullN.toLocaleString()} 점`; }
+document.querySelectorAll('[data-lod]').forEach(b => b.onclick = () => switchLod(b.dataset.lod));
+lodStatus();
+
+// ───────── 지상지도 (3D): 위성사진(Esri) + 지형(AWS Terrain Tiles, SRTM 기반) ─────────
+let DEM = null, gndMesh = null;
+function demAt(x, y) {
+  if (!DEM) return NaN; const fx = (x - DEM.x0) / DEM.step, fy = (y - DEM.y0) / DEM.step; const i = Math.floor(fx), j = Math.floor(fy);
+  if (i < 0 || j < 0 || i >= DEM.nx - 1 || j >= DEM.ny - 1) return NaN; const a = fx - i, b = fy - j, H = DEM.h, n = DEM.nx;
+  return (H[j * n + i] * (1 - a) + H[j * n + i + 1] * a) * (1 - b) + (H[(j + 1) * n + i] * (1 - a) + H[(j + 1) * n + i + 1] * a) * b; }
+const lon2tx = (lon, z) => (lon + 180) / 360 * 2 ** z, lat2ty = (lat, z) => { const r = lat * Math.PI / 180; return (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * 2 ** z; };
+function loadImg(url) { return new Promise((res, rej) => { const im = new Image(); im.crossOrigin = 'anonymous'; im.onload = () => res(im); im.onerror = rej; im.src = url; }); }
+async function tileCanvas(urlFn, z, tx0, tx1, ty0, ty1) {
+  const cv = document.createElement('canvas'); cv.width = (tx1 - tx0 + 1) * 256; cv.height = (ty1 - ty0 + 1) * 256; const g = cv.getContext('2d');
+  const jobs = []; for (let x = tx0; x <= tx1; x++) for (let y = ty0; y <= ty1; y++) jobs.push(loadImg(urlFn(z, x, y)).then(im => g.drawImage(im, (x - tx0) * 256, (y - ty0) * 256)));
+  await Promise.all(jobs); return cv;
+}
+async function loadGround() {
+  if (!GEO) return; $('gndgrp').style.display = ''; $('gndMsg').textContent = '불러오는 중…';
+  const M0 = 60, x0 = PB.x0 - O[0] - M0, x1 = PB.x1 - O[0] + M0, y0 = PB.y0 - O[1] - M0, y1 = PB.y1 - O[1] + M0;
+  const llA = toLL(x0 + O[0], y1 + O[1]), llB = toLL(x1 + O[0], y0 + O[1]);
+  const zt = 15, dtx0 = Math.floor(lon2tx(llA[1], zt)), dtx1 = Math.floor(lon2tx(llB[1], zt)), dty0 = Math.floor(lat2ty(llA[0], zt)), dty1 = Math.floor(lat2ty(llB[0], zt));
+  const dcv = await tileCanvas((z, x, y) => `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${z}/${x}/${y}.png`, zt, dtx0, dtx1, dty0, dty1);
+  const dd = dcv.getContext('2d').getImageData(0, 0, dcv.width, dcv.height).data;
+  const step = 3, nx = Math.ceil((x1 - x0) / step) + 1, ny = Math.ceil((y1 - y0) / step) + 1, h = new Float32Array(nx * ny);
+  for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) { const ll = toLL(x0 + i * step + O[0], y0 + j * step + O[1]);
+    const px = (lon2tx(ll[1], zt) - dtx0) * 256 - 0.5, py = (lat2ty(ll[0], zt) - dty0) * 256 - 0.5; const ix = Math.max(0, Math.min(dcv.width - 2, Math.floor(px))), iy = Math.max(0, Math.min(dcv.height - 2, Math.floor(py))), a = px - ix, b = py - iy;
+    const el = (u, v) => { const k = 4 * (v * dcv.width + u); return dd[k] * 256 + dd[k + 1] + dd[k + 2] / 256 - 32768; };
+    h[j * nx + i] = (el(ix, iy) * (1 - a) + el(ix + 1, iy) * a) * (1 - b) + (el(ix, iy + 1) * (1 - a) + el(ix + 1, iy + 1) * a) * b; }
+  DEM = { x0, y0, step, nx, ny, h, off: 0 };
+  const cellMin = new Map(); for (let i = 0; i < N; i += 2) { if (cls[i] !== 1) continue; const k = Math.floor(pos[3 * i] / 2) * 100003 + Math.floor(pos[3 * i + 1] / 2); const z = pos[3 * i + 2]; const o = cellMin.get(k); if (!o || z < o[2]) cellMin.set(k, [pos[3 * i], pos[3 * i + 1], z]); }
+  const diffs = []; for (const [, p] of cellMin) { const g = demAt(p[0], p[1]); if (isFinite(g)) diffs.push(elev(p[2]) - g); }
+  if (diffs.length > 50) { const off = pct(diffs, 50); DEM.off = off; DEM.fit = pct(diffs.map(d => Math.abs(d - off)), 50); ZOFF += off; }
+  const zs = 18, stx0 = Math.floor(lon2tx(llA[1], zs)), stx1 = Math.floor(lon2tx(llB[1], zs)), sty0 = Math.floor(lat2ty(llA[0], zs)), sty1 = Math.floor(lat2ty(llB[0], zs));
+  const scv = await tileCanvas((z, x, y) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`, zs, stx0, stx1, sty0, sty1);
+  const P3 = new Float32Array(nx * ny * 3), UV = new Float32Array(nx * ny * 2), idx = [];
+  for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) { const k = j * nx + i, x = x0 + i * step, y = y0 + j * step; P3[3 * k] = x; P3[3 * k + 1] = y; P3[3 * k + 2] = h[k] - O[2] + ZOFF;
+    const ll = toLL(x + O[0], y + O[1]); UV[2 * k] = ((lon2tx(ll[1], zs) - stx0) * 256) / scv.width; UV[2 * k + 1] = 1 - ((lat2ty(ll[0], zs) - sty0) * 256) / scv.height; }
+  for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) { const a = j * nx + i; idx.push(a, a + 1, a + nx, a + 1, a + nx + 1, a + nx); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(P3, 3)); g.setAttribute('uv', new THREE.BufferAttribute(UV, 2)); g.setIndex(idx);
+  const tex = new THREE.CanvasTexture(scv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+  gndMesh = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: +$('gndOp').value, side: THREE.DoubleSide, depthWrite: false }));
+  gndMesh.renderOrder = 5; scene.add(gndMesh);
+  $('gndMsg').textContent = DEM.fit != null ? `표고 = 지형(해발) 기준 · 지상 LiDAR 와 차 중앙 ${DEM.fit.toFixed(1)} m` : '';
+  recomputeActive(); drawCharts();
+}
+$('showGnd').onchange = e => { if (gndMesh) gndMesh.visible = e.target.checked; };
+$('gndOp').oninput = e => { if (gndMesh) gndMesh.material.opacity = +e.target.value; };
+const groundReady = loadGround().catch(err => { $('gndMsg').textContent = '지상지도를 불러오지 못했습니다(인터넷 연결 확인)'; console.warn(err); });
+window.raven = { lod: () => LOD, switchLod, profile: async (step = 1) => { await groundReady; if (!ST) return null; const out = []; const k = Math.max(1, Math.round(step / 0.5));
+  for (let i = 0; i < ST.length; i += k) { const M = measureStation(i, 0.15); out.push([ST[i].s, ...[M.floorZ, M.ceilZ, M.height, M.ww, M.w15, M.wmax, M.area, demAt(ST[i].x, ST[i].y)].map(x => isFinite(x) ? +x.toFixed(2) : null), ST[i].inside]); if (i % 100 === 0) await sleep0(); } return out; } };
+
+// ───────── 정보 탭 ─────────
+$('infoBox').innerHTML = (SITE ? `<h3 style="margin:4px 0">${SITE.name} — ${SITE.short}</h3>${SITE.about}${SITE.limits ? '<p><b>이 현장의 한계</b></p><ul>' + SITE.limits.map(x => `<li>${x}</li>`).join('') + '</ul>' : ''}${SITE.intro_url ? `<p><a href="${SITE.intro_url}" target="_blank" rel="noopener" style="color:var(--acc)">현장 소개 페이지 ↗</a></p>` : ''}<hr style="border:0;border-top:1px solid var(--line)">` : '') + `
+<p><b>${meta.name}</b> — 3DMakerpro raven + RayStudio 로 처리한 점군으로 만든 측정 페이지입니다. 세션 ${meta.sessions.length}개를 한 좌표로 정합했고, 원본은 ${meta.voxel * 100} cm 간격 · 점 ${fullN.toLocaleString()}개${meta.lite ? `, 저용량은 ${meta.lite.voxel} m 간격 · 점 ${meta.lite.n.toLocaleString()}개` : ''} 입니다.</p>
+<p>세션: ${meta.sessions.map((s, i) => `<span style="color:rgb(${SESC[i % SESC.length]})">■</span> ${s}`).join(' · ')}</p>
+<p><b>점군 — 저용량 / 원본</b> · 처음엔 저용량으로 빠르게 엽니다. 정밀하게 잴 때는 위 [원본] 을 누르세요(받는 동안에도 저용량으로 계속 볼 수 있고, 다 받으면 지금 측정을 원본으로 다시 계산합니다).</p>
+<p><b>단면</b> · 지도/3D 클릭으로 놓고, 지도의 빨간 ● 을 끌어 옮기고 흰 ● 을 끌어 각도·길이를 바꿉니다. 단면 탭에서 중심(동·북)·각도·길이·두께를 숫자/막대로 정확히 넣을 수 있고, ← → 키로 앞뒤 이동(Shift 5 m), ↑ ↓ 키로 각도(Shift 10°). 동굴은 [동굴 중심선에 붙이기] 로 중심선 위를 따라가고, [직각] 으로 진행 방향에 직각을 맞춥니다.</p>
+<p><b>구간</b> · 동굴은 중심선 위 시작·끝(초록·빨강 ● 끌기, 거리 입력). [동굴 중심선 따라] 를 끄면 지도에 자유 경로를 그려 어디서나 경로에 수직인 단면을 간격마다 잽니다. 간격·단면 길이·두께를 고르고, 체적(단면적×간격)·평면 면적·경사·종단면·CSV.</p>
+<p><b>선 단면</b> · 두 끝점(초록·빨강 ●)과 가운데 ■ 를 끌거나, 끝점 좌표·각도·길이·두께를 입력. <b>면적</b> · 클릭으로 꼭짓점, ● 끌기, 반투명 ● 을 끌면 꼭짓점 끼우기, 우클릭 삭제, 또는 사각형(중심·가로·세로·각도). <b>부피</b> · 같은 다각형에서 기준면 위(건물·쌓인 것)·아래(파인 곳)·위+아래, 또는 바닥~천장 빈 공간(동굴·실내)을 격자(0.1~1 m)마다 계산. 기준면 높이는 막대·숫자로, [기준면 = 지면/테두리] 로 자동.</p>
+<p><b>보기</b> · [3D] 원근, [위]·[왼쪽]·[오른쪽]·[정면]·[후면] 은 축척이 맞는 정사영(정면 = 남쪽에서 북쪽을 봄). [선택 주변] 을 켜면 지금 고른 도형 주변만 맞춰 봅니다. [단면 주변만] 은 3D 에서 단면·선 주변 점만 보입니다.</p>
+<p><b>지리 좌표</b> · ${GEO ? GEO.note : '이 현장은 지리 좌표 없이 현장 로컬 좌표(m)로 측정·표시합니다.'}</p>
+${meta.note ? `<p>${meta.note}</p>` : ''}
+<p class="muted">정의 · 폭은 바닥+1.5 m 높이에서 벽 사이(통행 폭은 중심에서 가장 가까운 장애물 — 난간·바위 포함), 천장고는 중앙 ±0.75 m 의 바닥→천장, 단면적은 방사 다각형(2°)이 닫힐 때만. 모든 수치는 점군 자동 측정이므로 사람·장비가 찍힌 곳은 직접 재기로 확인하세요.</p>`;
+
+// ───────── 시작 ─────────
+function redrawAll() { drawSection(); drawLine(); drawCharts(); drawAreaHist(); drawVol(); }
+window.addEventListener('resize', () => requestAnimationFrame(redrawAll));
+async function computeProfile() {   // 동굴 전체 종단면 (2 m 간격) — 구간 탭 기본 그래프
+  const out = []; for (let i = 0; i < ST.length; i += 4) { const s = ST[i]; out.push({ s: s.s, sAbs: s.s, c: [s.x, s.y, s.z], i, M: measureStation(i, 0.15) }); if (i % 80 === 0) { $('rngProg').textContent = `전체 종단면 ${(i / ST.length * 100).toFixed(0)}%`; await sleep0(); } }
+  prof = out; $('rngProg').textContent = ''; if (!RNG.R) $('rngLen2').textContent = `전체 ${ST[ST.length - 1].s.toFixed(0)} m`; drawCharts();
+}
+setMode('point');
+if (ST) { const i0 = ST.findIndex(s => s.inside && s.s >= 20); gotoStation(i0 >= 0 ? i0 : 0); }
+redrawAll();
+if (ST) computeProfile();
+if (!SEC.c) $('hud').innerHTML = `<b>${meta.name}</b> · 점 ${N.toLocaleString()}개${LOD === 'lite' ? ' (저용량)' : ''} · 왼쪽 끌기 회전 · 오른쪽 끌기 이동 · 휠 확대`;
+</script>
+</body>
+</html>

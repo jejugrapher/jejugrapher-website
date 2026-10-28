@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>별도환해장성 디지털 트윈 — 3D 측정 · 가우시안 스플래팅 · 식생 분석 | 제주그래퍼</title>
+<meta name="description" content="제주 화북 별도환해장성을 멀티스펙트럴 드론으로 촬영해 만든 디지털 트윈입니다. 3D 메시 위에서 거리를 재고, 가우시안 스플래팅으로 현장을 둘러보고, 정사영상·NDVI·식생 분류 지도를 겹쳐 보며 길이와 면적을 잴 수 있습니다.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="별도환해장성 디지털 트윈 — 3D 측정 · 가우시안 스플래팅">
+<meta property="og:description" content="제주 화북 별도환해장성을 멀티스펙트럴 드론으로 촬영해 만든 디지털 트윈입니다. 3D 메시 위에서 거리를 재고, 가우시안 스플래팅으로 현장을 둘러보고, 정사영상·NDVI·식생 분류 지도를 겹쳐 보며 길이와 면적을 잴 수 있습니다.">
+<meta property="og:image" content="https://jejugrapher.com/spatial/whanhae-wall/map/site00_class.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<title>별도환해장성 디지털 트윈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: 현무암 판 위의 측량 도면 — 상단 한 줄 선언, 그 아래 큰 작업창(탭 3개), 이어서 공정·수치·산출물 */
+:root{
+  --basalt:#1d2428;      /* 잉크 · 현무암 */
+  --paper:#eef1ef;       /* 바탕 · 젖은 돌빛 회녹 */
+  --panel:#ffffff;
+  --line:#cdd5d2;
+  --mute:#5c6a6a;
+  --sea:#0e6b72;         /* 주 강조 · 화북 바다 */
+  --moss:#5b8a34;        /* 식생 */
+  --survey:#d1207e;      /* 측량선 · 마젠타 */
+  --stage:#0c1114;       /* 뷰어 배경 */
+  --y1:#d7301f; --y2:#e8962a; --y3:#3f8f3f;
+  --f-display:"Hahmlet","Nanum Myeongjo",serif;
+  --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--basalt:#e3e9e7;--paper:#101517;--panel:#172024;--line:#2b383c;--mute:#94a3a3;--sea:#4fb7bd;--moss:#8cc35f;--survey:#ff5fb0;--stage:#05080a;color-scheme:dark}}
+:root[data-theme="dark"]{--basalt:#e3e9e7;--paper:#101517;--panel:#172024;--line:#2b383c;--mute:#94a3a3;--sea:#4fb7bd;--moss:#8cc35f;--survey:#ff5fb0;--stage:#05080a;color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--basalt);font:15px/1.7 var(--f-body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+.wrap{max-width:1240px;margin:0 auto}
+a{color:var(--sea)}
+:focus-visible{outline:2px solid var(--survey);outline-offset:2px}
+.eyebrow{font:500 12px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+h1{font-size:clamp(30px,5.2vw,58px);font-weight:800;line-height:1.08;letter-spacing:-.01em}
+h2{font-size:clamp(22px,2.6vw,30px);font-weight:700;line-height:1.25}
+h3{font-size:17px;font-weight:700}
+p{margin:0}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* hero */
+header.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px;align-items:end;padding-block:36px 22px}
+.hero .lede{font-size:17px;max-width:46ch;color:var(--mute);margin-top:14px}
+.caps{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.caps span{font:500 13px var(--f-body);border:1px solid var(--line);border-radius:999px;padding:4px 12px;background:var(--panel)}
+.spec{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.spec div{background:var(--panel);padding:12px 14px}
+.spec b{display:block;font:500 21px/1.2 var(--f-mono);font-variant-numeric:tabular-nums}
+.spec span{font-size:12.5px;color:var(--mute)}
+@media (max-width:820px){header.hero{grid-template-columns:1fr}}
+
+/* workbench */
+.bench{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.tabs{display:flex;gap:2px;padding:8px 8px 0;background:var(--panel);border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs button{font:600 14px var(--f-body);color:var(--mute);background:none;border:0;padding:10px 16px;border-radius:9px 9px 0 0;cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--basalt);background:var(--paper);box-shadow:inset 0 -2px 0 var(--sea)}
+.pane{display:grid;grid-template-columns:minmax(0,1fr) 300px;min-height:0}
+.pane[hidden]{display:none!important}
+@media (max-width:900px){.pane{grid-template-columns:1fr}}
+.stage{position:relative;background:var(--stage);aspect-ratio:16/10;max-width:100%;min-height:320px;overflow:hidden}
+.stage canvas{display:block;width:100%;height:100%}
+.stage .hint{position:absolute;left:12px;bottom:10px;font:12px var(--f-body);color:#d9e2e0;background:rgba(0,0,0,.55);padding:4px 10px;border-radius:6px;pointer-events:none}
+.stage .load{position:absolute;inset:0;display:grid;place-items:center;color:#cfd8d6;font:500 14px var(--f-body);text-align:center;padding:16px}
+.stage .load[hidden]{display:none}
+.lbl{position:absolute;transform:translate(-50%,-140%);font:500 12px var(--f-mono);color:#fff;background:var(--survey);padding:2px 7px;border-radius:5px;white-space:nowrap;pointer-events:none}
+.side{border-left:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:14px;min-width:0}
+@media (max-width:900px){.side{border-left:0;border-top:1px solid var(--line)}}
+.side .row{display:flex;flex-wrap:wrap;gap:6px}
+.btn{font:500 13px var(--f-body);border:1px solid var(--line);background:var(--paper);color:var(--basalt);padding:6px 12px;border-radius:8px;cursor:pointer}
+.btn[aria-pressed="true"]{background:var(--survey);border-color:var(--survey);color:#fff}
+.btn.ghost{background:none}
+.readout{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--paper)}
+.readout .big{font:500 26px/1.15 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--survey)}
+.readout dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:8px 0 0;font-size:13px}
+.readout dt{color:var(--mute)} .readout dd{margin:0;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.note{font-size:12.5px;color:var(--mute)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{font:500 12.5px var(--f-body);border:1px solid var(--line);background:var(--panel);color:var(--basalt);padding:4px 10px;border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--sea);border-color:var(--sea);color:#fff}
+/* map compare */
+.cmp{position:relative;width:100%;touch-action:none;user-select:none;background:var(--stage)}
+.cmp img{display:block;width:100%;height:auto;pointer-events:none}
+.cmp .top{position:absolute;inset:0}
+.cmp .bar{position:absolute;top:0;bottom:0;width:2px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.35);pointer-events:none}
+.cmp .knob{position:absolute;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:#fff;color:#222;display:grid;place-items:center;font:600 13px var(--f-body);box-shadow:0 1px 4px rgba(0,0,0,.4);cursor:ew-resize;touch-action:none}
+.cmp svg{position:absolute;inset:0;width:100%;height:100%}
+.cmp .tag{position:absolute;top:8px;font:12px var(--f-body);color:#fff;background:rgba(0,0,0,.55);padding:2px 8px;border-radius:6px;pointer-events:none}
+.legend{font-size:12px;color:var(--mute);line-height:1.9}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:2px;vertical-align:-1px;margin-right:4px}
+.ramp{height:9px;border-radius:3px;margin:3px 0 1px}
+.rl{display:flex;justify-content:space-between;font:11px var(--f-mono)}
+
+/* sections */
+section{padding-block:40px 0}
+.flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:16px;counter-reset:s}
+.flow li{list-style:none;border-top:2px solid var(--sea);padding-top:10px;counter-increment:s;min-width:0}
+.flow li::before{content:counter(s,decimal-leading-zero);font:500 12px var(--f-mono);color:var(--sea);display:block}
+.flow b{display:block;font:700 15px var(--f-display);margin:2px 0}
+.flow span{font-size:13px;color:var(--mute)}
+@media (max-width:860px){.flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;margin-top:16px}
+@media (max-width:820px){.split{grid-template-columns:1fr}}
+.bars{display:grid;gap:12px}
+.bars .r{display:grid;grid-template-columns:118px minmax(0,1fr) 56px;gap:10px;align-items:center;font-size:13.5px}
+.bars .t{height:14px;border-radius:3px;background:var(--line);overflow:hidden}
+.bars .t i{display:block;height:100%;background:var(--moss)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left}
+th{font:500 12px var(--f-mono);letter-spacing:.04em;color:var(--mute)}
+td.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.yr{display:inline-block;padding:0 8px;border-radius:9px;color:#fff;font-size:12px}
+.deliver{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.deliver div{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--panel);min-width:0}
+.deliver b{font:700 15px var(--f-display)}
+.deliver p{font-size:13px;color:var(--mute);margin-top:4px}
+@media (max-width:820px){.deliver{grid-template-columns:1fr}}
+footer{margin-top:44px;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--mute)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.jgnav{position:sticky;top:0;z-index:60;background:var(--paper);border-bottom:1px solid var(--line)}
+.jgin{max-width:1240px;margin:0 auto;padding:0 16px;height:54px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.jgnav a{color:var(--basalt);text-decoration:none}
+.jglogo{font-family:var(--f-display);font-weight:700;letter-spacing:2px;font-size:16px;white-space:nowrap}
+.jglinks{display:flex;gap:16px;font-size:14px;color:var(--mute)}
+.jglinks a{color:var(--mute)} .jglinks a:hover{color:var(--sea)}
+.jgfoot{max-width:1240px;margin:0 auto;padding:30px 16px 52px;border-top:1px solid var(--line);color:var(--mute);font-size:14px;line-height:1.8}
+.jgfoot a{color:var(--sea)}
+.jgfoot .go{display:inline-block;margin-top:1rem;border-bottom:1px solid}
+@media (max-width:600px){.jglinks a:first-child{display:none}}
+
+.zl{transform-origin:0 0;will-change:transform}
+.zl.abs{position:absolute;inset:0}
+.cmp .zl img{display:block;width:100%;height:auto}
+.cmp .zl.abs img{position:absolute;inset:0}
+.zbtns{position:absolute;right:8px;bottom:8px;display:flex;gap:6px;z-index:5}
+.zbtns button{width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.55);color:#fff;font:600 15px/1 var(--f-body);cursor:pointer;display:grid;place-items:center}
+.zbtns button:hover{background:var(--sea);border-color:var(--sea)}
+.zbtns .wide{width:auto;padding:0 10px;font-size:12.5px}
+.zhint{position:absolute;left:8px;bottom:8px;z-index:5;font:12px var(--f-body);color:#fff;background:rgba(0,0,0,.5);padding:3px 8px;border-radius:6px;pointer-events:none}
+#p-map:fullscreen{background:var(--paper);padding:10px;overflow:auto}
+#p-map:fullscreen .cmp{margin:0 auto}
+
+.ms .lead{max-width:62ch}
+.msfig{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 16px 12px;margin:18px 0}
+.msfig svg{width:100%;height:auto;display:block}
+.msfig figcaption{font:12.5px var(--f-body);color:var(--mute);margin-top:10px;line-height:1.7}
+.idx{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:6px}
+.idx article{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 15px;display:flex;flex-direction:column;gap:.45rem}
+.idx h4{font:700 1.05rem var(--f-display);color:var(--sea)}
+.idx .eq{font:500 13px var(--f-mono);background:var(--paper);border:1px solid var(--line);border-radius:7px;padding:7px 9px;color:var(--basalt)}
+.idx p{font-size:.92rem;color:var(--mute);line-height:1.7;margin:0}
+.idx .use{font-size:.88rem;color:var(--basalt);border-top:1px dashed var(--line);padding-top:.5rem;margin-top:auto}
+.msuse{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px;counter-reset:u}
+.msuse li{list-style:none;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 14px 13px;position:relative}
+.msuse li::before{counter-increment:u;content:counter(u);display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--sea);color:#fff;font:600 12px var(--f-mono);margin-bottom:.5rem}
+.msuse b{display:block;font:600 .98rem var(--f-body);margin-bottom:.25rem}
+.msuse span{font-size:.88rem;color:var(--mute);line-height:1.65}
+@media (max-width:900px){.idx,.msuse{grid-template-columns:1fr}}
+
+.why{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 22px 18px;margin:0 0 22px}
+.why h2{margin-bottom:.5rem}
+.why .lead{max-width:64ch;margin-bottom:1rem}
+.why .two{display:grid;grid-template-columns:1.25fr 1fr;gap:20px;align-items:start}
+.cmp2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cmp2 figure{margin:0}
+.cmp2 img{width:100%;height:auto;display:block;border-radius:10px;border:1px solid var(--line)}
+.cmp2 figcaption{font:12.5px var(--f-body);color:var(--mute);margin-top:6px;line-height:1.6}
+.cmp2 b{color:var(--basalt)}
+.whyk{display:flex;flex-direction:column;gap:10px}
+.whyk div{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.whyk b{display:block;font:700 1.25rem var(--f-mono);color:var(--sea);line-height:1.2}
+.whyk span{font-size:.88rem;color:var(--mute);line-height:1.6}
+.whyk .bad b{color:var(--survey)}
+@media (max-width:900px){.why .two{grid-template-columns:1fr}}
+
+/* ── 드론 식생 분석 (v4) ── */
+.v4 h2{margin:.2rem 0 .6rem}
+.v4 .lede{color:var(--mute);line-height:1.85;max-width:62ch}
+.v4 .key{margin:1.1rem 0 1.6rem;padding:1rem 1.15rem;border-left:3px solid var(--sea);background:var(--panel);
+         font-size:1.02rem;line-height:1.8}
+.v4 .key b{color:var(--sea)}
+.v4step{margin:0 0 2.4rem}
+.v4nav{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.7rem}
+.v4nav button{font:500 .88rem var(--f-body);padding:.5em 1em;border:1px solid var(--line);background:var(--panel);
+              color:var(--basalt);border-radius:999px;cursor:pointer}
+.v4nav button:hover{border-color:var(--sea);color:var(--sea)}
+.v4nav button[aria-pressed=true]{background:var(--sea);border-color:var(--sea);color:#fff}
+.v4stage{position:relative;aspect-ratio:16/9;background:var(--stage);overflow:hidden;border:1px solid var(--line)}
+.v4stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .28s ease}
+.v4stage img.on{opacity:1}
+.v4cap{margin-top:.7rem;font-size:.95rem;line-height:1.8;color:var(--basalt);min-height:3.6em}
+.v4cap b{color:var(--sea)}
+.v4hint{font-size:.84rem;color:var(--mute);margin-top:.35rem}
+.v4big{position:absolute;right:8px;bottom:8px;z-index:3;font:500 .8rem var(--f-body);color:#fff;
+       background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:.4em .7em;
+       text-decoration:none;cursor:pointer}
+.v4big:hover{background:var(--sea);border-color:var(--sea)}
+
+.v4grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:1.6rem;align-items:start;margin:1.6rem 0 2rem}
+.v4grid img{width:100%;height:auto;border:1px solid var(--line);background:var(--panel)}
+table.v4tb{width:100%;border-collapse:collapse;font-size:.93rem}
+table.v4tb th,table.v4tb td{border-bottom:1px solid var(--line);padding:.6em .45em;text-align:right;white-space:nowrap}
+table.v4tb td:nth-child(2){white-space:normal}
+table.v4tb th:first-child,table.v4tb td:first-child{text-align:left}
+table.v4tb thead th{color:var(--mute);font-weight:500;font-size:.86rem}
+table.v4tb .yr{display:inline-block;width:.62em;height:.62em;border-radius:50%;margin-right:.45em;vertical-align:.02em}
+.y1 .yr{background:var(--y1)}.y2 .yr{background:var(--y2)}.y3 .yr{background:var(--y3)}
+.v4note{font-size:.88rem;color:var(--mute);line-height:1.8;margin-top:.8rem}
+
+.v4zone{margin-top:2.2rem}
+.v4zb{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem}
+.v4zb button{font:500 .88rem var(--f-body);min-width:3.1em;padding:.5em .7em;border:1px solid var(--line);
+             background:var(--panel);color:var(--basalt);border-radius:8px;cursor:pointer}
+.v4zb button[aria-pressed=true]{background:var(--sea);border-color:var(--sea);color:#fff}
+.v4zw{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:1.4rem;align-items:start}
+.v4cmp{position:relative;overflow:hidden;border:1px solid var(--line);background:var(--stage);cursor:ew-resize;touch-action:none}
+.v4cmp img{display:block;width:100%;height:auto}
+.v4cmp .tw{position:absolute;inset:0;overflow:hidden;width:50%}
+.v4cmp .tw img{position:absolute;inset:0;width:auto;height:100%;max-width:none}
+.v4cmp .kn{position:absolute;top:0;bottom:0;left:50%;width:2px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.35);pointer-events:none}
+.v4cmp .kn::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:34px;height:34px;
+                  border-radius:50%;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.4)}
+.v4cmp .lb{position:absolute;top:8px;font:500 .78rem var(--f-body);background:rgba(0,0,0,.6);color:#fff;padding:.25em .6em;border-radius:6px}
+.v4cmp .lb.l{left:8px}.v4cmp .lb.r{right:8px}
+.v4num{font-size:.93rem;line-height:1.9}
+.v4num dl{display:grid;grid-template-columns:auto 1fr;gap:.25em 1em;margin:.5rem 0 0}
+.v4num dt{color:var(--mute)} .v4num dd{text-align:right;font-family:var(--f-mono)}
+.v4num .big{font:700 1.5rem var(--f-display);color:var(--sea);display:block;margin-bottom:.1rem}
+.v4meta{margin-top:2rem;font-size:.86rem;color:var(--mute);line-height:1.85;border-top:1px solid var(--line);padding-top:1rem}
+@media (max-width:860px){
+  .v4grid,.v4zw{grid-template-columns:minmax(0,1fr)}
+  .v4cap{min-height:0}
+}
+.legnote{margin-top:.5rem;font-size:.86rem;color:var(--mute);line-height:1.6}</style>
+
+<!-- jg-seo -->
+<link rel="canonical" href="https://jejugrapher.com/spatial/whanhae-wall/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://jejugrapher.com/spatial/whanhae-wall/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="별도환해장성 디지털 트윈 — 3D 측정 · 가우시안 스플래팅 · 식생 분석 | 제주그래퍼">
+<meta name="twitter:description" content="제주 화북 별도환해장성을 멀티스펙트럴 드론으로 촬영해 만든 디지털 트윈입니다. 3D 메시 위에서 거리를 재고, 가우시안 스플래팅으로 현장을 둘러보고, 정사영상·NDVI·식생 분류 지도를 겹쳐 보며 길이와 면적을 잴 수 있습니다.">
+<!-- /jg-seo -->
+</head>
+<body>
+<nav class="jgnav"><div class="jgin">
+<a class="jglogo" href="/">JEJUGRAPHER</a>
+<span class="jglinks"><a href="/spatial/index.html">공간데이터</a><a href="/media.html">포트폴리오</a><a href="report/">분석 보고서</a><a href="/inquiry.html">문의</a></span>
+</div></nav>
+
+
+<div class="wrap">
+<header class="hero">
+  <div>
+    <p class="eyebrow">제주 화북 · 별도환해장성 · 2026-10-12 촬영</p>
+    <h1>별도환해장성<br>디지털 트윈</h1>
+    <p class="lede">바닷가에 쌓은 돌벽을 <b>덩굴이 얼마나 덮었는지</b> 재려고 날았습니다. 한 번의 비행으로 정사영상 · 3D 메시 · 가우시안 스플래팅 · 식생 분석을 함께 만들었고, 아래 작업창에서 직접 돌려 보고 재 보실 수 있습니다.</p>
+    <div class="caps"><span>정사영상 1.5 cm</span><span>3D 메시</span><span>가우시안 스플래팅</span><span>3D·2D 거리 측정</span><span>성벽 돌 · 덩굴 구분</span><span>멀티스펙트럴 NDVI</span><span>3년 순환 관리안</span></div>
+  </div>
+  <div class="spec">
+    <div><b>1,651 × 5</b><span>촬영 캡처 × 밴드 (RGB + 녹·적·레드에지·근적외)</span></div>
+    <div><b>675 × 294 m</b><span>복원 범위</span></div>
+    <div><b>1,645</b><span>카메라 위치 복원 (99.6%)</span></div>
+    <div><b>67.2%</b><span>성벽 띠(중심선 ±3 m)를 식물이 덮은 비율</span></div>
+  </div>
+</header>
+
+
+<section class="why">
+  <p class="eyebrow">왜 찍었나</p>
+  <h2>덩굴이 돌벽을 벌립니다</h2>
+  <p class="lead">환해장성은 바닷가에 돌을 쌓아 올린 성벽입니다. 시멘트 없이 돌과 돌을 맞물려 쌓았기 때문에,
+  <b>덩굴과 관목이 돌 틈에 뿌리를 내리고 줄기가 굵어지면 돌이 밀려나고 결국 무너집니다.</b>
+  그래서 이번 촬영의 목적은 하나입니다 — <b>성벽을 식물이 얼마나 덮었는지 재는 것.</b>
+  사람 눈으로는 이끼 낀 돌과 마른 덩굴이 비슷해 보이지만, 근적외선으로 보면 <b>살아 있는 식물만 환하게 드러납니다.</b></p>
+  <div class="two">
+    <div class="cmp2">
+      <figure><img src="map/site05_rgb.jpg" alt="5구역 정사영상 — 돌벽과 식물이 섞여 보입니다" loading="lazy">
+        <figcaption><b>사진 그대로</b> — 돌벽인지 덩굴인지 한눈에 갈라지지 않습니다</figcaption></figure>
+      <figure><img src="map/site05_class.jpg" alt="5구역 분류 — 성벽 돌은 밝은 회색, 덩굴 추정은 붉은색" loading="lazy">
+        <figcaption><b>돌과 식물을 가른 뒤</b> — 회색이 성벽 돌, <span style="color:var(--survey);font-weight:600">붉은색이 성벽을 벌리는 덩굴</span>, 연두는 풀, 진녹색은 나무</figcaption></figure>
+    </div>
+    <div class="whyk">
+      <div><b>67.2%</b><span>성벽 띠(중심선 ±3 m)에서 식물이 덮은 비율</span></div>
+      <div class="bad"><b>2.0~23.4%</b><span>구역에 따라 성벽을 벌릴 수 있는 <b>덩굴·관목</b> 추정 비율 — 최다 5구역 23.4%</span></div>
+      <div class="bad"><b>5구역 · 23.4%</b><span>7개 구역 중 덩굴이 가장 많은 곳 — 1년차로 먼저 걷어 냅니다</span></div>
+      <div><b>3년 순환</b><span>공식 7개 구역을 1·2·3년차로 나눔</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="bench" id="bench">
+  <div class="tabs" role="tablist" aria-label="뷰어 선택">
+    <button role="tab" id="t-mesh" aria-controls="p-mesh" aria-selected="true">3D 메시 · 측정</button>
+    <button role="tab" id="t-gs" aria-controls="p-gs" aria-selected="false">가우시안 스플래팅</button>
+    <button role="tab" id="t-map" aria-controls="p-map" aria-selected="false">정사·분석 지도 · 측정</button>
+  </div>
+
+  <!-- 3D mesh -->
+  <div class="pane" id="p-mesh" role="tabpanel" aria-labelledby="t-mesh">
+    <div class="stage" id="meshStage">
+      <div class="load" id="meshLoad">3D 모델을 불러오는 중… (11.7 MB)</div>
+      <div class="hint" id="meshHint">끌어서 회전 · 우클릭 끌기로 이동 · 휠로 확대</div>
+    </div>
+    <div class="side">
+      <div>
+        <h3>3D 거리 측정</h3>
+        <p class="note">측정을 켜고 모델 표면을 차례로 클릭하세요. 직선 거리, 누적 거리, 높이 차를 계산합니다.</p>
+      </div>
+      <div class="row">
+        <button class="btn" id="mMeasure" aria-pressed="false">측정 켜기</button>
+        <button class="btn ghost" id="mUndo">한 점 취소</button>
+        <button class="btn ghost" id="mClear">지우기</button>
+      </div>
+      <div class="readout">
+        <div class="note">누적 거리</div>
+        <div class="big" id="mTotal">— m</div>
+        <dl>
+          <dt>점 개수</dt><dd id="mCount">0</dd>
+          <dt>마지막 구간</dt><dd id="mLast">—</dd>
+          <dt>수평 거리</dt><dd id="mHoriz">—</dd>
+          <dt>높이 차 (끝−시작)</dt><dd id="mDh">—</dd>
+        </dl>
+      </div>
+      <div class="row">
+        <button class="btn ghost" id="mTop">위에서 보기</button>
+        <button class="btn ghost" id="mOblique">비스듬히 보기</button>
+        <button class="btn ghost" id="mWire" aria-pressed="false">와이어프레임</button>
+      </div>
+      <p class="note">사진 1,651장으로 3D 메시를 만들고, 30만 면 웹용으로 단순화 · 4K 텍스처. 단위는 m입니다(GPS로 축척 고정).</p>
+    </div>
+  </div>
+
+  <!-- Gaussian splat -->
+  <div class="pane" id="p-gs" role="tabpanel" aria-labelledby="t-gs" hidden>
+    <div class="stage" id="gsStage">
+      <iframe id="gsFrame" title="별도환해장성 가우시안 스플래팅 (superspl.at)" allow="fullscreen; xr-spatial-tracking" style="position:absolute;inset:0;width:100%;height:100%;border:0" hidden></iframe>
+      <div class="load" id="gsLoad">탭을 열면 스플랫을 불러옵니다.</div>
+      <div class="hint" id="gsHint">끌어서 회전 · 우클릭 끌기로 이동 · 휠로 확대</div>
+    </div>
+    <div class="side">
+      <div>
+        <h3>가우시안 스플래팅</h3>
+        <p class="note">수십만 개의 반투명 타원체로 장면을 표현합니다. 메시가 뭉개는 풀잎, 파도 거품, 돌 틈의 질감까지 사진처럼 보여 줍니다.</p>
+      </div>
+      <div class="readout">
+        <dl>
+          <dt>학습 사진</dt><dd>1,645장</dd>
+          <dt>학습 스텝</dt><dd>30,000</dd>
+          <dt>웹 표시 스플랫</dt><dd id="gsCount">—</dd>
+          <dt>카메라 위치</dt><dd>ODM(OpenSfM)</dd>
+        </dl>
+      </div>
+      <div class="row" role="group" aria-label="뷰어 선택">
+        <button class="btn" id="gModeSS" aria-pressed="true">superspl.at 뷰어 (150만)</button>
+        <button class="btn" id="gModeLocal" aria-pressed="false">내장 뷰어 (45만)</button>
+      </div>
+      <div class="row" id="gLocalCtl" hidden>
+        <button class="btn ghost" id="gTop">위에서 보기</button>
+        <button class="btn ghost" id="gLow">낮게 날아 보기</button>
+      </div>
+      <p class="note"><a href="https://superspl.at/scene/a3d7e217" target="_blank" rel="noopener">superspl.at에서 크게 보기 ↗</a></p>
+      <p class="note">가우시안 스플래팅으로 복원했습니다. superspl.at에는 잡티를 걸러 낸 150만 스플랫을, 내장 뷰어에는 중요도 상위 45만 스플랫을 실었습니다.</p>
+    </div>
+  </div>
+
+  <!-- map -->
+  <div class="pane" id="p-map" role="tabpanel" aria-labelledby="t-map" hidden>
+    <div style="min-width:0">
+      <div class="chips" id="siteChips" style="padding:12px 12px 0" role="group" aria-label="장소 선택"></div>
+      <div style="padding:10px 12px 12px">
+        <div class="cmp" id="cmp">
+          <img id="imgA" alt="RGB 정사영상">
+          <div class="top" id="topWrap"><img id="imgB" alt="분석 레이어"></div>
+          <svg id="msvg" aria-hidden="true"></svg>
+          <div class="bar" id="bar"></div><div class="knob" id="knob" title="끌어서 비교">⇆</div>
+          <span class="tag" style="left:8px">RGB</span><span class="tag" id="tagB" style="right:8px"></span>
+        </div>
+        <div class="chips" id="layChips" style="margin-top:10px" role="group" aria-label="분석 레이어"></div>
+      </div>
+    </div>
+    <div class="side">
+      <div>
+        <h3 id="siteTitle"></h3>
+        <p class="note" id="siteNote"></p>
+      </div>
+      <div class="row">
+        <button class="btn" id="dDist" aria-pressed="false">거리</button>
+        <button class="btn" id="dArea" aria-pressed="false">면적</button>
+        <button class="btn ghost" id="dClear">지우기</button>
+      </div>
+      <div class="readout">
+        <div class="note" id="dLabel">측정 모드를 고르고 지도를 클릭하세요</div>
+        <div class="big" id="dValue">—</div>
+        <dl id="siteStats"></dl>
+      </div>
+      <div class="legend" id="legend"></div>
+    </div>
+  </div>
+</div>
+
+
+<section class="ms">
+  <p class="eyebrow">멀티스펙트럴이란</p>
+  <h2>눈에 보이지 않는 빛으로 잎을 셉니다</h2>
+  <p class="lead">사람 눈은 빨강·초록·파랑 세 가지 빛만 봅니다. 이 드론은 거기에 <b>레드에지</b>와 <b>근적외</b>를 더해 다섯 가지 빛으로 같은 장면을 동시에 찍습니다.
+  살아 있는 잎은 <b>빨간빛은 빨아들이고(광합성에 씁니다) 근적외는 거울처럼 되쏩니다.</b> 돌과 흙은 어느 빛이든 비슷하게 반사합니다.
+  이 차이가 크면 식물, 작으면 돌 — 그 차이를 숫자로 만든 것이 식생지수입니다.</p>
+
+  <figure class="msfig">
+    <svg viewBox="0 0 760 300" role="img" aria-label="잎·돌·물의 빛 반사율 그래프. 잎은 근적외에서 크게 치솟습니다.">
+      <rect x="148" y="40" width="46" height="210" fill="#5b8a34" opacity=".10"/>
+      <rect x="336" y="40" width="46" height="210" fill="#d7301f" opacity=".10"/>
+      <rect x="497" y="40" width="47" height="210" fill="#e8962a" opacity=".12"/>
+      <rect x="603" y="40" width="75" height="210" fill="#0e6b72" opacity=".12"/>
+      <text x="171" y="34" text-anchor="middle" font-size="12" fill="#6aa83d">녹색</text>
+      <text x="359" y="34" text-anchor="middle" font-size="12" fill="#e05b4a">적색</text>
+      <text x="520" y="34" text-anchor="middle" font-size="12" fill="#d08a2a">레드에지</text>
+      <text x="640" y="34" text-anchor="middle" font-size="12" fill="#2f9aa3">근적외</text>
+      <line x1="70" y1="250" x2="730" y2="250" stroke="var(--line)"/>
+      <line x1="70" y1="40" x2="70" y2="250" stroke="var(--line)"/>
+      <text x="70" y="270" text-anchor="middle" font-size="11" fill="var(--mute)">450</text>
+      <text x="388" y="270" text-anchor="middle" font-size="11" fill="var(--mute)">670 nm</text>
+      <text x="720" y="270" text-anchor="middle" font-size="11" fill="var(--mute)">900</text>
+      <text x="60" y="254" text-anchor="end" font-size="11" fill="var(--mute)">0</text>
+      <text x="60" y="79" text-anchor="end" font-size="11" fill="var(--mute)">50%</text>
+      <text x="26" y="150" text-anchor="middle" font-size="11" fill="var(--mute)" transform="rotate(-90 26 150)">반사율</text>
+      <path d="M70 236 L142 232 L214 211 L287 226 L388 236 L431 215 L460 152 L489 103 L546 82 L662 75 L720 75"
+            fill="none" stroke="#43a85a" stroke-width="3.2" stroke-linejoin="round"/>
+      <path d="M70 232 L214 229 L388 226 L518 222 L720 218"
+            fill="none" stroke="var(--mute)" stroke-width="2.6" stroke-dasharray="7 5"/>
+      <path d="M70 232 L214 232 L388 240 L518 247 L720 248"
+            fill="none" stroke="#5a9bd5" stroke-width="2.4" stroke-dasharray="3 5"/>
+      <text x="676" y="68" font-size="12.5" fill="#43a85a" font-weight="600">잎</text>
+      <text x="676" y="213" font-size="12.5" fill="var(--mute)">돌 · 흙</text>
+      <text x="676" y="262" font-size="12.5" fill="#5a9bd5">물</text>
+      <path d="M392 232 L392 128" stroke="#ef5aa8" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <path d="M392 128 L660 86" stroke="#ef5aa8" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <text x="470" y="122" font-size="12.5" fill="#ef5aa8" font-weight="600">이 벌어짐이 클수록 = 잎이 많고 건강</text>
+    </svg>
+    <figcaption>잎은 적색을 빨아들여 바닥을 찍고, 레드에지를 지나며 급히 치솟아 근적외에서 절반 가까이 되쏩니다. 돌·흙은 밋밋하고, 물은 근적외를 거의 되쏘지 않습니다.
+    검은 현무암은 적색·근적외가 모두 아주 낮아 비율이 요동치기 때문에, 이번 분석에서는 <b>근적외 반사율이 일정 값을 넘을 때만</b> 식물로 봤습니다.</figcaption>
+  </figure>
+
+  <div class="idx">
+    <article>
+      <h4>NDVI</h4>
+      <div class="eq">(근적외 − 적색) ÷ (근적외 + 적색)</div>
+      <p>가장 널리 쓰는 기본 지수입니다. <b>잎이 얼마나 많고 살아 있는지</b>를 봅니다. 값은 −1~1이고, 맨땅은 0 언저리, 우거진 숲은 0.8 위입니다.</p>
+      <div class="use">이번 분석의 <b>식생 판정 기준</b> — NDVI 0.30 이상이면 식물, 0.45 이상이고 높이가 0.2~2 m면 덩굴로 추정</div>
+    </article>
+    <article>
+      <h4>NDRE</h4>
+      <div class="eq">(근적외 − 레드에지) ÷ (근적외 + 레드에지)</div>
+      <p>적색 대신 <b>레드에지</b>를 씁니다. 적색은 잎이 조금만 겹쳐도 다 빨려 더 이상 변하지 않는데(포화), 레드에지는 그 안에서도 차이가 남습니다. <b>우거진 곳의 활력 차이</b>를 봅니다.</p>
+      <div class="use">덩굴이 두껍게 덮인 구간에서 NDVI가 한계에 닿을 때, 속이 살아 있는지 갈라 보는 데 씁니다</div>
+    </article>
+    <article>
+      <h4>GNDVI</h4>
+      <div class="eq">(근적외 − 녹색) ÷ (근적외 + 녹색)</div>
+      <p>적색 대신 <b>녹색</b>을 씁니다. 녹색은 엽록소 양에 민감해서 <b>잎의 푸름(엽록소 함량)</b>을 더 잘 드러냅니다.</p>
+      <div class="use">같은 면적이라도 마른 풀과 푸른 풀을 가르는 데, 그리고 계절·연차 비교의 보조 지표로 씁니다</div>
+    </article>
+  </div>
+
+  <ol class="msuse">
+    <li><b>다섯 가지 빛으로 찍기</b><span>한 번의 비행에서 RGB 사진과 녹·적·레드에지·근적외 4밴드를 같은 자리에서 동시에 기록</span></li>
+    <li><b>지수로 바꾸기</b><span>정사영상 위에서 픽셀마다 NDVI·NDRE·GNDVI를 계산해 지도로 만듦</span></li>
+    <li><b>식물과 돌 가르기</b><span>NDVI 0.30 이상 <b>그리고</b> 근적외 반사율이 일정 값 이상일 때만 식물 — 검은 현무암의 잡음을 걸러 냄</span></li>
+    <li><b>높이와 합치기</b><span>표면 높이에서 땅 높이를 뺀 식생 높이와 겹쳐, 초지 · 덩굴 추정 · 수목으로 나누고 구간별 위험도를 매김</span></li>
+  </ol>
+
+  <p class="note" style="margin-top:14px">※ 보정판(반사율 기준 패널) 없이 처리해 <b>절대 반사율은 낮게 나옵니다.</b> 그래서 반사율 자체가 아니라 <b>비율로 만든 지수</b>만 씁니다. 식생·덩굴 기준값은 현장 확인 전의 임시값입니다.</p>
+</section>
+
+<section>
+  <p class="eyebrow">처리 공정</p>
+  <h2>사진에서 디지털 트윈까지</h2>
+  <ol class="flow">
+    <li><b>촬영</b><span>DJI Mavic 3 Multispectral, 4회 비행, RGB와 4밴드 동시 기록, 사선 1회 포함</span></li>
+    <li><b>정합·정사</b><span>OpenDroneMap(GPU) — 카메라 복원, 고밀도 점군, DSM·DTM, 정사영상, 반사율</span></li>
+    <li><b>3D 메시</b><span>사진 정렬 · 메시 · 텍스처 · 웹용 단순화</span></li>
+    <li><b>스플래팅</b><span>가우시안 스플래팅 복원</span></li>
+    <li><b>분석</b><span>NDVI·식생 높이·해안 거리대·50 m 구간 위험도, QGIS 프로젝트</span></li>
+  </ol>
+</section>
+
+<section>
+  <p class="eyebrow">분석 요약</p>
+  <h2>식생이 성벽 쪽으로 밀려옵니다</h2>
+  <div class="split">
+    <div>
+      <p class="note" style="margin-bottom:12px">공식 7개 관리구역별로 성벽 중심선 ±3 m 띠의 식생을 쟀습니다.</p>
+      <div class="whyk">
+        <div><b>67.2%</b><span>성벽 띠를 식물이 덮은 비율 (7개 구역 평균)</span></div>
+        <div class="bad"><b>2.0~23.4%</b><span>구역별 덩굴·관목 추정 비율 — 최다 5구역 23.4%</span></div>
+      </div>
+      <p class="note" style="margin-top:14px">위험도(식생 0.5 + 덩굴 추정 0.3 + 수목 0.2)가 높은 구역부터 1·2·3년차로 나눴습니다. 덩굴이 굵어져 돌을 벌리기 전에 3년 주기로 제거하는 관리안입니다.</p>
+      <p class="note" style="margin-top:8px">성벽 위 식물 높이는 성벽 윗면을 기준으로 잽니다(2026-10-28 보정). 이 성벽은 나무가 거의 없어 수목 항은 0에 가깝습니다. 1구역과 7구역의 연차는 점수 차가 작아 현장 확인으로 최종 정합니다.</p>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>구역</th><th>식생</th><th>덩굴</th><th>위험도</th><th>배분</th></tr></thead>
+        <tbody>
+          <tr><td>6</td><td class="n">95.7%</td><td class="n">18.0%</td><td class="n">0.535</td><td><span class="yr" style="background:var(--y1)">1년차</span></td></tr>
+          <tr><td>5</td><td class="n">85.8%</td><td class="n">23.4%</td><td class="n">0.504</td><td><span class="yr" style="background:var(--y1)">1년차</span></td></tr>
+          <tr><td>4</td><td class="n">69.1%</td><td class="n">18.7%</td><td class="n">0.402</td><td><span class="yr" style="background:var(--y1)">1년차</span></td></tr>
+          <tr><td>7</td><td class="n">77.6%</td><td class="n">4.2%</td><td class="n">0.401</td><td><span class="yr" style="background:var(--y1)">1년차</span></td></tr>
+          <tr><td>1</td><td class="n">67.4%</td><td class="n">2.0%</td><td class="n">0.343</td><td><span class="yr" style="background:var(--y2)">2년차</span></td></tr>
+          <tr><td>3</td><td class="n">50.6%</td><td class="n">4.5%</td><td class="n">0.267</td><td><span class="yr" style="background:var(--y3)">3년차</span></td></tr>
+          <tr><td>2</td><td class="n">47.4%</td><td class="n">3.8%</td><td class="n">0.248</td><td><span class="yr" style="background:var(--y3)">3년차</span></td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:8px">공식 7개 관리구역을 위험도순으로 정렬했습니다. 성벽 중심선 ±3 m 띠 기준입니다.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">산출물</p>
+  <h2>한 번의 촬영, 여섯 가지 결과</h2>
+  <div class="deliver">
+    <div><b>정사영상·DSM·DTM</b><p>RGB 1.5 cm, 멀티스펙트럴 2.1 cm GeoTIFF, EPSG:32652</p></div>
+    <div><b>3D 메시</b><p>500만 면 OBJ(8K 텍스처), 웹용 30만·80만 면 GLB</p></div>
+    <div><b>가우시안 스플래팅</b><p>원본 PLY와 웹용 경량 .splat</p></div>
+    <div><b>점군</b><p>RGB 1.8 GB, 멀티스펙트럴 0.7 GB LAZ</p></div>
+    <div><b>식생 분석</b><p>NDVI·NDRE·GNDVI, 식생 높이, 분류도, 구간별 통계 CSV</p></div>
+    <div><b>GIS 프로젝트</b><p>QGIS 프로젝트(레이어 14개, 성벽 중심선 디지타이징 레이어 포함)</p></div>
+  </div>
+</section>
+
+<footer>절대 위치는 RTK 기준 수평 약 0.8 m 평행이동돼 있어 측량 성과로 쓰지 않습니다. 길이·면적·높이 차 같은 상대 측정은 유효합니다. 반사율은 보정판 없이 처리한 상대값이며, 식생 분류 기준은 현장 검증 전 임시값입니다.</footer>
+</div>
+
+<script type="importmap">
+{"imports":{
+ "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+ "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+ "gs3d":"https://cdn.jsdelivr.net/npm/@mkkellogg/gaussian-splats-3d@0.4.7/build/gaussian-splats-3d.module.js"
+}}
+</script>
+<script>
+/* ---------- 정사·분석 지도 (모듈과 무관하게 바로 동작) ---------- */
+const SITES=[
+ {id:0,file:'site00',title:'전체 범위',note:'성벽 중심선 639 m를 공식 1~7구역으로 나눴습니다. 연차 배분 레이어에서 구역과 연차를 확인하세요.',size:[652,346],px:[1600,850],layers:['priority','class','ndvi','false','chm'],stats:[['1년차','4~7구역 · 309 m'],['2년차','1구역 · 111 m'],['3년차','2·3구역 · 220 m']]},
+ {id:1,file:'zone1',title:'1구역 · 2년차',note:'포구 쪽 서측 성벽. 바깥면을 따라 마른 초본 띠가 있습니다.',size:[104,94],px:[1800,1619],stats:[['연차','2년차'],['위험도','0.343'],['길이','111.1 m'],['식생피복률','67.4%'],['덩굴 추정','2.0%'],['수목','0.0%'],['띠 면적','666 m²']]},
+ {id:2,file:'zone2',title:'2구역 · 3년차',note:'북측 모서리를 돌아 내려오는 성벽. 바깥이 암반이라 식생이 가장 적습니다.',size:[96,98],px:[1762,1800],stats:[['연차','3년차'],['위험도','0.248'],['길이','129.9 m'],['식생피복률','47.4%'],['덩굴 추정','3.8%'],['수목','0.1%'],['띠 면적','778 m²']]},
+ {id:3,file:'zone3',title:'3구역 · 3년차',note:'동쪽으로 꺾인 뒤 곧게 뻗는 구간. 비교적 양호합니다.',size:[101,71],px:[1800,1267],stats:[['연차','3년차'],['위험도','0.267'],['길이','89.6 m'],['식생피복률','50.6%'],['덩굴 추정','4.5%'],['수목','0.0%'],['띠 면적','537 m²']]},
+ {id:4,file:'zone4',title:'4구역 · 1년차',note:'비닐하우스 앞부터. 중간(약 380~400 m 지점)에 덩굴이 몰려 있습니다.',size:[124,81],px:[1800,1186],stats:[['연차','1년차'],['위험도','0.402'],['길이','116.2 m'],['식생피복률','69.1%'],['덩굴 추정','18.7%'],['수목','0.2%'],['띠 면적','697 m²']]},
+ {id:5,file:'zone5',title:'5구역 · 1년차',note:'덩굴 추정 비율이 가장 높은 구역입니다.',size:[84,33],px:[1800,699],stats:[['연차','1년차'],['위험도','0.504'],['길이','64.2 m'],['식생피복률','85.8%'],['덩굴 추정','23.4%'],['수목','2.4%'],['띠 면적','385 m²']]},
+ {id:6,file:'zone6',title:'6구역 · 1년차',note:'위험도 1위. 담 대부분이 식생에 덮여 있습니다.',size:[89,45],px:[1800,916],stats:[['연차','1년차'],['위험도','0.535'],['길이','70.8 m'],['식생피복률','95.7%'],['덩굴 추정','18.0%'],['수목','1.0%'],['띠 면적','425 m²']]},
+ {id:7,file:'zone7',title:'7구역 · 1년차',note:'동쪽 마을 앞 끝 구간.',size:[75,47],px:[1800,1122],stats:[['연차','1년차'],['위험도','0.401'],['길이','57.5 m'],['식생피복률','77.6%'],['덩굴 추정','4.2%'],['수목','0.0%'],['띠 면적','345 m²']]},
+];
+SITES.forEach(s=>{if(!s.layers)s.layers=['priority','class','ndvi','false','chm']});
+const LN={priority:'연차 배분',class:'석재·식생 분류',ndvi:'NDVI',false:'근적외 위색',chm:'식생 높이'};
+const LEG={
+ priority:'<span class="yr" style="background:var(--y1)">1년차</span> <span class="yr" style="background:var(--y2)">2년차</span> <span class="yr" style="background:var(--y3)">3년차</span><br>라벨 = 공식 관리구역(돌봄사업단 번호) · 성벽 ±3 m 띠',
+ class:'<i style="background:#2a5d8f"></i>수역 <i style="background:#d9d2c5"></i>석재·나지 <i style="background:#9fd27a"></i>초지<br><i style="background:#e03c3c"></i>덩굴 추정 <i style="background:#1f7a34"></i>수목',
+ ndvi:'NDVI<div class="ramp" style="background:linear-gradient(90deg,#2a5d8f,#d9d2c5 31%,#f7f4a8 54%,#9fd27a 65%,#0b5d1e)"></div><div class="rl"><span>−0.4</span><span>0</span><span>0.3</span><span>0.9</span></div>',
+ false:'근적외-적-녹 위색. 식생은 분홍·적색, 암반·바다는 청회색입니다.',
+ chm:'식생·지물 높이 (DSM − DTM)<div class="ramp" style="background:linear-gradient(90deg,#f4f1ea,#fde0c5 2%,#e03c3c 13%,#1f7a34 40%,#00441b)"></div><div class="rl"><span>0</span><span>2 m</span><span>6 m</span><span>15 m</span></div>'};
+const f2=n=>String(n).padStart(2,'0');
+const $=id=>document.getElementById(id);
+let cur=0,lay='priority',pos=50,mode=null,pts=[];
+function setPos(p){pos=Math.max(0,Math.min(100,p));$('topWrap').style.clipPath='inset(0 0 0 '+pos+'%)';$('bar').style.left=pos+'%';$('knob').style.left=pos+'%'}
+function drawMeasure(){
+ const s=SITES[cur],svg=$('msvg');svg.setAttribute('viewBox','0 0 '+s.px[0]+' '+s.px[1]);
+ const sw=Math.max(2,s.px[0]/450);
+ let h='';
+ if(pts.length){
+  const d=pts.map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' ')+(mode==='area'&&pts.length>2?' Z':'');
+  h+='<path d="'+d+'" fill="'+(mode==='area'?'rgba(209,32,126,.22)':'none')+'" stroke="#ff4fa8" stroke-width="'+sw+'" stroke-linejoin="round"/>';
+  pts.forEach(p=>h+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+sw*2.2+'" fill="#fff" stroke="#d1207e" stroke-width="'+sw+'"/>');
+ }
+ svg.innerHTML=h;
+ const mpp=s.size[0]/s.px[0];
+ if(!mode||!pts.length){$('dValue').textContent='—';return}
+ if(mode==='dist'){let L=0;for(let i=1;i<pts.length;i++)L+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);$('dValue').textContent=(L*mpp).toFixed(L*mpp<100?2:1)+' m'}
+ else{let A=0;for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length];A+=a[0]*b[1]-b[0]*a[1]}A=Math.abs(A)/2*mpp*mpp;$('dValue').textContent=pts.length<3?'점 3개 이상':(A<10000?A.toFixed(1)+' m²':(A/10000).toFixed(2)+' ha')}
+}
+function setMode(m){mode=mode===m?null:m;pts=[];$('dDist').setAttribute('aria-pressed',mode==='dist');$('dArea').setAttribute('aria-pressed',mode==='area');
+ $('dLabel').textContent=mode==='dist'?'거리 — 지도를 차례로 클릭':mode==='area'?'면적 — 둘레를 따라 클릭':'측정 모드를 고르고 지도를 클릭하세요';$('cmp').style.cursor=mode?'crosshair':'default';drawMeasure()}
+function renderMap(){
+ const s=SITES[cur];if(!s.layers.includes(lay))lay=s.layers[0];
+ const fn=k=>'map/site'+f2(s.id)+'_'+k+'.jpg';
+ $('imgA').src=fn('rgb');$('imgB').src=fn(lay);$('tagB').textContent=LN[lay];
+ $('siteTitle').textContent=s.title;$('siteNote').textContent=s.note+' 이미지 폭 '+s.size[0]+' m, 1픽셀 ≈ '+(s.size[0]/s.px[0]*100).toFixed(1)+' cm.';
+ $('siteStats').innerHTML=(s.stats||[['공식 구역','7개'],['성벽 중심선','639 m'],['성벽 띠 식생','67.2%']]).map(r=>'<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>').join('');
+ $('legend').innerHTML=LEG[lay];
+ $('siteChips').querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-pressed',i===cur));
+ const lc=$('layChips');lc.innerHTML='';s.layers.forEach(k=>{const b=document.createElement('button');b.textContent=LN[k];b.setAttribute('aria-pressed',k===lay);b.onclick=()=>{lay=k;renderMap()};lc.appendChild(b)});
+ pts=[];drawMeasure();setPos(pos)}
+SITES.forEach((s,i)=>{const b=document.createElement('button');b.textContent=s.id?s.id+'구역':'전체 범위';b.onclick=()=>{cur=i;renderMap()};$('siteChips').appendChild(b)});
+$('dDist').onclick=()=>setMode('dist');$('dArea').onclick=()=>setMode('area');$('dClear').onclick=()=>{pts=[];drawMeasure()};
+(()=>{const cmp=$('cmp'),knob=$('knob');let drag=false;
+ const rel=e=>{const r=cmp.getBoundingClientRect();return[(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height]};
+ knob.addEventListener('pointerdown',e=>{drag=true;knob.setPointerCapture(e.pointerId);e.stopPropagation()});
+ knob.addEventListener('pointermove',e=>{if(drag)setPos(rel(e)[0]*100)});
+ knob.addEventListener('pointerup',()=>drag=false);
+ cmp.addEventListener('click',e=>{if(e.target===knob||e.target.closest('.zbtns'))return;const[x,y]=rel(e);if(!mode){setPos(x*100);return}const s=SITES[cur];const[u,v]=cmp.__unzoom?cmp.__unzoom(e.clientX,e.clientY):[x,y];pts.push([u*s.px[0],v*s.px[1]]);drawMeasure()});
+})();
+renderMap();
+/* tabs */
+const TABS=[['t-mesh','p-mesh'],['t-gs','p-gs'],['t-map','p-map']];
+function openTab(t){TABS.forEach(([b,p])=>{const on=b===t;$(b).setAttribute('aria-selected',on);$(p).hidden=!on});window.dispatchEvent(new CustomEvent('tabopen',{detail:t}))}
+TABS.forEach(([b])=>$(b).addEventListener('click',()=>openTab(b)));
+const h=location.hash.slice(1);if(['mesh','gs','map'].includes(h))openTab('t-'+h);
+</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const $=id=>document.getElementById(id);
+
+/* ---------- 3D 메시 ---------- */
+const stage=$('meshStage');
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.outputColorSpace=THREE.SRGBColorSpace;stage.prepend(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x0c1114);
+const cam=new THREE.PerspectiveCamera(40,1,0.5,5000);
+const ctl=new OrbitControls(cam,renderer.domElement);ctl.enableDamping=true;ctl.maxPolarAngle=Math.PI*0.495;
+scene.add(new THREE.HemisphereLight(0xffffff,0x334044,2.2));
+let model=null,meshes=[];
+function size(){const r=stage.getBoundingClientRect();renderer.setSize(r.width,r.height,false);cam.aspect=r.width/r.height;cam.updateProjectionMatrix()}
+new ResizeObserver(size).observe(stage);size();
+function view(kind){if(kind==='top'){cam.position.set(0,620,1);ctl.target.set(0,0,0)}else{cam.position.set(-120,170,330);ctl.target.set(40,0,-10)}ctl.update()}
+view('oblique');
+new GLTFLoader().load('model/whanhae_300k.glb',g=>{
+ model=g.scene;model.traverse(o=>{if(o.isMesh){o.material.side=THREE.DoubleSide;if(o.material.map)o.material.map.anisotropy=8;
+   o.material=new THREE.MeshBasicMaterial({map:o.material.map,side:THREE.DoubleSide});meshes.push(o)}});
+ scene.add(model);$('meshLoad').hidden=true;
+},xhr=>{if(xhr.total)$('meshLoad').textContent='3D 모델을 불러오는 중… '+Math.round(xhr.loaded/xhr.total*100)+'%'},
+ ()=>{$('meshLoad').textContent='3D 모델을 불러오지 못했습니다. 페이지를 웹 서버로 열었는지 확인하세요(파일을 더블클릭하면 브라우저가 막습니다).'});
+/* 측정 */
+let measuring=false;const mp=[],marks=new THREE.Group();scene.add(marks);const labels=[];
+const lineMat=new THREE.LineBasicMaterial({color:0xff4fa8,depthTest:false});
+const dotGeo=new THREE.SphereGeometry(1,16,12),dotMat=new THREE.MeshBasicMaterial({color:0xffffff,depthTest:false});
+function rebuild(){
+ marks.clear();labels.forEach(l=>l.remove());labels.length=0;
+ const s=Math.max(0.35,cam.position.distanceTo(ctl.target)/260);
+ mp.forEach(p=>{const d=new THREE.Mesh(dotGeo,dotMat);d.position.copy(p);d.scale.setScalar(s);d.renderOrder=10;marks.add(d)});
+ if(mp.length>1){const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints(mp),lineMat);l.renderOrder=9;marks.add(l)}
+ for(let i=1;i<mp.length;i++){const el=document.createElement('div');el.className='lbl';el.textContent=mp[i].distanceTo(mp[i-1]).toFixed(2)+' m';stage.appendChild(el);labels.push(el)}
+ let T=0;for(let i=1;i<mp.length;i++)T+=mp[i].distanceTo(mp[i-1]);
+ $('mCount').textContent=mp.length;$('mTotal').textContent=mp.length>1?T.toFixed(2)+' m':'— m';
+ if(mp.length>1){const a=mp[mp.length-2],b=mp[mp.length-1];$('mLast').textContent=a.distanceTo(b).toFixed(2)+' m';
+  const A=mp[0],B=b;$('mHoriz').textContent=Math.hypot(B.x-A.x,B.z-A.z).toFixed(2)+' m';$('mDh').textContent=(B.y-A.y>=0?'+':'')+(B.y-A.y).toFixed(2)+' m'}
+ else{$('mLast').textContent=$('mHoriz').textContent=$('mDh').textContent='—'}
+}
+const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();let down=null;
+renderer.domElement.addEventListener('pointerdown',e=>down=[e.clientX,e.clientY]);
+renderer.domElement.addEventListener('pointerup',e=>{
+ if(!measuring||!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>5||!meshes.length)return;
+ const r=renderer.domElement.getBoundingClientRect();ndc.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);
+ ray.setFromCamera(ndc,cam);const hit=ray.intersectObjects(meshes,false)[0];if(hit){mp.push(hit.point.clone());rebuild()}});
+$('mMeasure').onclick=()=>{measuring=!measuring;$('mMeasure').setAttribute('aria-pressed',measuring);$('mMeasure').textContent=measuring?'측정 중':'측정 켜기';renderer.domElement.style.cursor=measuring?'crosshair':'grab';$('meshHint').textContent=measuring?'표면을 클릭해 점 추가 · 끌면 회전':'끌어서 회전 · 우클릭 끌기로 이동 · 휠로 확대'};
+$('mUndo').onclick=()=>{mp.pop();rebuild()};$('mClear').onclick=()=>{mp.length=0;rebuild()};
+$('mTop').onclick=()=>view('top');$('mOblique').onclick=()=>view('oblique');
+$('mWire').onclick=()=>{const on=$('mWire').getAttribute('aria-pressed')!=='true';$('mWire').setAttribute('aria-pressed',on);meshes.forEach(m=>m.material.wireframe=on)};
+const v=new THREE.Vector3();let lastD=0;
+(function loop(){requestAnimationFrame(loop);if($('p-mesh').hidden)return;ctl.update();
+ const d=cam.position.distanceTo(ctl.target);if(Math.abs(d-lastD)>d*0.15&&mp.length){lastD=d;rebuild()}
+ const r=renderer.domElement.getBoundingClientRect();
+ labels.forEach((el,i)=>{v.copy(mp[i]).add(mp[i+1]).multiplyScalar(.5).project(cam);el.style.left=((v.x+1)/2*r.width)+'px';el.style.top=((1-v.y)/2*r.height)+'px';el.hidden=v.z>1});
+ renderer.render(scene,cam)})();
+
+/* ---------- 가우시안 스플래팅 (탭을 열 때 불러옴) ---------- */
+let gsViewer=null;
+async function initGS(){
+ if(gsViewer)return;$('gsLoad').textContent='스플랫을 불러오는 중…';
+ try{
+  const GS=await import('gs3d');
+  gsViewer=new GS.Viewer({rootElement:$('gsStage'),cameraUp:[0,1,0],initialCameraPosition:[-120,170,330],initialCameraLookAt:[40,0,-10],
+    sharedMemoryForWorkers:false,gpuAcceleratedSort:false,useBuiltInControls:true,sphericalHarmonicsDegree:0});
+  await gsViewer.addSplatScene('splat/whanhae_lite.splat',{format:GS.SceneFormat.Splat,showLoadingUI:false,splatAlphaRemovalThreshold:5,
+    onProgress:(p)=>{$('gsLoad').textContent='스플랫을 불러오는 중… '+Math.round(p)+'%'}});
+  gsViewer.start();$('gsLoad').hidden=true;
+  try{$('gsCount').textContent=gsViewer.getSplatMesh().getSplatCount().toLocaleString()+'개'}catch(e){}
+  const c=gsViewer.camera,t=gsViewer.controls;
+  $('gTop').onclick=()=>{c.position.set(0,620,1);t.target.set(0,0,0);t.update()};
+  $('gLow').onclick=()=>{c.position.set(60,28,90);t.target.set(40,4,-10);t.update()};
+ }catch(e){$('gsLoad').textContent='스플랫을 불러오지 못했습니다: '+e.message}
+}
+const SS_EMBED='https://superspl.at/s?id=a3d7e217';
+let gsMode='ss';
+function applyGS(){
+ const ss=gsMode==='ss';
+ $('gModeSS').setAttribute('aria-pressed',ss);$('gModeLocal').setAttribute('aria-pressed',!ss);
+ $('gLocalCtl').hidden=ss;$('gsHint').hidden=ss;
+ const fr=$('gsFrame');
+ if(ss){if(!fr.src)fr.src=SS_EMBED;fr.hidden=false;$('gsLoad').hidden=true;$('gsCount').textContent='1,500,000개 (superspl.at)';
+   if(gsViewer){try{gsViewer.stop&&gsViewer.stop()}catch(e){}}}
+ else{fr.hidden=true;if(gsViewer){try{gsViewer.start()}catch(e){};try{$('gsCount').textContent=gsViewer.getSplatMesh().getSplatCount().toLocaleString()+'개'}catch(e){}}else{$('gsLoad').hidden=false;initGS()}}
+}
+$('gModeSS').onclick=()=>{gsMode='ss';applyGS()};
+$('gModeLocal').onclick=()=>{gsMode='local';applyGS()};
+window.addEventListener('tabopen',e=>{if(e.detail==='t-gs')applyGS();if(e.detail==='t-mesh')size()});
+if(!$('p-gs').hidden)applyGS();
+</script>
+
+
+<section class="v4" id="veg">
+  <p class="eyebrow">드론 식생 분석</p>
+  <h2>돌담처럼 보여도, 이미 식생이 덮고 있습니다</h2>
+  <p class="lede">눈으로 보면 돌벽입니다. 그런데 근적외선으로 다시 보면 성벽 대부분이 이미 풀과 덩굴에 덮여 있습니다.
+     그래서 <b>어디부터 정비할지</b>를 느낌이 아니라 데이터로 정했습니다.</p>
+  <p class="key">성벽 중심선 <b>639 m</b>를 따라 양옆 <b>3 m</b> 띠를 분석해, 공식 7개 관리구역을
+     <b>1 · 2 · 3년차</b>로 나눴습니다. 아래 단추를 차례로 눌러 보시면 어떻게 나왔는지 보실 수 있습니다.</p>
+
+  <figure class="v4step" data-set="a">
+<figcaption class="eyebrow">세트 1 — 성벽 전체</figcaption>
+<div class="v4nav"><button type="button" data-i="0" aria-pressed="true">① 일반 사진</button><button type="button" data-i="1" aria-pressed="false">② NDVI 식생지수</button><button type="button" data-i="2" aria-pressed="false">③ 석재 · 식생 분류</button><button type="button" data-i="3" aria-pressed="false">④ 1 · 2 · 3년차 관리 배분</button></div>
+<div class="v4stage"><img src="veg/a1.webp" alt="세트 1 — 성벽 전체 — ① 일반 사진" class="on" loading="lazy"><img src="veg/a2.webp" alt="세트 1 — 성벽 전체 — ② NDVI 식생지수" class="" loading="lazy"><img src="veg/a3.webp" alt="세트 1 — 성벽 전체 — ③ 석재 · 식생 분류" class="" loading="lazy"><img src="veg/a4.webp" alt="세트 1 — 성벽 전체 — ④ 1 · 2 · 3년차 관리 배분" class="" loading="lazy"><a class="v4big" href="veg/a1.webp" target="_blank" rel="noopener">⤢ 크게 보기</a></div>
+<p class="v4cap"><b>드론 사진(RGB)</b>으로 보면 돌담과 풀이 섞여 있어, 어디가 얼마나 덮였는지 눈으로는 알기 어렵습니다.</p>
+<p class="v4hint">단추를 눌러 같은 자리를 네 가지로 바꿔 보실 수 있습니다. 네 장은 범위와 크기가 같아 정확히 겹칩니다.</p>
+</figure>
+  <figure class="v4step" data-set="b">
+<figcaption class="eyebrow">세트 2 — 4 ~ 6구역 확대 (가장 심한 구간)</figcaption>
+<div class="v4nav"><button type="button" data-i="0" aria-pressed="true">① 일반 사진</button><button type="button" data-i="1" aria-pressed="false">② NDVI 식생지수</button><button type="button" data-i="2" aria-pressed="false">③ 석재 · 식생 분류</button><button type="button" data-i="3" aria-pressed="false">④ 1 · 2 · 3년차 관리 배분</button></div>
+<div class="v4stage"><img src="veg/b1.webp" alt="세트 2 — 4 ~ 6구역 확대 (가장 심한 구간) — ① 일반 사진" class="on" loading="lazy"><img src="veg/b2.webp" alt="세트 2 — 4 ~ 6구역 확대 (가장 심한 구간) — ② NDVI 식생지수" class="" loading="lazy"><img src="veg/b3.webp" alt="세트 2 — 4 ~ 6구역 확대 (가장 심한 구간) — ③ 석재 · 식생 분류" class="" loading="lazy"><img src="veg/b4.webp" alt="세트 2 — 4 ~ 6구역 확대 (가장 심한 구간) — ④ 1 · 2 · 3년차 관리 배분" class="" loading="lazy"><a class="v4big" href="veg/b1.webp" target="_blank" rel="noopener">⤢ 크게 보기</a></div>
+<p class="v4cap"><b>드론 사진(RGB)</b>으로 보면 돌담과 풀이 섞여 있어, 어디가 얼마나 덮였는지 눈으로는 알기 어렵습니다.</p>
+<p class="v4hint">1년차로 묶인 구간입니다. 빨강이 덩굴 추정입니다.</p>
+</figure>
+
+  <p class="eyebrow">연차 배분</p>
+  <div class="v4grid">
+    <img src="veg/years_map.webp" alt="구역별 1·2·3년차 관리 배분 지도" loading="lazy">
+    <div>
+      <table class="v4tb">
+        <thead><tr><th>연차</th><th>구역</th><th>성벽 길이</th><th>식생</th><th>덩굴 추정</th></tr></thead>
+        <tbody><tr class="y1"><td><span class="yr"></span>1년차</td><td>4 ~ 7구역</td><td>309 m</td><td>80.3%</td><td>16.8%</td></tr><tr class="y2"><td><span class="yr"></span>2년차</td><td>1구역 · 포구 쪽 서측 성벽</td><td>111 m</td><td>67.4%</td><td>2.0%</td></tr><tr class="y3"><td><span class="yr"></span>3년차</td><td>2 · 3구역</td><td>220 m</td><td>48.7%</td><td>4.1%</td></tr></tbody>
+      </table>
+      <p class="v4note">같은 연차는 서로 붙어 있는 구역끼리 묶어, 인원이 한 곳에서 이어서 작업할 수 있게 했습니다.
+         해마다 상 · 하반기에 같은 방식으로 촬영하면 정비 전후 변화를 같은 기준으로 비교할 수 있습니다.</p>
+    </div>
+  </div>
+  <div class="v4grid">
+    <img src="veg/zone_bars.webp" alt="구역별 식생·덩굴 추정 비율 막대 그래프" loading="lazy">
+    <img src="veg/wall_profile.webp" alt="성벽을 따라 본 식생 비율 변화 그래프" loading="lazy">
+  </div>
+
+  <div class="v4zone">
+    <p class="eyebrow">구역별로 보기</p>
+    <p class="lede">구역을 고르고, 가운데 선을 좌우로 끌어 <b>일반 사진</b>과 <b>분류 결과</b>를 견줘 보세요.</p>
+    <div class="v4zb"><button type="button" data-z="1" aria-pressed="false">1구역</button><button type="button" data-z="2" aria-pressed="false">2구역</button><button type="button" data-z="3" aria-pressed="false">3구역</button><button type="button" data-z="4" aria-pressed="true">4구역</button><button type="button" data-z="5" aria-pressed="false">5구역</button><button type="button" data-z="6" aria-pressed="false">6구역</button><button type="button" data-z="7" aria-pressed="false">7구역</button></div>
+    <div class="v4zw">
+      <div class="v4cmp" id="v4cmp">
+        <img id="v4a" src="veg/z4_class.webp" alt="구역 석재·식생 분류" loading="lazy">
+        <div class="tw" id="v4tw"><img id="v4b" src="veg/z4_rgb.webp" alt="구역 일반 사진"></div>
+        <div class="kn" id="v4kn"></div>
+        <span class="lb l">일반 사진</span><span class="lb r">석재 · 식생 분류</span>
+        <a class="v4big" id="v4zbig" href="veg/z4_class.webp" target="_blank" rel="noopener">⤢ 크게 보기</a>
+      </div>
+      <div class="v4num" id="v4num"></div>
+    </div>
+    <p class="v4note">분홍 테두리는 분석 범위(성벽 중심선 ±3 m)입니다.
+       구역 경계는 돌봄사업단 구역도에서 옮긴 것이라 현장 표지와 몇 m 다를 수 있습니다.</p>
+  </div>
+
+  <p class="v4meta">촬영 2026년 10월 12일 · DJI Mavic 3 Multispectral (일반 사진 1,651장 + 멀티스펙트럴 6,604장) ·
+     처리 OpenDroneMap (정사영상 1.5 cm/px) · NDVI · 식생 높이 · 석재/식생 분류.<br>
+     덩굴은 NDVI와 높이(0.2 ~ 2 m)로 가려낸 <b>추정</b>이며, 현장 확인 전입니다.
+     형태와 비율을 보기 위한 1차 기준 자료로, 측량 좌표로는 쓰지 않습니다.</p>
+</section>
+
+<section class="v4" id="rampart">
+  <style>
+    #rampart .v4tb td:nth-child(2),#rampart .v4tb td:nth-child(3){text-align:left}
+    #rampart .v4tb td:nth-child(3){white-space:normal}
+    #rampart .v4tb td:nth-child(2){white-space:normal}
+    #rampart .rampfig{margin:1.6rem 0 .3rem}
+    #rampart .rampfig svg{display:block;width:100%;max-width:560px;height:auto;margin:0 auto;color:var(--basalt)}
+    #rampart .rbody{font-size:.98rem;line-height:1.85;color:var(--basalt);max-width:64ch;margin-top:1rem}
+    #rampart .rbody b{color:var(--sea)}
+    #rampart h3{margin-top:1.8rem}
+  </style>
+  <p class="eyebrow">석축 판정</p>
+  <h2>돌벽만 남기는 조건</h2>
+  <p class="lede">성벽은 "주변보다 일정한 높이로, 일정한 폭으로, 길게 이어져 쌓여 있다"는 점으로 구별됩니다.
+     이 말을 수치 조건으로 바꿔야 자동으로 가려낼 수 있습니다. 아래 값은 성벽 639 m, 7개 구역 전체의 드론 표면모형에서 직접 뽑았습니다.</p>
+
+  <table class="v4tb">
+    <thead><tr><th>항목</th><th>값</th><th>어떻게 정했나</th></tr></thead>
+    <tbody>
+      <tr><td>거시 지형 제거</td><td>국소기복모형(LRM)</td><td>표면모형에서 완만한 지형을 빼고 국소 돌출만 남긴다</td></tr>
+      <tr><td>필터 반경</td><td><b>3 m</b> (5 cm 격자 60칸)</td><td>상부 폭(약 1.2 m)의 2~3배. 0.5~7.5 m를 비교해 성벽과 주변이 가장 잘 갈리면서 오검출이 적은 값</td></tr>
+      <tr><td>돌출 높이</td><td><b>0.5 m 이상</b></td><td>성벽 꼭대기의 90%가 0.76 m 넘게 솟았고, 성벽 3 m 밖 지면은 99%가 0.85 m 아래. 두 분포가 갈리는 지점</td></tr>
+      <tr><td>연속 길이</td><td><b>10 m 이상</b></td><td>해안 암반 덩이·돌무더기를 떨어낸다. 5 m로 두면 성벽 밖 오검출이 약 3배</td></tr>
+      <tr><td>상부 폭 <span style="color:var(--mute)">(참고)</span></td><td><b>중앙값 1.15 m</b> (중간 50%: 0.95~1.45 m)</td><td>성벽 0.5 m 간격 1,279개 단면에서 꼭대기 15 cm 안쪽 폭</td></tr>
+      <tr><td>식생</td><td><b>떼어내지 않고 겹쳐 본다</b></td><td>먼저 떼어내면 덮인 성벽까지 지워져 검출률이 14%로 떨어진다</td></tr>
+    </tbody>
+  </table>
+  <p class="v4note">이 숫자들은 문헌값이 아니라 <b>우리 측정분에서 만든 값</b>입니다. 지역마다 축조 양식이 달라 전역 임계값을 정한 문헌이 사실상 없습니다.
+     이 조건으로 성벽 단면의 97%를 찾았고, 성벽에서 3 m 넘게 떨어진 곳을 성벽으로 잘못 고른 면적은 약 60 m²였습니다.</p>
+
+  <figure class="rampfig">
+    <svg viewBox="0 0 520 320" role="img" aria-label="석축 탐지 설명도. 표면모형에서 완만한 지형을 빼면 국소기복만 남고, 거기에 높이와 폭 조건을 걸면 쌓은 벽만 남는다. 식생은 지우지 않고, 찾은 벽 위에 근적외로 본 식생을 겹친다.">
+      <defs>
+        <marker id="wh-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <!-- 1단 DSM -->
+      <text x="40" y="26" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" opacity=".6">① 표면모형(DSM) — 식생이 벽 위에 얹혀 있다</text>
+      <path d="M40 76 C 120 68, 170 72, 212 70 L212 44 L250 44 L250 72 C 320 74, 400 82, 492 78" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M206 44 q 12 -20 26 -8 q 16 -14 26 10 z" fill="var(--moss)" opacity=".75"/>
+      <text x="268" y="40" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--moss)">덩굴·관목</text>
+      <!-- 2단 식생 유지 -->
+      <text x="40" y="118" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" opacity=".6">② 식물은 지우지 않는다 — 얇게 덮인 벽은 모양이 남는다</text>
+      <path d="M40 166 C 120 158, 170 162, 212 160 L212 136 L250 136 L250 162 C 320 164, 400 172, 492 168" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M206 44 q 12 -20 26 -8 q 16 -14 26 10 z" fill="var(--moss)" opacity=".75" transform="translate(0,90)"/>
+      <!-- 3단 LRM -->
+      <text x="40" y="208" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" opacity=".6">③ 완만한 지형을 빼면(LRM) 국소 기복만 남는다</text>
+      <line x1="40" y1="268" x2="492" y2="268" stroke="currentColor" stroke-width="1.5" opacity=".45"/>
+      <path d="M40 268 L206 268 L206 236 L256 236 L256 268 L492 268" fill="var(--sea)" opacity=".18"/>
+      <path d="M40 268 L206 268 L206 236 L256 236 L256 268 L492 268" fill="none" stroke="var(--sea)" stroke-width="2.5"/>
+      <!-- 판정 조건 -->
+      <line x1="206" y1="282" x2="256" y2="282" stroke="currentColor" stroke-width="1" marker-start="url(#wh-ar)" marker-end="url(#wh-ar)" opacity=".7"/>
+      <text x="264" y="286" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" opacity=".8">폭 조건</text>
+      <line x1="180" y1="236" x2="180" y2="268" stroke="currentColor" stroke-width="1" marker-start="url(#wh-ar)" marker-end="url(#wh-ar)" opacity=".7"/>
+      <text x="172" y="256" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" text-anchor="end" opacity=".8">높이 조건</text>
+      <text x="40" y="308" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--sea)">일정 높이 + 일정 폭 + 길게 이어짐 = 쌓은 벽</text>
+    </svg>
+    <figcaption class="v4cap">설명도 · "주변보다 일정하게 솟아 있다"를 수치 조건으로 바꾸면 석축만 남는다 — 식생은 지우지 않고 그 위에 겹쳐 본다</figcaption>
+  </figure>
+
+  <h3>식물이 덮은 구간은 높이를 믿을 수 없습니다</h3>
+  <p class="rbody">성벽 꼭대기의 절반 이상이 풀과 덩굴에 덮여 있습니다. 식물을 지우고 빈 자리를 양옆으로 이어 메우면 성벽이 낮아집니다.
+     우리 측정분에서 덮인 폭이 2 m를 넘는 곳은 꼭대기가 중앙값 약 20 cm, 5 m를 넘는 곳은 약 50 cm 낮아졌고, 일부는 성벽이 통째로 사라졌습니다.
+     그래서 위 판정은 식물을 지우지 않은 표면모형에서 합니다. 대신 덮인 구간의 높이는 식물 윗면까지 잰 값이라 실제 돌보다 높게 나올 수 있습니다.
+     어느 쪽이든 <b>덮인 구간의 실제 돌 높이와 체적은 공중 사진만으로는 알 수 없습니다.</b></p>
+  <p class="rbody">그런 구간은 <b>지상 라이다로 따로 재어 보완합니다.</b> 공중에서 보이지 않는 옆면을 지상에서 재어 같은 좌표계로 합칩니다.
+     덩굴이 빽빽한 곳은 라이다도 돌을 보지 못하므로 정비로 걷어낸 뒤 다시 잽니다.</p>
+</section>
+
+<script>
+
+/* 지도 확대·축소·이동·전체화면 — 측정은 이미지 좌표로 계산하므로 확대와 무관하게 정확합니다 */
+(function(){
+  var cmp=document.getElementById('cmp'); if(!cmp) return;
+  var imgA=document.getElementById('imgA'), topW=document.getElementById('topWrap'),
+      imgB=document.getElementById('imgB'), svg=document.getElementById('msvg');
+  function layer(){ var d=document.createElement('div'); d.className='zl'; return d; }
+  var zA=layer(), zB=layer(), zS=layer();
+  zB.className=zS.className='zl abs';
+  cmp.insertBefore(zA, imgA); zA.appendChild(imgA);      /* 흐름에 남겨 두어 높이를 만든다 */
+  topW.appendChild(zB); zB.appendChild(imgB);
+  cmp.insertBefore(zS, document.getElementById('bar')); zS.appendChild(svg);
+  var z=1, tx=0, ty=0;
+  function apply(){
+    var t='translate('+tx+'px,'+ty+'px) scale('+z+')';
+    zA.style.transform=zB.style.transform=zS.style.transform=t;
+    document.getElementById('zLevel').textContent=Math.round(z*100)+'%';
+  }
+  function clamp(){
+    var w=cmp.clientWidth, h=cmp.clientHeight;
+    var minx=Math.min(0, w-w*z), miny=Math.min(0, h-h*z);
+    tx=Math.max(minx, Math.min(0, tx)); ty=Math.max(miny, Math.min(0, ty));
+  }
+  function zoomAt(nz, cx, cy){
+    nz=Math.max(1, Math.min(8, nz));
+    var r=cmp.getBoundingClientRect(), px=cx-r.left, py=cy-r.top;
+    tx = px - (px-tx)*(nz/z); ty = py - (py-ty)*(nz/z);
+    z=nz; clamp(); apply();
+  }
+  function reset(){ z=1; tx=0; ty=0; apply(); }
+  /* 버튼 */
+  var box=document.createElement('div'); box.className='zbtns';
+  box.innerHTML='<button type="button" id="zOut" aria-label="축소">−</button>'
+    +'<button type="button" class="wide" id="zLevel" aria-label="원래 크기로">100%</button>'
+    +'<button type="button" id="zIn" aria-label="확대">＋</button>'
+    +'<button type="button" id="zFull" aria-label="전체 화면">⛶</button>';
+  cmp.appendChild(box);
+  var hint=document.createElement('div'); hint.className='zhint';
+  hint.textContent='휠로 확대 · 끌어서 이동 · ⛶ 전체 화면';
+  cmp.appendChild(hint);
+  document.getElementById('zIn').onclick=function(){var r=cmp.getBoundingClientRect();zoomAt(z*1.5,r.left+r.width/2,r.top+r.height/2)};
+  document.getElementById('zOut').onclick=function(){var r=cmp.getBoundingClientRect();zoomAt(z/1.5,r.left+r.width/2,r.top+r.height/2)};
+  document.getElementById('zLevel').onclick=reset;
+  document.getElementById('zFull').onclick=function(){
+    var el=document.getElementById('p-map');
+    if(document.fullscreenElement) document.exitFullscreen();
+    else if(el.requestFullscreen) el.requestFullscreen();
+  };
+  function fitFull(){
+    var pane=document.getElementById('p-map');
+    if(document.fullscreenElement===pane){
+      var ar=(imgA.naturalWidth||16)/(imgA.naturalHeight||10);
+      var avail=window.innerHeight-170;                 /* 칩·측정줄 자리 */
+      cmp.style.maxWidth=Math.round(avail*ar)+'px';
+    } else cmp.style.maxWidth='';
+    clamp(); apply();
+  }
+  document.addEventListener('fullscreenchange',function(){ setTimeout(fitFull,60); });
+  window.addEventListener('resize',function(){ setTimeout(fitFull,60); });
+  /* 휠 확대 */
+  cmp.addEventListener('wheel',function(e){ e.preventDefault(); zoomAt(z*(e.deltaY<0?1.18:1/1.18), e.clientX, e.clientY); },{passive:false});
+  /* 끌어서 이동 (확대했을 때만) — 조금이라도 끌면 클릭으로 치지 않음 */
+  var down=null, moved=false;
+  cmp.addEventListener('pointerdown',function(e){
+    if(e.target.closest('.zbtns')||e.target.id==='knob') return;
+    down={x:e.clientX,y:e.clientY,tx:tx,ty:ty}; moved=false;
+  });
+  cmp.addEventListener('pointermove',function(e){
+    if(!down) return;
+    var dx=e.clientX-down.x, dy=e.clientY-down.y;
+    if(!moved && Math.hypot(dx,dy)<4) return;
+    if(z<=1) return;
+    moved=true; tx=down.tx+dx; ty=down.ty+dy; clamp(); apply();
+  });
+  window.addEventListener('pointerup',function(){ setTimeout(function(){down=null;},0); });
+  cmp.addEventListener('click',function(e){ if(moved){ e.stopImmediatePropagation(); moved=false; } },true);
+  /* 두 손가락 확대 */
+  var pts={}, d0=0, z0=1;
+  cmp.addEventListener('pointerdown',function(e){ pts[e.pointerId]=e; });
+  cmp.addEventListener('pointermove',function(e){
+    if(!(e.pointerId in pts)) return; pts[e.pointerId]=e;
+    var k=Object.keys(pts); if(k.length!==2) return;
+    var a=pts[k[0]], b=pts[k[1]], d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
+    if(!d0){ d0=d; z0=z; return; }
+    zoomAt(z0*d/d0,(a.clientX+b.clientX)/2,(a.clientY+b.clientY)/2);
+  });
+  function up(e){ delete pts[e.pointerId]; if(Object.keys(pts).length<2) d0=0; }
+  cmp.addEventListener('pointerup',up); cmp.addEventListener('pointercancel',up);
+  /* 장소·레이어를 바꾸면 원래 크기로 */
+  ['siteChips','layChips'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.addEventListener('click',function(){ setTimeout(reset,0); });
+  });
+  apply();
+  /* 측정 좌표 보정 — 확대·이동한 만큼 되돌려 이미지 좌표로 */
+  cmp.__unzoom=function(cx,cy){ var r=cmp.getBoundingClientRect();
+    return [((cx-r.left)-tx)/z/r.width, ((cy-r.top)-ty)/z/r.height]; };
+})();
+
+/* 레이어마다 '이게 무엇인지' 한 줄 덧붙이기 */
+(function(){
+  if(typeof LEG==='undefined') return;
+  var more={
+    priority:'<div class="legnote">위험도(식생 0.5 + 덩굴 추정 0.3 + 수목 0.2)로 공식 7개 구역을 1·2·3년차로 나눴습니다. 같은 연차는 붙어 있는 구역끼리 묶었습니다.</div>',
+    class:'<div class="legnote">NDVI와 높이로 픽셀을 다섯 갈래로 나눈 지도입니다. 성벽을 벌리는 <b>덩굴 추정</b>이 붉게 표시됩니다.</div>',
+    ndvi:'<div class="legnote">(근적외 − 적색) ÷ (근적외 + 적색). <b>잎이 많고 건강할수록 초록</b>, 돌·모래는 가운데, 물은 음수입니다.</div>',
+    'false':'<div class="legnote">근적외를 빨강 자리에 넣어 만든 그림. 사람 눈에 안 보이는 <b>근적외를 강하게 되쏘는 식물이 붉게</b> 드러납니다.</div>',
+    chm:'<div class="legnote">표면 높이(DSM)에서 땅 높이(DTM)를 뺀 값. <b>풀인지 덤불인지 나무인지</b>를 높이로 가릅니다.</div>'};
+  Object.keys(more).forEach(function(k){ if(LEG[k]!==undefined) LEG[k]=LEG[k]+more[k]; });
+  if(typeof renderMap==='function') renderMap();
+})();
+
+(function(){
+  if(typeof SITES==='undefined'||typeof LN==='undefined') return;
+  var PAL=[[42,93,143,'water'],[217,210,197,'stone'],[159,210,122,'grass'],[224,60,60,'vine'],[31,122,52,'tree']];
+  var OUT={grass:[200,240,106,110],vine:[255,45,111,205],tree:[25,195,125,150]};
+  var cache={};
+  LN.veg='돌벽 위 식물만';
+  LEG.veg='<i style="background:#ff2d6f"></i>덩굴·관목 추정 <i style="background:#19c37d"></i>수목 <i style="background:#c8f06a"></i>초지'
+    +'<div class="legnote">검은 현무암 돌벽 사진 위에 <b>살아 있는 식물만</b> 색으로 덮었습니다. 색이 없는 어두운 부분이 드러난 돌입니다. 가운데 손잡이를 끌면 덮인 정도가 바로 보입니다.</div>';
+  SITES.forEach(function(s){ if(s.layers.indexOf('veg')<0) s.layers.unshift('veg'); });
+
+  function make(id, cb){
+    if(cache[id]) return cb(cache[id]);
+    var im=new Image(); im.crossOrigin='anonymous';
+    im.onload=function(){
+      var w=im.naturalWidth, h=im.naturalHeight;
+      var c=document.createElement('canvas'); c.width=w; c.height=h;
+      var x=c.getContext('2d'); x.drawImage(im,0,0);
+      var d=x.getImageData(0,0,w,h), p=d.data;
+      for(var i=0;i<p.length;i+=4){
+        var r=p[i],g=p[i+1],b=p[i+2], best=1e9, kind=null;
+        for(var k=0;k<PAL.length;k++){
+          var q=PAL[k], dd=(r-q[0])*(r-q[0])+(g-q[1])*(g-q[1])+(b-q[2])*(b-q[2]);
+          if(dd<best){best=dd;kind=q[3];}
+        }
+        var o=OUT[kind];
+        if(o){ p[i]=o[0]; p[i+1]=o[1]; p[i+2]=o[2]; p[i+3]=o[3]; }
+        else { p[i+3]=0; }
+      }
+      x.putImageData(d,0,0);
+      cache[id]=c.toDataURL('image/png');
+      cb(cache[id]);
+    };
+    im.onerror=function(){ cb(null); };
+    im.src='map/site'+f2(id)+'_class.jpg';
+  }
+
+  var _render=renderMap;
+  renderMap=function(){
+    if(lay!=='veg'){ _render(); return; }
+    var s=SITES[cur];
+    lay='class'; _render(); lay='veg';                 /* 통계·범례는 분류 기준으로 그린 뒤 */
+    document.getElementById('tagB').textContent=LN.veg;
+    document.getElementById('legend').innerHTML=LEG.veg;
+    var lc=document.getElementById('layChips');
+    lc.querySelectorAll('button').forEach(function(b,i){ b.setAttribute('aria-pressed', s.layers[i]==='veg'); });
+    var img=document.getElementById('imgB');
+    img.removeAttribute('src');
+    make(s.id, function(url){ if(url && lay==='veg') img.src=url; });
+  };
+  lay='veg'; renderMap();
+})();
+
+(function(){
+  if(typeof SITES==='undefined') return;
+  var PAL=[[42,93,143,'water'],[217,210,197,'stone'],[159,210,122,'grass'],[224,60,60,'vine'],[31,122,52,'tree']];
+  var OUT={stone:[255,176,31,215], grass:[200,240,106,150], vine:[255,45,111,225], tree:[25,195,125,175], water:[10,22,40,130]};
+  var cache={};
+  LN.wall='돌과 식물 한눈에';
+  LEG.wall='<i style="background:#ffb01f"></i>드러난 돌 <i style="background:#ff2d6f"></i>덩굴·관목 추정 '
+    +'<i style="background:#19c37d"></i>수목 <i style="background:#c8f06a"></i>초지'
+    +'<div class="legnote">같은 자리를 <b>돌과 식물로만</b> 칠했습니다. 해안을 따라 이어지는 <b>주황 띠가 드러난 돌벽</b>이고, '
+    +'그 위를 덮은 분홍·초록이 성벽을 밀어내는 식물입니다. 주황이 끊긴 자리가 곧 덮인 자리입니다.'
+    +'<br>분홍 점선은 해안 10–25 m <b>성벽대 경계</b>입니다. 실제 성벽 중심선은 아직 그리지 않았습니다.</div>';
+  /* 'wall'(돌과 식물 한눈에) 레이어 비활성 — 예전 해안 성벽대(±10–25 m) 기준이라 새 7구역 이미지와 맞지 않아 지도 레이어에서 제외 */
+  function make(id, cb){
+    if(cache[id]) return cb(cache[id]);
+    var im=new Image();
+    im.onload=function(){
+      var w=im.naturalWidth,h=im.naturalHeight;
+      var c=document.createElement('canvas'); c.width=w;c.height=h;
+      var x=c.getContext('2d'); x.drawImage(im,0,0);
+      var d=x.getImageData(0,0,w,h), p=d.data;
+      for(var i=0;i<p.length;i+=4){
+        var R=p[i],G=p[i+1],B=p[i+2];
+        if(R>150&&G<90&&B>90&&B<190&&R-G>70){ p[i]=255;p[i+1]=77;p[i+2]=166;p[i+3]=255; continue; }
+        var best=1e9,k=null;
+        for(var t=0;t<PAL.length;t++){var q=PAL[t],dd=(R-q[0])*(R-q[0])+(G-q[1])*(G-q[1])+(B-q[2])*(B-q[2]); if(dd<best){best=dd;k=q[3];}}
+        var o=OUT[k]; if(o){p[i]=o[0];p[i+1]=o[1];p[i+2]=o[2];p[i+3]=o[3];} else p[i+3]=0;
+      }
+      x.putImageData(d,0,0); cache[id]=c.toDataURL('image/png'); cb(cache[id]);
+    };
+    im.onerror=function(){cb(null);};
+    im.src='map/site'+f2(id)+'_class.jpg';
+  }
+  var _r=renderMap;
+  renderMap=function(){
+    if(lay!=='wall'){ _r(); return; }
+    var s=SITES[cur];
+    lay='class'; _r(); lay='wall';
+    document.getElementById('tagB').textContent=LN.wall;
+    document.getElementById('legend').innerHTML=LEG.wall;
+    document.getElementById('layChips').querySelectorAll('button').forEach(function(bt,i){ bt.setAttribute('aria-pressed', s.layers[i]==='wall'); });
+    var img=document.getElementById('imgB'); img.removeAttribute('src');
+    make(s.id, function(url){ if(url && lay==='wall') img.src=url; });
+  };
+  renderMap();                 /* 레이어 목록을 다시 그려 새 칩이 바로 보이게 */
+})();
+
+/* ── 드론 식생 분석 — 단계 전환 · 구역 비교 ── */
+(function(){
+  var CAP = ["<b>드론 사진(RGB)</b>으로 보면 돌담과 풀이 섞여 있어, 어디가 얼마나 덮였는지 눈으로는 알기 어렵습니다.", "<b>멀티스펙트럴 카메라의 근적외선</b>으로 엽록소가 있는 곳만 초록으로 드러냅니다. 살아 있는 잎만 골라 셀 수 있습니다.", "돌(회색) · 풀(연두) · <b>덩굴 추정(빨강)</b> · 나무(진초록)로 자동으로 나눴습니다. 덩굴은 돌 틈에서 굵어지며 돌을 벌려 성벽을 무너뜨립니다.", "공식 <b>7개 관리구역</b>마다 식생 비율을 계산해, 가장 심한 곳부터 1년차로 묶었습니다."];
+  document.querySelectorAll('.v4step').forEach(function(fig){
+    var btns = fig.querySelectorAll('.v4nav button'),
+        imgs = fig.querySelectorAll('.v4stage img'),
+        big  = fig.querySelector('.v4big'),
+        cap  = fig.querySelector('.v4cap');
+    btns.forEach(function(b){
+      b.addEventListener('click', function(){
+        var i = +b.dataset.i;
+        btns.forEach(function(x,j){ x.setAttribute('aria-pressed', j===i); });
+        imgs.forEach(function(x,j){ x.classList.toggle('on', j===i); });
+        cap.innerHTML = CAP[i];
+        if(big) big.href = imgs[i].getAttribute('src');
+      });
+    });
+  });
+
+  var Z = {"1": {"year": 2, "veg": 0.674, "vine": 0.0201, "tree": 0.0, "grass": 0.6539, "stone": 0.326, "length": 111.1, "area": 666.4}, "2": {"year": 3, "veg": 0.4742, "vine": 0.0375, "tree": 0.0008, "grass": 0.4359, "stone": 0.5173, "length": 129.9, "area": 778.4}, "3": {"year": 3, "veg": 0.5065, "vine": 0.0455, "tree": 0.0001, "grass": 0.4608, "stone": 0.4898, "length": 89.6, "area": 537.4}, "4": {"year": 1, "veg": 0.6914, "vine": 0.1868, "tree": 0.0025, "grass": 0.5021, "stone": 0.3085, "length": 116.2, "area": 697.0}, "5": {"year": 1, "veg": 0.858, "vine": 0.2343, "tree": 0.0243, "grass": 0.5994, "stone": 0.1418, "length": 64.2, "area": 385.0}, "6": {"year": 1, "veg": 0.9573, "vine": 0.18, "tree": 0.01, "grass": 0.7673, "stone": 0.0426, "length": 70.8, "area": 424.7}, "7": {"year": 1, "veg": 0.776, "vine": 0.0417, "tree": 0.0, "grass": 0.7343, "stone": 0.2239, "length": 57.5, "area": 345.1}}, cmp = document.getElementById('v4cmp');
+  if(!cmp) return;
+  var tw = document.getElementById('v4tw'), kn = document.getElementById('v4kn'),
+      ia = document.getElementById('v4a'), ib = document.getElementById('v4b'),
+      num = document.getElementById('v4num'), btns = document.querySelectorAll('.v4zb button');
+  function pct(v){ return (v*100).toFixed(1) + '%'; }
+  function show(n){
+    var z = Z[n]; if(!z) return;
+    ia.src = 'veg/z'+n+'_class.webp'; ib.src = 'veg/z'+n+'_rgb.webp';
+    btns.forEach(function(b){ b.setAttribute('aria-pressed', +b.dataset.z===n); });
+    num.innerHTML = '<span class="big">'+z.year+'년차</span>'
+      + '<dl><dt>성벽 길이</dt><dd>'+z.length.toFixed(0)+' m</dd>'
+      + '<dt>분석 면적</dt><dd>'+z.area.toFixed(0)+' m²</dd>'
+      + '<dt>식생이 덮은 비율</dt><dd>'+pct(z.veg)+'</dd>'
+      + '<dt>덩굴 추정</dt><dd>'+pct(z.vine)+'</dd>'
+      + '<dt>나무</dt><dd>'+pct(z.tree)+'</dd>'
+      + '<dt>풀</dt><dd>'+pct(z.grass)+'</dd>'
+      + '<dt>드러난 돌</dt><dd>'+pct(z.stone)+'</dd></dl>';
+    var zb = document.getElementById('v4zbig'); if(zb) zb.href = 'veg/z'+n+'_class.webp';
+    setPos(50);
+  }
+  function setPos(p){
+    p = Math.max(0, Math.min(100, p));
+    tw.style.width = p + '%'; kn.style.left = p + '%';
+    ib.style.width = cmp.clientWidth + 'px';      /* 잘라 낸 쪽도 같은 배율로 */
+  }
+  btns.forEach(function(b){ b.addEventListener('click', function(){ show(+b.dataset.z); }); });
+  var drag = false;
+  function at(e){ var r = cmp.getBoundingClientRect(),
+                      x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+                  setPos(x / r.width * 100); }
+  cmp.addEventListener('pointerdown', function(e){ if(e.target.closest('.v4big')) return; drag = true; cmp.setPointerCapture(e.pointerId); at(e); });
+  cmp.addEventListener('pointermove', function(e){ if(drag) at(e); });
+  cmp.addEventListener('pointerup',   function(){ drag = false; });
+  window.addEventListener('resize', function(){ setPos(parseFloat(tw.style.width) || 50); });
+  ia.addEventListener('load', function(){ setPos(parseFloat(tw.style.width) || 50); });
+  show(4);
+})();
+</script>
+<div class="jgfoot">촬영 · 처리 · 분석 제주그래퍼 JEJUGRAPHER · DJI Mavic 3 Multispectral · 2026년 10월<br>3D 메시와 가우시안 스플래팅, 정사영상·식생 지도는 모두 같은 한 번의 촬영에서 나왔습니다. 길이 · 면적 · 높이 차 같은 <b>상대 측정은 유효</b>하지만, 절대 좌표는 보정 전이라 측량 성과로는 쓸 수 없습니다.<br>사진 · 그림 · 수치와 글의 저작권은 제주그래퍼에 있습니다.<a class="go" href="report/">수치와 방법이 담긴 분석 보고서 보기 →</a> · <a href="/media.html">포트폴리오</a> · <a href="/inquiry.html">조사 문의</a></div>
+<!-- jg-guard -->
+<script>(function(){var H=location.pathname.replace(/^\/+/,"");fetch("https://script.google.com/macros/s/AKfycbwYW8zN_7UyGnbeYpf3A5hSeSp4GVTc3N3Rj3c28WgnOiAZHVDuovvn4WvN5zHE6_WV/exec?mode=state").then(function(r){return r.json()}).then(function(d){if(!d||!d.hidden||!d.hidden.length)return;var hit=d.hidden.some(function(p){p=String(p).replace(/^\/+/,"");return p&&(H===p||H===p+"index.html"||H.indexOf(p)===0)});if(!hit)return;document.title="준비 중";document.body.innerHTML='<div style="min-height:100vh;display:grid;place-items:center;text-align:center;padding:2rem;font:400 16px/1.8 \'IBM Plex Sans KR\',\'Apple SD Gothic Neo\',sans-serif;color:#1B2430">'+'<div><h1 style="font-size:1.5rem">잠시 내려 두었습니다</h1>'+'<p style="color:#6b6b6b">이 페이지는 지금 볼 수 없습니다.<br>'+'문의는 <a href="/inquiry.html" style="color:#C97B5B">문의하기</a>로 주세요.</p>'+'<p><a href="/" style="color:#C97B5B">제주그래퍼 첫 화면으로</a></p></div></div>';document.body.style.background="#F6F1E7";}).catch(function(){})})();</script>
+<!-- /jg-guard -->
+<!-- jg-copyright-notice -->
+<div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
+<div style="max-width:880px;margin:0 auto">
+<strong style="display:block;color:#F3D9A4;font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:.02em">⚠ 무단 복제 · 도용 금지 — 저작권 경고</strong>
+이 사이트의 모든 사진 · 영상 · 글 · 음악 · 디자인 · 프로그램은 <b style="color:#fff">제주그래퍼(JEJUGRAPHER)</b>와 원저작자에게 저작권이 있으며 「저작권법」의 보호를 받습니다.
+저작권자의 <b style="color:#fff">사전 서면 동의 없이</b> 복제 · 다운로드 후 재배포 · 전송 · 게시 · 편집 · 2차 가공 · 캡처 사용 · 상업적 이용 · AI 학습 데이터로 사용하는 행위를 <b style="color:#fff">엄격히 금지</b>합니다.
+사진과 영상 속 인물의 초상권도 함께 보호됩니다.
+무단 도용이 확인되면 사전 경고 없이 「저작권법」 제136조(5년 이하의 징역 또는 5천만 원 이하의 벌금)에 따른 <b style="color:#fff">형사 고소와 민사상 손해배상 청구</b>를 진행합니다.
+<span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
+</div></div>
+<!-- /jg-copyright-notice -->
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>문의하기 — JEJUGRAPHER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F8F4EC;--navy:#1F3A5F;--terra:#C97B5B;--ink:#2C2825;--line:#E3DCCE}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7}
+h1,h2{font-family:'Gowun Batang',serif;color:var(--navy)}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;background:rgba(248,244,236,.94);border-bottom:1px solid var(--line);z-index:100;backdrop-filter:blur(8px)}
+.navin{max-width:1180px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Gowun Batang',serif;font-weight:700;font-size:19px;letter-spacing:2px;color:var(--navy)}
+.back{font-size:14px;color:var(--terra)}
+.wrap{max-width:760px;margin:0 auto;padding:150px 24px 120px}
+h1{font-size:30px;margin-bottom:14px}
+h2{font-size:20px;margin:70px 0 6px}
+.lead{font-size:15px;color:#5a544c;margin-bottom:44px}
+form,.bcard{background:#fff;border:1px solid var(--line)}
+form{padding:38px 34px}
+label{display:block;font-size:13.5px;font-weight:500;color:var(--navy);margin:22px 0 7px}
+label:first-child{margin-top:0}
+input,select,textarea{width:100%;border:1px solid var(--line);background:var(--bg);padding:12px 14px;font-family:inherit;font-size:14.5px;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:1px solid var(--terra)}
+textarea{min-height:170px;resize:vertical}
+.hint{font-size:12px;color:#8d8577;margin-top:5px}
+.btnrow{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
+.cta{display:inline-block;background:var(--terra);color:#fff;padding:14px 30px;font-size:15px;font-weight:500;border:0;cursor:pointer}
+.cta:hover{background:#b56a4c}
+.cta.sec{background:var(--navy)}
+.cta.sec:hover{background:#17304f}
+.bitem{border:1px solid var(--line,#E3DCCE);border-radius:10px;padding:14px 15px;margin-bottom:10px;background:#fff}
+.bmeta{font-size:12px;color:#8d8577}
+.btitle{font-weight:500;margin:.25rem 0 .4rem}
+.brow{display:flex;gap:8px;align-items:center}
+.brow input{flex:0 1 200px;margin:0}
+.bbody{white-space:pre-wrap;font-size:14.5px;line-height:1.8;margin-top:.4rem}
+.note{font-size:12.5px;color:#8d8577;margin-top:26px;line-height:1.8}
+.note b{color:var(--terra);font-weight:500}
+.blead{font-size:13.5px;color:#8d8577;margin-bottom:18px}
+.bcard{padding:20px 24px;margin-bottom:14px}
+.bhead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.bt{font-size:15px;font-weight:500;color:var(--navy)}
+.bmeta{font-size:12.5px;color:#8d8577;margin-top:3px}
+.tags{display:flex;gap:6px;align-items:center}
+.state{font-size:11.5px;padding:2px 10px;white-space:nowrap}
+.state.wait{color:var(--terra);border:1px solid var(--terra)}
+.state.done{color:#4a7a52;border:1px solid #9dbfa3}
+.state.lock{color:#6b5f4c;border:1px solid #cbbfa8;background:#faf6ec}
+.bbody{font-size:13.5px;color:#5a544c;margin-top:12px;white-space:pre-wrap;border-top:1px dashed var(--line);padding-top:12px}
+.pwrow{display:flex;gap:8px;margin-top:14px}
+.pwrow input{flex:1}
+.pwbtn{background:var(--navy);color:#fff;border:0;padding:0 20px;font-size:13.5px;cursor:pointer;font-family:inherit}
+.pwbtn:hover{background:#17304f}
+.pwerr{font-size:12.5px;color:#b0502e;margin-top:6px;min-height:16px}
+.blink{display:inline-block;margin-top:10px;font-size:12.5px;color:var(--terra);border-bottom:1px solid var(--terra)}
+.empty{background:#fff;border:1px dashed var(--line);padding:44px 20px;text-align:center;color:#8d8577;font-size:14px}
+.refresh{border:1px solid var(--navy);color:var(--navy);background:transparent;padding:8px 18px;font-size:13px;cursor:pointer;margin-bottom:16px;font-family:inherit}
+.refresh:hover{background:var(--navy);color:#fff}
+@media(max-width:767px){.wrap{padding:120px 18px 90px}form{padding:26px 20px}}
+</style>
+
+
+<!-- jg-seo -->
+<link rel="canonical" href="https://jejugrapher.com/inquiry.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://jejugrapher.com/inquiry.html">
+<meta property="og:title" content="문의하기 — JEJUGRAPHER">
+<meta property="og:image" content="https://jejugrapher.com/cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="문의하기 — JEJUGRAPHER">
+<!-- /jg-seo -->
+</head>
+<body>
+<!-- jg-nav -->
+<style>
+#jgnav{position:sticky;top:0;z-index:60;background:rgba(248,244,236,.96);border-bottom:1px solid #E3DCCE;backdrop-filter:blur(8px);font-family:'IBM Plex Sans KR','Apple SD Gothic Neo',sans-serif}
+#jgnav .in{max-width:1180px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:relative}
+#jgnav a{color:#1F3A5F;text-decoration:none}
+#jgnav .lg{font-family:'Gowun Batang',serif;font-weight:700;font-size:18px;letter-spacing:2px;white-space:nowrap}
+#jgnav .mn{display:flex;gap:20px;font-size:14px}
+#jgnav .mn a:hover{color:#C97B5B}
+#jgnav .mn a[aria-current]{color:#C97B5B;font-weight:500}
+#jgnav .tg{display:none;align-items:center;gap:6px;height:40px;padding:0 15px;border:1px solid #E3DCCE;border-radius:999px;background:transparent;color:#1F3A5F;font:500 15px/1 inherit;cursor:pointer}
+@media (max-width:900px){
+ #jgnav .tg{display:inline-flex}
+ #jgnav .mn{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:0;background:#F8F4EC;border-bottom:1px solid #E3DCCE}
+ #jgnav .mn.open{display:flex}
+ #jgnav .mn a{padding:15px 24px;border-top:1px solid #E3DCCE;font-size:16px}
+}
+</style>
+<nav id="jgnav"><div class="in">
+<a class="lg" href="index.html">JEJUGRAPHER</a>
+<button class="tg" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="jgmenu">☰ 메뉴</button>
+<div class="mn" id="jgmenu"><a href="spatial/index.html">공간데이터</a>
+<a href="index.html#filming">영상 제작</a>
+<a href="index.html#web">웹·체험 제작</a>
+<a href="aiclass.html">AI 강의</a>
+<a href="byeolbam.html">별밤사진관</a>
+<a href="media.html">포트폴리오</a>
+<a href="price.html">가격 안내</a>
+<a href="https://jajumap.com" target="_blank" rel="noopener">제주맵 ↗</a>
+<a href="inquiry.html" aria-current="page">문의</a></div>
+</div></nav>
+<script>(function(){var b=document.querySelector('#jgnav .tg'),m=document.getElementById('jgmenu');
+b.addEventListener('click',function(){var o=m.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false');});})();</script>
+<!-- /jg-nav -->
+
+
+
+
+<div class="wrap">
+  <h1>프로젝트 문의</h1>
+  <p class="lead">공간데이터 · 촬영 · 편집 · AI 영상 · 웹 제작 — 어떤 이야기든 편하게 남겨 주세요. 평일 기준 하루 안에 답을 드립니다.</p>
+
+  <form id="f" onsubmit="return false">
+    <label for="name">성함 · 소속</label>
+    <input id="name" type="text" placeholder="예) 홍길동 · ○○센터">
+    <label for="contact">연락처 (이메일 또는 전화)</label>
+    <input id="contact" type="text" placeholder="예) hello@example.com">
+    <label for="field">문의 분야</label>
+    <select id="field">
+      <option>3D 공간데이터 · 가우시안 스플래팅</option>
+      <option>촬영 (드론 · FPV · 360° · 지상)</option>
+      <option>편집 · 포스트 프로덕션</option>
+      <option>AI 영상 · 뮤직비디오 제작</option>
+      <option>웹 · 인터랙티브 제작</option>
+      <option>강의 · 교육</option>
+      <option>사진 · 영상 수정 요청</option>
+      <option>기타</option>
+    </select>
+    <label for="msg">문의 내용</label>
+    <textarea id="msg" placeholder="프로젝트 내용, 일정, 참고 링크 등을 자유롭게 적어 주세요."></textarea>
+    <label for="pw">글 비밀번호 <span style="color:#8d8577;font-weight:400">(선택)</span></label>
+    <input id="pw" type="password" placeholder="입력하면 비밀글로 올라갑니다" autocomplete="new-password">
+    <div class="hint">비밀번호를 넣으면 게시판에 <b>🔒 비밀글</b>로 보이고, 내용은 그 비밀번호를 넣어야 열립니다. 비밀번호는 브라우저에서 한 번 섞은 값만 전송되어 그대로 저장되지 않습니다.</div>
+    <div class="btnrow">
+      <button class="cta" id="send">문의 남기기</button>
+      <button class="cta sec" id="mail">이메일로 보내기</button>
+    </div>
+    <div id="msgbox" class="hint" role="status" style="min-height:1.4em"></div>
+    <p class="note">
+      남겨 주신 내용은 <b>제주그래퍼에게 바로 전달됩니다.</b> 아무 곳에도 공개되지 않고, 따로 가입하거나 로그인하실 것도 없습니다.<br>
+      전화는 010-6778-9199, 메일은 whipia@naver.com 입니다.
+    </p>
+  </form>
+
+  <div id="done" hidden>
+    <h2>문의를 받았습니다</h2>
+    <p class="blead">평일 기준 하루 안에 남겨 주신 연락처로 답을 드리겠습니다. 급하시면 010-6778-9199 로 전화 주세요.</p>
+  </div>
+
+  <h2>문의 게시판</h2>
+  <p class="blead">남겨 주신 문의가 시간순으로 표시됩니다. 🔒 비밀글은 글을 쓸 때 정한 비밀번호를 넣어야 내용이 열립니다.</p>
+  <button class="refresh" id="reload">목록 새로고침</button>
+  <div id="board"><div class="empty">문의를 불러오는 중…</div></div>
+</div>
+
+<script>
+(function(){
+ /* 문의는 제주그래퍼에게 바로 전달됩니다 — 가입·로그인 없음 */
+ var ENDPOINT = "https://script.google.com/macros/s/AKfycbwYW8zN_7UyGnbeYpf3A5hSeSp4GVTc3N3Rj3c28WgnOiAZHVDuovvn4WvN5zHE6_WV/exec";
+ var MAILTO = "whipia@naver.com";
+ var $ = function(id){ return document.getElementById(id); };
+ var esc = function(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){
+   return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+
+ /* 비밀번호는 브라우저에서 한 번 섞어서(SHA-256) 보냅니다 — 원문은 보내지 않습니다 */
+ async function hash(pw){
+  var b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('jg-ask:' + pw));
+  return Array.from(new Uint8Array(b)).map(function(x){ return x.toString(16).padStart(2,'0'); }).join('');
+ }
+
+ async function collect(){
+  var pw = $('pw').value;
+  return { type:'문의사항', session:'inquiry',
+           kind: $('field').value,
+           name: $('name').value.trim(),
+           contact: $('contact').value.trim(),
+           message: $('msg').value.trim(),
+           pwhash: pw ? await hash(pw) : '',
+           page: 'inquiry.html', at: new Date().toISOString() };
+ }
+
+ $('send').addEventListener('click', async function(){
+  var box = $('msgbox');
+  var d = await collect();
+  if(!d.contact || !d.message){ box.textContent = '연락처와 문의 내용을 적어 주세요.'; return; }
+  $('send').disabled = true; box.textContent = '보내는 중…';
+  try{
+   fetch(ENDPOINT, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(d) });
+   $('f').hidden = true; $('done').hidden = false;
+   setTimeout(loadBoard, 2500);
+  }catch(err){
+   box.textContent = '보내지 못했어요. 「이메일로 보내기」로 보내 주시면 확인하겠습니다.';
+   $('send').disabled = false;
+  }
+ });
+
+ $('mail').addEventListener('click', async function(){
+  var d = await collect();
+  var sub = '[문의] ' + d.kind + (d.name ? ' — ' + d.name : '');
+  var body = ['성함·소속: '+(d.name||'-'), '연락처: '+(d.contact||'-'), '분야: '+d.kind, '', '내용:', d.message||''].join('\n');
+  location.href = 'mailto:' + MAILTO + '?subject=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(body);
+ });
+
+ /* ---------- 게시판 ---------- */
+ function fmt(s){ var d=new Date(s); return isNaN(d)?'' :
+   d.getFullYear()+'. '+(d.getMonth()+1)+'. '+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
+
+ function card(it){
+  var head = '<div class="bmeta">'+fmt(it.at)+' · '+esc(it.kind||'문의')+(it.name?' · '+esc(it.name):'')+'</div>';
+  if(it.locked){
+   return '<div class="bitem" data-id="'+esc(it.id)+'">'+head
+    +'<div class="btitle">🔒 비밀글</div>'
+    +'<div class="brow"><input type="password" class="bpw" placeholder="글 비밀번호" autocomplete="off">'
+    +'<button class="refresh bopen" type="button">열기</button></div>'
+    +'<div class="bbody" hidden></div></div>';
+  }
+  return '<div class="bitem">'+head+'<div class="bbody">'+esc(it.message||'')+'</div></div>';
+ }
+
+ function loadBoard(){
+  var box = $('board'); box.innerHTML = '<div class="empty">문의를 불러오는 중…</div>';
+  fetch(ENDPOINT + '?mode=list&t=' + Date.now())
+   .then(function(r){ return r.json(); })
+   .then(function(j){
+     var items = (j && j.items) || [];
+     if(!items.length){ box.innerHTML = '<div class="empty">아직 남겨진 문의가 없습니다.</div>'; return; }
+     box.innerHTML = items.map(card).join('');
+   })
+   .catch(function(){
+     box.innerHTML = '<div class="empty">목록을 불러오지 못했습니다. 문의는 위에서 바로 남기실 수 있습니다.</div>';
+   });
+ }
+
+ document.addEventListener('click', async function(e){
+  var b = e.target.closest('.bopen'); if(!b) return;
+  var item = b.closest('.bitem'), inp = item.querySelector('.bpw'), body = item.querySelector('.bbody');
+  var pw = inp.value.trim(); if(!pw){ inp.focus(); return; }
+  b.disabled = true; b.textContent = '여는 중…';
+  try{
+   var h = await hash(pw);
+   var r = await fetch(ENDPOINT + '?mode=open&id=' + encodeURIComponent(item.dataset.id) + '&h=' + h);
+   var j = await r.json();
+   if(j && j.ok){
+    body.textContent = j.message || '';
+    body.hidden = false;
+    item.querySelector('.brow').remove();
+    item.querySelector('.btitle').textContent = '🔓 비밀글';
+   }else{
+    b.disabled = false; b.textContent = '열기'; inp.value=''; inp.placeholder = '비밀번호가 맞지 않아요';
+   }
+  }catch(err){ b.disabled = false; b.textContent = '열기'; }
+ });
+
+ $('reload').addEventListener('click', loadBoard);
+ loadBoard();
+})();
+</script>
+<!-- jg-copyright-notice -->
+<div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
+<div style="max-width:880px;margin:0 auto">
+<strong style="display:block;color:#F3D9A4;font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:.02em">⚠ 무단 복제 · 도용 금지 — 저작권 경고</strong>
+이 사이트의 모든 사진 · 영상 · 글 · 음악 · 디자인 · 프로그램은 <b style="color:#fff">제주그래퍼(JEJUGRAPHER)</b>와 원저작자에게 저작권이 있으며 「저작권법」의 보호를 받습니다.
+저작권자의 <b style="color:#fff">사전 서면 동의 없이</b> 복제 · 다운로드 후 재배포 · 전송 · 게시 · 편집 · 2차 가공 · 캡처 사용 · 상업적 이용 · AI 학습 데이터로 사용하는 행위를 <b style="color:#fff">엄격히 금지</b>합니다.
+사진과 영상 속 인물의 초상권도 함께 보호됩니다.
+무단 도용이 확인되면 사전 경고 없이 「저작권법」 제136조(5년 이하의 징역 또는 5천만 원 이하의 벌금)에 따른 <b style="color:#fff">형사 고소와 민사상 손해배상 청구</b>를 진행합니다.
+<span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
+</div></div>
+<!-- /jg-copyright-notice -->
+</body>
+</html>
