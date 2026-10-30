@@ -61,6 +61,84 @@
 </head>
 
 <body>
+<!-- jg-nav -->
+<style>
+#jgnav{position:sticky;top:0;z-index:200;background:rgba(248,244,236,.96);border-bottom:1px solid #E3DCCE;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-family:'IBM Plex Sans KR','Apple SD Gothic Neo',sans-serif}
+#jgnav .in{max-width:1180px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:relative}
+#jgnav a{text-decoration:none}
+#jgnav .lg{font-family:'Gowun Batang',serif;font-weight:700;font-size:19px;letter-spacing:2px;color:#1F3A5F;white-space:nowrap}
+#jgnav .mn{display:flex;align-items:center;gap:22px;font-size:14px}
+#jgnav .mn>a{color:#1F3A5F}
+#jgnav .mn>a:hover{color:#C97B5B}
+#jgnav .mn a[aria-current]{color:#C97B5B;font-weight:500}
+#jgnav .map{color:#C97B5B;font-weight:500}
+#jgnav .hasdrop{position:relative;display:inline-flex;align-items:center}
+#jgnav .svc{background:none;border:0;margin:0;padding:0;font:inherit;color:#1F3A5F;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+#jgnav .svc.cur{color:#C97B5B;font-weight:500}
+#jgnav .hasdrop:hover .svc,#jgnav .hasdrop:focus-within .svc{color:#C97B5B}
+#jgnav .caret{font-size:10px;transition:transform .2s ease}
+#jgnav .hasdrop:hover .caret,#jgnav .hasdrop:focus-within .caret{transform:rotate(180deg)}
+#jgnav .dd{position:absolute;top:100%;left:0;min-width:190px;background:#ffffff;border:1px solid #E3DCCE;border-radius:10px;box-shadow:0 14px 30px rgba(10,15,30,.18);padding:6px 0;display:none;flex-direction:column;z-index:210}
+#jgnav .hasdrop:hover .dd,#jgnav .hasdrop:focus-within .dd{display:flex}
+#jgnav .dd a{display:block;padding:10px 20px;font-size:14px;color:#1F3A5F;white-space:nowrap}
+#jgnav .dd a:hover{background:#F4EFE6;color:#C97B5B}
+#jgnav .dd a[aria-current]{color:#C97B5B;font-weight:500}
+#jgnav .dd .lk{color:#C97B5B}
+#jgnav #jglang{display:flex;gap:2px;align-items:center}
+#jgnav .tg{display:none;align-items:center;gap:6px;height:40px;padding:0 15px;border:1px solid #E3DCCE;border-radius:999px;background:transparent;color:#1F3A5F;font:500 15px/1 inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+@media (max-width:900px){
+ #jgnav .tg{display:inline-flex}
+ #jgnav .tg[aria-expanded="true"]{background:#1F3A5F;color:#F8F4EC}
+ #jgnav .mn{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:0;background:#F8F4EC;border-bottom:1px solid #E3DCCE;box-shadow:0 14px 28px rgba(0,0,0,.14);max-height:calc(100dvh - 64px);overflow-y:auto}
+ #jgnav .mn.open{display:flex}
+ #jgnav .mn>a{padding:15px 24px;border-top:1px solid #E3DCCE;font-size:16px}
+ #jgnav .hasdrop{display:block;position:static}
+ #jgnav .svc{display:flex;width:100%;justify-content:space-between;padding:15px 24px;border-top:1px solid #E3DCCE;font-size:16px}
+ #jgnav .caret{display:none}
+ #jgnav .dd{display:flex !important;position:static;border:0;border-radius:0;box-shadow:none;padding:0;background:transparent;min-width:0}
+ #jgnav .dd a{padding:13px 24px 13px 42px;border-top:1px solid rgba(0,0,0,.05);font-size:15px;color:#5a544c}
+ #jgnav #jglang{padding:12px 24px;border-top:1px solid #E3DCCE}
+}
+</style>
+<nav id="jgnav"><div class="in">
+<a class="lg" href="/">JEJUGRAPHER</a>
+<button class="tg" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="jgmenu">☰ 메뉴</button>
+<div class="mn" id="jgmenu">
+<a href="/about.html">소개</a>
+<div class="hasdrop"><button class="svc cur" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="jgsvc">서비스<span class="caret" aria-hidden="true">▾</span></button><div class="dd" id="jgsvc" role="menu" aria-label="서비스"><a role="menuitem" href="/index.html#filming">영상 제작</a>
+<a role="menuitem" href="/spatial/index.html" aria-current="page">공간데이터</a>
+<a role="menuitem" href="/index.html#web">웹 제작</a>
+<a role="menuitem" href="/games.html">VR·체험 게임</a>
+<a role="menuitem" href="/byeolbam.html">별밤사진관</a>
+<a role="menuitem" href="/auto.html">자동영상제작<span class="lk" aria-hidden="true"> 🔒</span></a>
+<a role="menuitem" href="/aiclass.html">AI 강의</a>
+<a role="menuitem" href="/price.html">가격 안내</a></div></div>
+<a href="/media.html">포트폴리오</a>
+<a href="https://jajumap.com" class="map" target="_blank" rel="noopener">제주맵 ↗</a>
+<a href="/inquiry.html">문의</a>
+<span id="jglang" data-noi18n></span>
+</div>
+</div></nav>
+<script>(function(){
+ var nav=document.getElementById('jgnav'); if(!nav) return;
+ var b=nav.querySelector('.tg'), m=nav.querySelector('.mn');
+ if(b&&m){function set(o){m.classList.toggle('open',o);b.setAttribute('aria-expanded',o?'true':'false');b.innerHTML=o?'\u2715 \ub2eb\uae30':'\u2630 \uba54\ub274';}
+  b.addEventListener('click',function(e){e.stopPropagation();set(!m.classList.contains('open'));});
+  m.addEventListener('click',function(e){if(e.target.closest('a'))set(false);});
+  document.addEventListener('click',function(e){if(m.classList.contains('open')&&!nav.contains(e.target))set(false);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false);});}
+ nav.querySelectorAll('.hasdrop').forEach(function(d){var s=d.querySelector('.svc'); if(!s) return;
+  function sync(){try{s.setAttribute('aria-expanded',(d.matches(':hover')||d.contains(document.activeElement))?'true':'false');}catch(_){}}
+  ['mouseenter','mouseleave','focusin','focusout'].forEach(function(ev){d.addEventListener(ev,function(){setTimeout(sync,0);});});});
+ nav.querySelectorAll('a[href*="#"]').forEach(function(a){a.addEventListener('click',function(e){
+  try{var u=new URL(a.href,location.href);
+   var same=u.pathname===location.pathname||(u.pathname==='/index.html'&&(location.pathname==='/'||location.pathname===''));
+   if(u.hash&&same){var t=document.querySelector(u.hash);if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});history.replaceState(null,'',u.hash);}}
+  }catch(_){}});});
+})();</script>
+<!-- /jg-nav -->
+
+
 
 <nav class="nav">
   <div class="nav-inner">
@@ -364,6 +442,10 @@
   </div>
 </footer>
 
+<!-- jg-i18n -->
+<script src="/i18n_dict.js" defer></script>
+<script src="/i18n_dom.js" defer></script>
+<!-- /jg-i18n -->
 <!-- jg-copyright-notice -->
 <div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
 <div style="max-width:880px;margin:0 auto">
@@ -375,9 +457,5 @@
 <span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
 </div></div>
 <!-- /jg-copyright-notice -->
-<!-- jg-i18n -->
-<script src="/i18n_dict.js" defer></script>
-<script src="/i18n_dom.js" defer></script>
-<!-- /jg-i18n -->
 </body>
 </html>

@@ -125,6 +125,29 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 #yt .ytbar{display:flex;justify-content:flex-end;margin-bottom:10px}
 #yt #ytx{float:none!important;margin:0!important;min-height:44px;padding:.5em 1.3em!important;font-weight:700;border-radius:999px;background:#fff;border:0;cursor:pointer;color:#222}
 
+/* 서비스 드롭다운 + 언어 스위처 슬롯 (5탭 공통 메뉴) */
+.menu{align-items:center}
+.menu .map{color:var(--terra);font-weight:500}
+.hasdrop{position:relative;display:inline-flex;align-items:center}
+.svc{background:none;border:0;margin:0;padding:0;font:inherit;color:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.hasdrop:hover .svc,.hasdrop:focus-within .svc{color:var(--terra)}
+.caret{font-size:10px;transition:transform .2s ease}
+.hasdrop:hover .caret,.hasdrop:focus-within .caret{transform:rotate(180deg)}
+.dropdown{position:absolute;top:100%;left:0;min-width:190px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 30px rgba(20,25,40,.14);padding:6px 0;display:none;flex-direction:column;z-index:30}
+.hasdrop:hover .dropdown,.hasdrop:focus-within .dropdown{display:flex}
+.menu .dropdown a{display:block;padding:10px 20px;font-size:14px;color:var(--navy,#1F3A5F);white-space:nowrap}
+.menu .dropdown a:hover{background:#F4EFE6;color:var(--terra)}
+.dropdown .lk{color:var(--terra)}
+#jglang{display:flex;gap:2px;align-items:center}
+@media (max-width:860px){
+  .hasdrop{display:block;position:static}
+  .svc{display:flex;width:100%;justify-content:space-between;padding:15px 24px;border-top:1px solid rgba(0,0,0,.07);font-size:16px}
+  .caret{display:none}
+  .dropdown{display:flex!important;position:static;border:0;border-radius:0;box-shadow:none;padding:0;background:transparent;min-width:0}
+  .menu .dropdown a{padding:13px 24px 13px 42px;border-top:1px solid rgba(0,0,0,.05);font-size:15px;color:#5a544c}
+  #jglang{padding:12px 24px;border-top:1px solid rgba(0,0,0,.07)}
+}
+
 /* 첫 화면: 별밤 · 드론 사진이 천천히 바뀜 */
 .hero{min-height:min(82svh,760px)}
 .hero>img.hs{opacity:0;animation:hs 16s infinite;transform:scale(1.04)}
@@ -179,6 +202,17 @@ a.vt:hover b{text-decoration:underline;text-underline-offset:3px}
   .tabs .wrap{gap:.35rem}.tabs a{font-size:.84rem;padding:.45em .85em}
 }
 </style>
+
+<!-- jg-seo -->
+<link rel="canonical" href="https://jejugrapher.com/media.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://jejugrapher.com/media.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="포트폴리오 — 영상 · 사진 · 3D · 측량 | JEJUGRAPHER 제주그래퍼">
+<meta name="twitter:description" content="제주그래퍼가 촬영·제작한 작업을 한곳에서 — 제작 영상, 드론 사진측량 3D 모델, 드론·FPV, 360° VR, 별밤·야간 사진, AI 영상·음악 채널.">
+<!-- /jg-seo -->
 </head>
 <body>
 <nav>
@@ -186,18 +220,28 @@ a.vt:hover b{text-decoration:underline;text-underline-offset:3px}
     <a class="logo" href="index.html">JEJUGRAPHER</a>
     <button class="mtog" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="siteMenu">☰ 메뉴</button>
     <div class="menu" id="siteMenu">
-      <a href="spatial/index.html">공간데이터</a>
-      <a href="index.html#filming">영상 제작</a>
-      <a href="index.html#web">웹·체험 제작</a>
-      <a href="aiclass.html">AI 강의</a>
-      <a href="byeolbam.html">별밤사진관</a>
+      <a href="about.html">소개</a>
+      <div class="hasdrop">
+        <button class="svc" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="svcmenu">서비스<span class="caret" aria-hidden="true">▾</span></button>
+        <div class="dropdown" id="svcmenu" role="menu" aria-label="서비스">
+          <a role="menuitem" href="index.html#filming">영상 제작</a>
+          <a role="menuitem" href="spatial/index.html">공간데이터</a>
+          <a role="menuitem" href="index.html#web">웹 제작</a>
+          <a role="menuitem" href="games.html">VR·체험 게임</a>
+          <a role="menuitem" href="byeolbam.html">별밤사진관</a>
+          <a role="menuitem" href="auto.html">자동영상제작<span class="lk" aria-hidden="true"> 🔒</span></a>
+          <a role="menuitem" href="aiclass.html">AI 강의</a>
+          <a role="menuitem" href="price.html">가격 안내</a>
+        </div>
+      </div>
       <a href="media.html" aria-current="page">포트폴리오</a>
-      <a href="price.html">가격 안내</a>
-      <a href="https://jajumap.com" target="_blank" rel="noopener">제주맵 ↗</a>
+      <a class="map" href="https://jajumap.com" target="_blank" rel="noopener">제주맵 ↗</a>
       <a href="inquiry.html">문의</a>
+      <span id="jglang" data-noi18n></span>
     </div>
   </div>
 </nav>
+
 <header class="hero">
   <img class="hs" src="media/hero_1.jpg" alt="은하수 아래 빛으로 그림을 그리는 별밤사진관">
   <img class="hs" src="media/hero_2.jpg" alt="드론으로 내려다본 평대 에메랄드빛 바다와 오름" loading="lazy">
@@ -254,7 +298,16 @@ b.addEventListener('click',function(e){e.stopPropagation();set(!m.classList.cont
 m.addEventListener('click',function(e){if(e.target.closest('a'))set(false);});
 document.addEventListener('click',function(e){if(m.classList.contains('open')&&!m.contains(e.target))set(false);});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false);});})();
+/* 서비스 드롭다운 aria 동기화 */
+(function(){document.querySelectorAll('.hasdrop').forEach(function(d){var s=d.querySelector('.svc');if(!s)return;
+ function sync(){try{s.setAttribute('aria-expanded',(d.matches(':hover')||d.contains(document.activeElement))?'true':'false');}catch(_){}}
+ ['mouseenter','mouseleave','focusin','focusout'].forEach(function(ev){d.addEventListener(ev,function(){setTimeout(sync,0);});});});})();
+/* 같은 페이지 앵커는 새로고침 없이 부드럽게 */
+(function(){var m=document.getElementById('siteMenu');if(!m)return;m.querySelectorAll('a[href*="#"]').forEach(function(a){a.addEventListener('click',function(e){
+ try{var u=new URL(a.href,location.href);var same=u.pathname===location.pathname||(u.pathname==='/index.html'&&(location.pathname==='/'||location.pathname===''));
+  if(u.hash&&same){var t=document.querySelector(u.hash);if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});history.replaceState(null,'',u.hash);}}}catch(_){}});});})();
 </script>
+
 <script>
 /* 행사 영상 받기 — 비밀번호(사진첩과 같은 방식으로 안내)로 드라이브 폴더 주소를 풀어서 엶. 주소는 비밀번호 없이는 읽히지 않게 섞어 둠 */
 (function(){

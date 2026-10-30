@@ -32,7 +32,7 @@ a:hover { color: var(--text-main); }
 .section-alt { background: var(--bg-soft); }
 .eyebrow { font-family: 'Noto Sans KR', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent-terracotta); margin-bottom: 0.75rem; display: block; }
 .section-lead { font-size: 1.0625rem; color: var(--text-soft); max-width: 720px; margin-bottom: 3rem; }
-.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(254, 252, 247, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-line); }
+.nav { position: sticky; top: 64px; z-index: 90; background: rgba(254, 252, 247, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-line); }
 .nav-inner { max-width: 1240px; margin: 0 auto; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
 .nav-logo { font-family: 'Noto Serif KR', serif; font-weight: 700; font-size: 1.125rem; color: var(--text-main); letter-spacing: 0.08em; }
 .nav-cta { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1.25rem; background: var(--accent-terracotta); color: var(--bg-main); border-radius: 999px; font-size: 0.875rem; font-weight: 500; transition: background 0.2s; }

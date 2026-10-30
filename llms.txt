@@ -6,6 +6,7 @@
 
 ## 무엇을 찾을 수 있나
 - [첫 화면](https://jejugrapher.com/) — 하는 일 전체
+- [소개](https://jejugrapher.com/about.html) — 스튜디오 소개·기술 영역·장비·연혁·연락처
 - [포트폴리오](https://jejugrapher.com/media.html) — 제작 영상과 사진첩, 드론 사진측량 3D 모델, 유튜브 채널
 - [공간데이터](https://jejugrapher.com/spatial/index.html) — 3D 가우시안 스플래팅·포토그래메트리·동굴 스캔
 - [별밤사진관](https://jejugrapher.com/byeolbam.html) — 밤하늘 라이트 페인팅 사진 체험

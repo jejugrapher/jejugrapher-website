@@ -30,6 +30,17 @@ nav{position:fixed;top:0;left:0;right:0;background:rgba(248,244,236,.94);border-
 .menu a{color:var(--ink)}
 .menu a:hover{color:var(--terra)}
 .menu .map{color:var(--terra);font-weight:500}
+/* 서비스 드롭다운 (데스크톱: hover + 키보드 포커스) */
+.hasdrop{position:relative;display:inline-flex;align-items:center}
+.svc{background:none;border:0;margin:0;padding:0;font:inherit;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.hasdrop:hover .svc,.hasdrop:focus-within .svc{color:var(--terra)}
+.caret{font-size:10px;transition:transform .2s ease}
+.hasdrop:hover .caret,.hasdrop:focus-within .caret{transform:rotate(180deg)}
+.dropdown{position:absolute;top:100%;left:0;min-width:190px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 30px rgba(20,25,40,.14);padding:6px 0;display:none;flex-direction:column;z-index:110}
+.hasdrop:hover .dropdown,.hasdrop:focus-within .dropdown{display:flex}
+.menu .dropdown a{display:block;padding:10px 20px;font-size:14px;color:var(--ink);white-space:nowrap}
+.menu .dropdown a:hover{background:#F4EFE6;color:var(--terra)}
+.dropdown .lk{color:#C97B5B}
 
 .hero{padding:210px 0 150px;text-align:center}
 .eyebrow{font-size:13.5px;letter-spacing:3px;color:var(--terra);margin-bottom:22px;font-weight:500}
@@ -159,6 +170,12 @@ footer .adminlink{color:#b7ab97}
   .menu.open{display:flex!important}
   .menu a{display:block;padding:15px 24px;border-top:1px solid rgba(0,0,0,.07);font-size:16px}
   .menu a:first-child{border-top:0}
+  /* 서비스: 휴대폰에선 드롭다운 대신 '서비스' 머리말 + 들여쓴 목록을 항상 펼쳐 둔다 (모두 눌러지게) */
+  .hasdrop{display:block;position:static}
+  .svc{display:flex;width:100%;justify-content:space-between;text-align:left;padding:15px 24px;border-top:1px solid rgba(0,0,0,.07);font-size:16px;color:var(--ink)}
+  .caret{display:none}
+  .dropdown{display:flex!important;position:static;border:0;border-radius:0;box-shadow:none;padding:0;background:transparent;min-width:0}
+  .menu .dropdown a{padding:13px 24px 13px 42px;border-top:1px solid rgba(0,0,0,.05);font-size:15px;color:#5a544c}
 }
 
 /* 웹 · 체험 제작 — 체험 게임 */
@@ -237,15 +254,24 @@ a.shot:hover .sh-im img{transform:scale(1.05)}
     <a class="logo" href="#top">JEJUGRAPHER</a>
     <button class="mtog" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="siteMenu">☰ 메뉴</button>
     <div class="menu" id="siteMenu">
-      <a href="#filming">영상 제작</a><a href="spatial/index.html">공간데이터</a>
-      
-      <a href="#web">웹·체험 제작</a>
-      <a href="aiclass.html">AI 강의</a>
-      <a href="byeolbam.html">별밤사진관</a>
-      <a href="media.html">포트폴리오</a>
-      <a href="price.html">가격 안내</a>
+      <a href="/about.html">소개</a>
+      <div class="hasdrop">
+        <button class="svc" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="svcmenu">서비스<span class="caret" aria-hidden="true">▾</span></button>
+        <div class="dropdown" id="svcmenu" role="menu" aria-label="서비스">
+          <a role="menuitem" href="/index.html#filming">영상 제작</a>
+          <a role="menuitem" href="/spatial/index.html">공간데이터</a>
+          <a role="menuitem" href="/index.html#web">웹 제작</a>
+          <a role="menuitem" href="/games.html">VR·체험 게임</a>
+          <a role="menuitem" href="/byeolbam.html">별밤사진관</a>
+          <a role="menuitem" href="/auto.html">자동영상제작<span class="lk" aria-hidden="true"> 🔒</span></a>
+          <a role="menuitem" href="/aiclass.html">AI 강의</a>
+          <a role="menuitem" href="/price.html">가격 안내</a>
+        </div>
+      </div>
+      <a href="/media.html">포트폴리오</a>
       <a class="map" href="https://jajumap.com" target="_blank" rel="noopener">제주맵 ↗</a>
-      <a href="inquiry.html">문의</a>
+      <a href="/inquiry.html">문의</a>
+      <span id="jglang" data-noi18n></span>
     </div>
   </div>
 </nav>
@@ -590,7 +616,22 @@ b.addEventListener('click',function(e){e.stopPropagation();set(!m.classList.cont
 m.addEventListener('click',function(e){if(e.target.closest('a'))set(false);});
 document.addEventListener('click',function(e){if(m.classList.contains('open')&&!m.contains(e.target))set(false);});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false);});})();
+/* 서비스 드롭다운 — aria 상태 동기화 (데스크톱 hover·포커스) */
+(function(){document.querySelectorAll('.hasdrop').forEach(function(d){var btn=d.querySelector('.svc');if(!btn)return;
+  function sync(){try{btn.setAttribute('aria-expanded',(d.matches(':hover')||d.contains(document.activeElement))?'true':'false');}catch(_){}}
+  ['mouseenter','mouseleave','focusin','focusout'].forEach(function(ev){d.addEventListener(ev,function(){setTimeout(sync,0);});});});})();
+/* 같은 페이지 앵커(#filming/#web)는 새로고침 없이 부드럽게 이동 */
+(function(){document.querySelectorAll('#siteMenu a[href*="#"]').forEach(function(a){a.addEventListener('click',function(e){
+  try{var u=new URL(a.href,location.href);
+    var same=u.pathname===location.pathname||(u.pathname==='/index.html'&&(location.pathname==='/'||location.pathname===''));
+    if(u.hash&&same){var t=document.querySelector(u.hash);if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});history.replaceState(null,'',u.hash);}}
+  }catch(_){}
+});});})();
 </script>
+<!-- jg-i18n -->
+<script src="/i18n_dict.js" defer></script>
+<script src="/i18n_dom.js" defer></script>
+<!-- /jg-i18n -->
 <!-- jg-copyright-notice -->
 <div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
 <div style="max-width:880px;margin:0 auto">
@@ -602,9 +643,5 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false);}
 <span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
 </div></div>
 <!-- /jg-copyright-notice -->
-<!-- jg-i18n -->
-<script src="/i18n_dict.js" defer></script>
-<script src="/i18n_dom.js" defer></script>
-<!-- /jg-i18n -->
 </body>
 </html>
