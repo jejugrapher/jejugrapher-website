@@ -200,6 +200,8 @@ $('#lock').addEventListener('click', () => {
 
 function enter() {
   $('#gate').hidden = true; $('#app').hidden = false;
+  // 들어올 때마다 페이지 목록을 새로 읽는다 — 홈페이지에 새 글/카드가 생기면 바로 반영된다
+  PAGES = []; try { sessionStorage.removeItem('jg-pages'); } catch (e) {}
   loadAsks(); loadPages();
 }
 
@@ -385,7 +387,9 @@ async function loadPages() {
         <button class="btn" data-act="${s.hidden ? 'show' : 'hide'}" data-path="${esc(p.path)}">${s.hidden ? '다시 보이기' : '가리기'}</button>
         <button class="btn ${s.down ? '' : 'warn'}" data-act="${s.down ? 'republish' : 'unpublish'}" data-path="${esc(p.path)}">${s.down ? '되돌리기' : '내리기'}</button>
       </div></div>
-      ${p.lock === 'card' ? cardRow(p) : p.lock ? pwRow(p) : ''}
+      ${p.lock === 'card' ? cardRow(p)
+        : p.lock === 'enc' ? '<div class="pwrow"><span class="pwnote" style="background:#F6E7D8;color:#8a5a2e">🔒 본문 암호화 — 내용이 통째로 잠겨 있어 여기서 공개/비번을 바꿀 수 없습니다. 관리자에서 바꾸려면 ‘가벼운 가림’으로 전환해야 합니다(원하시면 말씀 주세요).</span></div>'
+        : p.lock ? pwRow(p) : ''}
       </div>`;
   }).join('');
   paintPw();
