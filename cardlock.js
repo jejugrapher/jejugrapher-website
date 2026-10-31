@@ -1,77 +1,74 @@
-/* 제주그래퍼 — 카드 가림막 (서버가 여닫는 비밀번호)
+/* 제주그래퍼 — 포트폴리오 카드 가림막 (서버가 여닫는 공개/비공개/비밀번호)
  *
- * 쓰는 법: 가리고 싶은 페이지 <head> 안에 두 줄만 넣습니다.
- *   <script>window.JG_CARDLOCK={default:'locked'}</script>
+ * 쓰는 법: 카드가 가리키는 페이지 <head> 안에 두 줄.
+ *   <script>window.JG_CARDLOCK={default:'public'}</script>
  *   <script src="/cardlock.js" defer></script>
  *
- * - 비밀번호·공개여부는 관리자페이지에서 정하고, 그 값은 Apps Script 시트에 있습니다.
- *   이 파일도, 페이지 소스도 비밀번호를 담지 않습니다(관리자가 바꾸면 재배포 없이 바로 반영).
- * - 이것은 '가벼운 가림'입니다. 화면을 덮을 뿐, 사진 주소나 본문은 소스에 남습니다.
- *   진짜 숨겨야 하는 내용은 본문 암호화(lock_page.py)를 쓰거나 아예 올리지 않습니다.
+ * 관리자페이지에서 페이지(카드)별로 정합니다 — 재배포 없이 바로 반영:
+ *   공개   : 그대로 열림
+ *   비공개 : 「가리기」(mode=hide) → 이 페이지만 "준비 중"으로 덮음 (카드는 포트폴리오에 그대로 보임)
+ *   비밀번호: 「비번 넣기」(pw_set) → 비밀번호를 넣어야 열림. 비번은 「비밀번호」 시트에만, 이 파일/페이지엔 안 들어감.
  *
- * default:
- *   'locked'  시트에 아무 설정이 없으면 '잠김'으로 본다(관리자가 공개로 바꾸기 전엔 가림). 권장.
- *   'public'  시트에 설정이 없으면 공개로 본다.
+ * 이것은 '가벼운 가림'입니다(화면만 덮음). 진짜 숨길 내용은 본문 암호화를 쓰거나 올리지 않습니다.
+ * default: 'public'이면 시트에 설정이 없을 때 공개로 봅니다(포트폴리오 공개 페이지 기본값).
  */
 (function () {
   var CFG = window.JG_CARDLOCK || {};
   var API = CFG.api ||
     'https://script.google.com/macros/s/AKfycbwYW8zN_7UyGnbeYpf3A5hSeSp4GVTc3N3Rj3c28WgnOiAZHVDuovvn4WvN5zHE6_WV/exec';
-  var DEF = CFG.default === 'public' ? 'public' : 'locked';
-  var TITLE = CFG.title || document.title.replace(/\s*\|.*$/, '').trim() || '비공개 페이지';
+  var DEF = CFG.default === 'locked' ? 'locked' : 'public';
+  var TITLE = CFG.title || document.title.replace(/\s*[|·].*$/, '').trim() || '비공개 페이지';
 
   var path = location.pathname.replace(/^\/+/, '').replace(/index\.html$/, '');
-  var OKKEY = 'jg-card-ok:' + path;
+  var OKKEY = 'jg-card-ok:' + path;       // 이번 방문에서 비번 통과함
+  var HINT = 'jg-card-locked:' + path;    // 지난 방문에서 잠겨 있었음(깜빡임 줄이기)
 
-  function unlocked() { try { return sessionStorage.getItem(OKKEY) === '1'; } catch (e) { return false; } }
-  if (unlocked()) return;                      // 이번 방문에서 이미 열었음
+  function ok() { try { return sessionStorage.getItem(OKKEY) === '1'; } catch (e) { return false; } }
+  function hint() { try { return localStorage.getItem(HINT) === '1'; } catch (e) { return false; } }
+  function setHint(v) { try { v ? localStorage.setItem(HINT, '1') : localStorage.removeItem(HINT); } catch (e) {} }
+  if (ok()) return;
 
-  /* 내용 위를 즉시 덮는다 */
-  var ov = document.createElement('div');
-  ov.id = 'jg-cardlock';
-  ov.style.cssText = 'position:fixed;inset:0;z-index:2147483600;display:grid;place-items:center;' +
-    'background:#0d1310;color:#e9eee6;padding:24px;text-align:center;' +
-    'font:16px/1.7 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif';
-  ov.innerHTML =
-    '<div style="max-width:430px;width:100%">' +
-    '<div style="font-size:.78rem;letter-spacing:.2em;color:#8f99a0;margin-bottom:.9rem">PRIVATE</div>' +
-    '<h1 style="font-size:1.5rem;line-height:1.4;margin:0 0 .8rem;font-weight:700">' + esc(TITLE) + '</h1>' +
-    '<div id="jg-cl-body"><p style="color:#a9b8ac">여는 중…</p></div>' +
-    '</div>';
-
-  function mount() { (document.body || document.documentElement).appendChild(ov); }
-  if (document.body) mount(); else document.addEventListener('DOMContentLoaded', mount);
-
-  function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"]/g,
-      function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; });
+  var ov = null;
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function build() {
+    var d = document.createElement('div');
+    d.id = 'jg-cardlock';
+    d.style.cssText = 'position:fixed;inset:0;z-index:2147483600;display:grid;place-items:center;' +
+      'background:#0d1310;color:#e9eee6;padding:24px;text-align:center;' +
+      'font:16px/1.7 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif';
+    d.innerHTML = '<div style="max-width:430px;width:100%"><div id="jg-cl-body"><p style="color:#a9b8ac">여는 중…</p></div></div>';
+    return d;
   }
-  function body(html) { var b = ov.querySelector('#jg-cl-body'); if (b) b.innerHTML = html; }
-  function reveal() { try { sessionStorage.setItem(OKKEY, '1'); } catch (e) {} if (ov.parentNode) ov.remove(); }
+  function mount() { if (!ov) { ov = build(); (document.body || document.documentElement).appendChild(ov); } }
+  function body(html) { if (!ov) mount(); var b = ov.querySelector('#jg-cl-body'); if (b) b.innerHTML = html; }
+  function reveal() { try { sessionStorage.setItem(OKKEY, '1'); } catch (e) {} setHint(false); if (ov && ov.parentNode) { ov.remove(); ov = null; } }
   function ask(mode, extra) {
-    var u = API + '?mode=' + mode + '&path=' + encodeURIComponent(path);
-    if (extra) u += extra;
-    return fetch(u, { redirect: 'follow' }).then(function (r) { return r.json(); });
+    return fetch(API + '?mode=' + mode + '&path=' + encodeURIComponent(path) + (extra || ''), { redirect: 'follow' }).then(function (r) { return r.json(); });
   }
 
-  function gate(note) {
-    body(
+  function notice() {          // 비공개(가리기)
+    document.title = '준비 중';
+    body('<div style="font-size:.78rem;letter-spacing:.2em;color:#8f99a0;margin-bottom:.9rem">PRIVATE</div>' +
+      '<h1 style="font-size:1.5rem;margin:0 0 .6rem">잠시 내려 두었습니다</h1>' +
+      '<p style="color:#a9b8ac">이 페이지는 지금 볼 수 없습니다.<br>문의는 <a href="/inquiry.html" style="color:#f0b35a">문의하기</a>로 주세요.</p>' +
+      '<p style="margin-top:1rem"><a href="/" style="color:#f0b35a">제주그래퍼 첫 화면으로</a></p>');
+  }
+
+  function gate(note) {        // 비밀번호
+    setHint(true);
+    body('<div style="font-size:.78rem;letter-spacing:.2em;color:#8f99a0;margin-bottom:.9rem">PRIVATE</div>' +
+      '<h1 style="font-size:1.5rem;line-height:1.4;margin:0 0 .8rem;font-weight:700">' + esc(TITLE) + '</h1>' +
       '<p style="color:#a9b8ac;margin:0 0 1.4rem">안내받은 비밀번호를 넣으면 열립니다.</p>' +
       '<form id="jg-cl-f" autocomplete="off" style="display:flex;gap:.5rem;justify-content:center">' +
       '<input id="jg-cl-pw" type="password" inputmode="numeric" placeholder="비밀번호" aria-label="비밀번호" required ' +
-      'style="flex:1;max-width:220px;padding:.75rem .9rem;border:1px solid #2a3830;border-radius:9px;' +
-      'background:#141c17;color:#e9eee6;font:inherit">' +
-      '<button type="submit" style="padding:.75rem 1.3rem;border:0;border-radius:9px;background:#f0b35a;' +
-      'color:#15110a;font:inherit;font-weight:600;cursor:pointer">열기</button></form>' +
-      '<p id="jg-cl-m" role="status" style="min-height:1.5em;margin:.9rem 0 0;color:#f08a6c;font-size:.92rem">' +
-      esc(note || '') + '</p>' +
-      '<p style="margin-top:1.4rem;font-size:.9rem;color:#8f99a0">' +
-      '비밀번호가 필요하시면 <a href="/inquiry.html" style="color:#f0b35a">문의</a>해 주세요.</p>');
+      'style="flex:1;max-width:220px;padding:.75rem .9rem;border:1px solid #2a3830;border-radius:9px;background:#141c17;color:#e9eee6;font:inherit">' +
+      '<button type="submit" style="padding:.75rem 1.3rem;border:0;border-radius:9px;background:#f0b35a;color:#15110a;font:inherit;font-weight:600;cursor:pointer">열기</button></form>' +
+      '<p id="jg-cl-m" role="status" style="min-height:1.5em;margin:.9rem 0 0;color:#f08a6c;font-size:.92rem">' + esc(note || '') + '</p>' +
+      '<p style="margin-top:1.4rem;font-size:.9rem;color:#8f99a0">비밀번호가 필요하시면 <a href="/inquiry.html" style="color:#f0b35a">문의</a>해 주세요.</p>');
     var f = ov.querySelector('#jg-cl-f'), m = ov.querySelector('#jg-cl-m');
     f.addEventListener('submit', function (e) {
       e.preventDefault();
-      var pw = ov.querySelector('#jg-cl-pw').value.trim();
-      if (!pw) return;
+      var pw = ov.querySelector('#jg-cl-pw').value.trim(); if (!pw) return;
       m.style.color = '#a9b8ac'; m.textContent = '확인 중…';
       ask('unlock', '&pw=' + encodeURIComponent(pw)).then(function (d) {
         if (d && d.ok) reveal();
@@ -79,24 +76,31 @@
       }).catch(function () { m.style.color = '#f08a6c'; m.textContent = '서버에 닿지 못했습니다. 잠시 뒤 다시 시도해 주세요.'; });
     });
     var pwi = ov.querySelector('#jg-cl-pw'); if (pwi) pwi.focus();
-
-    /* 관리자 「바로 열기」 — 주소 뒤 #pw=... 로 들어오면 자동으로 넣어 본다 */
     try {
       var hm = (location.hash || '').match(/[#&]pw=([^&]+)/);
-      if (hm) {
-        history.replaceState(null, '', location.pathname + location.search);
-        ov.querySelector('#jg-cl-pw').value = decodeURIComponent(hm[1]);
-        f.dispatchEvent(new Event('submit'));
-      }
+      if (hm) { history.replaceState(null, '', location.pathname + location.search); ov.querySelector('#jg-cl-pw').value = decodeURIComponent(hm[1]); f.dispatchEvent(new Event('submit')); }
     } catch (e) {}
   }
 
-  ask('access').then(function (d) {
-    var mode = (d && d.ok && d.mode) ? d.mode : 'unset';
+  function hiddenMatch(list) {
+    if (!Array.isArray(list)) return false;
+    return list.some(function (p) { p = String(p).replace(/^\/+/, ''); return p && (path === p || path === p + 'index.html' || path.indexOf(p) === 0); });
+  }
+
+  // 공개 기본값이고 지난번에 잠겨 있지 않았으면, 깜빡임 없이 그대로 두고 뒤에서 확인한다.
+  if (DEF === 'locked' || hint()) mount();
+
+  Promise.all([
+    ask('access').catch(function () { return null; }),
+    ask('state').catch(function () { return null; })
+  ]).then(function (res) {
+    var a = res[0], s = res[1];
+    if (s && s.ok && hiddenMatch(s.hidden)) { mount(); notice(); return; }   // 비공개
+    var mode = (a && a.ok && a.mode) ? a.mode : 'unset';
     if (mode === 'unset') mode = DEF;
-    if (mode === 'public') reveal(); else gate('');
+    if (mode === 'locked') { mount(); gate(''); }
+    else reveal();   // 공개
   }).catch(function () {
-    /* 서버에 못 닿음: 기본이 공개면 보여 주고, 아니면 잠근 채 비번으로 열게 둔다(열리는 쪽이 아니라 막는 쪽) */
-    if (DEF === 'public') reveal(); else gate('서버에 닿지 못했습니다. 비밀번호로 열어 보세요.');
+    if (DEF === 'locked' || hint()) { mount(); gate('서버에 닿지 못했습니다. 비밀번호로 열어 주세요.'); }
   });
 })();

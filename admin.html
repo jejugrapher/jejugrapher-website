@@ -401,22 +401,22 @@ function cardMode(p) {
 }
 function cardChip(p) {
   const m = cardMode(p);
-  if (m === 'public') return '<span class="state pub" title="비밀번호 없이 누구나 봅니다">🔓 완전 공개</span>';
-  if (m === 'locked') return '<span class="state lock2" title="비밀번호를 넣어야 열립니다 (화면 가림)">🔑 비번 잠김</span>';
-  return `<span class="state card" title="시트에 설정이 없어 페이지 기본값을 따릅니다">⚙ 미설정 · 기본 ${p.carddef === 'public' ? '공개' : '잠김'}</span>`;
+  if (m === 'public') return '<span class="state pub" title="비밀번호 없이 누구나 봅니다">🔓 공개</span>';
+  if (m === 'locked') return '<span class="state lock2" title="비밀번호를 넣어야 열립니다 (화면 가림)">🔒 비밀번호</span>';
+  return `<span class="state card" title="아직 설정 전 — 기본값을 따릅니다">공개 (기본)</span>`;
 }
 function cardRow(p) {
   const m = cardMode(p), pw = PWSHEET[p.path] || '';
-  const cur = m === 'public' ? '완전 공개'
-            : m === 'locked' ? (pw ? esc(pw) : '비번 잠김')
-            : `미설정 (기본 ${p.carddef === 'public' ? '공개' : '잠김'})`;
+  const cur = m === 'public' ? '공개'
+            : m === 'locked' ? (pw ? ('비밀번호 ' + esc(pw)) : '비밀번호')
+            : '공개 (기본)';
   return `<div class="pwrow cardrow" data-cardpath="${esc(p.path)}">
-    <span class="pwlab">카드 공개</span>
+    <span class="pwlab">이 카드</span>
     <code class="pwval">${cur}</code>
-    <input class="pwin" data-role="in" type="text" inputmode="numeric" placeholder="새 비밀번호를 넣거나 ‘임의 생성’" autocomplete="off">
+    <input class="pwin" data-role="in" type="text" inputmode="numeric" placeholder="넣을 비밀번호 (또는 ‘임의 생성’)" autocomplete="off">
     <button class="btn" data-role="gen">임의 생성</button>
-    <button class="btn pri" data-role="setpw">비번 걸기</button>
-    <button class="btn" data-role="pub">완전 공개</button>
+    <button class="btn pri" data-role="setpw">비밀번호 넣기</button>
+    <button class="btn" data-role="pub">비밀번호 빼기 · 공개로</button>
     <button class="btn open" data-role="open">열어보기 ↗</button>
   </div>`;
 }
