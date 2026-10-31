@@ -65,7 +65,9 @@ nav a:hover::after{right:0}
 .dot{width:3px;height:3px;border-radius:50%;background:var(--terra);display:inline-block}
 /* reels cluster */
 .reels{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:end}
-.reel{position:relative;aspect-ratio:9/16;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.14);display:grid;place-content:center}
+.reel{position:relative;aspect-ratio:9/16;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.14);display:grid;place-content:center;transition:transform .28s,box-shadow .28s}
+.reel img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+a.reel:hover{transform:translateY(-4px)}
 .reels .reel:nth-child(1){transform:translateY(20px)}
 .reels .reel:nth-child(3){transform:translateY(36px)}
 .reel::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.42))}
@@ -97,11 +99,19 @@ section.band{padding:104px 0}
 /* work showcase */
 .work{background:var(--surface)}
 .work-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-.work-grid .reel{box-shadow:0 24px 50px -36px rgba(19,38,62,.5);border:1px solid var(--line);transition:transform .28s,box-shadow .28s}
-.work-grid .reel:hover{transform:translateY(-6px);box-shadow:0 34px 60px -34px rgba(19,38,62,.6)}
-.work-note{margin:30px 0 0;font-size:13.5px;color:var(--muted)}
+.wcard{display:block;border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 20px 44px -34px rgba(19,38,62,.5);transition:transform .28s,box-shadow .28s}
+.wcard:hover{transform:translateY(-6px);box-shadow:0 34px 60px -32px rgba(19,38,62,.55)}
+.wthumb{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--navy)}
+.wthumb img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.wcard:hover .wthumb img{transform:scale(1.06)}
+.wthumb .play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:48px;height:48px}
+.wbody{padding:15px 17px 18px}
+.wt{font-family:var(--display);font-size:17px;color:var(--navy);line-height:1.32}
+.wd{font-size:12.5px;color:var(--muted);margin-top:4px}
+.work-note{margin:34px 0 0;font-size:14px}
+.work-note a{color:var(--terra);font-weight:500}
 @media(max-width:860px){.work-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:480px){.work-grid{grid-template-columns:repeat(2,1fr);gap:12px}}
+@media(max-width:480px){.work-grid{grid-template-columns:repeat(2,1fr);gap:14px}}
 
 /* process */
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
@@ -226,9 +236,9 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
         </div>
       </div>
       <div class="reels">
-        <div class="reel r1"><span class="play"></span><span class="reel-cap">브랜드 소개</span></div>
-        <div class="reel r2"><span class="play"></span><span class="reel-cap">공간 스케치</span></div>
-        <div class="reel r3"><span class="play"></span><span class="reel-cap">행사 하이라이트</span></div>
+        <a class="reel r1" href="https://youtu.be/Vw1NkX1LhCI" target="_blank" rel="noopener"><img loading="lazy" src="https://img.youtube.com/vi/Vw1NkX1LhCI/hqdefault.jpg" alt="비 오는 날, 중문별장"><span class="play"></span><span class="reel-cap">비 오는 날, 중문별장</span></a>
+        <a class="reel r2" href="https://youtu.be/n30blIPywGM" target="_blank" rel="noopener"><img loading="lazy" src="https://img.youtube.com/vi/n30blIPywGM/hqdefault.jpg" alt="바람 부는 날, 꽃숨"><span class="play"></span><span class="reel-cap">바람 부는 날, 꽃숨</span></a>
+        <a class="reel r3" href="https://youtu.be/iNCghWdfA9M" target="_blank" rel="noopener"><img loading="lazy" src="https://img.youtube.com/vi/iNCghWdfA9M/hqdefault.jpg" alt="소금땅에 사는 식물"><span class="play"></span><span class="reel-cap">소금땅에 사는 식물</span></a>
       </div>
     </div>
   </section>
@@ -249,16 +259,20 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
     <div class="in">
       <div class="sec-head">
         <div class="eyebrow">작업</div>
-        <h2>짧게, 그러나 정확하게.</h2>
-        <p>공간·브랜드·행사·소개 — 무엇이든 한 편의 세로 영상으로.</p>
+        <h2>지금까지 만든 영상.</h2>
+        <p>영상 한 편이 어떤 결로 나오는지, 작업으로 보여 드립니다. 눌러서 바로 보실 수 있어요.</p>
       </div>
       <div class="work-grid">
-        <div class="reel r2"><span class="play"></span><span class="reel-cap">공간</span></div>
-        <div class="reel r1"><span class="play"></span><span class="reel-cap">브랜드</span></div>
-        <div class="reel r3"><span class="play"></span><span class="reel-cap">행사</span></div>
-        <div class="reel r4"><span class="play"></span><span class="reel-cap">소개</span></div>
+        <a class="wcard" href="https://youtu.be/Vw1NkX1LhCI" target="_blank" rel="noopener"><div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/Vw1NkX1LhCI/hqdefault.jpg" alt="비 오는 날, 중문별장"><span class="play"></span></div><div class="wbody"><div class="wt">비 오는 날, 중문별장</div><div class="wd">제주 빗소리와 정원</div></div></a>
+        <a class="wcard" href="https://youtu.be/iNCghWdfA9M" target="_blank" rel="noopener"><div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/iNCghWdfA9M/hqdefault.jpg" alt="소금땅에 사는 식물"><span class="play"></span></div><div class="wbody"><div class="wt">소금땅에 사는 식물</div><div class="wd">성산 오조리 염생식물</div></div></a>
+        <a class="wcard" href="https://youtu.be/n30blIPywGM" target="_blank" rel="noopener"><div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/n30blIPywGM/hqdefault.jpg" alt="바람 부는 날, 꽃숨"><span class="play"></span></div><div class="wbody"><div class="wt">바람 부는 날, 꽃숨</div><div class="wd">천일홍 꽃다발 만들기</div></div></a>
+        <a class="wcard" href="https://youtu.be/CIDynyE21Ko" target="_blank" rel="noopener"><div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/CIDynyE21Ko/hqdefault.jpg" alt="제주치유농장 꽃숨"><span class="play"></span></div><div class="wbody"><div class="wt">제주치유농장 꽃숨</div><div class="wd">꽃으로 치유하는 농장</div></div></a>
+        <a class="wcard" href="https://youtu.be/9LojjzD7vqQ" target="_blank" rel="noopener"><div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/9LojjzD7vqQ/hqdefault.jpg" alt="Sehwa Morning Run"><span class="play"></span></div><div class="wbody"><div class="wt">Sehwa Morning Run</div><div class="wd">세화 해안도로 러닝 크루</div></div></a>
+        <a class="wcard" href="https://youtu.be/07dIm0ToziQ" target="_blank" rel="noopener"><div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/07dIm0ToziQ/hqdefault.jpg" alt="숲속 네트 놀이터"><span class="play"></span></div><div class="wbody"><div class="wt">숲속 네트 놀이터</div><div class="wd">미로숲놀이터 자연놀이</div></div></a>
+        <a class="wcard" href="https://youtu.be/tAy1ASz-xGc" target="_blank" rel="noopener"><div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/tAy1ASz-xGc/hqdefault.jpg" alt="동백동산 기후탐사대"><span class="play"></span></div><div class="wbody"><div class="wt">동백동산 기후탐사대</div><div class="wd">숲·습지 생태 탐사</div></div></a>
+        <a class="wcard" href="https://youtu.be/gg6-9TWov0g" target="_blank" rel="noopener"><div class="wthumb"><img loading="lazy" src="https://img.youtube.com/vi/gg6-9TWov0g/hqdefault.jpg" alt="다시, 대나무"><span class="play"></span></div><div class="wbody"><div class="wt">다시, 대나무</div><div class="wd">오영희 장인의 호근</div></div></a>
       </div>
-      <p class="work-note">작업 영상이 준비되는 대로 이곳에 담깁니다.</p>
+      <p class="work-note"><a href="https://youtube.com/@jejugrapher" target="_blank" rel="noopener">더 많은 작업 보기 →</a></p>
     </div>
   </section>
 
