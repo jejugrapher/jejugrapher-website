@@ -221,7 +221,7 @@ footer p{margin:0;max-width:60em}
       inp=document.getElementById("pw"),btn=document.getElementById("pwBtn"),st=document.getElementById("status");
   async function sha(s){var b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("shortjeju-pw:"+s));
     return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0");}).join("");}
-  function open_(){gate.hidden=true;content.hidden=false;foot.hidden=false;try{sessionStorage.setItem("sj_auto","1");}catch(e){}}
+  function open_(){try{sessionStorage.setItem("sj_auto","1");}catch(e){}location.replace("https://jejugrapher.github.io/shortjeju/");}
   async function tryPw(v){st.classList.remove("err");if(!v){return;}st.textContent="확인 중…";
     try{var h=await sha(v);if(h===PW_HASH){st.textContent="";open_();}else{st.textContent="비밀번호가 맞지 않아요. 다시 확인해 주세요.";st.classList.add("err");}}
     catch(e){st.textContent="확인하지 못했어요. 다시 시도해 주세요.";st.classList.add("err");}}
