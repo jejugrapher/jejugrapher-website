@@ -427,6 +427,8 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
   const el = (tag, cls, txt) => { const n = document.createElement(tag); if (cls) n.className = cls; if (txt != null) n.textContent = txt; return n; };
   const won = (n) => Number(n || 0).toLocaleString("ko-KR") + "원";
   const mb = (b) => b >= 1024 ** 3 ? (b / 1024 ** 3).toFixed(2) + "GB" : (b / 1024 ** 2).toFixed(1) + "MB";
+  // 유튜브 watch/short/embed URL에서 11자 영상 ID만 뽑는다 (아니면 "")
+  const ytId = (u) => { if (!u) return ""; const m = String(u).match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/|v\/))([\w-]{11})/); return m ? m[1] : ""; };
   // 시트가 날짜로 자동변환해 ISO(UTC)로 넘어오는 접수일시·기록 일시를 한국시간 'yyyy-MM-dd HH:mm'로 표시(평문 문자열은 그대로)
   const fmtDate = (v) => {
     if (v == null || v === "") return "";
@@ -525,14 +527,35 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
     meta.append(document.createTextNode("   접수 " + fmtDate(post["접수일시"])));
     c.append(meta);
 
-    // 완성본
+    // 완성본 — 유튜브 링크면 페이지 안에서 바로 재생(임베드) + 다운로드 버튼
     const block1 = el("div", "block"); block1.append(el("h4", null, "완성 영상"));
-    if (post["완성본링크"]) {
+    const finLink = post["완성본링크"] || "";
+    const dlink = post["다운로드링크"] || "";
+    const yid = ytId(finLink);
+    if (yid) {
+      const box = el("div");
+      box.style.cssText = "position:relative;width:100%;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden;margin:4px 0 12px;background:#000";
+      const ifr = document.createElement("iframe");
+      ifr.src = "https://www.youtube.com/embed/" + yid + "?rel=0";
+      ifr.title = post["제목"] || "완성 영상"; ifr.loading = "lazy";
+      ifr.allow = "accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      ifr.allowFullscreen = true;
+      ifr.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;border:0";
+      box.append(ifr); block1.append(box);
+      const d = el("div", "deliver");
+      d.append(el("span", null, "완성된 영상입니다. 위에서 바로 보실 수 있어요."));
+      const a = document.createElement("a"); a.target = "_blank"; a.rel = "noopener"; a.className = "btn small";
+      if (dlink) { a.href = dlink; a.textContent = "영상 다운로드"; }
+      else { a.href = finLink; a.textContent = "유튜브에서 열기"; }
+      d.append(a); block1.append(d);
+    } else if (finLink) {
       const d = el("div", "deliver");
       d.append(el("span", null, "완성된 영상이 올라왔습니다."));
-      const a = document.createElement("a"); a.href = post["완성본링크"]; a.target = "_blank"; a.rel = "noopener";
+      const a = document.createElement("a"); a.href = finLink; a.target = "_blank"; a.rel = "noopener";
       a.className = "btn small"; a.textContent = "열어서 다운로드";
-      d.append(a); block1.append(d);
+      d.append(a);
+      if (dlink && dlink !== finLink) { const a2 = document.createElement("a"); a2.href = dlink; a2.target = "_blank"; a2.rel = "noopener"; a2.className = "btn small"; a2.textContent = "영상 다운로드"; d.append(a2); }
+      block1.append(d);
     } else {
       block1.append(el("div", "hint", "아직 준비 중입니다. 완성되면 여기에서 열어 받으실 수 있습니다."));
     }
