@@ -436,15 +436,17 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
   };
   // 메모 등에서 보여줄 텍스트에서 유튜브 URL만 지운다(아래에서 임베드로 이미 보여주므로 중복 제거)
   const ytStrip = (s) => String(s || "").replace(/https?:\/\/(?:www\.|m\.)?(?:youtu\.be\/[\w-]{11}|youtube\.com\/(?:watch\?[^\s"']*v=[\w-]{11}|embed\/[\w-]{11}|shorts\/[\w-]{11}|live\/[\w-]{11}|v\/[\w-]{11}))[^\s"']*/g, "").replace(/[ \t]*\n[ \t]*\n\s*/g, "\n\n").trim();
-  // 유튜브 임베드 한 개(가로 16:9 / 세로 Shorts 9:16·좁게). label 있으면 위에 작게 표기.
-  const ytEmbed = (id, shorts, label) => {
+  // 유튜브 임베드 한 개(가로 16:9 / 세로 Shorts 9:16·좁게). label=위 작은 표기, autoplay=음소거 자동재생.
+  const ytEmbed = (id, shorts, label, autoplay) => {
     const wrap = el("div"); wrap.style.cssText = shorts ? "max-width:300px;margin:4px 0 12px" : "margin:4px 0 12px";
     if (label) { const l = el("div", null, label); l.style.cssText = "font-size:12.5px;color:#8a8172;margin:0 0 4px"; wrap.append(l); }
     const box = el("div");
     box.style.cssText = "position:relative;width:100%;height:0;padding-bottom:" + (shorts ? "177.78%" : "56.25%") + ";border-radius:12px;overflow:hidden;background:#000";
     const ifr = document.createElement("iframe");
-    ifr.src = "https://www.youtube.com/embed/" + id + "?rel=0"; ifr.title = label || "완성 영상"; ifr.loading = "lazy";
-    ifr.allow = "accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"; ifr.allowFullscreen = true;
+    // 소리 켠 자동재생은 브라우저가 막으므로, 자동재생은 음소거로(사용자가 누르면 소리)
+    ifr.src = "https://www.youtube.com/embed/" + id + "?rel=0&playsinline=1" + (autoplay ? "&autoplay=1&mute=1" : "");
+    ifr.title = label || "완성 영상"; ifr.loading = "lazy";
+    ifr.allow = "autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"; ifr.allowFullscreen = true;
     ifr.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;border:0";
     box.append(ifr); wrap.append(box); return wrap;
   };
@@ -554,8 +556,8 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
     const mains = ytScan(finLink);       // 완성본링크의 유튜브(보통 가로 1개)
     const extra = ytScan(memoRaw);       // 메모 속 유튜브(세로 Shorts 등 보조)
     if (mains.length) {
-      mains.forEach(v => block1.append(ytEmbed(v.id, v.shorts, v.shorts ? "세로 (Shorts)" : null)));
-      extra.forEach(v => block1.append(ytEmbed(v.id, v.shorts, v.shorts ? "세로 (Shorts)" : "영상")));
+      mains.forEach((v, i) => block1.append(ytEmbed(v.id, v.shorts, v.shorts ? "세로 (Shorts)" : null, i === 0)));   // 가로 메인 = 음소거 자동재생
+      extra.forEach(v => block1.append(ytEmbed(v.id, v.shorts, v.shorts ? "세로 (Shorts)" : "영상", false)));         // 세로 Shorts = 클릭 재생
       const d = el("div", "deliver");
       d.append(el("span", null, "완성된 영상입니다. 위에서 바로 보실 수 있어요."));
       const a = document.createElement("a"); a.target = "_blank"; a.rel = "noopener"; a.className = "btn small";
