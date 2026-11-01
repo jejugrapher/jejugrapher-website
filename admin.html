@@ -345,8 +345,17 @@ async function fetchPages(force) {
     } catch (e) { it.title = it.path; it.date = ''; it.lock = ''; it.pw = ''; it.carddef = 'locked'; }
   }));
   list.forEach(it => { it.shot = SHOT.test(it.file); if (!it.shot) it.date = ''; });
-  list.sort((a, b) => (b.shot - a.shot)
-    || (b.date || '').localeCompare(a.date || '')
+  // 포트폴리오(media.html) 카드 배치 순서를 그대로 따른다 — 카드에 없는 페이지(사진첩·앨범 등)는 그 뒤로 날짜순
+  let ORDER = [];
+  try {
+    const mh = await (await fetch('/media.html', { cache: 'no-cache' })).text();
+    ORDER = [...mh.matchAll(/<div class="pc"><a class="ph" href="([^"]+)"/g)]
+      .map(m => m[1].replace(/index\.html$/, ''));
+  } catch (e) {}
+  list.forEach(it => { it.ord = ORDER.indexOf(it.path.replace(/index\.html$/, '')); if (it.ord < 0) it.ord = 1e9; });
+  list.sort((a, b) => (a.ord - b.ord)                   // 포트폴리오 카드 순서 우선
+    || (b.shot - a.shot)                                // 그 밖은 촬영물 먼저
+    || (b.date || '').localeCompare(a.date || '')       // 최신 촬영일
     || a.path.localeCompare(b.path));
   try { sessionStorage.setItem('jg-pages', JSON.stringify({t: Date.now(), v: list})); } catch (e) {}
   return list;
