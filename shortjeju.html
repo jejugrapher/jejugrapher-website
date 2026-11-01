@@ -785,7 +785,16 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
   }
 
   /* ---- 시작 ---- */
-  if (adminPw) { markAdmin(); loadAdmin().catch(() => { adminPw = ""; try { localStorage.removeItem("sj_admin"); } catch (e) {} $("adminBadge").hidden = true; $("adminToggle").textContent = "관리자"; }); }
+  // #open=<id> 로 특정 글 바로 열기 (관리자면 비번 없이, 아니면 비번 게이트) — 관리자페이지 '열어보기'가 쓴다
+  const openId = new URLSearchParams(location.hash.slice(1)).get("open");
+  if (adminPw) {
+    markAdmin();
+    loadAdmin().then(() => { if (openId) { const f = (window.__adminCache || {})[openId]; if (f) renderPost(f, true); } })
+      .catch(() => { adminPw = ""; try { localStorage.removeItem("sj_admin"); } catch (e) {} $("adminBadge").hidden = true; $("adminToggle").textContent = "관리자"; });
+  } else if (openId) {
+    cur = { id: openId }; $("gateTitle").textContent = ""; $("g-pw").value = ""; $("gateStatus").textContent = "";
+    show("viewGate"); setTimeout(() => $("g-pw").focus(), 30);
+  }
   loadBoard();
 })();
 </script>
