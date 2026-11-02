@@ -758,7 +758,8 @@ async function loadBoardAdmin() {
       '<span class="hint" style="margin-left:auto">' + esc(date) + '</span>';
     card.append(row);
     const ctl = document.createElement('div'); ctl.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-top:.6rem';
-    const open = document.createElement('a'); open.className = 'btn'; open.textContent = '열어보기 ↗'; open.href = '/shortjeju.html#open=' + encodeURIComponent(id); open.target = '_blank'; open.rel = 'noopener';
+    const durl = /^(\/shortjeju\/|https?:\/\/[^/]+\/shortjeju\/)/.test(p['완성본링크'] || '') ? p['완성본링크'] : '';
+    const open = document.createElement('a'); open.className = 'btn'; open.textContent = durl ? '상세페이지 ↗' : '열어보기 ↗'; open.href = durl || ('/shortjeju.html#open=' + encodeURIComponent(id)); open.target = '_blank'; open.rel = 'noopener';
     const hide = document.createElement('button'); hide.className = 'btn'; hide.textContent = '숨기기';
     const del = document.createElement('button'); del.className = 'btn warn'; del.textContent = '삭제';
     hide.addEventListener('click', () => sjAction('hide', id, title));

@@ -469,6 +469,11 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
   try { adminPw = localStorage.getItem("sj_admin") || ""; } catch (e) {}
   let cur = null;   // 현재 연 글 {id, pw?} — pw는 의뢰자 본인
 
+  // 완성본링크가 우리 사이트의 상세페이지(/shortjeju/<slug>/)면 그 URL을 돌려준다
+  const detailURL = (post) => { const l = (post && post["완성본링크"]) || ""; return /^(\/shortjeju\/|https?:\/\/[^/]+\/shortjeju\/)/.test(l) ? l : ""; };
+  // 상세페이지가 있으면 그 '홈페이지형' 별도 페이지로 이동, 없으면 인라인으로 본다
+  function openResolved(post, isAdmin) { const du = detailURL(post); if (du) { location.href = du; return; } renderPost(post, isAdmin); }
+
   /* ---- API ---- */
   async function call(action, data) {
     if (DEMO) return demo(action, data);
@@ -513,9 +518,9 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
   function openPost(p) {
     if (adminPw) { // 관리자: 비번 없이 바로
       const full = (window.__adminCache || {})[p.id];
-      if (full) return renderPost(full, true);
+      if (full) return openResolved(full, true);
       // 캐시 없으면 전체 다시 로드 후 열기
-      return loadAdmin().then(() => { const f = (window.__adminCache || {})[p.id]; if (f) renderPost(f, true); });
+      return loadAdmin().then(() => { const f = (window.__adminCache || {})[p.id]; if (f) openResolved(f, true); });
     }
     cur = { id: p.id };
     $("gateTitle").textContent = p["제목"] || "";
@@ -530,7 +535,7 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
     try {
       const j = await call("open", { id: cur.id, pw });
       cur.pw = pw; st.textContent = "";
-      renderPost(j.post, false);
+      openResolved(j.post, false);
     } catch (e) { st.classList.add("err"); st.textContent = errText(e); }
   }
 
@@ -791,7 +796,7 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
   const openId = new URLSearchParams(location.hash.slice(1)).get("open");
   if (adminPw) {
     markAdmin();
-    loadAdmin().then(() => { if (openId) { const f = (window.__adminCache || {})[openId]; if (f) renderPost(f, true); } })
+    loadAdmin().then(() => { if (openId) { const f = (window.__adminCache || {})[openId]; if (f) openResolved(f, true); } })
       .catch(() => { adminPw = ""; try { localStorage.removeItem("sj_admin"); } catch (e) {} $("adminBadge").hidden = true; $("adminToggle").textContent = "관리자"; });
   } else if (openId) {
     cur = { id: openId }; $("gateTitle").textContent = ""; $("g-pw").value = ""; $("gateStatus").textContent = "";
