@@ -524,8 +524,11 @@ body.gjr-rtl .vcap,body.gjr-rtl .swipe{text-align:right}
 <section class="vidsec">
   <div class="wrap">
     <div class="kicker" id="t-film"></div>
-    <div class="vid"><iframe id="ytf" src="https://www.youtube-nocookie.com/embed/_SVo61xxyDo" title="생태관광 인터뷰 · 고제량" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+    <div class="vid"><iframe id="ytf-top" src="https://www.youtube-nocookie.com/embed/w_3yMem_-NY" title="생태관광 인터뷰 · 고제량 (페르시아어)" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
     <p class="vcap" id="t-videonote"></p>
+    <div class="dlbtns" id="t-dlbtns"></div>
+    <h3 class="a-h3" id="t-orighead" style="margin-top:2.2rem"></h3>
+    <div class="vid"><iframe id="ytf" src="https://www.youtube-nocookie.com/embed/_SVo61xxyDo" title="생태관광 인터뷰 · 고제량" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
   </div>
 </section>
 
@@ -606,6 +609,7 @@ body.gjr-rtl .vcap,body.gjr-rtl .swipe{text-align:right}
     document.getElementById('t-summary').textContent=m.summary||'';
     document.getElementById('t-film').textContent=FILM[l]||('▶ '+data.duration);
     document.getElementById('t-videonote').textContent=m.video_note||'';
+    var oh=document.getElementById('t-orighead'); if(oh) oh.textContent=m.original_head||'';
     document.getElementById('t-cardskicker').textContent=(m.cards_head||'')+' · '+(data.cards||[]).length;
     document.getElementById('t-cardshead').textContent=m.cards_head||'';
     document.getElementById('t-swipe').textContent=m.swipe||'';
