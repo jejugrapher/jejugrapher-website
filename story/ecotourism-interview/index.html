@@ -126,7 +126,7 @@ body.gjr-rtl .vcap,body.gjr-rtl .swipe{text-align:right}
 <script type="application/json" id="jg-content">
 {
  "youtube": "",
- "download": {"k4": "https://drive.google.com/file/d/1WO3O1G7o7Fe6HihoJEPZRpNuLMNCbq3P/view", "fhd": ""},
+ "download": {"k4": "https://drive.usercontent.google.com/download?id=1WO3O1G7o7Fe6HihoJEPZRpNuLMNCbq3P&export=download&confirm=t", "fhd": ""},
  "duration": "17:02",
  "langs": [
   "fa",
@@ -533,8 +533,6 @@ body.gjr-rtl .vcap,body.gjr-rtl .swipe{text-align:right}
     <div class="vid"><iframe id="ytf-top" src="https://www.youtube-nocookie.com/embed/w_3yMem_-NY" title="생태관광 인터뷰 · 고제량 (페르시아어)" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
     <p class="vcap" id="t-videonote"></p>
     <div class="dlbtns" id="t-dlbtns"></div>
-    <h3 class="a-h3" id="t-orighead" style="margin-top:2.2rem"></h3>
-    <div class="vid"><iframe id="ytf" src="https://www.youtube-nocookie.com/embed/ugOuSf-lKI4" title="생태관광 인터뷰 · 고제량 (원본)" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
   </div>
 </section>
 
@@ -557,6 +555,10 @@ body.gjr-rtl .vcap,body.gjr-rtl .swipe{text-align:right}
     <div id="art"></div>
   </div>
 </article>
+
+<section class="kolinksec"><div class="narrow">
+  <a class="go kolink" id="t-kolink" href="https://youtu.be/ugOuSf-lKI4" target="_blank" rel="noopener"></a>
+</div></section>
 
 <section class="creditsec">
   <div class="narrow">
@@ -615,15 +617,16 @@ body.gjr-rtl .vcap,body.gjr-rtl .swipe{text-align:right}
     document.getElementById('t-summary').textContent=m.summary||'';
     document.getElementById('t-film').textContent=FILM[l]||('▶ '+data.duration);
     document.getElementById('t-videonote').textContent=m.video_note||'';
-    var oh=document.getElementById('t-orighead'); if(oh) oh.textContent=m.original_head||'';
-    var dl=data.download||{}, dbox=document.getElementById('t-dlbtns');
+    var DLB={ko:{k4:'4K 다운로드',fhd:'1080p 다운로드'},fa:{k4:'دانلود 4K',fhd:'دانلود 1080p'}};
+    var dl=data.download||{}, lab=DLB[l]||DLB.ko, dbox=document.getElementById('t-dlbtns');
     if(dbox){ dbox.innerHTML='';
-      if(dl.k4||dl.fhd){
+      if(dl.k4 && dl.fhd){   // 4K·1080p 둘 다 준비됐을 때만 함께 노출
         var dh=document.createElement('div'); dh.className='dlhead'; dh.textContent='⬇ '+(m.download_head||''); dbox.appendChild(dh);
-        if(dl.k4){ var a4=document.createElement('a'); a4.className='dlbtn'; a4.href=dl.k4; a4.target='_blank'; a4.rel='noopener'; a4.textContent=m.download_4k||'4K'; dbox.appendChild(a4); }
-        if(dl.fhd){ var af=document.createElement('a'); af.className='dlbtn'; af.href=dl.fhd; af.target='_blank'; af.rel='noopener'; af.textContent=m.download_fhd||'Full HD'; dbox.appendChild(af); }
+        var a4=document.createElement('a'); a4.className='dlbtn'; a4.href=dl.k4; a4.target='_blank'; a4.rel='noopener'; a4.textContent=lab.k4; dbox.appendChild(a4);
+        var af=document.createElement('a'); af.className='dlbtn'; af.href=dl.fhd; af.target='_blank'; af.rel='noopener'; af.textContent=lab.fhd; dbox.appendChild(af);
       }
     }
+    var kl=document.getElementById('t-kolink'); if(kl) kl.textContent=({ko:'한국어 버전 영상 보기 (유튜브) ↗',fa:'تماشای نسخهٔ کره‌ای در یوتیوب ↗'})[l]||'';
     document.getElementById('t-cardskicker').textContent=(m.cards_head||'')+' · '+(data.cards||[]).length;
     document.getElementById('t-cardshead').textContent=m.cards_head||'';
     document.getElementById('t-swipe').textContent=m.swipe||'';
