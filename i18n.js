@@ -1,25 +1,30 @@
-/* JEJUGRAPHER 다국어 엔진 — KO / EN / ZH / JA
-   페이지가 window.JG_I18N = {ko:{k:html}, en:{...}, zh:{...}, ja:{...}} 를 미리 넣어 두면,
+/* JEJUGRAPHER 다국어 엔진 — KO / EN / ZH / JA / FA
+   페이지가 window.JG_I18N = {ko:{k:html}, en:{...}, zh:{...}, ja:{...}, fa:{...}} 를 미리 넣어 두면,
    [data-i18n="k"] 요소의 innerHTML 과 [data-i18n-attr="attr:k;.."] 속성을 언어에 맞게 바꾼다.
    언어 선택은 localStorage('jg-lang') → 브라우저 언어 자동감지 → ko 순. 없는 키는 ko 로 남는다(폴백).
-   스위처: 페이지에 #jglang 이 있으면 그 안에 버튼을 채우고, 없으면 우상단 플로팅으로 만든다. */
+   스위처: 페이지에 #jglang 이 있으면 그 안에 버튼을 채우고, 없으면 우상단 플로팅으로 만든다.
+   fa(페르시아어)는 RTL — 선택 시 <html dir="rtl"> 로 바꾼다. */
 (function () {
-  var LANGS = ['ko', 'en', 'zh', 'ja'];
-  var SHORT = { ko: 'KO', en: 'EN', zh: '中', ja: '日' };
-  var NAMES = { ko: '한국어', en: 'English', zh: '中文', ja: '日本語' };
-  var HTMLLANG = { ko: 'ko', en: 'en', zh: 'zh-CN', ja: 'ja' };
+  var LANGS = ['ko', 'en', 'zh', 'ja', 'fa'];
+  var SHORT = { ko: 'KO', en: 'EN', zh: '中', ja: '日', fa: 'فا' };
+  var NAMES = { ko: '한국어', en: 'English', zh: '中文', ja: '日本語', fa: 'فارسی' };
+  var HTMLLANG = { ko: 'ko', en: 'en', zh: 'zh-CN', ja: 'ja', fa: 'fa' };
+  var RTL = { fa: 1 };
 
   function detect() {
-    try { var s = localStorage.getItem('jg-lang'); if (s && LANGS.indexOf(s) >= 0) return s; } catch (e) {}
+    var I = window.JG_I18N || {};
+    var has = function (l) { return l === 'ko' || !!I[l]; };   // 그 페이지에 있는 언어만
+    try { var s = localStorage.getItem('jg-lang'); if (s && LANGS.indexOf(s) >= 0 && has(s)) return s; } catch (e) {}
     var navs = navigator.languages || [navigator.language || 'ko'];
     for (var i = 0; i < navs.length; i++) {
       var l = String(navs[i]).toLowerCase();
-      if (l.indexOf('ko') === 0) return 'ko';
-      if (l.indexOf('zh') === 0) return 'zh';
-      if (l.indexOf('ja') === 0) return 'ja';
-      if (l.indexOf('en') === 0) return 'en';
+      if (l.indexOf('ko') === 0 && has('ko')) return 'ko';
+      if (l.indexOf('zh') === 0 && has('zh')) return 'zh';
+      if (l.indexOf('ja') === 0 && has('ja')) return 'ja';
+      if (l.indexOf('fa') === 0 && has('fa')) return 'fa';
+      if (l.indexOf('en') === 0 && has('en')) return 'en';
     }
-    return 'ko';
+    return 'ko';   // 한국어가 메인(기본)
   }
 
   function apply(lang) {
@@ -27,6 +32,7 @@
     var dict = I[lang] || {};
     var ko = I.ko || {};
     document.documentElement.setAttribute('lang', HTMLLANG[lang] || 'ko');
+    document.documentElement.setAttribute('dir', RTL[lang] ? 'rtl' : 'ltr');
     var els = document.querySelectorAll('[data-i18n]');
     for (var i = 0; i < els.length; i++) {
       var k = els[i].getAttribute('data-i18n');
@@ -60,8 +66,10 @@
   }
 
   function buttons(box) {
+    var I = window.JG_I18N || {};
     for (var i = 0; i < LANGS.length; i++) {
       var l = LANGS[i];
+      if (l !== 'ko' && !I[l]) continue;   // 그 페이지에 번역이 있는 언어만(한국어는 항상)
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.setAttribute('data-l', l);

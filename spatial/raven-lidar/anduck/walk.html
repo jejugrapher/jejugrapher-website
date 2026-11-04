@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title data-i18n="w.__title">안덕계곡 디지털 트윈 산책 — 눈높이로 걷는 계곡 | JEJUGRAPHER 제주그래퍼</title>
+<meta name="description" data-i18n-attr="content:w.desc" content="제주 안덕계곡을 실측으로 지어 올린 디지털 트윈. 깎아지른 절벽과 상록수림 사이, 계곡의 바닥을 따라 눈높이에서 컷 없이 이어지는 산책 영상과 안덕계곡·3D 가우시안 스플랫 이야기.">
+<meta property="og:type" content="video.other">
+<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
+<meta property="og:title" content="안덕계곡 디지털 트윈 산책 — 눈높이로 걷는 계곡">
+<meta property="og:description" content="실측으로 지어 올린 디지털 트윈. 절벽과 상록수림 사이, 계곡 바닥을 눈높이에서 컷 없이 걷는 산책 영상과, 안덕계곡·가우시안 스플랫 이야기.">
+<meta property="og:image" content="https://jejugrapher.com/spatial/raven-lidar/cover_ad.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://jejugrapher.com/spatial/raven-lidar/anduck/walk.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/spatial/style.css">
+<style>
+  body{background:var(--bg-main);color:var(--text-main);font-family:'Noto Sans KR',sans-serif;margin:0;line-height:1.75}
+  .rlnav{position:sticky;top:0;z-index:60;background:rgba(254,252,247,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border-line)}
+  .rlnav .in{max-width:1080px;margin:0 auto;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .rlnav a{color:var(--text-soft);text-decoration:none}
+  .rlnav .logo{font-family:'Noto Serif KR',serif;font-weight:700;letter-spacing:2px;font-size:16px;color:var(--text-main)}
+  .rlnav .lk{display:flex;gap:16px;font-size:14px;flex-wrap:wrap;align-items:center}
+  .rlnav .lk a:hover{color:var(--accent-sage)} .rlnav .lk a.on{color:var(--accent-terracotta);font-weight:500}
+  .rlnav #jglang{flex:0 0 auto}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+  .hero{min-height:auto;display:block;padding:4rem 0 2.4rem;background:linear-gradient(135deg,var(--bg-soft) 0%,var(--bg-accent) 100%)}
+  .crumb{font-size:13px;color:var(--text-mute);margin-bottom:1rem}
+  .crumb a{color:var(--text-mute);text-decoration:none;border-bottom:1px solid transparent}
+  .crumb a:hover{border-color:var(--text-mute)}
+  .eyebrow{font-family:'Noto Serif KR',serif;font-size:13px;letter-spacing:.2em;color:var(--accent-terracotta);font-weight:600;margin-bottom:12px}
+  .hero h1{font-family:'Noto Serif KR',serif;font-size:clamp(1.8rem,4.6vw,2.9rem);line-height:1.3;margin:0 0 1rem}
+  .hero .lede{font-size:1.05rem;color:var(--text-soft);max-width:42em}
+  .player{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;box-shadow:var(--shadow-deep);margin:0}
+  .player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  figure{margin:2.4rem 0 0}
+  figcaption{margin-top:12px;font-size:14px;color:var(--text-mute)}
+  section{padding:3.2rem 0;border-top:1px solid var(--border-line)}
+  section:first-of-type{border-top:0}
+  h2{font-family:'Noto Serif KR',serif;font-size:clamp(1.4rem,3vw,2rem);margin:0 0 1.2rem;color:var(--text-main)}
+  h3{font-family:'Noto Serif KR',serif;font-size:1.15rem;margin:1.6rem 0 .5rem;color:var(--text-main)}
+  p{color:var(--text-soft);margin:0 0 1rem}
+  .halls{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+  .halls li{background:var(--bg-soft);border:1px solid var(--border-line);border-radius:8px;padding:14px 16px}
+  .halls .hn{font-family:'Noto Serif KR',serif;font-weight:600;color:var(--text-main)}
+  .halls .hd{display:block;font-size:14px;color:var(--text-mute);margin-top:4px}
+  .callout{background:var(--bg-accent);border-left:3px solid var(--accent-sage);border-radius:0 8px 8px 0;padding:1.2rem 1.4rem;margin:1.4rem 0}
+  .callout p:last-child{margin-bottom:0}
+  .twin{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:1.2rem}
+  .twin .card{background:var(--bg-soft);border:1px solid var(--border-line);border-radius:8px;overflow:hidden;display:block;text-decoration:none;color:inherit;transition:border-color .2s,box-shadow .2s}
+  a.card:hover{border-color:var(--accent-sage);box-shadow:var(--shadow-soft)}
+  .twin .card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+  .twin .lc-body{padding:1rem 1.3rem}
+  .twin h4{font-family:'Noto Serif KR',serif;font-size:1.05rem;margin:0 0 .4rem;color:var(--text-main)}
+  .twin .lc-go{color:var(--accent-terracotta);font-size:.92rem;font-weight:500}
+  @media (max-width:640px){.twin{grid-template-columns:1fr}}
+  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:1.2rem}
+  .gallery figure{margin:0;border-radius:8px;overflow:hidden;background:var(--bg-soft);border:1px solid var(--border-line)}
+  .gallery img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+  .gallery figcaption{padding:10px 14px;font-size:14px;color:var(--text-soft)}
+  .cta{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.3rem;background:var(--accent-terracotta);color:var(--bg-main);border-radius:999px;font-weight:500;font-size:.95rem;margin:.4rem .6rem .4rem 0}
+  .cta:hover{background:#B86A4D;color:var(--bg-main)}
+  .cta.ghost{background:transparent;color:var(--text-soft);border:1px solid var(--border-soft)}
+  .cta.ghost:hover{border-color:var(--accent-sage);color:var(--text-main)}
+  .rlfoot{border-top:1px solid var(--border-line);background:var(--bg-soft);padding:2.4rem 0;margin-top:1rem}
+  .rlfoot p{font-size:13px;color:var(--text-mute);margin:.2rem 0}
+  /* 페르시아어 등 RTL */
+  html[dir="rtl"] .hero .lede,html[dir="rtl"] p,html[dir="rtl"] .halls li{text-align:right}
+  html[dir="rtl"] .cta{margin:.4rem 0 .4rem .6rem}
+  html[dir="rtl"] .callout{border-left:0;border-right:3px solid var(--accent-sage);border-radius:8px 0 0 8px}
+</style>
+</head>
+<body>
+<nav class="rlnav"><div class="in"><a class="logo" href="/">JEJUGRAPHER</a><span class="lk"><a href="/spatial/index.html" data-i18n="nav.spatial">공간데이터</a><a href="/media.html" data-i18n="nav.portfolio">포트폴리오</a><a href="../anduck/" data-i18n="name.anduck">안덕계곡</a><a href="/inquiry.html" data-i18n="nav.inquiry">문의</a><span id="jglang" class="rllang"></span></span></div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="crumb"><a href="/spatial/index.html" data-i18n="nav.spatial">공간데이터</a> · <a href="../" data-i18n="crumb.hub">제주 동굴·유적 LiDAR 측량</a> · <a href="../anduck/" data-i18n="name.anduck">안덕계곡</a> · <span data-i18n="w.crumb">디지털 트윈 산책</span></div>
+  <div class="eyebrow">DIGITAL TWIN · WALK-THROUGH</div>
+  <h1 data-i18n="w.h1">눈높이로 걷는 계곡,<br>안덕계곡 디지털 트윈 산책</h1>
+  <p class="lede" data-i18n="w.lede">사진이 아니라, 실제로 걸어 들어갈 수 있는 계곡입니다. 깎아지른 절벽과 상록수림 사이, 계곡의 바닥을 따라 — 눈높이에서, 건너뛰는 구간 없이 하나로 이어지는 산책으로 안덕계곡을 둘러봅니다.</p>
+</div></header>
+
+<main class="wrap">
+  <figure>
+    <div class="player">
+      <iframe src="https://www.youtube.com/embed/QpqgxQAYZI8?rel=0&cc_load_policy=1"
+        title="안덕계곡 디지털 트윈 산책 — 눈높이로 걷는 계곡" loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <figcaption data-i18n="w.figcap">약 2분 20초 — 계곡 어귀에서 안쪽까지, 절벽과 계류와 상록수림 사이를 서두르지 않고 끊김 없이 걷습니다. (영상 자막: 영어·중국어·일본어·페르시아어)</figcaption>
+  </figure>
+
+  <section>
+    <h2 data-i18n="w.gal.h2">계곡 풍경 — 디지털 트윈에서</h2>
+    <div class="gallery">
+      <figure><img loading="lazy" src="./img/ad_gorge.webp" alt="안덕계곡 절벽"><figcaption data-i18n="gal.1">계곡 어귀 · 절벽 사이로 드는 길</figcaption></figure>
+      <figure><img loading="lazy" src="./img/ad_stream.webp" alt="안덕계곡 계류"><figcaption data-i18n="gal.2">계류 · 계곡의 바닥을 따라</figcaption></figure>
+      <figure><img loading="lazy" src="./img/ad_rail.webp" alt="안덕계곡 물가 산책로"><figcaption data-i18n="gal.3">물가 길 · 난간을 낀 산책로</figcaption></figure>
+      <figure><img loading="lazy" src="./img/ad_ledge.webp" alt="안덕계곡 반석"><figcaption data-i18n="gal.4">반석 · 물 위의 너럭바위</figcaption></figure>
+      <figure><img loading="lazy" src="./img/ad_cliff.webp" alt="안덕계곡 절벽과 상록수림"><figcaption data-i18n="gal.5">절벽과 숲 · 벽을 덮은 상록수</figcaption></figure>
+      <figure><img loading="lazy" src="./img/ad_boulders.webp" alt="안덕계곡 안쪽 바위"><figcaption data-i18n="gal.6">계곡 안쪽 · 바위와 돌을 지나</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-i18n="w.s1.h2">안덕계곡, 그리고 상록수림</h2>
+    <p data-i18n="w.s1.p1">안덕계곡은 서귀포시 안덕면에 있는 깊은 협곡입니다. 조면암질 용암이 오랜 세월 물에 깎여, 양옆으로 깎아지른 절벽이 서고 그 바닥으로 사철 맑은 물이 흐르는 계곡이 되었습니다.</p>
+    <p data-i18n="w.s1.p2">계곡을 덮은 난대성 상록수림은 천연기념물 제377호로 지정돼 있습니다. 구실잣밤나무·조록나무·후박나무를 비롯해 수백 종의 식물이 자라고, 보기 드문 양치식물도 깃들어 있습니다. 예부터 선비들이 찾아 글을 남기던 자리이기도 합니다.</p>
+    <ul class="halls">
+      <li><span class="hn" data-i18n="w.factn.forest">상록수림</span><span class="hd" data-i18n="w.fact.forest">천연기념물 제377호 · 난대성 상록수림지대</span></li>
+      <li><span class="hn" data-i18n="w.factn.cliff">절벽</span><span class="hd" data-i18n="w.fact.cliff">조면암 용암이 깎여 생긴 협곡</span></li>
+      <li><span class="hn" data-i18n="w.factn.stream">계류</span><span class="hd" data-i18n="w.fact.stream">사철 맑은 물이 흐르는 계곡 바닥</span></li>
+      <li><span class="hn" data-i18n="w.factn.flora">식생</span><span class="hd" data-i18n="w.fact.flora">수백 종의 식물 · 보기 드문 양치식물</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 data-i18n="w.s2.h2">이 영상은 어떻게 만들어졌나 — 3D 가우시안 스플랫</h2>
+    <p data-i18n="w.s2.p1">이 산책의 모든 장면은 생성된 그림이 아니라, 현장에서 담은 실제 안덕계곡입니다. 한 공간을 여러 각도에서 찍은 수많은 실제 사진으로, 그 공간을 통째로 되살리는 방식을 3D 가우시안 스플랫(3DGS)이라 합니다.</p>
+    <p data-i18n="w.s2.p2">장면을 삼각형 면이 아니라, 색과 빛을 머금은 수백만 개의 작은 타원체 — ‘스플랫’으로 채웁니다. 보는 각도에 따라 빛과 질감이 자연스럽게 바뀌어, 사진처럼 선명하면서도 그 안을 카메라처럼 자유롭게 걸어 다닐 수 있습니다.</p>
+    <div class="callout"><p data-i18n="w.s2.callout">그래서 디지털 트윈은 한 장의 사진이 아니라, 들어가 걸을 수 있는 공간이 됩니다. 영상으로도, 체험으로도, 다시 태어납니다.</p></div>
+    <h3 data-i18n="w.s2.h3">눈으로 걷는 트윈, 자로 재는 트윈</h3>
+    <p data-i18n="w.s2.p3">같은 안덕계곡을 raven LiDAR로도 통째로 떠, 절벽의 높이와 계곡의 단면을 자로 잰 듯 측정했습니다. 두 가지는 서로를 채웁니다.</p>
+    <div class="twin">
+      <div class="card"><img loading="lazy" src="./img/ad_gorge.webp" alt="가우시안 스플랫 — 안덕계곡"><div class="lc-body"><h4 data-i18n="w.twin.a.h">가우시안 스플랫 · 보는 트윈</h4><p style="margin:0" data-i18n="w.twin.a.p">실제 사진으로 지어, 눈높이에서 걸어 들어가 둘러보는 디지털 트윈.</p></div></div>
+      <a class="card" href="../anduck/"><img loading="lazy" src="../img/ad_plan.webp" alt="안덕계곡 LiDAR 점군 평면"><div class="lc-body"><h4 data-i18n="w.twin.b.h">LiDAR 점군 · 재는 트윈</h4><p style="margin:0 0 .5rem" data-i18n="w.twin.b.p">점군에서 절벽 높이·계곡 단면·거리를 직접 재는 측량·분석.</p><span class="lc-go" data-i18n="w.twin.b.link">안덕계곡 측량 보기 →</span></div></a>
+    </div>
+  </section>
+
+  <section>
+    <p>
+      <a class="cta" href="../anduck/" data-i18n="w.cta.survey">안덕계곡 LiDAR 측량 페이지</a>
+      <a class="cta ghost" href="../" data-i18n="foot.go4">네 현장 한눈에 보기</a>
+      <a class="cta ghost" href="/inquiry.html" data-i18n="w.cta.inquiry">제작·측량 문의</a>
+    </p>
+  </section>
+</main>
+
+<footer class="rlfoot"><div class="wrap">
+  <p data-i18n="w.foot1">제주그래퍼 JEJUGRAPHER · 실측으로 지어 올린 디지털 트윈 — 안덕계곡</p>
+  <p data-i18n="w.foot2">영상·점군·그림과 글의 저작권은 제주그래퍼에 있습니다.</p>
+</div></footer>
+
+<script>window.JG_I18N={
+"ko":{"nav.spatial":"공간데이터","nav.portfolio":"포트폴리오","nav.inquiry":"문의","crumb.hub":"제주 동굴·유적 LiDAR 측량","name.anduck":"안덕계곡","foot.go4":"네 현장 한눈에 보기 →",
+ "w.__title":"안덕계곡 디지털 트윈 산책 — 눈높이로 걷는 계곡 | JEJUGRAPHER 제주그래퍼",
+ "w.desc":"제주 안덕계곡을 실측으로 지어 올린 디지털 트윈. 깎아지른 절벽과 상록수림 사이, 계곡의 바닥을 따라 눈높이에서 컷 없이 이어지는 산책 영상과 안덕계곡·3D 가우시안 스플랫 이야기.",
+ "w.crumb":"디지털 트윈 산책","w.h1":"눈높이로 걷는 계곡,<br>안덕계곡 디지털 트윈 산책",
+ "w.lede":"사진이 아니라, 실제로 걸어 들어갈 수 있는 계곡입니다. 깎아지른 절벽과 상록수림 사이, 계곡의 바닥을 따라 — 눈높이에서, 건너뛰는 구간 없이 하나로 이어지는 산책으로 안덕계곡을 둘러봅니다.",
+ "w.figcap":"약 2분 20초 — 계곡 어귀에서 안쪽까지, 절벽과 계류와 상록수림 사이를 서두르지 않고 끊김 없이 걷습니다. (영상 자막: 영어·중국어·일본어·페르시아어)",
+ "w.gal.h2":"계곡 풍경 — 디지털 트윈에서",
+ "gal.1":"계곡 어귀 · 절벽 사이로 드는 길","gal.2":"계류 · 계곡의 바닥을 따라","gal.3":"물가 길 · 난간을 낀 산책로","gal.4":"반석 · 물 위의 너럭바위","gal.5":"절벽과 숲 · 벽을 덮은 상록수","gal.6":"계곡 안쪽 · 바위와 돌을 지나",
+ "w.s1.h2":"안덕계곡, 그리고 상록수림",
+ "w.s1.p1":"안덕계곡은 서귀포시 안덕면에 있는 깊은 협곡입니다. 조면암질 용암이 오랜 세월 물에 깎여, 양옆으로 깎아지른 절벽이 서고 그 바닥으로 사철 맑은 물이 흐르는 계곡이 되었습니다.",
+ "w.s1.p2":"계곡을 덮은 난대성 상록수림은 천연기념물 제377호로 지정돼 있습니다. 구실잣밤나무·조록나무·후박나무를 비롯해 수백 종의 식물이 자라고, 보기 드문 양치식물도 깃들어 있습니다. 예부터 선비들이 찾아 글을 남기던 자리이기도 합니다.",
+ "w.factn.forest":"상록수림","w.fact.forest":"천연기념물 제377호 · 난대성 상록수림지대","w.factn.cliff":"절벽","w.fact.cliff":"조면암 용암이 깎여 생긴 협곡","w.factn.stream":"계류","w.fact.stream":"사철 맑은 물이 흐르는 계곡 바닥","w.factn.flora":"식생","w.fact.flora":"수백 종의 식물 · 보기 드문 양치식물",
+ "w.s2.h2":"이 영상은 어떻게 만들어졌나 — 3D 가우시안 스플랫",
+ "w.s2.p1":"이 산책의 모든 장면은 생성된 그림이 아니라, 현장에서 담은 실제 안덕계곡입니다. 한 공간을 여러 각도에서 찍은 수많은 실제 사진으로, 그 공간을 통째로 되살리는 방식을 3D 가우시안 스플랫(3DGS)이라 합니다.",
+ "w.s2.p2":"장면을 삼각형 면이 아니라, 색과 빛을 머금은 수백만 개의 작은 타원체 — ‘스플랫’으로 채웁니다. 보는 각도에 따라 빛과 질감이 자연스럽게 바뀌어, 사진처럼 선명하면서도 그 안을 카메라처럼 자유롭게 걸어 다닐 수 있습니다.",
+ "w.s2.callout":"그래서 디지털 트윈은 한 장의 사진이 아니라, 들어가 걸을 수 있는 공간이 됩니다. 영상으로도, 체험으로도, 다시 태어납니다.",
+ "w.s2.h3":"눈으로 걷는 트윈, 자로 재는 트윈","w.s2.p3":"같은 안덕계곡을 raven LiDAR로도 통째로 떠, 절벽의 높이와 계곡의 단면을 자로 잰 듯 측정했습니다. 두 가지는 서로를 채웁니다.",
+ "w.twin.a.h":"가우시안 스플랫 · 보는 트윈","w.twin.a.p":"실제 사진으로 지어, 눈높이에서 걸어 들어가 둘러보는 디지털 트윈.","w.twin.b.h":"LiDAR 점군 · 재는 트윈","w.twin.b.p":"점군에서 절벽 높이·계곡 단면·거리를 직접 재는 측량·분석.","w.twin.b.link":"안덕계곡 측량 보기 →",
+ "w.cta.survey":"안덕계곡 LiDAR 측량 페이지","w.cta.inquiry":"제작·측량 문의","w.foot1":"제주그래퍼 JEJUGRAPHER · 실측으로 지어 올린 디지털 트윈 — 안덕계곡","w.foot2":"영상·점군·그림과 글의 저작권은 제주그래퍼에 있습니다."},
+"en":{"nav.spatial":"Spatial Data","nav.portfolio":"Portfolio","nav.inquiry":"Contact","crumb.hub":"Jeju Cave & Heritage LiDAR Survey","name.anduck":"Anduck Valley","foot.go4":"See all four sites →",
+ "w.__title":"Anduck Valley Digital Twin Walk — Walking the Gorge at Eye Level | JEJUGRAPHER",
+ "w.desc":"A measured digital twin of Jeju’s Anduck Valley. Between sheer cliffs and an evergreen forest, a seamless eye-level walk along the floor of the gorge, plus the story of the valley and 3D Gaussian Splatting.",
+ "w.crumb":"Digital Twin Walk","w.h1":"Walking the gorge at eye level —<br>an Anduck Valley digital-twin walk",
+ "w.lede":"Not a photo, but a gorge you can actually walk into. Between sheer cliffs and an evergreen forest, along the floor of the valley — at eye level, in one seamless walk with no section skipped — we move through Anduck Valley.",
+ "w.figcap":"About 2m 20s — from the mouth of the gorge to deep inside, an unhurried, continuous walk among cliffs, stream and evergreen forest. (Subtitles: English, Chinese, Japanese, Persian)",
+ "w.gal.h2":"The gorge — in the digital twin",
+ "gal.1":"The gorge mouth · the path in between the cliffs","gal.2":"The stream · along the floor of the valley","gal.3":"The streamside · a railed walking path","gal.4":"Flat rock · a wide stone over the water","gal.5":"Cliff and forest · evergreens cloaking the walls","gal.6":"Deeper in · past rock and stone",
+ "w.s1.h2":"Anduck Valley, and its evergreen forest",
+ "w.s1.p1":"Anduck Valley is a deep gorge in Andeok-myeon, Seogwipo. Over long ages, trachytic lava was carved away by water, leaving sheer cliffs on either side and a valley floor where clear water runs all year.",
+ "w.s1.p2":"The warm-temperate evergreen forest that cloaks the valley is designated Natural Monument No. 377. Hundreds of plant species grow here — chinquapin, Distylium, machilus and more — along with rare ferns. Scholars of old came here and left their writings.",
+ "w.factn.forest":"Evergreen forest","w.fact.forest":"Natural Monument No. 377 · warm-temperate evergreen forest","w.factn.cliff":"Cliffs","w.fact.cliff":"A gorge carved from trachytic lava","w.factn.stream":"Stream","w.fact.stream":"Clear water running year-round along the valley floor","w.factn.flora":"Flora","w.fact.flora":"Hundreds of plant species · rare ferns",
+ "w.s2.h2":"How this was made — 3D Gaussian Splatting",
+ "w.s2.p1":"Every scene in this walk is not a generated image but the real Anduck Valley, captured on site. Reconstructing a whole space from many real photographs taken from many angles is called 3D Gaussian Splatting (3DGS).",
+ "w.s2.p2":"Instead of triangle meshes, the scene is filled with millions of tiny ellipsoids — “splats” — that carry color and light. As your viewpoint moves, light and texture shift naturally, so it stays photo-sharp while you walk freely through it as if holding a camera.",
+ "w.s2.callout":"So a digital twin is not a single photo but a space you can enter and walk — reborn as video, and as something you can experience.",
+ "w.s2.h3":"A twin you walk with your eyes, a twin you measure with a ruler","w.s2.p3":"We also scanned the same Anduck Valley in full with a raven LiDAR, measuring cliff heights and valley cross-sections as if with a ruler. The two complement each other.",
+ "w.twin.a.h":"Gaussian Splatting · the twin you see","w.twin.a.p":"Built from real photos — a digital twin you walk into and look around at eye level.","w.twin.b.h":"LiDAR point cloud · the twin you measure","w.twin.b.p":"Survey and analysis that measure cliff height, cross-section and distance directly from the point cloud.","w.twin.b.link":"See the Anduck Valley survey →",
+ "w.cta.survey":"Anduck Valley LiDAR survey","w.cta.inquiry":"Production & survey inquiries","w.foot1":"JEJUGRAPHER · a measured digital twin — Anduck Valley","w.foot2":"Video, point clouds, figures and text are copyright JEJUGRAPHER."},
+"zh":{"nav.spatial":"空间数据","nav.portfolio":"作品集","nav.inquiry":"咨询","crumb.hub":"济州洞窟与古迹 LiDAR 测量","name.anduck":"安德溪谷","foot.go4":"一览四个现场 →",
+ "w.__title":"安德溪谷数字孪生漫步 — 以眼高视角行走的溪谷 | JEJUGRAPHER 济州Grapher",
+ "w.desc":"以实测打造的济州安德溪谷数字孪生。在陡峭崖壁与常绿树林之间，沿谷底以眼高视角、无剪辑地漫步，附安德溪谷与 3D 高斯泼溅（Gaussian Splatting）的介绍。",
+ "w.crumb":"数字孪生漫步","w.h1":"以眼高视角行走的溪谷，<br>安德溪谷数字孪生漫步",
+ "w.lede":"不是一张照片，而是可以真正走进去的溪谷。在陡峭崖壁与常绿树林之间，沿着谷底——以眼高视角，不跳过任何一段、连贯地一步步游览安德溪谷。",
+ "w.figcap":"约 2 分 20 秒 — 自溪谷口至深处，在崖壁、溪流与常绿树林之间不疾不徐、连续地行走。（字幕：英语·中文·日语·波斯语）",
+ "w.gal.h2":"溪谷掠影 — 于数字孪生之中",
+ "gal.1":"溪谷口 · 走入崖壁之间的路","gal.2":"溪流 · 沿着谷底","gal.3":"临水小径 · 带栏杆的步道","gal.4":"磐石 · 水上的宽石","gal.5":"崖壁与林 · 覆满崖壁的常绿树","gal.6":"溪谷深处 · 穿过岩与石",
+ "w.s1.h2":"安德溪谷与常绿树林",
+ "w.s1.p1":"安德溪谷位于西归浦市安德面，是一道深邃的峡谷。粗面岩质熔岩历经漫长岁月被流水侵蚀，两侧形成陡峭崖壁，谷底四季清流不绝。",
+ "w.s1.p2":"覆盖溪谷的暖温带常绿树林被指定为天然纪念物第377号。此地生长着数百种植物——苦槠、蚊母树、红楠等——并栖有罕见的蕨类。自古便是文人来访、留下诗文之地。",
+ "w.factn.forest":"常绿树林","w.fact.forest":"天然纪念物第377号 · 暖温带常绿树林地带","w.factn.cliff":"崖壁","w.fact.cliff":"由粗面岩熔岩侵蚀而成的峡谷","w.factn.stream":"溪流","w.fact.stream":"四季清流不绝的谷底","w.factn.flora":"植被","w.fact.flora":"数百种植物 · 罕见蕨类",
+ "w.s2.h2":"这段影像是如何制作的 — 3D 高斯泼溅",
+ "w.s2.p1":"这段漫步的每一个画面都并非生成图像，而是现场拍摄的真实安德溪谷。以多角度拍摄的大量真实照片，将整个空间整体重建，这种方式称为 3D 高斯泼溅（3DGS）。",
+ "w.s2.p2":"它不以三角面片，而以数百万个携带颜色与光线的微小椭球——「泼溅（splat）」填充场景。随视角移动，光影与质感自然变化，因而既如照片般清晰，又能让你如持相机般在其中自由行走。",
+ "w.s2.callout":"因此数字孪生不是一张照片，而是可以进入、可以行走的空间——既化作影像，也化作可体验之物，重获新生。",
+ "w.s2.h3":"用眼睛行走的孪生，用尺子丈量的孪生","w.s2.p3":"我们也以 raven LiDAR 将同一座安德溪谷整体扫描，如同用尺子般测量崖壁高度与溪谷断面。二者相辅相成。",
+ "w.twin.a.h":"高斯泼溅 · 看的孪生","w.twin.a.p":"以真实照片打造——可在眼高视角走进并环顾的数字孪生。","w.twin.b.h":"LiDAR 点云 · 量的孪生","w.twin.b.p":"直接在点云上测量崖壁高度、断面与距离的测量与分析。","w.twin.b.link":"查看安德溪谷测量 →",
+ "w.cta.survey":"安德溪谷 LiDAR 测量页","w.cta.inquiry":"制作与测量咨询","w.foot1":"济州Grapher JEJUGRAPHER · 以实测打造的数字孪生 — 安德溪谷","w.foot2":"影像·点云·图像及文字版权归济州Grapher所有。"},
+"ja":{"nav.spatial":"空間データ","nav.portfolio":"ポートフォリオ","nav.inquiry":"お問い合わせ","crumb.hub":"済州の洞窟・史跡 LiDAR 測量","name.anduck":"安徳渓谷","foot.go4":"4つの現場を一覧 →",
+ "w.__title":"安徳渓谷デジタルツイン散策 — 目線の高さで歩く渓谷 | JEJUGRAPHER",
+ "w.desc":"実測で築いた済州・安徳渓谷のデジタルツイン。切り立った崖と常緑樹林のあいだ、谷の底を目線の高さでカットなく歩く散策映像と、安徳渓谷・3Dガウシアンスプラットの話。",
+ "w.crumb":"デジタルツイン散策","w.h1":"目線の高さで歩く渓谷、<br>安徳渓谷デジタルツイン散策",
+ "w.lede":"写真ではなく、実際に歩いて入れる渓谷です。切り立った崖と常緑樹林のあいだ、谷の底に沿って——目線の高さで、どの区間も飛ばさず一つに続く散策で、安徳渓谷を巡ります。",
+ "w.figcap":"約2分20秒 — 渓谷の入口から奥まで、崖と渓流と常緑樹林のあいだを急がず、途切れなく歩きます。（字幕：英語・中国語・日本語・ペルシャ語）",
+ "w.gal.h2":"渓谷の風景 — デジタルツインにて",
+ "gal.1":"渓谷の入口 · 崖のあいだへ入る道","gal.2":"渓流 · 谷の底に沿って","gal.3":"水辺の道 · 手すりのある遊歩道","gal.4":"磐石 · 水の上の広い岩","gal.5":"崖と森 · 壁を覆う常緑樹","gal.6":"渓谷の奥 · 岩と石を過ぎて",
+ "w.s1.h2":"安徳渓谷、そして常緑樹林",
+ "w.s1.p1":"安徳渓谷は西帰浦市安徳面にある深い渓谷です。粗面岩質の溶岩が長い年月をかけて水に削られ、両側に切り立った崖が立ち、その底を四季を通じて澄んだ水が流れる谷となりました。",
+ "w.s1.p2":"渓谷を覆う暖温帯の常緑樹林は天然記念物第377号に指定されています。スダジイ・イスノキ・タブノキをはじめ数百種の植物が育ち、珍しいシダ類も息づいています。古くから文人が訪れ、詩文を残した場所でもあります。",
+ "w.factn.forest":"常緑樹林","w.fact.forest":"天然記念物第377号 · 暖温帯常緑樹林地帯","w.factn.cliff":"崖","w.fact.cliff":"粗面岩の溶岩が削られてできた渓谷","w.factn.stream":"渓流","w.fact.stream":"四季を通じて澄んだ水が流れる谷の底","w.factn.flora":"植生","w.fact.flora":"数百種の植物 · 珍しいシダ類",
+ "w.s2.h2":"この映像はどう作られたか — 3Dガウシアンスプラット",
+ "w.s2.p1":"この散策のすべての場面は生成画像ではなく、現場で撮った本物の安徳渓谷です。一つの空間を多数の角度から撮った大量の実写真で、その空間を丸ごと復元する方法を3Dガウシアンスプラット（3DGS）と呼びます。",
+ "w.s2.p2":"三角形の面ではなく、色と光を宿した数百万の小さな楕円体——「スプラット」で場面を満たします。視点が動くと光と質感が自然に変わり、写真のように鮮明でありながら、カメラを手にするように自由に歩き回れます。",
+ "w.s2.callout":"だからデジタルツインは一枚の写真ではなく、入って歩ける空間になります。映像としても、体験としても、再び生まれ変わります。",
+ "w.s2.h3":"目で歩くツイン、ものさしで測るツイン","w.s2.p3":"同じ安徳渓谷をraven LiDARでも丸ごと取り、崖の高さや渓谷の断面をものさしのように測りました。二つは互いを補います。",
+ "w.twin.a.h":"ガウシアンスプラット · 見るツイン","w.twin.a.p":"実写真で築いた、目線の高さで歩いて入り見て回るデジタルツイン。","w.twin.b.h":"LiDAR点群 · 測るツイン","w.twin.b.p":"点群から崖の高さ・断面・距離を直接測る測量・分析。","w.twin.b.link":"安徳渓谷の測量を見る →",
+ "w.cta.survey":"安徳渓谷 LiDAR 測量ページ","w.cta.inquiry":"制作・測量のお問い合わせ","w.foot1":"JEJUGRAPHER · 実測で築いたデジタルツイン — 安徳渓谷","w.foot2":"映像・点群・図および文章の著作権はJEJUGRAPHERに帰属します。"},
+"fa":{"nav.spatial":"داده‌های فضایی","nav.portfolio":"نمونه‌کارها","nav.inquiry":"تماس","crumb.hub":"نقشه‌برداری لیدار غارها و آثار ججو","name.anduck":"درهٔ آندوک","foot.go4":"دیدن هر چهار سایت ←",
+ "w.__title":"گردش در دوقلوی دیجیتالِ درهٔ آندوک — پیمودن تنگه هم‌تراز چشم | JEJUGRAPHER",
+ "w.desc":"دوقلوی دیجیتالِ اندازه‌گیری‌شدهٔ درهٔ آندوکِ ججو. میان صخره‌های سر به فلک کشیده و جنگلی همیشه‌سبز، گردشی پیوسته و هم‌تراز چشم در کف تنگه، همراه با داستان دره و اسپلتینگ گاوسی سه‌بعدی.",
+ "w.crumb":"گردش در دوقلوی دیجیتال","w.h1":"پیمودن تنگه هم‌تراز چشم؛<br>گردش در دوقلوی دیجیتالِ درهٔ آندوک",
+ "w.lede":"نه یک عکس، بلکه تنگه‌ای که واقعاً می‌توان درونش قدم زد. میان صخره‌های سر به فلک کشیده و جنگلی همیشه‌سبز، در امتداد کف دره — هم‌تراز چشم و در یک گردشِ پیوسته که هیچ بخشی از آن حذف نشده — درهٔ آندوک را می‌پیماییم.",
+ "w.figcap":"حدود ۲ دقیقه و ۲۰ ثانیه — از دهانهٔ تنگه تا ژرفای آن، گردشی بی‌شتاب و پیوسته میان صخره‌ها، جویبار و جنگل همیشه‌سبز. (زیرنویس: انگلیسی، چینی، ژاپنی، فارسی)",
+ "w.gal.h2":"تنگه — در دوقلوی دیجیتال",
+ "gal.1":"دهانهٔ تنگه · راهی که میان صخره‌ها فرو می‌رود","gal.2":"جویبار · در امتداد کف دره","gal.3":"کنار آب · گذرگاهی با نرده","gal.4":"تخته‌سنگ · سنگی پهن بر فراز آب","gal.5":"صخره و جنگل · درختان همیشه‌سبز بر دیواره‌ها","gal.6":"ژرفای تنگه · از میان سنگ و صخره",
+ "w.s1.h2":"درهٔ آندوک و جنگل همیشه‌سبزش",
+ "w.s1.p1":"درهٔ آندوک تنگه‌ای ژرف در اندوک-میئونِ سوگویپو است. گدازهٔ تراکیتی در گذر زمانی دراز با آب تراشیده شد و صخره‌هایی سر به فلک کشیده در دو سو پدید آورد و کف دره‌ای که آب زلال در همهٔ فصول در آن روان است.",
+ "w.s1.p2":"جنگل همیشه‌سبزِ گرم‌معتدلی که دره را پوشانده، به‌عنوان اثر طبیعی ملی شمارهٔ ۳۷۷ ثبت شده است. صدها گونهٔ گیاهی در اینجا می‌رویند — بلوط ژاپنی، دیستیلیوم، ماکیلوس و جز آن — همراه با سرخس‌های کمیاب. از دیرباز نیز جای آمدِ ادیبان و نگارش آثارشان بوده است.",
+ "w.factn.forest":"جنگل همیشه‌سبز","w.fact.forest":"اثر طبیعی ملی شمارهٔ ۳۷۷ · جنگل همیشه‌سبز گرم‌معتدل","w.factn.cliff":"صخره‌ها","w.fact.cliff":"تنگه‌ای تراشیده از گدازهٔ تراکیتی","w.factn.stream":"جویبار","w.fact.stream":"آبِ زلالی که در همهٔ فصول در کف دره روان است","w.factn.flora":"پوشش گیاهی","w.fact.flora":"صدها گونهٔ گیاهی · سرخس‌های کمیاب",
+ "w.s2.h2":"این ویدیو چگونه ساخته شد — اسپلتینگ گاوسی سه‌بعدی",
+ "w.s2.p1":"هر صحنهٔ این گردش، تصویری تولیدشده نیست، بلکه درهٔ آندوکِ واقعی است که در محل ثبت شده. بازسازی یک فضای کامل از صدها عکس واقعی که از زوایای گوناگون گرفته شده، «اسپلتینگ گاوسی سه‌بعدی» (3DGS) نام دارد.",
+ "w.s2.p2":"به جای شبکه‌های مثلثی، صحنه با میلیون‌ها بیضی‌گونِ کوچک — «اسپلت» — که رنگ و نور را در خود دارند پر می‌شود. با جابه‌جایی دید، نور و بافت به‌طبیعی تغییر می‌کند؛ پس هم مانند عکس شفاف است و هم می‌توان مانند دوربین آزادانه درونش قدم زد.",
+ "w.s2.callout":"پس دوقلوی دیجیتال، یک عکس نیست، بلکه فضایی است که می‌توان واردش شد و در آن قدم زد — هم به‌صورت ویدیو و هم به‌صورت تجربه، دوباره زاده می‌شود.",
+ "w.s2.h3":"دوقلویی که با چشم می‌پیمایی، دوقلویی که با خط‌کش می‌سنجی","w.s2.p3":"همان درهٔ آندوک را با لیدار raven نیز به‌طور کامل برداشت کردیم و ارتفاع صخره‌ها و مقطع تنگه را گویی با خط‌کش سنجیدیم. این دو، یکدیگر را کامل می‌کنند.",
+ "w.twin.a.h":"اسپلتینگ گاوسی · دوقلویی که می‌بینی","w.twin.a.p":"ساخته‌شده از عکس‌های واقعی — دوقلویی دیجیتالی که هم‌تراز چشم واردش می‌شوی و می‌گردی.","w.twin.b.h":"ابر نقاط لیدار · دوقلویی که می‌سنجی","w.twin.b.p":"نقشه‌برداری و تحلیلی که ارتفاع صخره، مقطع و فاصله را مستقیم از ابر نقاط می‌سنجد.","w.twin.b.link":"دیدن نقشه‌برداری درهٔ آندوک ←",
+ "w.cta.survey":"صفحهٔ نقشه‌برداری لیدار درهٔ آندوک","w.cta.inquiry":"درخواست ساخت و نقشه‌برداری","w.foot1":"JEJUGRAPHER · دوقلوی دیجیتالِ اندازه‌گیری‌شده — درهٔ آندوک","w.foot2":"حق تکثیر ویدیو، ابر نقاط، تصاویر و متن از آنِ JEJUGRAPHER است."}
+};</script>
+<script src="/i18n.js" defer></script>
+</body>
+</html>
