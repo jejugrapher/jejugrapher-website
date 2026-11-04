@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title data-i18n="w.__title">제주목관아 디지털 트윈 산책 — 걸어 들어가는 관아 | JEJUGRAPHER 제주그래퍼</title>
+<meta name="description" data-i18n-attr="content:w.desc" content="제주를 다스리던 제주목관아를 실측으로 지어 올린 디지털 트윈. 두 겹의 문을 지나 마당과 전각들 사이를 눈높이에서 컷 없이 걷는 산책 영상과, 제주목관아·3D 가우시안 스플랫 이야기.">
+<meta property="og:type" content="video.other">
+<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
+<meta property="og:title" content="제주목관아 디지털 트윈 산책 — 걸어 들어가는 관아">
+<meta property="og:description" content="실측으로 지어 올린 디지털 트윈. 두 겹의 문을 지나 마당과 전각들 사이를 눈높이에서 컷 없이 걷는 산책 영상과, 제주목관아·가우시안 스플랫 이야기.">
+<meta property="og:image" content="https://jejugrapher.com/spatial/raven-lidar/cover_gw.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://jejugrapher.com/spatial/raven-lidar/gwandeokjeong/walk.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/spatial/style.css">
+<style>
+  body{background:var(--bg-main);color:var(--text-main);font-family:'Noto Sans KR',sans-serif;margin:0;line-height:1.75}
+  .rlnav{position:sticky;top:0;z-index:60;background:rgba(254,252,247,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border-line)}
+  .rlnav .in{max-width:1080px;margin:0 auto;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .rlnav a{color:var(--text-soft);text-decoration:none}
+  .rlnav .logo{font-family:'Noto Serif KR',serif;font-weight:700;letter-spacing:2px;font-size:16px;color:var(--text-main)}
+  .rlnav .lk{display:flex;gap:16px;font-size:14px;flex-wrap:wrap;align-items:center}
+  .rlnav .lk a:hover{color:var(--accent-sage)} .rlnav .lk a.on{color:var(--accent-terracotta);font-weight:500}
+  .rlnav #jglang{flex:0 0 auto}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+  .hero{min-height:auto;display:block;padding:4rem 0 2.4rem;background:linear-gradient(135deg,var(--bg-soft) 0%,var(--bg-accent) 100%)}
+  .crumb{font-size:13px;color:var(--text-mute);margin-bottom:1rem}
+  .crumb a{color:var(--text-mute);text-decoration:none;border-bottom:1px solid transparent}
+  .crumb a:hover{border-color:var(--text-mute)}
+  .eyebrow{font-family:'Noto Serif KR',serif;font-size:13px;letter-spacing:.2em;color:var(--accent-terracotta);font-weight:600;margin-bottom:12px}
+  .hero h1{font-family:'Noto Serif KR',serif;font-size:clamp(1.8rem,4.6vw,2.9rem);line-height:1.3;margin:0 0 1rem}
+  .hero .lede{font-size:1.05rem;color:var(--text-soft);max-width:42em}
+  .player{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;box-shadow:var(--shadow-deep);margin:0}
+  .player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  figure{margin:2.4rem 0 0}
+  figcaption{margin-top:12px;font-size:14px;color:var(--text-mute)}
+  section{padding:3.2rem 0;border-top:1px solid var(--border-line)}
+  section:first-of-type{border-top:0}
+  h2{font-family:'Noto Serif KR',serif;font-size:clamp(1.4rem,3vw,2rem);margin:0 0 1.2rem;color:var(--text-main)}
+  h3{font-family:'Noto Serif KR',serif;font-size:1.15rem;margin:1.6rem 0 .5rem;color:var(--text-main)}
+  p{color:var(--text-soft);margin:0 0 1rem}
+  .halls{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+  .halls li{background:var(--bg-soft);border:1px solid var(--border-line);border-radius:8px;padding:14px 16px}
+  .halls .hn{font-family:'Noto Serif KR',serif;font-weight:600;color:var(--text-main)}
+  .halls .hd{display:block;font-size:14px;color:var(--text-mute);margin-top:4px}
+  .callout{background:var(--bg-accent);border-left:3px solid var(--accent-sage);border-radius:0 8px 8px 0;padding:1.2rem 1.4rem;margin:1.4rem 0}
+  .callout p:last-child{margin-bottom:0}
+  .twin{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:1.2rem}
+  .twin .card{background:var(--bg-soft);border:1px solid var(--border-line);border-radius:8px;overflow:hidden;display:block;text-decoration:none;color:inherit;transition:border-color .2s,box-shadow .2s}
+  a.card:hover{border-color:var(--accent-sage);box-shadow:var(--shadow-soft)}
+  .twin .card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+  .twin .lc-body{padding:1rem 1.3rem}
+  .twin h4{font-family:'Noto Serif KR',serif;font-size:1.05rem;margin:0 0 .4rem;color:var(--text-main)}
+  .twin .lc-go{color:var(--accent-terracotta);font-size:.92rem;font-weight:500}
+  @media (max-width:640px){.twin{grid-template-columns:1fr}}
+  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:1.2rem}
+  .gallery figure{margin:0;border-radius:8px;overflow:hidden;background:var(--bg-soft);border:1px solid var(--border-line)}
+  .gallery img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+  .gallery figcaption{padding:10px 14px;font-size:14px;color:var(--text-soft)}
+  .cta{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.3rem;background:var(--accent-terracotta);color:var(--bg-main);border-radius:999px;font-weight:500;font-size:.95rem;margin:.4rem .6rem .4rem 0}
+  .cta:hover{background:#B86A4D;color:var(--bg-main)}
+  .cta.ghost{background:transparent;color:var(--text-soft);border:1px solid var(--border-soft)}
+  .cta.ghost:hover{border-color:var(--accent-sage);color:var(--text-main)}
+  .rlfoot{border-top:1px solid var(--border-line);background:var(--bg-soft);padding:2.4rem 0;margin-top:1rem}
+  .rlfoot p{font-size:13px;color:var(--text-mute);margin:.2rem 0}
+  /* 페르시아어 등 RTL */
+  html[dir="rtl"] .hero .lede,html[dir="rtl"] p,html[dir="rtl"] .halls li{text-align:right}
+  html[dir="rtl"] .cta{margin:.4rem 0 .4rem .6rem}
+  html[dir="rtl"] .callout{border-left:0;border-right:3px solid var(--accent-sage);border-radius:8px 0 0 8px}
+</style>
+</head>
+<body>
+<nav class="rlnav"><div class="in"><a class="logo" href="/">JEJUGRAPHER</a><span class="lk"><a href="/spatial/index.html" data-i18n="nav.spatial">공간데이터</a><a href="/media.html" data-i18n="nav.portfolio">포트폴리오</a><a href="./" data-i18n="name.gw">관덕정</a><a href="/inquiry.html" data-i18n="nav.inquiry">문의</a><span id="jglang" class="rllang"></span></span></div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="crumb"><a href="/spatial/index.html" data-i18n="nav.spatial">공간데이터</a> · <a href="../" data-i18n="crumb.hub">제주 동굴·유적 LiDAR 측량</a> · <a href="./" data-i18n="name.gw">관덕정</a> · <span data-i18n="w.crumb">디지털 트윈 산책</span></div>
+  <div class="eyebrow">DIGITAL TWIN · WALK-THROUGH</div>
+  <h1 data-i18n="w.h1">걸어 들어가는 관아,<br>제주목관아 디지털 트윈 산책</h1>
+  <p class="lede" data-i18n="w.lede">사진이 아니라, 실제로 걸어 들어갈 수 있는 관아입니다. 두 겹의 문을 지나 너른 마당으로, 귤림당과 망경루·연희각·홍화각을 지나 연못 곁 우련당까지 — 눈높이에서, 건너뛰는 구간 없이 하나로 이어지는 산책으로 제주목관아를 둘러봅니다.</p>
+</div></header>
+
+<main class="wrap">
+  <figure>
+    <div class="player">
+      <iframe src="https://www.youtube.com/embed/j16K409pNhs?rel=0&cc_load_policy=1"
+        title="제주목관아 디지털 트윈 산책 — 걸어 들어가는 관아" loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <figcaption data-i18n="w.figcap">약 2분 20초 — 외대문에서 우련당까지, 마당과 전각들 사이를 서두르지 않고 끊김 없이 걷습니다. (영상 자막: 영어·중국어·일본어·페르시아어)</figcaption>
+  </figure>
+
+  <section>
+    <h2 data-i18n="w.gal.h2">관아의 풍경 — 디지털 트윈에서</h2>
+    <div class="gallery">
+      <figure><img loading="lazy" src="./img/gw_madang.webp" alt="제주목관아 마당"><figcaption data-i18n="gal.1">관아 마당 · 문을 지나 드는 너른 뜰</figcaption></figure>
+      <figure><img loading="lazy" src="./img/gw_gyullim.webp" alt="귤림당"><figcaption data-i18n="gal.2">귤림당 · 귤나무 그늘의 집</figcaption></figure>
+      <figure><img loading="lazy" src="./img/gw_manggyeong.webp" alt="망경루"><figcaption data-i18n="gal.3">망경루 · 제주목에만 있던 두 층 누각</figcaption></figure>
+      <figure><img loading="lazy" src="./img/gw_yeonhui.webp" alt="연희각"><figcaption data-i18n="gal.4">연희각 · 제주목사가 정사를 보던 곳</figcaption></figure>
+      <figure><img loading="lazy" src="./img/gw_eaves.webp" alt="전각의 처마와 단청"><figcaption data-i18n="gal.5">처마와 단청 · 공포가 받치는 지붕</figcaption></figure>
+      <figure><img loading="lazy" src="./img/gw_pond.webp" alt="우련당 연못"><figcaption data-i18n="gal.6">우련당 · 연못을 곁에 둔 쉼터</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-i18n="w.s1.h2">제주목관아, 제주를 다스리던 중심</h2>
+    <p data-i18n="w.s1.p1">제주목관아는 조선시대 제주를 다스리던 관아입니다. 두 겹의 문이 안과 밖을 가르고, 너른 마당을 두고 전각들이 둘러섭니다. 섬의 행정과 정사가 오랫동안 이곳에서 이루어졌습니다.</p>
+    <p data-i18n="w.s1.p2">마당 앞에 선 관덕정은 제주에서 가장 오래된 목조건물로 꼽히는 누정입니다(보물 제322호). 귤나무 그늘의 귤림당, 제주목에만 있던 두 층 누각 망경루, 제주목사가 정사를 보던 연희각과 집무를 보던 홍화각, 그리고 연못을 곁에 둔 우련당이 하나의 공간으로 이어집니다.</p>
+    <ul class="halls">
+      <li><span class="hn" data-i18n="w.factn.gw">관덕정</span><span class="hd" data-i18n="w.fact.gw">제주에서 가장 오래된 누정 · 보물 제322호</span></li>
+      <li><span class="hn" data-i18n="w.factn.mg">망경루</span><span class="hd" data-i18n="w.fact.mg">제주목에만 있던 두 층 누각</span></li>
+      <li><span class="hn" data-i18n="w.factn.yh">연희각 · 홍화각</span><span class="hd" data-i18n="w.fact.yh">제주목사가 정사와 집무를 보던 전각</span></li>
+      <li><span class="hn" data-i18n="w.factn.ur">우련당</span><span class="hd" data-i18n="w.fact.ur">연못을 곁에 둔 쉼의 자리</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 data-i18n="w.s2.h2">이 영상은 어떻게 만들어졌나 — 3D 가우시안 스플랫</h2>
+    <p data-i18n="w.s2.p1">이 산책의 모든 장면은 생성된 그림이 아니라, 현장에서 담은 실제 제주목관아입니다. 한 공간을 여러 각도에서 찍은 수많은 실제 사진으로, 그 공간을 통째로 되살리는 방식을 3D 가우시안 스플랫(3DGS)이라 합니다.</p>
+    <p data-i18n="w.s2.p2">장면을 삼각형 면이 아니라, 색과 빛을 머금은 수백만 개의 작은 타원체 — ‘스플랫’으로 채웁니다. 보는 각도에 따라 빛과 질감이 자연스럽게 바뀌어, 사진처럼 선명하면서도 그 안을 카메라처럼 자유롭게 걸어 다닐 수 있습니다.</p>
+    <div class="callout"><p data-i18n="w.s2.callout">그래서 디지털 트윈은 한 장의 사진이 아니라, 들어가 걸을 수 있는 공간이 됩니다. 영상으로도, 체험으로도, 다시 태어납니다.</p></div>
+    <h3 data-i18n="w.s2.h3">눈으로 걷는 트윈, 자로 재는 트윈</h3>
+    <p data-i18n="w.s2.p3">같은 제주목관아를 raven LiDAR로도 통째로 떠, 전각 사이의 거리와 마당의 높이를 자로 잰 듯 측정했습니다. 두 가지는 서로를 채웁니다.</p>
+    <div class="twin">
+      <div class="card"><img loading="lazy" src="./img/gw_gyullim.webp" alt="가우시안 스플랫 — 제주목관아"><div class="lc-body"><h4 data-i18n="w.twin.a.h">가우시안 스플랫 · 보는 트윈</h4><p style="margin:0" data-i18n="w.twin.a.p">실제 사진으로 지어, 눈높이에서 걸어 들어가 둘러보는 디지털 트윈.</p></div></div>
+      <a class="card" href="./"><img loading="lazy" src="../img/gw_plan.webp" alt="관덕정 LiDAR 점군 평면"><div class="lc-body"><h4 data-i18n="w.twin.b.h">LiDAR 점군 · 재는 트윈</h4><p style="margin:0 0 .5rem" data-i18n="w.twin.b.p">1,792만 점 · 세션 7개로 뜬 점군에서 전각 거리·마당 높이를 직접 재는 측량·분석.</p><span class="lc-go" data-i18n="w.twin.b.link">관덕정 측량 보기 →</span></div></a>
+    </div>
+  </section>
+
+  <section>
+    <p>
+      <a class="cta" href="./" data-i18n="w.cta.survey">관덕정 LiDAR 측량 페이지</a>
+      <a class="cta ghost" href="../" data-i18n="foot.go4">네 현장 한눈에 보기</a>
+      <a class="cta ghost" href="/inquiry.html" data-i18n="w.cta.inquiry">제작·측량 문의</a>
+    </p>
+  </section>
+</main>
+
+<footer class="rlfoot"><div class="wrap">
+  <p data-i18n="w.foot1">제주그래퍼 JEJUGRAPHER · 실측으로 지어 올린 디지털 트윈 — 제주목관아</p>
+  <p data-i18n="w.foot2">영상·점군·그림과 글의 저작권은 제주그래퍼에 있습니다.</p>
+</div></footer>
+
+<script>window.JG_I18N={
+"ko":{"nav.spatial":"공간데이터","nav.portfolio":"포트폴리오","nav.inquiry":"문의","crumb.hub":"제주 동굴·유적 LiDAR 측량","name.gw":"관덕정","foot.go4":"네 현장 한눈에 보기 →",
+ "w.__title":"제주목관아 디지털 트윈 산책 — 걸어 들어가는 관아 | JEJUGRAPHER 제주그래퍼",
+ "w.desc":"제주를 다스리던 제주목관아를 실측으로 지어 올린 디지털 트윈. 두 겹의 문을 지나 마당과 전각들 사이를 눈높이에서 컷 없이 걷는 산책 영상과, 제주목관아·3D 가우시안 스플랫 이야기.",
+ "w.crumb":"디지털 트윈 산책","w.h1":"걸어 들어가는 관아,<br>제주목관아 디지털 트윈 산책",
+ "w.lede":"사진이 아니라, 실제로 걸어 들어갈 수 있는 관아입니다. 두 겹의 문을 지나 너른 마당으로, 귤림당과 망경루·연희각·홍화각을 지나 연못 곁 우련당까지 — 눈높이에서, 건너뛰는 구간 없이 하나로 이어지는 산책으로 제주목관아를 둘러봅니다.",
+ "w.figcap":"약 2분 20초 — 외대문에서 우련당까지, 마당과 전각들 사이를 서두르지 않고 끊김 없이 걷습니다. (영상 자막: 영어·중국어·일본어·페르시아어)",
+ "w.gal.h2":"관아의 풍경 — 디지털 트윈에서",
+ "gal.1":"관아 마당 · 문을 지나 드는 너른 뜰","gal.2":"귤림당 · 귤나무 그늘의 집","gal.3":"망경루 · 제주목에만 있던 두 층 누각","gal.4":"연희각 · 제주목사가 정사를 보던 곳","gal.5":"처마와 단청 · 공포가 받치는 지붕","gal.6":"우련당 · 연못을 곁에 둔 쉼터",
+ "w.s1.h2":"제주목관아, 제주를 다스리던 중심",
+ "w.s1.p1":"제주목관아는 조선시대 제주를 다스리던 관아입니다. 두 겹의 문이 안과 밖을 가르고, 너른 마당을 두고 전각들이 둘러섭니다. 섬의 행정과 정사가 오랫동안 이곳에서 이루어졌습니다.",
+ "w.s1.p2":"마당 앞에 선 관덕정은 제주에서 가장 오래된 목조건물로 꼽히는 누정입니다(보물 제322호). 귤나무 그늘의 귤림당, 제주목에만 있던 두 층 누각 망경루, 제주목사가 정사를 보던 연희각과 집무를 보던 홍화각, 그리고 연못을 곁에 둔 우련당이 하나의 공간으로 이어집니다.",
+ "w.factn.gw":"관덕정","w.fact.gw":"제주에서 가장 오래된 누정 · 보물 제322호","w.factn.mg":"망경루","w.fact.mg":"제주목에만 있던 두 층 누각","w.factn.yh":"연희각 · 홍화각","w.fact.yh":"제주목사가 정사와 집무를 보던 전각","w.factn.ur":"우련당","w.fact.ur":"연못을 곁에 둔 쉼의 자리",
+ "w.s2.h2":"이 영상은 어떻게 만들어졌나 — 3D 가우시안 스플랫",
+ "w.s2.p1":"이 산책의 모든 장면은 생성된 그림이 아니라, 현장에서 담은 실제 제주목관아입니다. 한 공간을 여러 각도에서 찍은 수많은 실제 사진으로, 그 공간을 통째로 되살리는 방식을 3D 가우시안 스플랫(3DGS)이라 합니다.",
+ "w.s2.p2":"장면을 삼각형 면이 아니라, 색과 빛을 머금은 수백만 개의 작은 타원체 — ‘스플랫’으로 채웁니다. 보는 각도에 따라 빛과 질감이 자연스럽게 바뀌어, 사진처럼 선명하면서도 그 안을 카메라처럼 자유롭게 걸어 다닐 수 있습니다.",
+ "w.s2.callout":"그래서 디지털 트윈은 한 장의 사진이 아니라, 들어가 걸을 수 있는 공간이 됩니다. 영상으로도, 체험으로도, 다시 태어납니다.",
+ "w.s2.h3":"눈으로 걷는 트윈, 자로 재는 트윈","w.s2.p3":"같은 제주목관아를 raven LiDAR로도 통째로 떠, 전각 사이의 거리와 마당의 높이를 자로 잰 듯 측정했습니다. 두 가지는 서로를 채웁니다.",
+ "w.twin.a.h":"가우시안 스플랫 · 보는 트윈","w.twin.a.p":"실제 사진으로 지어, 눈높이에서 걸어 들어가 둘러보는 디지털 트윈.","w.twin.b.h":"LiDAR 점군 · 재는 트윈","w.twin.b.p":"1,792만 점 · 세션 7개로 뜬 점군에서 전각 거리·마당 높이를 직접 재는 측량·분석.","w.twin.b.link":"관덕정 측량 보기 →",
+ "w.cta.survey":"관덕정 LiDAR 측량 페이지","w.cta.inquiry":"제작·측량 문의","w.foot1":"제주그래퍼 JEJUGRAPHER · 실측으로 지어 올린 디지털 트윈 — 제주목관아","w.foot2":"영상·점군·그림과 글의 저작권은 제주그래퍼에 있습니다."},
+"en":{"nav.spatial":"Spatial Data","nav.portfolio":"Portfolio","nav.inquiry":"Contact","crumb.hub":"Jeju Cave & Heritage LiDAR Survey","name.gw":"Gwandeokjeong","foot.go4":"See all four sites →",
+ "w.__title":"Jeju Mok Government Office Digital Twin Walk — Walking the Old Seat of Government | JEJUGRAPHER",
+ "w.desc":"A measured digital twin of Jeju Mok Government Office, which governed Jeju. Through two gates, across the courtyard and among the halls at eye level, in one seamless walk — plus the story of the office and 3D Gaussian Splatting.",
+ "w.crumb":"Digital Twin Walk","w.h1":"Walking the old seat of government —<br>a Jeju Mok Government Office digital-twin walk",
+ "w.lede":"Not a photo, but a government office you can actually walk into. Through two gates into the broad courtyard, past Gyullimdang, Manggyeongnu, Yeonhuigak and Honghwagak to Uryeondang beside its pond — at eye level, in one seamless walk with no section skipped — we move through Jeju Mok Government Office.",
+ "w.figcap":"About 2m 20s — from the outer gate to Uryeondang, an unhurried, continuous walk across the courtyard and among the halls. (Subtitles: English, Chinese, Japanese, Persian)",
+ "w.gal.h2":"The office grounds — in the digital twin",
+ "gal.1":"The courtyard · the broad yard entered through the gate","gal.2":"Gyullimdang · the hall in the shade of tangerine trees","gal.3":"Manggyeongnu · a two-story pavilion found only at Jeju Mok","gal.4":"Yeonhuigak · where the Jeju magistrate governed","gal.5":"Eaves and dancheong · a roof held up by bracket sets","gal.6":"Uryeondang · a place of rest beside the pond",
+ "w.s1.h2":"Jeju Mok Government Office, the seat that governed Jeju",
+ "w.s1.p1":"Jeju Mok Government Office is the old government seat from which Jeju was governed in the Joseon period. Two gates divide inside from outside, and the halls stand around a broad courtyard. For a long time, the island’s administration and affairs of state were carried out here.",
+ "w.s1.p2":"Gwandeokjeong, standing before the courtyard, is counted among the oldest wooden buildings in Jeju (National Treasure No. 322). Gyullimdang in the shade of tangerine trees, Manggyeongnu — a two-story pavilion found only at Jeju Mok — Yeonhuigak where the magistrate governed and Honghwagak where he worked, and Uryeondang beside its pond all connect into a single space.",
+ "w.factn.gw":"Gwandeokjeong","w.fact.gw":"Among the oldest pavilions in Jeju · National Treasure No. 322","w.factn.mg":"Manggyeongnu","w.fact.mg":"A two-story pavilion found only at Jeju Mok","w.factn.yh":"Yeonhuigak · Honghwagak","w.fact.yh":"Halls where the Jeju magistrate governed and worked","w.factn.ur":"Uryeondang","w.fact.ur":"A place of rest beside the pond",
+ "w.s2.h2":"How this was made — 3D Gaussian Splatting",
+ "w.s2.p1":"Every scene in this walk is not a generated image but the real Jeju Mok Government Office, captured on site. Reconstructing a whole space from many real photographs taken from many angles is called 3D Gaussian Splatting (3DGS).",
+ "w.s2.p2":"Instead of triangle meshes, the scene is filled with millions of tiny ellipsoids — “splats” — that carry color and light. As your viewpoint moves, light and texture shift naturally, so it stays photo-sharp while you walk freely through it as if holding a camera.",
+ "w.s2.callout":"So a digital twin is not a single photo but a space you can enter and walk — reborn as video, and as something you can experience.",
+ "w.s2.h3":"A twin you walk with your eyes, a twin you measure with a ruler","w.s2.p3":"We also scanned the same Jeju Mok Government Office in full with a raven LiDAR, measuring the distances between halls and the levels of the courtyard as if with a ruler. The two complement each other.",
+ "w.twin.a.h":"Gaussian Splatting · the twin you see","w.twin.a.p":"Built from real photos — a digital twin you walk into and look around at eye level.","w.twin.b.h":"LiDAR point cloud · the twin you measure","w.twin.b.p":"Survey and analysis that measure hall-to-hall distance and courtyard level directly from a point cloud of 17.92 million points across 7 sessions.","w.twin.b.link":"See the Gwandeokjeong survey →",
+ "w.cta.survey":"Gwandeokjeong LiDAR survey","w.cta.inquiry":"Production & survey inquiries","w.foot1":"JEJUGRAPHER · a measured digital twin — Jeju Mok Government Office","w.foot2":"Video, point clouds, figures and text are copyright JEJUGRAPHER."},
+"zh":{"nav.spatial":"空间数据","nav.portfolio":"作品集","nav.inquiry":"咨询","crumb.hub":"济州洞窟与古迹 LiDAR 测量","name.gw":"观德亭","foot.go4":"一览四个现场 →",
+ "w.__title":"济州牧官衙数字孪生漫步 — 走进旧时治所 | JEJUGRAPHER 济州Grapher",
+ "w.desc":"以实测打造的济州牧官衙数字孪生。穿过两重门，在庭院与殿阁之间以眼高视角、无剪辑地漫步，附济州牧官衙与 3D 高斯泼溅（Gaussian Splatting）的介绍。",
+ "w.crumb":"数字孪生漫步","w.h1":"走进旧时治所，<br>济州牧官衙数字孪生漫步",
+ "w.lede":"不是一张照片，而是可以真正走进去的官衙。穿过两重门进入宽阔的庭院，经橘林堂、望京楼、延曦阁与弘化阁，直到池畔的友莲堂——以眼高视角，不跳过任何一段、连贯地游览济州牧官衙。",
+ "w.figcap":"约 2 分 20 秒 — 自外大门至友莲堂，在庭院与殿阁之间不疾不徐、连续地行走。（字幕：英语·中文·日语·波斯语）",
+ "w.gal.h2":"官衙掠影 — 于数字孪生之中",
+ "gal.1":"官衙庭院 · 穿门而入的宽阔庭院","gal.2":"橘林堂 · 橘树荫下之堂","gal.3":"望京楼 · 唯济州牧才有的两层楼阁","gal.4":"延曦阁 · 济州牧使处理政务之所","gal.5":"檐与丹青 · 由斗拱托起的屋顶","gal.6":"友莲堂 · 池畔休憩之处",
+ "w.s1.h2":"济州牧官衙，治理济州的中枢",
+ "w.s1.p1":"济州牧官衙是朝鲜时代治理济州的官衙。两重门分隔内外，殿阁环绕着宽阔的庭院。岛上的行政与政务长期在此进行。",
+ "w.s1.p2":"立于庭院之前的观德亭，是济州现存最古老的木构建筑之一（宝物第322号）。橘树荫下的橘林堂、唯济州牧才有的两层楼阁望京楼、济州牧使处理政务的延曦阁与办公的弘化阁，以及池畔的友莲堂，连为一个整体空间。",
+ "w.factn.gw":"观德亭","w.fact.gw":"济州现存最古老的楼亭之一 · 宝物第322号","w.factn.mg":"望京楼","w.fact.mg":"唯济州牧才有的两层楼阁","w.factn.yh":"延曦阁 · 弘化阁","w.fact.yh":"济州牧使处理政务与办公的殿阁","w.factn.ur":"友莲堂","w.fact.ur":"池畔休憩之处",
+ "w.s2.h2":"这段影像是如何制作的 — 3D 高斯泼溅",
+ "w.s2.p1":"这段漫步的每一个画面都并非生成图像，而是现场拍摄的真实济州牧官衙。以多角度拍摄的大量真实照片，将整个空间整体重建，这种方式称为 3D 高斯泼溅（3DGS）。",
+ "w.s2.p2":"它不以三角面片，而以数百万个携带颜色与光线的微小椭球——「泼溅（splat）」填充场景。随视角移动，光影与质感自然变化，因而既如照片般清晰，又能让你如持相机般在其中自由行走。",
+ "w.s2.callout":"因此数字孪生不是一张照片，而是可以进入、可以行走的空间——既化作影像，也化作可体验之物，重获新生。",
+ "w.s2.h3":"用眼睛行走的孪生，用尺子丈量的孪生","w.s2.p3":"我们也以 raven LiDAR 将同一座济州牧官衙整体扫描，如同用尺子般测量殿阁之间的距离与庭院的高差。二者相辅相成。",
+ "w.twin.a.h":"高斯泼溅 · 看的孪生","w.twin.a.p":"以真实照片打造——可在眼高视角走进并环顾的数字孪生。","w.twin.b.h":"LiDAR 点云 · 量的孪生","w.twin.b.p":"在 7 个测程、1,792 万点的点云上，直接测量殿阁间距与庭院高差的测量与分析。","w.twin.b.link":"查看观德亭测量 →",
+ "w.cta.survey":"观德亭 LiDAR 测量页","w.cta.inquiry":"制作与测量咨询","w.foot1":"济州Grapher JEJUGRAPHER · 以实测打造的数字孪生 — 济州牧官衙","w.foot2":"影像·点云·图像及文字版权归济州Grapher所有。"},
+"ja":{"nav.spatial":"空間データ","nav.portfolio":"ポートフォリオ","nav.inquiry":"お問い合わせ","crumb.hub":"済州の洞窟・史跡 LiDAR 測量","name.gw":"観徳亭","foot.go4":"4つの現場を一覧 →",
+ "w.__title":"済州牧官衙デジタルツイン散策 — かつての治所を歩く | JEJUGRAPHER",
+ "w.desc":"済州を治めた済州牧官衙を実測で築いたデジタルツイン。二重の門を抜け、庭と殿閣のあいだを目線の高さでカットなく歩く散策映像と、済州牧官衙・3Dガウシアンスプラットの話。",
+ "w.crumb":"デジタルツイン散策","w.h1":"かつての治所を歩く、<br>済州牧官衙デジタルツイン散策",
+ "w.lede":"写真ではなく、実際に歩いて入れる官衙です。二重の門を抜けて広い庭へ、橘林堂と望京楼・延曦閣・弘化閣を過ぎ、池のそばの友蓮堂まで——目線の高さで、どの区間も飛ばさず一つに続く散策で、済州牧官衙を巡ります。",
+ "w.figcap":"約2分20秒 — 外大門から友蓮堂まで、庭と殿閣のあいだを急がず、途切れなく歩きます。（字幕：英語・中国語・日本語・ペルシャ語）",
+ "w.gal.h2":"官衙の風景 — デジタルツインにて",
+ "gal.1":"官衙の庭 · 門を抜けて入る広い庭","gal.2":"橘林堂 · 橘の木陰の堂","gal.3":"望京楼 · 済州牧にのみあった二層の楼閣","gal.4":"延曦閣 · 済州牧使が政務をみた所","gal.5":"軒と丹青 · 組物が支える屋根","gal.6":"友蓮堂 · 池のそばの憩いの場",
+ "w.s1.h2":"済州牧官衙、済州を治めた中心",
+ "w.s1.p1":"済州牧官衙は朝鮮時代に済州を治めた官衙です。二重の門が内と外を分け、広い庭を囲んで殿閣が立ち並びます。島の行政と政務は長くここで行われました。",
+ "w.s1.p2":"庭の前に立つ観徳亭は、済州で最も古い木造建築のひとつに数えられる楼亭です（宝物第322号）。橘の木陰の橘林堂、済州牧にのみあった二層の楼閣・望京楼、済州牧使が政務をみた延曦閣と執務の弘化閣、そして池のそばの友蓮堂が、一つの空間としてつながります。",
+ "w.factn.gw":"観徳亭","w.fact.gw":"済州で最も古い楼亭のひとつ · 宝物第322号","w.factn.mg":"望京楼","w.fact.mg":"済州牧にのみあった二層の楼閣","w.factn.yh":"延曦閣 · 弘化閣","w.fact.yh":"済州牧使が政務と執務をみた殿閣","w.factn.ur":"友蓮堂","w.fact.ur":"池のそばの憩いの場",
+ "w.s2.h2":"この映像はどう作られたか — 3Dガウシアンスプラット",
+ "w.s2.p1":"この散策のすべての場面は生成画像ではなく、現場で撮った本物の済州牧官衙です。一つの空間を多数の角度から撮った大量の実写真で、その空間を丸ごと復元する方法を3Dガウシアンスプラット（3DGS）と呼びます。",
+ "w.s2.p2":"三角形の面ではなく、色と光を宿した数百万の小さな楕円体——「スプラット」で場面を満たします。視点が動くと光と質感が自然に変わり、写真のように鮮明でありながら、カメラを手にするように自由に歩き回れます。",
+ "w.s2.callout":"だからデジタルツインは一枚の写真ではなく、入って歩ける空間になります。映像としても、体験としても、再び生まれ変わります。",
+ "w.s2.h3":"目で歩くツイン、ものさしで測るツイン","w.s2.p3":"同じ済州牧官衙をraven LiDARでも丸ごと取り、殿閣のあいだの距離や庭の高さをものさしのように測りました。二つは互いを補います。",
+ "w.twin.a.h":"ガウシアンスプラット · 見るツイン","w.twin.a.p":"実写真で築いた、目線の高さで歩いて入り見て回るデジタルツイン。","w.twin.b.h":"LiDAR点群 · 測るツイン","w.twin.b.p":"7セッション・1,792万点の点群から、殿閣の距離や庭の高さを直接測る測量・分析。","w.twin.b.link":"観徳亭の測量を見る →",
+ "w.cta.survey":"観徳亭 LiDAR 測量ページ","w.cta.inquiry":"制作・測量のお問い合わせ","w.foot1":"JEJUGRAPHER · 実測で築いたデジタルツイン — 済州牧官衙","w.foot2":"映像・点群・図および文章の著作権はJEJUGRAPHERに帰属します。"},
+"fa":{"nav.spatial":"داده‌های فضایی","nav.portfolio":"نمونه‌کارها","nav.inquiry":"تماس","crumb.hub":"نقشه‌برداری لیدار غارها و آثار ججو","name.gw":"گوان‌دوک‌جونگ","foot.go4":"دیدن هر چهار سایت ←",
+ "w.__title":"گردش در دوقلوی دیجیتالِ ادارهٔ حکومتی ججو-موک — پیمودن مرکز کهن حکومت | JEJUGRAPHER",
+ "w.desc":"دوقلوی دیجیتالِ اندازه‌گیری‌شدهٔ ادارهٔ حکومتی ججو-موک که ججو را اداره می‌کرد. از دو دروازه، در میان حیاط و تالارها هم‌تراز چشم و بی‌وقفه، همراه با داستان این اداره و اسپلتینگ گاوسی سه‌بعدی.",
+ "w.crumb":"گردش در دوقلوی دیجیتال","w.h1":"پیمودن مرکز کهن حکومت؛<br>گردش در دوقلوی دیجیتالِ ادارهٔ حکومتی ججو-موک",
+ "w.lede":"نه یک عکس، بلکه اداره‌ای که واقعاً می‌توان درونش قدم زد. از دو دروازه به حیاط پهناور، از کنار گیوللیم‌دانگ، مانگ‌گیونگ‌نو، یون‌هویی‌گاک و هونگ‌هوا‌گاک تا اوریون‌دانگ در کنار برکه‌اش — هم‌تراز چشم و در یک گردشِ پیوسته که هیچ بخشی حذف نشده — ادارهٔ حکومتی ججو-موک را می‌پیماییم.",
+ "w.figcap":"حدود ۲ دقیقه و ۲۰ ثانیه — از دروازهٔ بیرونی تا اوریون‌دانگ، گردشی بی‌شتاب و پیوسته در حیاط و میان تالارها. (زیرنویس: انگلیسی، چینی، ژاپنی، فارسی)",
+ "w.gal.h2":"محوطهٔ اداره — در دوقلوی دیجیتال",
+ "gal.1":"حیاط اداره · حیاط پهناوری که از دروازه وارد می‌شوی","gal.2":"گیوللیم‌دانگ · تالاری در سایهٔ درختان نارنگی","gal.3":"مانگ‌گیونگ‌نو · کوشکی دوطبقه که تنها در ججو-موک بود","gal.4":"یون‌هویی‌گاک · جایی که حاکم ججو حکومت می‌کرد","gal.5":"بام و دانچونگ · سقفی که بر بازوهای چوبی استوار است","gal.6":"اوریون‌دانگ · جای آسودن در کنار برکه",
+ "w.s1.h2":"ادارهٔ حکومتی ججو-موک؛ مرکزی که ججو را اداره می‌کرد",
+ "w.s1.p1":"ادارهٔ حکومتی ججو-موک، مرکز کهنی است که در دورهٔ جوزون از آن ججو اداره می‌شد. دو دروازه درون را از بیرون جدا می‌کند و تالارها گرد حیاطی پهناور ایستاده‌اند. دیرزمانی، اداره و امور حکومتی جزیره در اینجا انجام می‌شد.",
+ "w.s1.p2":"گوان‌دوک‌جونگ که در برابر حیاط ایستاده، از کهن‌ترین بناهای چوبی ججو به شمار می‌رود (گنجینهٔ ملی شمارهٔ ۳۲۲). گیوللیم‌دانگ در سایهٔ درختان نارنگی، مانگ‌گیونگ‌نو — کوشکی دوطبقه که تنها در ججو-موک بود — یون‌هویی‌گاک که حاکم در آن حکومت می‌کرد و هونگ‌هوا‌گاک که در آن کار می‌کرد، و اوریون‌دانگ در کنار برکه، همه در یک فضای پیوسته به هم می‌رسند.",
+ "w.factn.gw":"گوان‌دوک‌جونگ","w.fact.gw":"از کهن‌ترین کوشک‌های ججو · گنجینهٔ ملی شمارهٔ ۳۲۲","w.factn.mg":"مانگ‌گیونگ‌نو","w.fact.mg":"کوشکی دوطبقه که تنها در ججو-موک بود","w.factn.yh":"یون‌هویی‌گاک · هونگ‌هوا‌گاک","w.fact.yh":"تالارهایی که حاکم ججو در آن‌ها حکومت و کار می‌کرد","w.factn.ur":"اوریون‌دانگ","w.fact.ur":"جای آسودن در کنار برکه",
+ "w.s2.h2":"این ویدیو چگونه ساخته شد — اسپلتینگ گاوسی سه‌بعدی",
+ "w.s2.p1":"هر صحنهٔ این گردش، تصویری تولیدشده نیست، بلکه ادارهٔ حکومتی ججو-موکِ واقعی است که در محل ثبت شده. بازسازی یک فضای کامل از صدها عکس واقعی که از زوایای گوناگون گرفته شده، «اسپلتینگ گاوسی سه‌بعدی» (3DGS) نام دارد.",
+ "w.s2.p2":"به جای شبکه‌های مثلثی، صحنه با میلیون‌ها بیضی‌گونِ کوچک — «اسپلت» — که رنگ و نور را در خود دارند پر می‌شود. با جابه‌جایی دید، نور و بافت به‌طبیعی تغییر می‌کند؛ پس هم مانند عکس شفاف است و هم می‌توان مانند دوربین آزادانه درونش قدم زد.",
+ "w.s2.callout":"پس دوقلوی دیجیتال، یک عکس نیست، بلکه فضایی است که می‌توان واردش شد و در آن قدم زد — هم به‌صورت ویدیو و هم به‌صورت تجربه، دوباره زاده می‌شود.",
+ "w.s2.h3":"دوقلویی که با چشم می‌پیمایی، دوقلویی که با خط‌کش می‌سنجی","w.s2.p3":"همان ادارهٔ حکومتی ججو-موک را با لیدار raven نیز به‌طور کامل برداشت کردیم و فاصلهٔ میان تالارها و اختلاف ارتفاع حیاط را گویی با خط‌کش سنجیدیم. این دو، یکدیگر را کامل می‌کنند.",
+ "w.twin.a.h":"اسپلتینگ گاوسی · دوقلویی که می‌بینی","w.twin.a.p":"ساخته‌شده از عکس‌های واقعی — دوقلویی دیجیتالی که هم‌تراز چشم واردش می‌شوی و می‌گردی.","w.twin.b.h":"ابر نقاط لیدار · دوقلویی که می‌سنجی","w.twin.b.p":"نقشه‌برداری و تحلیلی که فاصلهٔ میان تالارها و اختلاف ارتفاع حیاط را مستقیم از ابر نقاطی با ۱۷٬۹۲۰٬۰۰۰ نقطه در ۷ نشست می‌سنجد.","w.twin.b.link":"دیدن نقشه‌برداری گوان‌دوک‌جونگ ←",
+ "w.cta.survey":"صفحهٔ نقشه‌برداری لیدار گوان‌دوک‌جونگ","w.cta.inquiry":"درخواست ساخت و نقشه‌برداری","w.foot1":"JEJUGRAPHER · دوقلوی دیجیتالِ اندازه‌گیری‌شده — ادارهٔ حکومتی ججو-موک","w.foot2":"حق تکثیر ویدیو، ابر نقاط، تصاویر و متن از آنِ JEJUGRAPHER است."}
+};</script>
+<script src="/i18n.js" defer></script>
+</body>
+</html>
