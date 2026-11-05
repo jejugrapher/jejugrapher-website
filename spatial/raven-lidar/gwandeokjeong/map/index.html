@@ -68,6 +68,8 @@ main{display:flex;flex:1.55 1 0;min-height:260px}
 .leaflet-container{background:#1a1d22;font:inherit}
 .leaflet-control-layers{background:var(--panel2);color:var(--text)}
 .lbl{background:rgba(15,18,22,.85);border:1px solid var(--line);color:var(--text);padding:1px 5px;border-radius:4px;font-size:11px;white-space:nowrap}
+body.nonum .lbl,body.nonum .leaflet-control-scale,body.nonum .leaflet-tooltip{display:none!important}
+.cmpB{fill:none;stroke:#be8cff;stroke-dasharray:4 3}
 .hd{width:100%;height:100%;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #000,0 0 6px rgba(0,0,0,.6);cursor:grab}
 .hd.sq{border-radius:3px}.hd.mid{opacity:.55}
 #intro{position:fixed;inset:0;z-index:2000;background:rgba(8,10,13,.72);display:flex;align-items:center;justify-content:center;padding:16px}
@@ -110,7 +112,8 @@ main{display:flex;flex:1.55 1 0;min-height:260px}
     <label class="chk" title="고른 단면·선·영역 주변만 맞춰 봄"><input type="checkbox" id="viewSel">선택 주변</label>
   </div>
   <div class="grp"><label>색</label><select id="color"><option value="z">높이</option><option value="i">반사강도</option><option value="k">동굴/지상</option><option value="s">세션</option></select></div>
-  <div class="grp"><label class="chk"><input type="checkbox" id="showCave" checked>동굴</label><label class="chk"><input type="checkbox" id="showSurf" checked>지상</label><label class="chk"><input type="checkbox" id="showTraj">궤적</label><label class="chk" title="3D 에서 단면·선 주변 ±2 m 만 보기"><input type="checkbox" id="clip">단면 주변만</label></div>
+  <div class="grp"><label class="chk"><input type="checkbox" id="showCave" checked>동굴</label><label class="chk"><input type="checkbox" id="showSurf" checked>지상</label><label class="chk"><input type="checkbox" id="showTraj">궤적</label><label class="chk" title="3D 에서 단면·선 주변 ±2 m 만 보기"><input type="checkbox" id="clip">단면 주변만</label><label class="chk" title="지도의 거리 라벨·축척·툴팁 숨김 — 동굴이 지나가는 모양만 깔끔히 보기"><input type="checkbox" id="noNum">숫자 숨김</label></div>
+  <div class="grp" id="cmpgrp" style="display:none"><label title="같은 곳을 다른 날 찍은 촬영분과 겹쳐 단면·체적 변화(낙석 등)를 비교">비교</label><select id="cmp"><option value="-1">없음</option></select><span id="cmpMsg" class="muted"></span></div>
   <div class="grp" id="gndgrp" style="display:none"><label class="chk" title="위성사진을 지형 위에 입혀 3D 에 함께 표시"><input type="checkbox" id="showGnd" checked>지상지도</label><input type="range" id="gndOp" min="0" max="1" step="0.05" value="0.55" title="지상지도 투명도"><span id="gndMsg" class="muted"></span></div>
   <div class="grp"><label>점 크기</label><input type="range" id="psize" min="0.3" max="3" step="0.1" value="1"></div>
 </header>
@@ -233,15 +236,19 @@ function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTi
 // ───────── 데이터 목록 · 현장 문구 ─────────
 const DS = await (await fetch('datasets.json', { cache: 'no-cache' })).json();
 let dsi = +(new URLSearchParams(location.search).get('ds') || 0); if (!DS[dsi]) dsi = 0;
-DS.forEach((d, i) => { const o = document.createElement('option'); o.value = i; o.textContent = d.name; $('ds').appendChild(o); });
+const dlabel = d => d.date ? `${d.name} · ${d.date}` : d.name;   // ⑥ 촬영일 병기
+DS.forEach((d, i) => { const o = document.createElement('option'); o.value = i; o.textContent = dlabel(d); $('ds').appendChild(o); });
 $('ds').value = dsi; if (DS.length < 2) $('dsgrp').style.display = 'none';
 $('ds').onchange = () => { location.search = '?ds=' + $('ds').value; };
+// ⑥ 시계열 비교: 같은 장소(place)를 다른 날 찍은 촬영분만 비교 대상. place 없으면 비교 숨김(동굴/지상 같은 성격이 다른 데이터셋은 섞지 않음)
+const cmpSibs = DS.map((d, i) => i).filter(i => i !== dsi && DS[i].place && DS[dsi].place && DS[i].place === DS[dsi].place);
+if (cmpSibs.length) { $('cmpgrp').style.display = ''; cmpSibs.forEach(i => { const o = document.createElement('option'); o.value = i; o.textContent = dlabel(DS[i]); $('cmp').appendChild(o); }); }
 const base = DS[dsi].dir + '/';
 const meta = await (await fetch(base + 'meta.json', { cache: 'no-cache' })).json();
 const SITE = await fetch('site.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null);
 document.title = SITE ? `${SITE.name} — ${SITE.short} | raven LiDAR 측정` : meta.name + ' · raven 점군지도';
 $('title').firstChild.textContent = SITE ? `${SITE.name} · ${SITE.short}` : meta.name + ' raven 점군지도';
-$('subtitle').textContent = DS[dsi].name;
+$('subtitle').textContent = dlabel(DS[dsi]);
 if (SITE) {
   $('iEb').textContent = SITE.eyebrow; $('iTitle').innerHTML = SITE.title; $('iLede').textContent = SITE.lede;
   $('iStats').innerHTML = SITE.stats.map(([v, l]) => `<div><b>${v}</b><span>${l}</span></div>`).join('');
@@ -561,6 +568,10 @@ const HINT = {
 function setMode(m) {
   mode = m; document.querySelectorAll('[data-mode]').forEach(x => x.classList.toggle('on', x.dataset.mode === m));
   $('hint').textContent = HINT[m]; showTab({ point: 'sec', range: 'rng', line: 'lin', area: 'are', vol: 'vol' }[m]); redrawSel();
+  // ④ 편의: 구간을 처음 열면 촬영 구간 전체를 자동으로 잡아 둔다 — 끝점 ● 만 끌면 바로 "여기서부터 여기까지"
+  if (m === 'range' && ST && RNG.cl && RNG.i0 < 0 && RNG.i1 < 0 && !RNG.pts.length) {
+    const a = ST.findIndex(s => s.inside); RNG.i0 = a >= 0 ? a : 0; RNG.i1 = ST.length - 1; redrawSel(); runRangeD();
+  }
 }
 document.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => setMode(b.dataset.mode));
 function showTab(t) { document.querySelectorAll('[data-tab]').forEach(x => x.classList.toggle('on', x.dataset.tab === t)); document.querySelectorAll('.tabbody').forEach(x => x.classList.toggle('on', x.id === 'tab-' + t)); requestAnimationFrame(redrawAll); }
@@ -572,6 +583,7 @@ $('showSurf').onchange = e => { radCache.clear(); showSurf = e.target.checked; U
 $('showTraj').onchange = e => { trajGroup.visible = e.target.checked; e.target.checked ? trajMap.addTo(map) : map.removeLayer(trajMap); };
 $('psize').oninput = e => { U.uSize.value = 0.09 * +e.target.value; };
 $('clip').onchange = () => applyClip();
+$('noNum').onchange = e => { document.body.classList.toggle('nonum', e.target.checked); $('hint').style.display = e.target.checked ? 'none' : ''; };
 document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT' && e.target.type !== 'range' && e.target.type !== 'checkbox') return;
   if (e.key === 'Escape') $('clear').click();
@@ -648,11 +660,13 @@ function runSection() {
   { const gz = demAt(SEC.c[0], SEC.c[1]); if (isFinite(gz)) { posKv.push(['지표 표고 (지형)', fmt(gz)]); posKv.push(['지표 → 천장 깊이', fmt(gz - (isFinite(M.ceilZ) ? M.ceilZ : M.floorZ))]); } }
   $('secPos').innerHTML = kvHtml(posKv);
   const cave = isFinite(M.height);
+  if (CMP.on) cmpUpdateSection();
   $('secKv').innerHTML = kvHtml([
     ['폭 — 벽 사이 (바닥+1.5 m)', fmt(M.ww)], ['  중심에서 왼쪽 / 오른쪽', `${fmt(M.wwl, 2, '')} / ${fmt(M.wwr, 2, ' m')}`], ['통행 폭 (가장 가까운 장애물)', fmt(M.w15)],
     ['최대 폭', fmt(M.wmax)], [cave ? '천장고 (중앙)' : '위 막힘 높이', fmt(M.height)],
     ['단면적', M.closed ? fmt(M.area, 2, ' m²') : '— (위가 열림)'], ['단면 둘레', M.closed ? fmt(M.perim) : '—'],
-    ['단면 점 수', M.n.toLocaleString() + (LOD === 'lite' ? ' <span class="warn">(저용량)</span>' : '')], ['윤곽 계산', robust ? `앞뒤 ±2 m 단면 ${M.robust}개 중앙값` : '이 단면만']]);
+    ['단면 점 수', M.n.toLocaleString() + (LOD === 'lite' ? ' <span class="warn">(저용량)</span>' : '')], ['윤곽 계산', robust ? `앞뒤 ±2 m 단면 ${M.robust}개 중앙값` : '이 단면만'],
+    ...cmpSectionRows()]);
   $('secMeas').textContent = '단면 그림에서 두 점을 클릭하면 거리·높이차를 잽니다. 휠 = 확대.';
   $('hud').innerHTML = `<b>${meta.name}</b> · ${SEC.station >= 0 ? `중심선 <b>${ST[SEC.station].s.toFixed(1)} m</b> · ` : ''}폭 <b>${fmt(isFinite(M.ww) ? M.ww : M.w15)}</b> · 높이 <b>${fmt(M.height)}</b>${M.closed ? ` · 단면적 <b>${fmt(M.area, 1, ' m²')}</b>` : ''}${LOD === 'lite' ? ' · <span style="color:var(--acc)">저용량</span>' : ''}`;
   drawSection();
@@ -719,6 +733,7 @@ function drawSection() {
   drawGrid(g, v, `자르는 선 방향 (m) · 각도 ${SEC.ang.toFixed(0)}°`, '높이 (표고 m)', c[2] + O[2] - ZOFF);
   for (let i = 0; i < S.n; i++) { const X = v.X(S.u[i]), Y = v.Y(S.v[i]); if (X < 0 || X > W || Y < 0 || Y > H) continue; g.fillStyle = S.k[i] === 0 ? '#d9dee6' : '#7fbf7f'; g.fillRect(X - 0.9, Y - 0.9, 1.8, 1.8); }
   if (M.closed && M.poly.length > 3) { g.beginPath(); M.poly.forEach((p, i) => i ? g.lineTo(v.X(p[0]), v.Y(p[1])) : g.moveTo(v.X(p[0]), v.Y(p[1]))); g.closePath(); g.fillStyle = 'rgba(242,179,61,.10)'; g.fill(); g.strokeStyle = 'rgba(242,179,61,.75)'; g.lineWidth = 1.5; g.stroke(); }
+  if (CMP.on && CMP.secPoly) { g.save(); g.setLineDash([5, 3]); g.strokeStyle = '#be8cff'; g.lineWidth = 1.5; g.beginPath(); CMP.secPoly.forEach((p, i) => i ? g.lineTo(v.X(p[0]), v.Y(p[1])) : g.moveTo(v.X(p[0]), v.Y(p[1]))); g.closePath(); g.stroke(); g.setLineDash([]); g.fillStyle = '#be8cff'; g.font = '11px Noto Sans KR'; g.fillText(`비교 ${CMP.B.date || ''} 단면 (바닥 맞춤)`, 8, H - 40); g.restore(); }
   if (isFinite(M.floor)) { g.setLineDash([5, 4]); g.strokeStyle = '#5fd38d'; g.lineWidth = 1; g.beginPath(); g.moveTo(v.X(v.x0), v.Y(M.floor)); g.lineTo(v.X(v.x1), v.Y(M.floor)); g.stroke(); g.setLineDash([]);
     g.fillStyle = '#5fd38d'; g.font = '11px Noto Sans KR'; g.fillText(`바닥 ${M.floorZ.toFixed(2)} m`, v.X(v.x0) + 4, v.Y(M.floor) - 4); }
   if (isFinite(M.ww)) arrow(g, v.X(-M.wwl), v.Y(M.band), v.X(M.wwr), v.Y(M.band), '#f2b33d', `폭 ${M.ww.toFixed(2)} m`);
@@ -763,9 +778,12 @@ function rngPath() {   // [{s, c:[x,y,z], t:[tx,ty], i(중심선 번호 or -1)}]
 async function runRange() {
   const path = rngPath(); const tok = ++RNG.token;
   if (!path || path.length < 2) { RNG.R = null; $('rngLen2').textContent = '—'; $('rngWhere').textContent = ''; $('rngKv').innerHTML = kvHtml([['—', '']]); drawCharts(); return; }
-  const R = RNG.L / 2, h = RNG.th / 2, out = [];
+  const R = RNG.L / 2, h = RNG.th / 2, out = []; const cmpOn = CMP.on && CMP.B; let volAc = 0, volBc = 0, cmpN = 0;
   for (let k = 0; k < path.length; k++) { const p = path[k]; const S = slice(p.c, p.t, R, h); const M = (p.i >= 0) ? measureStation(p.i, h, S, R) : measure(S);
-    out.push({ s: p.s, sAbs: p.sAbs, c: p.c, i: p.i, M }); if (k % 20 === 19) { $('rngProg').textContent = `계산 중 ${((k + 1) / path.length * 100).toFixed(0)}%`; await sleep0(); if (tok !== RNG.token) return; } }
+    out.push({ s: p.s, sAbs: p.sAbs, c: p.c, i: p.i, M });
+    if (cmpOn) { const MAs = measure(S), MBs = measure(cmpSlice(worldOf(p.c), p.t, R, h));   // 같은 단일단면 방식으로 A·B 맞춰 비교
+      if (isFinite(MAs.area)) volAc += MAs.area * RNG.step; if (isFinite(MBs.area)) volBc += MBs.area * RNG.step; cmpN++; }
+    if (k % 20 === 19) { $('rngProg').textContent = `계산 중 ${((k + 1) / path.length * 100).toFixed(0)}%`; await sleep0(); if (tok !== RNG.token) return; } }
   $('rngProg').textContent = ''; RNG.R = out; fixZ(out);
   const len = path[path.length - 1].s, step = RNG.step;
   const val = f => out.map(r => r.M[f]).filter(x => isFinite(x));
@@ -774,14 +792,18 @@ async function runRange() {
   const vol = out.reduce((s, r) => s + (isFinite(r.M.area) ? r.M.area * step : 0), 0), planA = out.reduce((s, r) => s + (isFinite(r.M.wmax) ? r.M.wmax * step : 0), 0);
   const covered = out.filter(r => isFinite(r.M.area)).length / out.length;
   const z0 = out[0].M.floorZ, z1 = out[out.length - 1].M.floorZ;
+  const straight = Math.hypot(out[out.length - 1].c[0] - out[0].c[0], out[out.length - 1].c[1] - out[0].c[1]);
   $('rngLen2').textContent = `${len.toFixed(1)} m`;
   $('rngWhere').textContent = RNG.cl ? `중심선 ${out[0].sAbs.toFixed(1)} → ${out[out.length - 1].sAbs.toFixed(1)} m · 단면 ${out.length}개 (${step} m 간격, 길이 ${RNG.L} m, 두께 ${RNG.th} m)` : `자유 경로 ${RNG.pts.length}점 · 단면 ${out.length}개 (${step} m 간격, 길이 ${RNG.L} m)`;
   if (RNG.cl) { $('rngS0').value = ST[Math.min(RNG.i0, RNG.i1)].s.toFixed(1); $('rngS1').value = ST[Math.max(RNG.i0, RNG.i1)].s.toFixed(1); }
   $('rngKv').innerHTML = kvHtml([
+    ['경로 길이 곡선 / 직선', `${fmt(len, 1, '')} / ${fmt(straight, 1)}` + (isFinite(straight) && straight > 0.5 ? ` (${(len / straight).toFixed(2)}배)` : '')],
     ['폭 벽 사이 (바닥+1.5 m) 평균', fmt(avg(w))], ['  최소 / 최대', `${fmt(mn(w), 2, '')} / ${fmt(mx(w))}`], ['통행 폭 평균 / 최소', `${fmt(avg(wp), 2, '')} / ${fmt(mn(wp))}`], ['최대 폭 평균', fmt(avg(wm))],
     ['천장고 평균', fmt(avg(hh))], ['  최소 / 최대', `${fmt(mn(hh), 2, '')} / ${fmt(mx(hh))}`],
     ['단면적 평균', fmt(avg(ar), 1, ' m²')], ['  최소 / 최대', `${fmt(mn(ar), 1, '')} / ${fmt(mx(ar), 1, ' m²')}`],
-    ['체적 (단면적×간격)', fmt(vol, 0, ' m³') + (isFinite(vol) ? ' ≈ ' + (vol * 1000).toLocaleString('ko-KR', { maximumFractionDigits: 0 }) + ' L' : '')], ['평면 면적 (최대폭×간격)', fmt(planA, 0, ' m²')], ['띠 면적 (단면 길이×구간)', fmt(RNG.L * len, 0, ' m²')],
+    ['체적 (단면적×간격)', fmt(vol, 0, ' m³') + (isFinite(vol) ? ' ≈ ' + (vol * 1000).toLocaleString('ko-KR', { maximumFractionDigits: 0 }) + ' L' : '')],
+    ...(cmpOn && cmpN ? [[`비교 체적 (같은 단일단면 방식) 지금 → ${CMP.B.date || '비교'}`, `${fmt(volAc, 0, '')} → ${fmt(volBc, 0, ' m³')}`], ['Δ 체적 (지금 − 비교)', (volAc - volBc >= 0 ? '+' : '') + (volAc - volBc).toFixed(0) + ' m³' + (volBc > 0 ? ` (${((volAc - volBc) / volBc * 100).toFixed(1)} %)` : '') + ' · 낙석·붕적 변화 추정']] : []),
+    ['평면 면적 (최대폭×간격)', fmt(planA, 0, ' m²')], ['띠 면적 (단면 길이×구간)', fmt(RNG.L * len, 0, ' m²')],
     ['바닥 표고 시작 → 끝', `${fmt(z0, 2, '')} → ${fmt(z1)}`], ['바닥 최저 / 최고', `${fmt(mn(fz), 2, '')} / ${fmt(mx(fz))}`],
     ['평균 경사', isFinite(z1 - z0) ? ((z1 - z0) / len * 100).toFixed(1) + ' %' : '—'], ['닫힌 단면 비율', (covered * 100).toFixed(0) + ' %'], ['점군', LOD === 'lite' ? '<span class="warn">저용량 (근사)</span>' : '원본']]);
   if (mode === 'range') redrawSel();
@@ -795,7 +817,7 @@ function drawRngSel() {
       [ST[a], ST[b]].forEach((s, j) => addPlane3D([s.x, s.y, s.z], [s.tx, s.ty], RNG.L / 2, s.z - 5, s.z + 10, j ? 0xff5d5d : 0x5fd38d));
       selBoxFn = () => { const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]); return { c: [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2, pts[0][2]], ex: Math.max(...xs) - Math.min(...xs) + RNG.L, ey: Math.max(...ys) - Math.min(...ys) + RNG.L, ez: 25 }; }; }
     ['i0', 'i1'].forEach((key, j) => { const i = RNG[key]; if (i < 0) return; const s = ST[i];
-      mkHandle('r' + key, [s.x, s.y], j ? '#ff5d5d' : '#5fd38d', p => { const k = nearestStation(p[0], p[1], false); if (k >= 0) { RNG[key] = k; } }, () => { runRangeD(); }, { title: j ? '끝 — 끌면 중심선 따라 이동' : '시작 — 끌면 중심선 따라 이동' }); });
+      mkHandle('r' + key, [s.x, s.y], j ? '#ff5d5d' : '#5fd38d', p => { const k = nearestStation(p[0], p[1], false); if (k >= 0) { RNG[key] = k; } }, () => { runRangeD(); }, { size: 20, title: j ? '끝 — 끌면 중심선 따라 이동' : '시작 — 끌면 중심선 따라 이동' }); });
   } else {
     const P = RNG.pts; if (P.length >= 2) { L.polyline(P.map(llOf), { color: '#f2b33d', weight: 4, interactive: false }).addTo(ovl); const P3 = P.map(p => [p[0], p[1], zRef(p[0], p[1])]); addLine3D(P3, 0xf2b33d);
       for (let j = 1; j < P.length; j++) { const d = [P[j][0] - P[j - 1][0], P[j][1] - P[j - 1][1]], L0 = Math.hypot(...d) || 1, n = [-d[1] / L0, d[0] / L0], R = RNG.L / 2;
@@ -1078,6 +1100,59 @@ $('gndOp').oninput = e => { if (gndMesh) gndMesh.material.opacity = +e.target.va
 const groundReady = loadGround().catch(err => { $('gndMsg').textContent = '지상지도를 불러오지 못했습니다(인터넷 연결 확인)'; console.warn(err); });
 window.raven = { lod: () => LOD, switchLod, profile: async (step = 1) => { await groundReady; if (!ST) return null; const out = []; const k = Math.max(1, Math.round(step / 0.5));
   for (let i = 0; i < ST.length; i += k) { const M = measureStation(i, 0.15); out.push([ST[i].s, ...[M.floorZ, M.ceilZ, M.height, M.ww, M.w15, M.wmax, M.area, demAt(ST[i].x, ST[i].y)].map(x => isFinite(x) ? +x.toFixed(2) : null), ST[i].inside]); if (i % 100 === 0) await sleep0(); } return out; } };
+
+// ───────── ⑥ 시계열 비교 (단면 중첩 + Δ) — 같은 곳을 다른 날 찍은 촬영분 B 를 겹친다 ─────────
+const CMP = { on: false, B: null, secM: null, secPoly: null, loading: false };
+const worldOf = c => [c[0] + O[0], c[1] + O[1]];               // A 로컬 → 월드(동·북)
+async function cmpLoad(idx) {
+  const d = DS[idx], bbase = d.dir + '/';
+  const bmeta = await (await fetch(bbase + 'meta.json', { cache: 'no-cache' })).json();
+  const info = bmeta.lite || { n: bmeta.n, parts: bmeta.parts };
+  let buf;
+  if (!info.parts) { buf = await (await fetch(bbase + 'cloud.bin')).arrayBuffer(); }
+  else { const tot = info.parts.reduce((a, p) => a + p.size, 0), out = new Uint8Array(tot); let off = 0;
+    for (const p of info.parts) { const b = new Uint8Array(await (await fetch(bbase + p.name)).arrayBuffer()); out.set(b, off); off += b.length; } buf = out.buffer; }
+  const n = info.n, BNX = bmeta.nx, BNY = bmeta.ny, BCELL = bmeta.cell, BMN = bmeta.min, BMX = bmeta.max;
+  const BEXT = [BMX[0] - BMN[0], BMX[1] - BMN[1], BMX[2] - BMN[2]];
+  const q = new Uint16Array(buf, 0, n * 3), at = new Uint8Array(buf, n * 6, n * 4);
+  const Bpos = new Float32Array(n * 3), Bcls = new Uint8Array(n);
+  const sx = BEXT[0] / 65535, sy = BEXT[1] / 65535, sz = BEXT[2] / 65535;
+  for (let i = 0; i < n; i++) { Bpos[3 * i] = BMN[0] + q[3 * i] * sx; Bpos[3 * i + 1] = BMN[1] + q[3 * i + 1] * sy; Bpos[3 * i + 2] = BMN[2] + q[3 * i + 2] * sz; Bcls[i] = at[4 * i + 1]; }  // 월드 좌표
+  const BcellStart = new Uint32Array(buf.slice(n * 10, n * 10 + (BNX * BNY + 1) * 4));
+  CMP.B = { pos: Bpos, cls: Bcls, cellStart: BcellStart, NX: BNX, NY: BNY, CELL: BCELL, MN: BMN, n, name: d.name, date: d.date || '' };
+}
+function cmpCellOf(x, y) { const B = CMP.B; const cx = Math.floor((x - B.MN[0]) / B.CELL), cy = Math.floor((y - B.MN[1]) / B.CELL); return (cx < 0 || cy < 0 || cx >= B.NX || cy >= B.NY) ? -1 : cy * B.NX + cx; }
+function cmpSlice(cw, t, R, h) {   // cw=[worldE,worldN], t=ENU 진행방향. u=자르는선, v=절대 월드 z
+  const B = CMP.B, nx = -t[1], ny = t[0]; const Set0 = new Set(); const L = Math.hypot(2 * nx * R, 2 * ny * R) || (2 * R);
+  const nseg = Math.max(1, Math.ceil(2 * R / (B.CELL * 0.5))), npad = Math.max(1, Math.ceil((h + B.CELL * 0.75) / (B.CELL * 0.5)));
+  for (let k = 0; k <= nseg; k++) { const x = cw[0] - nx * R + nx * 2 * R * k / nseg, y = cw[1] - ny * R + ny * 2 * R * k / nseg;
+    for (let j = -npad; j <= npad; j++) { const o = (h + B.CELL * 0.75) * j / npad; const c = cmpCellOf(x + t[0] * o, y + t[1] * o); if (c >= 0) Set0.add(c); } }
+  const U = [], V = [], K = [];
+  for (const ci of Set0) { const a = B.cellStart[ci], b = B.cellStart[ci + 1];
+    for (let i = a; i < b; i++) { const dx = B.pos[3 * i] - cw[0], dy = B.pos[3 * i + 1] - cw[1]; const al = dx * t[0] + dy * t[1]; if (al > h || al < -h) continue; const u = dx * nx + dy * ny; if (u > R || u < -R) continue; U.push(u); V.push(B.pos[3 * i + 2]); K.push(B.cls[i]); } }
+  return { u: Float32Array.from(U), v: Float32Array.from(V), k: Uint8Array.from(K), n: U.length, R, h, c: [0, 0, 0] };   // v=절대 월드 z, 바닥정렬(dz)로 겹치므로 c.z=0
+}
+function cmpUpdateSection() {
+  CMP.secPoly = null; CMP.secM = null; if (!CMP.on || !CMP.B || !curSec) return;
+  const MB = measure(cmpSlice(worldOf(curSec.c), curSec.t, curSec.S.R, curSec.S.h)); CMP.secM = MB;
+  if (MB.closed && MB.poly && MB.poly.length > 3 && isFinite(curSec.M.floor) && isFinite(MB.floor)) {
+    const dz = curSec.M.floor - MB.floor; CMP.secPoly = MB.poly.map(p => [p[0], p[1] + dz]);   // 바닥 맞춰 겹침
+  }
+}
+function cmpSectionRows() {
+  if (!CMP.on || !CMP.secM) return [];
+  const MB = CMP.secM, A = curSec.M, dA = (isFinite(A.area) && isFinite(MB.area)) ? A.area - MB.area : NaN;
+  return [[`— 비교 ${CMP.B.date || CMP.B.name} (보라 점선)`, MB.closed ? fmt(MB.area, 2, ' m²') : '— (열림)'],
+    ['Δ 단면적 (지금 − 비교)', isFinite(dA) ? (dA >= 0 ? '+' : '') + dA.toFixed(2) + ' m²' + (MB.area > 0 ? ` (${(dA / MB.area * 100).toFixed(1)} %)` : '') : '—']];
+}
+$('cmp').onchange = async e => {
+  const idx = +e.target.value;
+  if (idx < 0) { CMP.on = false; CMP.secPoly = CMP.secM = null; $('cmpMsg').textContent = ''; recomputeActive(); drawSection(); drawCharts(); return; }
+  if (CMP.loading) return; CMP.loading = true; $('cmpMsg').textContent = '비교 촬영분 불러오는 중…';
+  try { await cmpLoad(idx); CMP.on = true; $('cmpMsg').textContent = `비교: ${CMP.B.name}${CMP.B.date ? ' · ' + CMP.B.date : ''} (보라 점선)`; recomputeActive(); if (curSec) { cmpUpdateSection(); drawSection(); } }
+  catch (err) { CMP.on = false; $('cmpMsg').textContent = '비교 데이터를 불러오지 못했습니다'; console.warn(err); }
+  CMP.loading = false;
+};
 
 // ───────── 정보 탭 ─────────
 $('infoBox').innerHTML = (SITE ? `<h3 style="margin:4px 0">${SITE.name} — ${SITE.short}</h3>${SITE.about}${SITE.limits ? '<p><b>이 현장의 한계</b></p><ul>' + SITE.limits.map(x => `<li>${x}</li>`).join('') + '</ul>' : ''}${SITE.intro_url ? `<p><a href="${SITE.intro_url}" target="_blank" rel="noopener" style="color:var(--acc)">현장 소개 페이지 ↗</a></p>` : ''}<hr style="border:0;border-top:1px solid var(--line)">` : '') + `
