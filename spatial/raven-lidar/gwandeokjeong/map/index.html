@@ -203,7 +203,8 @@ main{display:flex;flex:1.55 1 0;min-height:260px}
   <!-- 부피 -->
   <div class="tabbody" id="tab-vol">
     <div class="cards" style="width:380px">
-      <div class="card edit"><h3>부피 조절 — 영역은 [면적] 과 같은 다각형을 씁니다</h3>
+      <div class="card"><h3>동굴 전체 체적 (자동)</h3><div class="big" id="volWhole">—</div><div class="kv" id="volWholeKv"><span>종단면이 계산되면 자동으로 나옵니다</span><span></span></div><div class="btnrow" style="margin-top:4px"><button id="volWholeBtn">전체 정밀 계산(원본)</button><button id="volRngGo">구간만 재기 →</button></div></div>
+      <div class="card edit"><h3>영역 지정 체적 — [면적] 과 같은 다각형을 씁니다</h3>
         <div class="ed">
           <label>계산 방식</label><div class="row"><select id="volMode"><option value="above">기준면 위 (건물·쌓인 것)</option><option value="below">기준면 아래 (파인 곳)</option><option value="both">기준면 위 + 아래</option><option value="void">바닥~천장 빈 공간 (동굴·실내)</option></select></div>
           <label>기준면 표고</label><div class="row"><input type="range" id="volRefR" step="0.05"><input type="number" id="volRef" step="0.05" style="width:74px">m</div>
@@ -563,7 +564,7 @@ function setMode(m) {
 }
 document.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => setMode(b.dataset.mode));
 function showTab(t) { document.querySelectorAll('[data-tab]').forEach(x => x.classList.toggle('on', x.dataset.tab === t)); document.querySelectorAll('.tabbody').forEach(x => x.classList.toggle('on', x.id === 'tab-' + t)); requestAnimationFrame(redrawAll); }
-document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { const t = b.dataset.tab; const m = { sec: 'point', rng: 'range', lin: 'line', are: 'area', vol: 'vol' }[t]; if (m) setMode(m); else showTab(t); });
+document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { const t = b.dataset.tab; const m = { sec: 'point', rng: 'range', lin: 'line', are: 'area', vol: 'vol' }[t]; if (m) setMode(m); else showTab(t); if (t === 'vol') computeWholeVol(); });
 $('clear').onclick = () => { if (mode === 'point') SEC.c = null; if (mode === 'range') RNG.pts = [], RNG.i0 = RNG.i1 = -1, RNG.R = null; if (mode === 'line') LIN.a = LIN.b = null, LIN.res = null; if (mode === 'area' || mode === 'vol') POLY.pts = [], AREA.res = VOL.res = null; U.uSlab.value = 0; $('clip').checked = false; redrawSel(); redrawAll(); };
 $('color').onchange = e => { colorMode = e.target.value; recolor(); };
 $('showCave').onchange = e => { radCache.clear(); showCave = e.target.checked; U.uShowCave.value = +showCave; recomputeActive(); };
@@ -780,7 +781,7 @@ async function runRange() {
     ['폭 벽 사이 (바닥+1.5 m) 평균', fmt(avg(w))], ['  최소 / 최대', `${fmt(mn(w), 2, '')} / ${fmt(mx(w))}`], ['통행 폭 평균 / 최소', `${fmt(avg(wp), 2, '')} / ${fmt(mn(wp))}`], ['최대 폭 평균', fmt(avg(wm))],
     ['천장고 평균', fmt(avg(hh))], ['  최소 / 최대', `${fmt(mn(hh), 2, '')} / ${fmt(mx(hh))}`],
     ['단면적 평균', fmt(avg(ar), 1, ' m²')], ['  최소 / 최대', `${fmt(mn(ar), 1, '')} / ${fmt(mx(ar), 1, ' m²')}`],
-    ['체적 (단면적×간격)', fmt(vol, 0, ' m³')], ['평면 면적 (최대폭×간격)', fmt(planA, 0, ' m²')], ['띠 면적 (단면 길이×구간)', fmt(RNG.L * len, 0, ' m²')],
+    ['체적 (단면적×간격)', fmt(vol, 0, ' m³') + (isFinite(vol) ? ' ≈ ' + (vol * 1000).toLocaleString('ko-KR', { maximumFractionDigits: 0 }) + ' L' : '')], ['평면 면적 (최대폭×간격)', fmt(planA, 0, ' m²')], ['띠 면적 (단면 길이×구간)', fmt(RNG.L * len, 0, ' m²')],
     ['바닥 표고 시작 → 끝', `${fmt(z0, 2, '')} → ${fmt(z1)}`], ['바닥 최저 / 최고', `${fmt(mn(fz), 2, '')} / ${fmt(mx(fz))}`],
     ['평균 경사', isFinite(z1 - z0) ? ((z1 - z0) / len * 100).toFixed(1) + ' %' : '—'], ['닫힌 단면 비율', (covered * 100).toFixed(0) + ' %'], ['점군', LOD === 'lite' ? '<span class="warn">저용량 (근사)</span>' : '원본']]);
   if (mode === 'range') redrawSel();
@@ -945,7 +946,7 @@ function runPoly() {
       const t = VOL.mode === 'above' ? a1 : VOL.mode === 'below' ? b1 : VOL.mode === 'both' ? a1 + b1 : vv; val[k] = t; maxT = Math.max(maxT, t); }
     const V = VOL.mode === 'above' ? up : VOL.mode === 'below' ? dn : VOL.mode === 'both' ? up + dn : vd;
     VOL.res = { V, up, dn, vd, cells, cov: cells * ca, A, val, gw, gh, bb, gs, maxT };
-    $('volBig').textContent = `${V.toFixed(V < 100 ? 2 : 0)} m³`;
+    $('volBig').innerHTML = `${V.toFixed(V < 100 ? 2 : 0)} m³ <span style="font-size:.56em;color:#8ad6a0">≈ ${(V * 1000).toLocaleString('ko-KR', { maximumFractionDigits: 0 })} L</span>`;
     $('volKv').innerHTML = kvHtml([['기준면 위', fmt(up, 1, ' m³')], ['기준면 아래', fmt(dn, 1, ' m³')], ['바닥~천장 빈 공간', fmt(vd, 1, ' m³')], ['기준면 표고', fmt(VOL.ref)], ['영역 면적 / 점군 덮은 면적', `${A.toFixed(1)} / ${(cells * ca).toFixed(1)} m²`],
       ['평균 두께 (부피÷덮은 면적)', fmt(cells ? V / (cells * ca) : NaN)], ['최대 두께', fmt(maxT)], ['격자', `${gs} m (${cells.toLocaleString()} 칸)`], ['점군', LOD === 'lite' ? '<span class="warn">저용량 (근사)</span>' : '원본']]);
   } else { VOL.res = null; $('volBig').textContent = '영역이 너무 큽니다 — 격자를 키우세요'; }
@@ -957,6 +958,25 @@ const setVRefUI = pair('volRefR', 'volRef', v => { VOL.ref = v; runPolyD(); });
 $('volMode').onchange = e => { VOL.mode = e.target.value; runPoly(); };
 $('volGrid').onchange = e => { VOL.grid = +e.target.value; runPoly(); };
 $('volGround').onclick = () => { if (AREA.res) { VOL.ref = elev(AREA.res.zlo); runPoly(); } };
+function computeWholeVol(){
+  const hasCL=(typeof ST!=='undefined')&&ST&&ST.length;
+  if(!hasCL){ $('volWhole').textContent='통로형 현장 아님'; $('volWholeKv').innerHTML=kvHtml([['전체 체적은 통로형(동굴) 현장만','아래 [영역 지정 체적] 사용']]); return; }
+  if(LOD!=='full'){ $('volWhole').textContent='원본에서 정밀 계산 →'; $('volWholeKv').innerHTML=kvHtml([['저용량은 좁은 단면을 과대 측정','아래 [전체 정밀 계산] 누르기'],['정확한 전체 체적','[원본] 점군에서만']]); return; }
+  if(!prof||!prof.length){ $('volWhole').textContent='— (종단면 계산 중…)'; $('volWholeKv').innerHTML=kvHtml([['잠시 뒤 자동 계산','']]); return; }
+  const ss=prof.map(p=>p.sAbs), ar=prof.map(p=>p.M.area);
+  const af=ar.slice(); let closed=0;            // 미계측(안 닫힌) 단면은 이웃 단면적으로 선형 보간
+  for(let k=0;k<af.length;k++){ if(isFinite(af[k])){ closed++; continue; }
+    let a=k-1; while(a>=0 && !isFinite(ar[a])) a--; let b=k+1; while(b<ar.length && !isFinite(ar[b])) b++;
+    if(a>=0 && b<ar.length){ const f=(ss[k]-ss[a])/((ss[b]-ss[a])||1); af[k]=ar[a]+(ar[b]-ar[a])*f; }
+    else if(a>=0) af[k]=ar[a]; else if(b<ar.length) af[k]=ar[b]; }
+  let V=0; for(let k=0;k<af.length;k++){ const a=af[k]; if(!isFinite(a)) continue;
+    const sPrev=k>0?ss[k-1]:ss[k], sNext=k<af.length-1?ss[k+1]:ss[k]; V+=a*((sNext-sPrev)/2||2); }
+  const Lv=V*1000, len=ss[ss.length-1]-ss[0], ratio=closed/af.length*100;
+  $('volWhole').innerHTML=`${V.toLocaleString('ko-KR',{maximumFractionDigits:0})} m³ <span style="font-size:.56em;color:#8ad6a0">≈ ${Lv.toLocaleString('ko-KR',{maximumFractionDigits:0})} L</span>`;
+  $('volWholeKv').innerHTML=kvHtml([['물로 채우면',Lv.toLocaleString('ko-KR',{maximumFractionDigits:0})+' L'],['통로 전체 길이',fmt(len,0)],['계산 방식','중심선 단면적 × 거리 적분(빈 단면 보간)'],['실측 단면 비율',ratio.toFixed(0)+' %'+(ratio<80?' · 나머지는 이웃값 보간':'')],['점군',LOD==='lite'?'<span class="warn">저용량(근사) — 정밀은 [원본]</span>':'원본']]);
+}
+$('volWholeBtn').onclick = () => { if(LOD!=='full'){ document.querySelector('[data-lod="full"]')?.click(); } else computeWholeVol(); };
+$('volRngGo').onclick = () => { setMode('range'); };
 $('volEdge').onclick = () => { const P = POLY.pts; if (P.length < 3) return; const zs = []; for (let j = 0; j < P.length; j++) { const a = P[j], b = P[(j + 1) % P.length]; for (let f = 0; f <= 1; f += 0.1) { const g = groundAt(a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f); if (g) zs.push(g.z); } } if (zs.length) { VOL.ref = elev(pct(zs, 50)); runPoly(); } };
 function drawPolySel() {
   const P = POLY.pts; if (!P.length) return;
@@ -1077,7 +1097,7 @@ function redrawAll() { drawSection(); drawLine(); drawCharts(); drawAreaHist(); 
 window.addEventListener('resize', () => requestAnimationFrame(redrawAll));
 async function computeProfile() {   // 동굴 전체 종단면 (2 m 간격) — 구간 탭 기본 그래프
   const out = []; for (let i = 0; i < ST.length; i += 4) { const s = ST[i]; out.push({ s: s.s, sAbs: s.s, c: [s.x, s.y, s.z], i, M: measureStation(i, 0.15) }); if (i % 80 === 0) { $('rngProg').textContent = `전체 종단면 ${(i / ST.length * 100).toFixed(0)}%`; await sleep0(); } }
-  prof = out; $('rngProg').textContent = ''; if (!RNG.R) $('rngLen2').textContent = `전체 ${ST[ST.length - 1].s.toFixed(0)} m`; drawCharts();
+  prof = out; $('rngProg').textContent = ''; if (!RNG.R) $('rngLen2').textContent = `전체 ${ST[ST.length - 1].s.toFixed(0)} m`; drawCharts(); computeWholeVol();
 }
 setMode('point');
 if (ST) { const i0 = ST.findIndex(s => s.inside && s.s >= 20); gotoStation(i0 >= 0 ? i0 : 0); }
