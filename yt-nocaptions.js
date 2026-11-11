@@ -25,11 +25,7 @@
     try { p.unloadModule("cc"); } catch (e) {}
   }
 
-  function attach(f) {
-    if (!f || f.__nocap) return;
-    if (!isYT(f.getAttribute("src"))) return;
-    if (!window.YT || !YT.Player) return; // API 준비 후 재시도
-    f.__nocap = true;
+  function makePlayer(f) {
     try {
       new YT.Player(f, {
         events: {
@@ -39,7 +35,21 @@
           }
         }
       });
-    } catch (e) { f.__nocap = false; }
+    } catch (e) {}
+  }
+  function attach(f) {
+    if (!f || f.__nocap) return;
+    var src = f.getAttribute("src");
+    if (!isYT(src)) return;
+    if (!window.YT || !YT.Player) return; // API 준비 후 재시도
+    f.__nocap = true;
+    // 핵심: iframe 이 API 리스닝 전에 이미 로드되면 handshake 가 안 돼 onReady 가 안 뜬다.
+    // 그래서 src 를 다시 지정해 '다시 로드' → load 직후 YT.Player 생성(핸드셰이크 성립) → unloadModule.
+    f.addEventListener("load", function onL() {
+      f.removeEventListener("load", onL);
+      makePlayer(f);
+    });
+    try { f.src = src; } catch (e) { makePlayer(f); } // 재할당이 load 를 트리거
   }
 
   function scan() {
