@@ -43,8 +43,6 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
 .pwtest .res{font-size:.88rem;color:var(--mute)}
 .state.lock{background:#2E4A6B;color:#fff}
 .state.lock2{background:#EFE7D6;color:#6B5A3E;border:1px solid #DCCBA8}
-.state.pub{background:#1F6F43;color:#fff;border-color:#1F6F43}
-.state.card{background:#F2EFE8;color:#6B5A3E;border:1px solid #DCCBA8}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px}
 .meta{display:flex;flex-wrap:wrap;gap:.5rem 1rem;font-size:.82rem;color:var(--mute);margin-bottom:.5rem}
 .tag{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:.1rem .6rem;font-size:.78rem}
@@ -74,6 +72,26 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
 .done{background:var(--bg);border-left:3px solid var(--ok);padding:.5rem .7rem;margin-top:.6rem;
   font-size:.9rem;white-space:pre-wrap;color:var(--ink)}
 .done b{color:var(--ok);font-weight:500}
+/* 방문자 */
+.vtiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px;margin:.4rem 0 1rem}
+.vtile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.75rem .5rem;text-align:center}
+.vlab{font-size:.78rem;color:var(--mute)}
+.vnum{font-family:"Gowun Batang",serif;font-size:1.55rem;color:var(--navy);line-height:1.35}
+.vsub{font-size:.74rem;color:var(--mute)}
+.vsec{font-size:.86rem;letter-spacing:.03em;color:var(--mute);margin:1.1rem 0 .55rem;border-top:1px solid var(--line);padding-top:.8rem}
+.vsec .hint{display:inline;border:0;padding:0}
+.vchart{display:flex;align-items:flex-end;gap:3px;height:128px;padding:2px 2px 0}
+.vbar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;min-width:0}
+.vbar i{display:block;width:100%;max-width:15px;background:var(--navy);border-radius:3px 3px 0 0;min-height:2px}
+.vbar u{font-size:.58rem;color:var(--mute);text-decoration:none;margin-top:4px;white-space:nowrap;height:1em;line-height:1}
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;margin-top:.3rem}
+@media(max-width:640px){.vgrid{grid-template-columns:1fr}}
+.vrow{display:flex;align-items:center;gap:.5rem;margin:.32rem 0;font-size:.86rem}
+.vk{flex:0 0 44%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vk a{color:var(--navy);text-decoration:none}
+.vbarh{flex:1;background:var(--bg);border-radius:5px;height:9px;overflow:hidden}
+.vbarh i{display:block;height:100%;background:var(--terra);border-radius:5px}
+.vv{flex:0 0 auto;color:var(--mute);font-variant-numeric:tabular-nums}
 </style></head><body>
 <div class="wrap">
   <div id="gate" class="gate">
@@ -93,8 +111,8 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
     </header>
     <div class="tabs">
       <button id="t1" class="on">문의</button>
-      <button id="tG">게시물 관리</button>
-      <button id="t2">포트폴리오(페이지) 공개 관리</button>
+      <button id="t4">방문자</button>
+      <button id="t2">페이지 공개 관리</button>
       <button id="t3">잠금 점검</button>
     </div>
 
@@ -103,23 +121,13 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
       <div id="asks">불러오는 중…</div>
     </section>
 
-    <section id="pG" hidden>
+    <section id="p4" hidden>
       <p class="hint">
-        숏제주 ‘내 의뢰’ 게시판 글입니다. <b>관리자 코드</b>를 한 번 넣어 두면 이 기기에서는 <b>비밀번호 없이</b> 글을 열어볼 수 있습니다(코드는 이 브라우저에만 저장).<br>
-        <b>열어보기</b>는 비밀번호 없이 해당 글을 엽니다. <b>숨기기·삭제</b>는 숏제주 게시판 자체를 바꿉니다.
+        우리 시트에만 쌓는 <b>자체 집계</b>입니다 — 구글 애널리틱스가 아니고, 방문자 IP·이름 같은 개인정보는 담지 않습니다.
+        날짜·페이지·유입 갈래만 셉니다. <b>순방문</b>은 브라우저 기준 하루 한 번만 세는 대략치라 실제와 조금 차이날 수 있습니다.
+        비공개 인사이트트립 페이지는 집계에서 빠져 있습니다.
       </p>
-      <div class="card">
-        <div class="row" style="flex-wrap:wrap;gap:8px;align-items:center">
-          <span class="t">숏제주 관리자 코드</span>
-          <input id="sjCode" type="password" placeholder="숏제주 관리자 코드" autocomplete="off" style="flex:1;min-width:170px;padding:.5rem .7rem;border:1px solid var(--line);border-radius:8px;background:#fff">
-          <button class="btn pri" id="sjLogin">코드 기억</button>
-          <button class="btn ghost" id="sjLogout" hidden>코드 지우기</button>
-        </div>
-        <div id="sjAuthState" class="hint" style="margin-top:.4rem"></div>
-      </div>
-      <div style="display:flex;justify-content:flex-end;margin:.3rem 0 .5rem">
-        <button class="btn ghost" id="sjRefresh">목록 새로고침</button></div>
-      <div id="sjList">관리자 코드를 넣거나 「목록 새로고침」을 누르세요.</div>
+      <div id="visBox">불러오는 중…</div>
     </section>
 
     <section id="p3" hidden>
@@ -169,6 +177,7 @@ const REPO = 'jejugrapher/jejugrapher-website';
 let PAGES = [];
 let KEY = null;
 let PWSHEET = {};   // 「비밀번호」 시트에서 읽어 온 값 (문의와 같은 시트, 관리자 열쇠로만)
+let VIS_LOADED = false;
 
 const $ = s => document.querySelector(s);
 const say = t => { $('#say').textContent = t || ''; };
@@ -184,15 +193,16 @@ async function call(mode, extra) {
 }
 
 /* ── 탭 ── */
-const TABS = [['t1', 'p1'], ['tG', 'pG'], ['t2', 'p2'], ['t3', 'p3']];
-function setTab(id) {
-  if (typeof id === 'number') id = ({ 1: 't1', 2: 't2', 3: 't3' })[id] || 't1';   // 옛 숫자 호출 호환
-  for (const [b, p] of TABS) { $('#' + b).classList.toggle('on', b === id); $('#' + p).hidden = b !== id; }
+function setTab(n) {
+  for (const i of [1, 2, 3, 4]) {
+    $('#t' + i).classList.toggle('on', n === i);
+    $('#p' + i).hidden = n !== i;
+  }
 }
-$('#t1').addEventListener('click', () => setTab('t1'));
-$('#tG').addEventListener('click', () => { setTab('tG'); loadBoardAdmin(); });
-$('#t2').addEventListener('click', () => setTab('t2'));
-$('#t3').addEventListener('click', () => setTab('t3'));
+$('#t1').addEventListener('click', () => setTab(1));
+$('#t2').addEventListener('click', () => setTab(2));
+$('#t3').addEventListener('click', () => { setTab(3); });
+$('#t4').addEventListener('click', () => { setTab(4); if (!VIS_LOADED) { VIS_LOADED = true; loadVisits(); } });
 $('#refresh').addEventListener('click', async () => {
   PAGES = []; try { sessionStorage.removeItem('jg-pages'); } catch (e) {}
   $('#pages').textContent = '다시 읽는 중…'; await loadPages(); say('목록을 다시 읽었습니다.');
@@ -220,8 +230,6 @@ $('#lock').addEventListener('click', () => {
 
 function enter() {
   $('#gate').hidden = true; $('#app').hidden = false;
-  // 들어올 때마다 페이지 목록을 새로 읽는다 — 홈페이지에 새 글/카드가 생기면 바로 반영된다
-  PAGES = []; try { sessionStorage.removeItem('jg-pages'); } catch (e) {}
   loadAsks(); loadPages();
 }
 
@@ -331,14 +339,8 @@ async function fetchPages(force) {
         if (d > best) best = d;
       }
       it.date = best;
-      // PBKDF2 = 본문 암호화 / cardlock.js = 서버가 여닫는 카드 가림막 / 그 밖의 가림막 = 화면만 가림
-      it.lock = /PBKDF2/.test(h) ? 'enc' : (/cardlock\.js/.test(h) ? 'card' : (GATE.test(h) ? 'gate' : ''));
-      // 카드 가림막 페이지가 시트에 설정이 없을 때 따르는 기본값 (locked/public)
-      it.carddef = 'locked';
-      if (it.lock === 'card') {
-        const dm = h.match(/JG_CARDLOCK\s*=\s*\{[^}]*default\s*:\s*['"](\w+)['"]/);
-        it.carddef = (dm && dm[1] === 'public') ? 'public' : 'locked';
-      }
+      // PBKDF2 가 있으면 본문을 통째로 암호화한 것, 없으면 화면만 가리는 가림막
+      it.lock = /PBKDF2/.test(h) ? 'enc' : (GATE.test(h) ? 'gate' : '');
       // 사진첩 비밀번호는 대개 촬영 날짜입니다 — 페이지에 적힌 날짜를 맞춰 보고 맞으면 그대로 채웁니다.
       // (페이지에 이미 보이는 값 하나를 확인하는 것이라, 비밀번호를 알아내는 게 아닙니다.)
       it.pw = '';
@@ -362,20 +364,11 @@ async function fetchPages(force) {
           }
         }
       }
-    } catch (e) { it.title = it.path; it.date = ''; it.lock = ''; it.pw = ''; it.carddef = 'locked'; }
+    } catch (e) { it.title = it.path; it.date = ''; it.lock = ''; it.pw = ''; }
   }));
   list.forEach(it => { it.shot = SHOT.test(it.file); if (!it.shot) it.date = ''; });
-  // 포트폴리오(media.html) 카드 배치 순서를 그대로 따른다 — 카드에 없는 페이지(사진첩·앨범 등)는 그 뒤로 날짜순
-  let ORDER = [];
-  try {
-    const mh = await (await fetch('/media.html', { cache: 'no-cache' })).text();
-    ORDER = [...mh.matchAll(/<div class="pc"><a class="ph" href="([^"]+)"/g)]
-      .map(m => m[1].replace(/index\.html$/, ''));
-  } catch (e) {}
-  list.forEach(it => { it.ord = ORDER.indexOf(it.path.replace(/index\.html$/, '')); if (it.ord < 0) it.ord = 1e9; });
-  list.sort((a, b) => (a.ord - b.ord)                   // 포트폴리오 카드 순서 우선
-    || (b.shot - a.shot)                                // 그 밖은 촬영물 먼저
-    || (b.date || '').localeCompare(a.date || '')       // 최신 촬영일
+  list.sort((a, b) => (b.shot - a.shot)
+    || (b.date || '').localeCompare(a.date || '')
     || a.path.localeCompare(b.path));
   try { sessionStorage.setItem('jg-pages', JSON.stringify({t: Date.now(), v: list})); } catch (e) {}
   return list;
@@ -408,7 +401,6 @@ async function loadPages() {
       <div><div class="t">${p.date ? `<span style="color:var(--mute);font-size:.82rem">${esc(p.date)}</span>  ` : ''}${esc(p.title)}
         ${p.lock === 'enc' ? '<span class="state lock" title="비밀번호 없이는 내용이 보이지 않습니다 (본문 암호화)">🔒 비밀번호 · 본문 암호화</span>' : ''}
         ${p.lock === 'gate' ? '<span class="state lock2" title="화면은 가리지만, 사진 주소 같은 일부는 소스에 남습니다">🔑 비밀번호</span>' : ''}
-        ${p.lock === 'card' ? cardChip(p) : ''}
         ${s.hidden ? '<span class="state hid">가려짐</span>' : ''}
         ${s.down ? '<span class="state down">내려짐</span>' : ''}</div>
         <div class="p">/${esc(p.path)}</div></div>
@@ -416,75 +408,11 @@ async function loadPages() {
         <button class="btn" data-act="${s.hidden ? 'show' : 'hide'}" data-path="${esc(p.path)}">${s.hidden ? '다시 보이기' : '가리기'}</button>
         <button class="btn ${s.down ? '' : 'warn'}" data-act="${s.down ? 'republish' : 'unpublish'}" data-path="${esc(p.path)}">${s.down ? '되돌리기' : '내리기'}</button>
       </div></div>
-      ${p.lock === 'card' ? cardRow(p)
-        : p.lock === 'enc' ? '<div class="pwrow"><span class="pwnote" style="background:#F6E7D8;color:#8a5a2e">🔒 본문 암호화 — 내용이 통째로 잠겨 있어 여기서 공개/비번을 바꿀 수 없습니다. 관리자에서 바꾸려면 ‘가벼운 가림’으로 전환해야 합니다(원하시면 말씀 주세요).</span></div>'
-        : p.lock ? pwRow(p) : ''}
+      ${p.lock ? pwRow(p) : ''}
       </div>`;
   }).join('');
   paintPw();
 }
-
-/* ── 카드 가림막 (서버가 여닫는 비밀번호) ──────────────────────
-   enc/gate 와 달리, 비번·공개여부를 관리자에서 바로 정한다(재배포 없이).
-   값은 「비밀번호」 시트에 있다: 행 없음=미설정(페이지 기본값), 비번 있음=잠김, 비번 빈칸=완전 공개. */
-function cardMode(p) {
-  const path = p.path;
-  if (!(path in PWSHEET)) return 'unset';
-  return PWSHEET[path] ? 'locked' : 'public';
-}
-function cardChip(p) {
-  const m = cardMode(p);
-  if (m === 'public') return '<span class="state pub" title="비밀번호 없이 누구나 봅니다">🔓 공개</span>';
-  if (m === 'locked') return '<span class="state lock2" title="비밀번호를 넣어야 열립니다 (화면 가림)">🔒 비밀번호</span>';
-  return `<span class="state card" title="아직 설정 전 — 기본값을 따릅니다">공개 (기본)</span>`;
-}
-function cardRow(p) {
-  const m = cardMode(p), pw = PWSHEET[p.path] || '';
-  const cur = m === 'public' ? '공개'
-            : m === 'locked' ? (pw ? ('비밀번호 ' + esc(pw)) : '비밀번호')
-            : '공개 (기본)';
-  return `<div class="pwrow cardrow" data-cardpath="${esc(p.path)}">
-    <span class="pwlab">이 카드</span>
-    <code class="pwval">${cur}</code>
-    <input class="pwin" data-role="in" type="text" inputmode="numeric" placeholder="넣을 비밀번호 (또는 ‘임의 생성’)" autocomplete="off">
-    <button class="btn" data-role="gen">임의 생성</button>
-    <button class="btn pri" data-role="setpw">비밀번호 넣기</button>
-    <button class="btn" data-role="pub">비밀번호 빼기 · 공개로</button>
-    <button class="btn open" data-role="open">열어보기 ↗</button>
-  </div>`;
-}
-document.addEventListener('click', async e => {
-  const b = e.target.closest('.cardrow [data-role]'); if (!b) return;
-  const row = b.closest('.cardrow'), path = row.dataset.cardpath, role = b.dataset.role;
-  const inp = row.querySelector('[data-role="in"]');
-  if (role === 'gen') { inp.value = String(Math.floor(100000 + Math.random() * 900000)); inp.focus(); return; }
-  if (role === 'setpw') {
-    const v = inp.value.trim();
-    if (!v) { say('비밀번호를 넣거나 ‘임의 생성’을 누르세요.'); return; }
-    b.disabled = true; say('저장하는 중…');
-    try {
-      const d = await call('pw_set', { path, pw: v });
-      if (d && d.ok) { PWSHEET[path] = v; say(`비번을 걸었습니다 — /${path} · ${v}`); loadPages(); }
-      else say('실패: ' + ((d && d.why) || '알 수 없음 — Apps Script 재배포를 확인하세요'));
-    } catch (err) { say('서버에 닿지 못했습니다.'); }
-    b.disabled = false; return;
-  }
-  if (role === 'pub') {
-    if (!confirm(`/${path} 을(를) 완전 공개로 바꿉니다.\n비밀번호 없이 누구나 보게 됩니다. 진행할까요?`)) return;
-    b.disabled = true; say('바꾸는 중…');
-    try {
-      const d = await call('pw_set', { path, pub: '1' });
-      if (d && d.ok) { PWSHEET[path] = ''; say(`완전 공개로 바꿨습니다 — /${path}`); loadPages(); }
-      else say('실패: ' + ((d && d.why) || '알 수 없음 — Apps Script 재배포를 확인하세요'));
-    } catch (err) { say('서버에 닿지 못했습니다.'); }
-    b.disabled = false; return;
-  }
-  if (role === 'open') {
-    const pw = PWSHEET[path] || '';
-    if (pw) { try { await navigator.clipboard.writeText(pw); } catch (e) {} }
-    window.open('/' + path + (pw ? '#pw=' + encodeURIComponent(pw) : ''), '_blank', 'noopener');
-  }
-});
 
 /* ── 비밀번호 보관함 ──────────────────────────────────────────
    비밀번호는 이 브라우저에만(localStorage) 저장합니다. 사이트 소스에는 들어가지 않습니다.
@@ -572,6 +500,67 @@ document.addEventListener('click', async e => {
   b.disabled = false;
   loadPages();
 });
+
+/* ── 방문자 ──────────────────────────────────────────────
+   우리 시트(mode=visits)에서 날짜별 집계를 받아 그린다. 날짜는 yyyy-mm-dd(한국시간). */
+function vday(n) {
+  const d = new Date(); d.setDate(d.getDate() - n);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function vnorm(s) { return String(s).split('-').map((x, i) => i ? x.padStart(2, '0') : x).join('-'); }
+function vsum(days, from) {
+  let pv = 0, uv = 0; const pages = {}, refs = {};
+  days.forEach(r => { if (r.d >= from) { pv += r.pv; uv += r.uv;
+    for (const k in r.pages) pages[k] = (pages[k] || 0) + r.pages[k];
+    for (const k in r.refs) refs[k] = (refs[k] || 0) + r.refs[k]; } });
+  return { pv, uv, pages, refs };
+}
+function vtop(obj, n, fmt) {
+  const a = Object.entries(obj).sort((x, y) => y[1] - x[1]).slice(0, n);
+  if (!a.length) return '<div class="hint">아직 없습니다.</div>';
+  const mx = a[0][1] || 1;
+  return a.map(([k, v]) => `<div class="vrow"><span class="vk">${fmt ? fmt(k) : esc(k)}</span>` +
+    `<span class="vbarh"><i style="width:${Math.round(v / mx * 100)}%"></i></span>` +
+    `<span class="vv">${v.toLocaleString()}</span></div>`).join('');
+}
+async function loadVisits() {
+  const box = $('#visBox'); box.textContent = '불러오는 중…';
+  let d;
+  try { d = await call('visits'); }
+  catch (e) { box.textContent = '서버에 닿지 못했습니다.'; return; }
+  if (!d || !d.ok) {
+    box.innerHTML = '<p class="hint">' + esc((d && d.why) ||
+      '불러오지 못했습니다. Apps Script 에 「방문집계」 코드가 설치·배포됐는지 확인해 주세요.') + '</p>';
+    return;
+  }
+  const days = (d.days || []).map(r => (r.d = vnorm(r.d), r)).sort((a, b) => a.d.localeCompare(b.d));
+  if (!days.length) {
+    box.innerHTML = '<p class="hint">아직 방문 기록이 없습니다. 페이지가 열리기 시작하면 여기에 쌓입니다.</p>';
+    return;
+  }
+  const byd = {}; days.forEach(r => byd[r.d] = r);
+  const g = dd => byd[dd] || { pv: 0, uv: 0 };
+  const tdy = g(vday(0)), ysd = g(vday(1));
+  const w = vsum(days, vday(6)), m = vsum(days, vday(29)), tot = vsum(days, '0000-00-00');
+  const tile = (lab, o) => `<div class="vtile"><div class="vlab">${lab}</div>` +
+    `<div class="vnum">${(o.pv || 0).toLocaleString()}</div>` +
+    `<div class="vsub">순방문 ${(o.uv || 0).toLocaleString()}</div></div>`;
+  const last30 = []; for (let i = 29; i >= 0; i--) { const dd = vday(i); last30.push(byd[dd] || { d: dd, pv: 0, uv: 0 }); }
+  const mx = Math.max(1, ...last30.map(x => x.pv));
+  const bars = last30.map((x, i) => {
+    const h = Math.round(x.pv / mx * 100);
+    const lab = (i % 5 === 0 || i === 29) ? x.d.slice(5).replace('-', '/') : '';
+    return `<div class="vbar" title="${x.d} · 조회수 ${x.pv} · 순방문 ${x.uv}"><i style="height:${h}%"></i><u>${lab}</u></div>`;
+  }).join('');
+  box.innerHTML =
+    `<div class="vtiles">${tile('오늘', tdy)}${tile('어제', ysd)}${tile('최근 7일', w)}${tile('최근 30일', m)}${tile('전체', tot)}</div>` +
+    `<div class="vsec">최근 30일 조회수</div><div class="vchart">${bars}</div>` +
+    `<div class="vgrid">` +
+      `<div><div class="vsec">많이 본 페이지 <span class="hint">· 최근 30일</span></div>` +
+        vtop(m.pages, 12, k => `<a href="${esc(k)}" target="_blank" rel="noopener">${esc(k)}</a>`) + `</div>` +
+      `<div><div class="vsec">유입 경로 <span class="hint">· 최근 30일</span></div>` + vtop(m.refs, 10) + `</div>` +
+    `</div>`;
+}
 
 /* 새로고침해도 다시 묻지 않게 */
 try { const k = sessionStorage.getItem('jg-admin'); if (k) { KEY = k; enter(); } } catch (e) {}
@@ -717,85 +706,5 @@ document.addEventListener('click', async e => {
   inp.value = '';                     /* 넣은 비밀번호는 바로 지운다 */
 });
 
-/* ── 게시물 관리 (숏제주 ‘내 의뢰’ 게시판) ── */
-const SJ_API = "https://script.google.com/macros/s/AKfycbyOCuhtrvgt7BAz9dIvKQ26RgzEaOGScAamlxp-gm_vbhZ6prsEwFeuWIMfn8FJAMTQ/exec";
-let sjCode = ''; try { sjCode = localStorage.getItem('sj_admin') || ''; } catch (e) {}   // shortjeju.html과 같은 키 → 한 번 넣으면 양쪽에서 무비번
-const sjFmt = v => {
-  if (!v) return ''; const s = String(v);
-  if (/^\d{4}-\d{2}-\d{2}T/.test(s)) { const d = new Date(s); if (!isNaN(d)) { const k = new Date(d.getTime() + 9 * 3600 * 1000), p = n => String(n).padStart(2, '0'); return k.getUTCFullYear() + '-' + p(k.getUTCMonth() + 1) + '-' + p(k.getUTCDate()) + ' ' + p(k.getUTCHours()) + ':' + p(k.getUTCMinutes()); } }
-  return s;
-};
-async function sjCall(action, data) {
-  const r = await fetch(SJ_API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action, data: data || {} }) });
-  const j = await r.json();
-  if (!j.ok) { const e = new Error(j.message || j.error || 'error'); e.code = j.error; throw e; }
-  return j;
-}
-function sjAuthUI() {
-  const on = !!sjCode;
-  $('#sjLogout').hidden = !on;
-  $('#sjAuthState').textContent = on ? '✓ 코드 기억됨 — 비밀번호 없이 열어볼 수 있습니다.' : '코드를 넣지 않으면 목록만 보이고, 글은 각자 비밀번호로만 열립니다.';
-}
-async function loadBoardAdmin() {
-  sjAuthUI();
-  const box = $('#sjList'); box.textContent = '불러오는 중…';
-  let posts = [];
-  try {
-    const j = sjCode ? await sjCall('adminAll', { adminPw: sjCode }) : await sjCall('board', {});
-    posts = j.posts || [];
-  } catch (e) {
-    if (e.code === 'wrong_password') { sjCode = ''; try { localStorage.removeItem('sj_admin'); } catch (x) {} box.innerHTML = '<div class="hint" style="color:var(--warn)">관리자 코드가 맞지 않습니다. 코드를 다시 넣어 주세요.</div>'; sjAuthUI(); return; }
-    box.textContent = '목록을 불러오지 못했습니다.'; return;
-  }
-  if (!posts.length) { box.textContent = '게시물이 없습니다.'; return; }
-  box.innerHTML = '';
-  for (const p of posts) {
-    const id = p.id, title = p['제목'] || '(제목 없음)', date = sjFmt(p['접수일시']), state = p['상태'] || '접수', done = !!p['완성본링크'];
-    const card = document.createElement('div'); card.className = 'card';
-    const row = document.createElement('div'); row.className = 'row'; row.style.flexWrap = 'wrap';
-    row.innerHTML = '<span class="t">' + esc(title) + '</span>' +
-      '<span class="state">' + esc(state) + '</span>' + (done ? ' <span class="state pub">완성본</span>' : '') +
-      '<span class="hint" style="margin-left:auto">' + esc(date) + '</span>';
-    card.append(row);
-    const ctl = document.createElement('div'); ctl.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-top:.6rem';
-    const durl = /^(\/shortjeju\/|https?:\/\/[^/]+\/shortjeju\/)/.test(p['완성본링크'] || '') ? p['완성본링크'] : '';
-    const open = document.createElement('a'); open.className = 'btn'; open.textContent = durl ? '상세페이지 ↗' : '열어보기 ↗'; open.href = durl || ('/shortjeju.html#open=' + encodeURIComponent(id)); open.target = '_blank'; open.rel = 'noopener';
-    const hide = document.createElement('button'); hide.className = 'btn'; hide.textContent = '숨기기';
-    const del = document.createElement('button'); del.className = 'btn warn'; del.textContent = '삭제';
-    hide.addEventListener('click', () => sjAction('hide', id, title));
-    del.addEventListener('click', () => sjAction('delete', id, title));
-    ctl.append(open, hide, del);
-    card.append(ctl);
-    box.append(card);
-  }
-}
-async function sjAction(action, id, title) {
-  if (!sjCode) { say('먼저 숏제주 관리자 코드를 넣어 주세요.'); setTab('tG'); return; }
-  const label = action === 'delete' ? '삭제' : '숨기기';
-  if (action === 'delete' && !confirm('“' + title + '” 글을 삭제할까요? 되돌릴 수 없습니다.')) return;
-  say(label + ' 요청 중…');
-  try {
-    await sjCall(action, { adminPw: sjCode, id });
-    say('“' + title + '” ' + label + ' 완료.');
-    loadBoardAdmin();
-  } catch (e) {
-    if (e.code === 'unknown_action') say(label + ' 기능이 숏제주 게시판 백엔드에 아직 없습니다 — Apps Script에 ‘' + action + '’ 액션을 추가해야 작동합니다.');
-    else if (e.code === 'wrong_password') say('관리자 코드가 맞지 않습니다.');
-    else say(label + ' 실패: ' + (e.message || '연결 오류'));
-  }
-}
-$('#sjLogin').addEventListener('click', async () => {
-  const v = $('#sjCode').value.trim(); if (!v) return;
-  say('코드 확인 중…');
-  try { await sjCall('adminAll', { adminPw: v }); sjCode = v; try { localStorage.setItem('sj_admin', v); } catch (e) {} $('#sjCode').value = ''; say('숏제주 관리자 코드를 기억했습니다.'); loadBoardAdmin(); }
-  catch (e) { say(e.code === 'wrong_password' ? '관리자 코드가 맞지 않습니다.' : '확인 실패: ' + (e.message || '연결 오류')); }
-});
-$('#sjLogout').addEventListener('click', () => { sjCode = ''; try { localStorage.removeItem('sj_admin'); } catch (e) {} say('코드를 지웠습니다.'); loadBoardAdmin(); });
-$('#sjRefresh').addEventListener('click', loadBoardAdmin);
-
 </script>
-<!-- jg-i18n -->
-<script src="/i18n_dict.js" defer></script>
-<script src="/i18n_dom.js" defer></script>
-<!-- /jg-i18n -->
 </body></html>
