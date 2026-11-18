@@ -577,7 +577,11 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
       if (du) { const ap = document.createElement("a"); ap.href = du; ap.target = "_blank"; ap.rel = "noopener"; ap.className = "btn small"; ap.textContent = "완성본 페이지 따로 보기"; d.append(ap); }
       const a = document.createElement("a"); a.target = "_blank"; a.rel = "noopener"; a.className = "btn small";
       if (dlink) { a.href = dlink; a.textContent = "영상 다운로드"; d.append(a); }
-      else if (!du) { a.href = finLink; a.textContent = "유튜브에서 열기"; d.append(a); }
+      else if (!du) {                      // 완성본링크가 비었으면 임베드한 영상의 유튜브 주소로
+        const first = mains[0] || extra[0];
+        const ytUrl = finLink || (first ? "https://youtu.be/" + first.id : "");
+        if (ytUrl) { a.href = ytUrl; a.textContent = "유튜브에서 열기"; d.append(a); }
+      }
       block1.append(d);
     } else if (du) {                      // 완성본이 별도 상세페이지뿐 — 넘기지 말고 글과 함께 두고 버튼으로 연다
       const d = el("div", "deliver");
