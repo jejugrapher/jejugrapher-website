@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title data-i18n="g.__title">제주목관아 걸어보기 — 디지털 트윈 해설 체험 | JEJUGRAPHER 제주그래퍼</title>
+<meta name="description" data-i18n-attr="content:g.desc" content="3D 스캔으로 담은 제주목관아를, 안내 캐릭터와 함께 걸으며 전각마다 해설을 듣는 디지털 트윈 해설 체험을 준비하고 있습니다. 관덕정에서 연희각까지 끊김 없이 걷는 샘플 영상과 소개.">
+<meta property="og:type" content="video.other">
+<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
+<meta property="og:title" content="제주목관아 걸어보기 — 디지털 트윈 해설 체험 (준비 중)">
+<meta property="og:description" content="3D 스캔으로 담은 제주목관아를, 안내 캐릭터와 함께 걸으며 전각마다 해설을 듣는 디지털 트윈 해설 체험. 관덕정에서 연희각까지 끊김 없이 걷는 샘플 영상.">
+<meta property="og:image" content="https://i.ytimg.com/vi/Y_rLgTbh6LE/maxresdefault.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://jejugrapher.com/spatial/raven-lidar/gwandeokjeong/experience.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/spatial/style.css">
+<style>
+  body{background:var(--bg-main);color:var(--text-main);font-family:'Noto Sans KR',sans-serif;margin:0;line-height:1.75}
+  .rlnav{position:sticky;top:0;z-index:60;background:rgba(254,252,247,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border-line)}
+  .rlnav .in{max-width:1080px;margin:0 auto;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .rlnav a{color:var(--text-soft);text-decoration:none}
+  .rlnav .logo{font-family:'Noto Serif KR',serif;font-weight:700;letter-spacing:2px;font-size:16px;color:var(--text-main)}
+  .rlnav .lk{display:flex;gap:16px;font-size:14px;flex-wrap:wrap;align-items:center}
+  .rlnav .lk a:hover{color:var(--accent-sage)} .rlnav .lk a.on{color:var(--accent-terracotta);font-weight:500}
+  .rlnav #jglang{flex:0 0 auto}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+  .hero{min-height:auto;display:block;padding:4rem 0 2.4rem;background:linear-gradient(135deg,var(--bg-soft) 0%,var(--bg-accent) 100%)}
+  .crumb{font-size:13px;color:var(--text-mute);margin-bottom:1rem}
+  .crumb a{color:var(--text-mute);text-decoration:none;border-bottom:1px solid transparent}
+  .crumb a:hover{border-color:var(--text-mute)}
+  .eyebrow{font-family:'Noto Serif KR',serif;font-size:13px;letter-spacing:.2em;color:var(--accent-terracotta);font-weight:600;margin-bottom:12px}
+  .hero h1{font-family:'Noto Serif KR',serif;font-size:clamp(1.8rem,4.6vw,2.9rem);line-height:1.3;margin:0 0 1rem}
+  .hero .lede{font-size:1.05rem;color:var(--text-soft);max-width:42em}
+  .badge-prep{display:inline-block;margin-left:.5rem;padding:.12em .7em;border-radius:999px;background:var(--accent-sage);color:var(--bg-main);font-family:'Noto Sans KR',sans-serif;font-size:.62em;font-weight:600;letter-spacing:.02em;vertical-align:middle}
+  .player{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;box-shadow:var(--shadow-deep);margin:0}
+  .player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  figure{margin:2.4rem 0 0}
+  figcaption{margin-top:12px;font-size:14px;color:var(--text-mute)}
+  section{padding:3.2rem 0;border-top:1px solid var(--border-line)}
+  section:first-of-type{border-top:0}
+  h2{font-family:'Noto Serif KR',serif;font-size:clamp(1.4rem,3vw,2rem);margin:0 0 1.2rem;color:var(--text-main)}
+  h3{font-family:'Noto Serif KR',serif;font-size:1.15rem;margin:1.6rem 0 .5rem;color:var(--text-main)}
+  p{color:var(--text-soft);margin:0 0 1rem}
+  .why{list-style:none;padding:0;margin:1.4rem 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+  .why li{background:var(--bg-soft);border:1px solid var(--border-line);border-radius:8px;padding:16px 18px}
+  .why .hn{font-family:'Noto Serif KR',serif;font-weight:600;color:var(--text-main)}
+  .why .hd{display:block;font-size:14px;color:var(--text-mute);margin-top:6px;line-height:1.7}
+  .lists{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:1.2rem}
+  .lists .box{background:var(--bg-soft);border:1px solid var(--border-line);border-radius:8px;padding:1.1rem 1.4rem}
+  .lists .box.prep{background:var(--bg-accent)}
+  .lists h3{margin:.2rem 0 .7rem}
+  .lists ul{margin:0;padding-left:1.1rem}
+  .lists li{color:var(--text-soft);margin:.35rem 0;line-height:1.7}
+  @media (max-width:640px){.lists{grid-template-columns:1fr}}
+  .callout{background:var(--bg-accent);border-left:3px solid var(--accent-sage);border-radius:0 8px 8px 0;padding:1.2rem 1.4rem;margin:1.4rem 0}
+  .callout p:last-child{margin-bottom:0}
+  .src{font-size:12.5px;color:var(--text-mute);margin-top:1.2rem;line-height:1.7}
+  .cta{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.3rem;background:var(--accent-terracotta);color:var(--bg-main);border-radius:999px;font-weight:500;font-size:.95rem;margin:.4rem .6rem .4rem 0}
+  .cta:hover{background:#B86A4D;color:var(--bg-main)}
+  .cta.ghost{background:transparent;color:var(--text-soft);border:1px solid var(--border-soft)}
+  .cta.ghost:hover{border-color:var(--accent-sage);color:var(--text-main)}
+  .rlfoot{border-top:1px solid var(--border-line);background:var(--bg-soft);padding:2.4rem 0;margin-top:1rem}
+  .rlfoot p{font-size:13px;color:var(--text-mute);margin:.2rem 0}
+  html[dir="rtl"] .hero .lede,html[dir="rtl"] p,html[dir="rtl"] .why li{text-align:right}
+</style>
+<script src="/yt-nocaptions.js" defer></script><!-- jg-visit -->
+<script>(function(){try{var EP='https://script.google.com/macros/s/AKfycbwYW8zN_7UyGnbeYpf3A5hSeSp4GVTc3N3Rj3c28WgnOiAZHVDuovvn4WvN5zHE6_WV/exec';var t=new Date(),day=t.getFullYear()+'-'+(t.getMonth()+1)+'-'+t.getDate(),f='0';try{if(localStorage.getItem('jg-vday')!==day){f='1';localStorage.setItem('jg-vday',day);}}catch(e){}var h='';try{h=document.referrer?(new URL(document.referrer).hostname):'';}catch(e){}var u=EP+(EP.indexOf('?')<0?'?':'&')+'mode=hit&u='+f+'&p='+encodeURIComponent(location.pathname)+'&r='+encodeURIComponent(h);try{new Image().src=u;}catch(e){}}catch(e){}})();</script>
+<!-- /jg-visit -->
+</head>
+<body>
+<nav class="rlnav"><div class="in"><a class="logo" href="/">JEJUGRAPHER</a><span class="lk"><a href="/spatial/index.html" data-i18n="nav.spatial">공간데이터</a><a href="/media.html" data-i18n="nav.portfolio">포트폴리오</a><a href="./" data-i18n="name.gw">관덕정</a><a href="/inquiry.html" data-i18n="nav.inquiry">문의</a><span id="jglang" class="rllang"></span></span></div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="crumb"><a href="/spatial/index.html" data-i18n="nav.spatial">공간데이터</a> · <a href="../" data-i18n="crumb.hub">제주 동굴·유적 LiDAR 측량</a> · <a href="./" data-i18n="name.gw">관덕정</a> · <span data-i18n="g.crumb">걸어보기 해설 체험</span></div>
+  <div class="eyebrow">DIGITAL TWIN · GUIDED EXPERIENCE</div>
+  <h1><span data-i18n="g.h1">제주목관아를 걸어 보다 — 디지털 트윈 해설 체험</span><span class="badge-prep" data-i18n="g.prep">준비 중</span></h1>
+  <p class="lede" data-i18n="g.lede">3D 스캔으로 통째로 담은 제주목관아를, 안내 캐릭터와 함께 걸으며 전각마다 해설을 듣는 체험을 준비하고 있습니다. 아래 샘플 영상에서, 관덕정에서 연희각까지 끊김 없이 이어지는 길을 함께 걸어 보세요.</p>
+</div></header>
+
+<main class="wrap">
+  <figure>
+    <div class="player">
+      <iframe src="https://www.youtube.com/embed/Y_rLgTbh6LE?rel=0&cc_load_policy=0&enablejsapi=1"
+        title="제주목관아 걸어보기 — 디지털 트윈 해설 체험" loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <figcaption data-i18n="g.figcap">약 2분 — 관덕정 앞에서 외대문과 중대문을 지나, 정원 길과 귤림당·망경루를 거쳐 연희각까지 끊김 없이 걷습니다. 관덕정과 연희각에서는 걸음을 멈추고 안내 캐릭터의 해설을 듣습니다. (영상 자막: 한국어·영어·중국어·일본어)</figcaption>
+  </figure>
+
+  <section>
+    <h2 data-i18n="g.s1.h2">걸어 들어가 해설을 듣는, 게임형 디지털 트윈</h2>
+    <p data-i18n="g.s1.p1">이것은 제주목관아를 3D 스캔으로 통째로 담은 디지털 트윈 세상입니다. 사진이나 그림이 아니라, 실제 건물을 그대로 기록한 삼차원 데이터 위를 — 정해진 길을 따라가기만 하는 영상이 아니라 — 직접 걸어 다니며 둘러볼 수 있게 만드는 것이 목표입니다.</p>
+    <p data-i18n="g.s1.p2">전각 앞에 서면 안내 캐릭터가 그곳이 어떤 자리인지 들려줍니다. 지금은 그 모습의 일부를 샘플 영상으로 먼저 보여 드립니다. (안내 캐릭터의 모습은 아직 정해지지 않았고, 바뀔 수 있습니다.)</p>
+  </section>
+
+  <section>
+    <h2 data-i18n="g.why.h2">왜 이렇게 만들까요</h2>
+    <p data-i18n="g.why.p">한 번 사라지거나 바뀌면 되돌리기 어려운 것이 문화유산입니다. 실제 모습 그대로 기록해 두고, 누구나 쉽게 걸어 보고 배울 수 있게 하려는 것입니다.</p>
+    <ul class="why">
+      <li><span class="hn" data-i18n="g.why.1t">있는 그대로 남깁니다</span><span class="hd" data-i18n="g.why.1d">문화유산을 실제 모습 그대로 기록해 두면, 세월이 지나거나 손상·복원이 있어도 ‘이전에는 이랬다’를 견주어 볼 수 있는 기록이 됩니다.</span></li>
+      <li><span class="hn" data-i18n="g.why.2t">누구나 걸어 봅니다</span><span class="hd" data-i18n="g.why.2d">멀리 사는 사람, 현장에 가기 어려운 사람, 교실의 학생도 화면 안에서 관아를 걸어 보고 전각의 이야기를 들을 수 있습니다.</span></li>
+      <li><span class="hn" data-i18n="g.why.3t">해설이 즐겁습니다</span><span class="hd" data-i18n="g.why.3d">긴 설명을 읽는 대신, 함께 걷는 안내를 따라가며 자연스럽게 듣습니다. 배우는 일이 놀이에 가까워집니다.</span></li>
+      <li><span class="hn" data-i18n="g.why.4t">제주의 이야기를 나눕니다</span><span class="hd" data-i18n="g.why.4d">제주를 다스리던 관아의 자리와 그 안의 전각들을, 한국어·영어·중국어·일본어로 함께 소개합니다.</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 data-i18n="g.now.h2">지금 볼 수 있는 것, 그리고 준비 중인 것</h2>
+    <div class="lists">
+      <div class="box">
+        <h3 data-i18n="g.now.h3a">지금, 이 샘플 영상으로</h3>
+        <ul>
+          <li data-i18n="g.now.a1">관덕정 앞에서 연희각까지, 끊김 없이 이어 걷는 시점</li>
+          <li data-i18n="g.now.a2">관덕정과 연희각에서 걸음을 멈추고 듣는 해설</li>
+          <li data-i18n="g.now.a3">한국어·영어·중국어·일본어 자막</li>
+        </ul>
+      </div>
+      <div class="box prep">
+        <h3 data-i18n="g.now.h3b">준비 중 (아직 열리지 않았습니다)</h3>
+        <ul>
+          <li data-i18n="g.now.b1">보는 사람이 직접 방향을 정해 걸어 다니는 체험</li>
+          <li data-i18n="g.now.b2">더 많은 전각의 해설과 둘러보기</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout"><p data-i18n="g.now.callout">위 ‘준비 중’ 기능은 아직 완성되지 않았습니다. 이 페이지의 영상은 앞으로의 방향을 미리 보여 드리는 샘플입니다.</p></div>
+  </section>
+
+  <section>
+    <h2 data-i18n="g.about.h2">관덕정과 제주목관아</h2>
+    <p data-i18n="g.about.p1">제주목관아는 조선시대 제주를 다스리던 관아입니다. 그 마당 앞에 선 관덕정은 제주에 남은 가장 오래된 목조건물의 하나로 꼽히는 국가지정 보물(제322호)입니다.</p>
+    <p data-i18n="g.about.p2">관덕정은 1448년(세종 30년), 군사들이 활쏘기를 익히던 훈련청으로 처음 지어졌습니다. ‘관덕’이라는 이름에는 활을 쏘는 일이 높은 덕을 살피는 일이라는 뜻이 담겨 있습니다. 벽도 문도 없이 사방이 트인, 정면 다섯 칸·측면 네 칸의 건물입니다.</p>
+    <p data-i18n="g.about.p3">영상 뒤쪽에 나오는 연희각은 제주목 관아 안쪽의 전각으로, 제주목사가 정사를 보던 곳으로 전해집니다.</p>
+    <p class="src" data-i18n="g.about.src">출처 — 한국민족문화대백과사전, 국가유산청 국가유산포털. 건립 당시 직함 등 일부 기록은 자료마다 달라, 확인된 내용만 적었습니다.</p>
+  </section>
+
+  <section>
+    <p>
+      <a class="cta" href="./walk.html" data-i18n="g.cta.walk">디지털 트윈 산책 영상 보기</a>
+      <a class="cta ghost" href="./" data-i18n="g.cta.survey">관덕정 LiDAR 측량 페이지</a>
+      <a class="cta ghost" href="/inquiry.html" data-i18n="g.cta.inquiry">제작·측량 문의</a>
+    </p>
+  </section>
+</main>
+
+<footer class="rlfoot"><div class="wrap">
+  <p data-i18n="g.foot1">제주그래퍼 JEJUGRAPHER · 실측으로 지어 올린 디지털 트윈 — 제주목관아</p>
+  <p data-i18n="g.foot2">영상·점군·그림과 글의 저작권은 제주그래퍼에 있습니다.</p>
+</div></footer>
+
+<script>window.JG_I18N={
+"ko":{"nav.spatial":"공간데이터","nav.portfolio":"포트폴리오","nav.inquiry":"문의","crumb.hub":"제주 동굴·유적 LiDAR 측량","name.gw":"관덕정",
+ "g.__title":"제주목관아 걸어보기 — 디지털 트윈 해설 체험 | JEJUGRAPHER 제주그래퍼",
+ "g.desc":"3D 스캔으로 담은 제주목관아를, 안내 캐릭터와 함께 걸으며 전각마다 해설을 듣는 디지털 트윈 해설 체험을 준비하고 있습니다. 관덕정에서 연희각까지 끊김 없이 걷는 샘플 영상과 소개.",
+ "g.crumb":"걸어보기 해설 체험","g.prep":"준비 중",
+ "g.h1":"제주목관아를 걸어 보다 — 디지털 트윈 해설 체험",
+ "g.lede":"3D 스캔으로 통째로 담은 제주목관아를, 안내 캐릭터와 함께 걸으며 전각마다 해설을 듣는 체험을 준비하고 있습니다. 아래 샘플 영상에서, 관덕정에서 연희각까지 끊김 없이 이어지는 길을 함께 걸어 보세요.",
+ "g.figcap":"약 2분 — 관덕정 앞에서 외대문과 중대문을 지나, 정원 길과 귤림당·망경루를 거쳐 연희각까지 끊김 없이 걷습니다. 관덕정과 연희각에서는 걸음을 멈추고 안내 캐릭터의 해설을 듣습니다. (영상 자막: 한국어·영어·중국어·일본어)",
+ "g.s1.h2":"걸어 들어가 해설을 듣는, 게임형 디지털 트윈",
+ "g.s1.p1":"이것은 제주목관아를 3D 스캔으로 통째로 담은 디지털 트윈 세상입니다. 사진이나 그림이 아니라, 실제 건물을 그대로 기록한 삼차원 데이터 위를 — 정해진 길을 따라가기만 하는 영상이 아니라 — 직접 걸어 다니며 둘러볼 수 있게 만드는 것이 목표입니다.",
+ "g.s1.p2":"전각 앞에 서면 안내 캐릭터가 그곳이 어떤 자리인지 들려줍니다. 지금은 그 모습의 일부를 샘플 영상으로 먼저 보여 드립니다. (안내 캐릭터의 모습은 아직 정해지지 않았고, 바뀔 수 있습니다.)",
+ "g.why.h2":"왜 이렇게 만들까요",
+ "g.why.p":"한 번 사라지거나 바뀌면 되돌리기 어려운 것이 문화유산입니다. 실제 모습 그대로 기록해 두고, 누구나 쉽게 걸어 보고 배울 수 있게 하려는 것입니다.",
+ "g.why.1t":"있는 그대로 남깁니다","g.why.1d":"문화유산을 실제 모습 그대로 기록해 두면, 세월이 지나거나 손상·복원이 있어도 ‘이전에는 이랬다’를 견주어 볼 수 있는 기록이 됩니다.",
+ "g.why.2t":"누구나 걸어 봅니다","g.why.2d":"멀리 사는 사람, 현장에 가기 어려운 사람, 교실의 학생도 화면 안에서 관아를 걸어 보고 전각의 이야기를 들을 수 있습니다.",
+ "g.why.3t":"해설이 즐겁습니다","g.why.3d":"긴 설명을 읽는 대신, 함께 걷는 안내를 따라가며 자연스럽게 듣습니다. 배우는 일이 놀이에 가까워집니다.",
+ "g.why.4t":"제주의 이야기를 나눕니다","g.why.4d":"제주를 다스리던 관아의 자리와 그 안의 전각들을, 한국어·영어·중국어·일본어로 함께 소개합니다.",
+ "g.now.h2":"지금 볼 수 있는 것, 그리고 준비 중인 것",
+ "g.now.h3a":"지금, 이 샘플 영상으로",
+ "g.now.a1":"관덕정 앞에서 연희각까지, 끊김 없이 이어 걷는 시점","g.now.a2":"관덕정과 연희각에서 걸음을 멈추고 듣는 해설","g.now.a3":"한국어·영어·중국어·일본어 자막",
+ "g.now.h3b":"준비 중 (아직 열리지 않았습니다)",
+ "g.now.b1":"보는 사람이 직접 방향을 정해 걸어 다니는 체험","g.now.b2":"더 많은 전각의 해설과 둘러보기",
+ "g.now.callout":"위 ‘준비 중’ 기능은 아직 완성되지 않았습니다. 이 페이지의 영상은 앞으로의 방향을 미리 보여 드리는 샘플입니다.",
+ "g.about.h2":"관덕정과 제주목관아",
+ "g.about.p1":"제주목관아는 조선시대 제주를 다스리던 관아입니다. 그 마당 앞에 선 관덕정은 제주에 남은 가장 오래된 목조건물의 하나로 꼽히는 국가지정 보물(제322호)입니다.",
+ "g.about.p2":"관덕정은 1448년(세종 30년), 군사들이 활쏘기를 익히던 훈련청으로 처음 지어졌습니다. ‘관덕’이라는 이름에는 활을 쏘는 일이 높은 덕을 살피는 일이라는 뜻이 담겨 있습니다. 벽도 문도 없이 사방이 트인, 정면 다섯 칸·측면 네 칸의 건물입니다.",
+ "g.about.p3":"영상 뒤쪽에 나오는 연희각은 제주목 관아 안쪽의 전각으로, 제주목사가 정사를 보던 곳으로 전해집니다.",
+ "g.about.src":"출처 — 한국민족문화대백과사전, 국가유산청 국가유산포털. 건립 당시 직함 등 일부 기록은 자료마다 달라, 확인된 내용만 적었습니다.",
+ "g.cta.walk":"디지털 트윈 산책 영상 보기","g.cta.survey":"관덕정 LiDAR 측량 페이지","g.cta.inquiry":"제작·측량 문의",
+ "g.foot1":"제주그래퍼 JEJUGRAPHER · 실측으로 지어 올린 디지털 트윈 — 제주목관아","g.foot2":"영상·점군·그림과 글의 저작권은 제주그래퍼에 있습니다."},
+"en":{"nav.spatial":"Spatial Data","nav.portfolio":"Portfolio","nav.inquiry":"Contact","crumb.hub":"Jeju Cave & Heritage LiDAR Survey","name.gw":"Gwandeokjeong",
+ "g.__title":"Walking Jeju Mok Government Office — A Digital-Twin Guided Experience | JEJUGRAPHER",
+ "g.desc":"We are preparing a digital-twin guided experience: walk through a 3D-scanned Jeju Mok Government Office alongside a guide character and hear the story of each hall. A sample video walks from Gwandeokjeong to Yeonhuigak, plus an introduction.",
+ "g.crumb":"Guided Walk-through","g.prep":"In preparation",
+ "g.h1":"Walking Jeju Mok Government Office — a digital-twin guided experience",
+ "g.lede":"We are preparing an experience where you walk through a fully 3D-scanned Jeju Mok Government Office alongside a guide character, hearing the story of each hall. In the sample video below, walk the unbroken path from Gwandeokjeong to Yeonhuigak with us.",
+ "g.figcap":"About 2 minutes — from Gwandeokjeong, through the outer and middle gates, along the garden path past Gyullimdang and Manggyeongnu to Yeonhuigak, in one unbroken walk. At Gwandeokjeong and Yeonhuigak the walk pauses for the guide character’s narration. (Subtitles: Korean, English, Chinese, Japanese)",
+ "g.s1.h2":"A game-style digital twin you walk into and hear explained",
+ "g.s1.p1":"This is a digital-twin world that captures the whole of Jeju Mok Government Office through 3D scanning. Not a photo or a drawing, but three-dimensional data that records the real building as it is — and the aim is to let you walk through it yourself and look around, rather than only follow a fixed path on video.",
+ "g.s1.p2":"Stand before a hall and a guide character tells you what the place was. For now, a sample video shows part of how that looks. (The guide character’s appearance is not yet decided and may change.)",
+ "g.why.h2":"Why make it this way",
+ "g.why.p":"Cultural heritage, once lost or altered, is hard to bring back. The idea is to record it just as it is, and to let anyone walk through and learn from it easily.",
+ "g.why.1t":"Keeping it as it is","g.why.1d":"Recording cultural heritage exactly as it stands leaves a record you can compare against later — ‘this is how it was’ — even after time passes or after damage and restoration.",
+ "g.why.2t":"Anyone can walk it","g.why.2d":"People who live far away, who find it hard to visit in person, and students in a classroom can all walk through the office on screen and hear the halls’ stories.",
+ "g.why.3t":"Learning that’s enjoyable","g.why.3d":"Instead of reading long explanations, you hear them naturally by following a guide who walks with you. Learning comes closer to play.",
+ "g.why.4t":"Sharing Jeju’s story","g.why.4d":"We introduce the seat that governed Jeju and the halls within it together, in Korean, English, Chinese and Japanese.",
+ "g.now.h2":"What you can see now, and what is in preparation",
+ "g.now.h3a":"Now, in this sample video",
+ "g.now.a1":"An unbroken walking viewpoint from Gwandeokjeong to Yeonhuigak","g.now.a2":"Narration where the walk pauses at Gwandeokjeong and Yeonhuigak","g.now.a3":"Korean, English, Chinese and Japanese subtitles",
+ "g.now.h3b":"In preparation (not yet available)",
+ "g.now.b1":"An experience where the viewer chooses a direction and walks freely","g.now.b2":"Narration and exploration of more halls",
+ "g.now.callout":"The ‘in preparation’ features above are not yet complete. The video on this page is a sample that previews the direction ahead.",
+ "g.about.h2":"Gwandeokjeong and Jeju Mok Government Office",
+ "g.about.p1":"Jeju Mok Government Office is the old seat from which Jeju was governed in the Joseon period. Gwandeokjeong, standing before its courtyard, is counted among the oldest wooden buildings remaining in Jeju and is a designated National Treasure (No. 322).",
+ "g.about.p2":"Gwandeokjeong was first built in 1448 (the 30th year of King Sejong) as a training hall where soldiers practiced archery. The name ‘Gwandeok’ carries the meaning that shooting a bow is a way of observing high virtue. It is a building open on all sides, without walls or doors, five bays across the front and four bays deep.",
+ "g.about.p3":"Yeonhuigak, which appears later in the video, is a hall within the inner grounds of Jeju Mok Government Office, said to be where the Jeju magistrate governed.",
+ "g.about.src":"Sources — Encyclopedia of Korean Culture; Korea Heritage Service, Korean Heritage Portal. Some records, such as the founder’s title, differ between sources, so only confirmed details are given here.",
+ "g.cta.walk":"Watch the digital-twin walk video","g.cta.survey":"Gwandeokjeong LiDAR survey","g.cta.inquiry":"Production & survey inquiries",
+ "g.foot1":"JEJUGRAPHER · a measured digital twin — Jeju Mok Government Office","g.foot2":"Video, point clouds, figures and text are copyright JEJUGRAPHER."},
+"zh":{"nav.spatial":"空间数据","nav.portfolio":"作品集","nav.inquiry":"咨询","crumb.hub":"济州洞窟与古迹 LiDAR 测量","name.gw":"观德亭",
+ "g.__title":"漫步济州牧官衙 — 数字孪生导览体验 | JEJUGRAPHER 济州Grapher",
+ "g.desc":"我们正在筹备一种数字孪生导览体验：在3D扫描还原的济州牧官衙中，与向导角色一同漫步，聆听每座殿阁的讲解。样片从观德亭走到延曦阁，并附介绍。",
+ "g.crumb":"漫步导览体验","g.prep":"筹备中",
+ "g.h1":"漫步济州牧官衙 — 数字孪生导览体验",
+ "g.lede":"我们正在筹备一种体验：在3D扫描整体还原的济州牧官衙中，与向导角色一同漫步，聆听每座殿阁的讲解。请在下方样片中，与我们一起走过从观德亭到延曦阁连贯不断的路。",
+ "g.figcap":"约2分钟 — 自观德亭起，穿过外大门与中大门，沿庭园小路经橘林堂、望京楼，直到延曦阁，一镜到底连贯行走。在观德亭与延曦阁，脚步停下，聆听向导角色的讲解。（字幕：韩语·英语·中文·日语）",
+ "g.s1.h2":"可走进其中、聆听讲解的游戏形式数字孪生",
+ "g.s1.p1":"这是以3D扫描整体还原济州牧官衙的数字孪生世界。它不是照片或图画，而是如实记录真实建筑的三维数据——我们的目标是让你能亲自在其中行走、环顾，而不只是跟随影像中既定的路线。",
+ "g.s1.p2":"站在殿阁之前，向导角色会告诉你那里曾是何处。目前先以样片展示其中一部分的样子。（向导角色的形象尚未确定，可能会调整。）",
+ "g.why.h2":"为何这样制作",
+ "g.why.p":"文化遗产一旦消失或改变，便难以复原。我们希望如实记录其本来面貌，让任何人都能轻松走进并从中学习。",
+ "g.why.1t":"如实留存","g.why.1d":"将文化遗产如实记录下来，即使岁月流逝、经历损坏与修复，也能留下可供对照「从前是这样」的记录。",
+ "g.why.2t":"人人皆可漫步","g.why.2d":"住得远的人、难以亲临现场的人、课堂上的学生，都能在屏幕中走过官衙，聆听殿阁的故事。",
+ "g.why.3t":"讲解更有趣","g.why.3d":"不必阅读冗长的说明，而是跟随同行的向导自然地聆听。学习因此更接近游戏。",
+ "g.why.4t":"分享济州的故事","g.why.4d":"我们以韩语·英语·中文·日语，一同介绍治理济州的官衙及其中的殿阁。",
+ "g.now.h2":"现在能看到的，以及筹备中的",
+ "g.now.h3a":"现在，通过这段样片",
+ "g.now.a1":"自观德亭到延曦阁、连贯不断的行走视角","g.now.a2":"在观德亭与延曦阁停下脚步聆听的讲解","g.now.a3":"韩语·英语·中文·日语字幕",
+ "g.now.h3b":"筹备中（尚未开放）",
+ "g.now.b1":"由观看者自行决定方向、自由行走的体验","g.now.b2":"更多殿阁的讲解与游览",
+ "g.now.callout":"以上「筹备中」的功能尚未完成。本页的影像是预示未来方向的样片。",
+ "g.about.h2":"观德亭与济州牧官衙",
+ "g.about.p1":"济州牧官衙是朝鲜时代治理济州的官衙。立于其庭院之前的观德亭，是济州现存最古老的木构建筑之一，为国家指定宝物（第322号）。",
+ "g.about.p2":"观德亭始建于1448年（世宗30年），最初是士兵研习射箭的训练之所。「观德」之名寓意射箭乃观照高尚德行之事。它是一座四面敞开、无墙无门，正面五间、侧面四间的建筑。",
+ "g.about.p3":"影像后段出现的延曦阁，是济州牧官衙内侧的殿阁，相传为济州牧使处理政务之所。",
+ "g.about.src":"出处 — 韩国民族文化大百科、国家遗产厅国家遗产门户。建造时的官衔等部分记载因资料而异，此处仅记述已确认的内容。",
+ "g.cta.walk":"观看数字孪生漫步影像","g.cta.survey":"观德亭 LiDAR 测量页","g.cta.inquiry":"制作与测量咨询",
+ "g.foot1":"济州Grapher JEJUGRAPHER · 以实测打造的数字孪生 — 济州牧官衙","g.foot2":"影像·点云·图像及文字版权归济州Grapher所有。"},
+"ja":{"nav.spatial":"空間データ","nav.portfolio":"ポートフォリオ","nav.inquiry":"お問い合わせ","crumb.hub":"済州の洞窟・史跡 LiDAR 測量","name.gw":"観徳亭",
+ "g.__title":"済州牧官衙を歩く — デジタルツイン解説体験 | JEJUGRAPHER",
+ "g.desc":"3Dスキャンで収めた済州牧官衙を、案内キャラクターと一緒に歩きながら殿閣ごとの解説を聞くデジタルツイン解説体験を準備しています。観徳亭から延曦閣まで途切れず歩くサンプル映像と紹介。",
+ "g.crumb":"歩く解説体験","g.prep":"準備中",
+ "g.h1":"済州牧官衙を歩く — デジタルツイン解説体験",
+ "g.lede":"3Dスキャンで丸ごと収めた済州牧官衙を、案内キャラクターと一緒に歩きながら、殿閣ごとの解説を聞く体験を準備しています。下のサンプル映像で、観徳亭から延曦閣まで途切れず続く道を一緒に歩いてみてください。",
+ "g.figcap":"約2分 — 観徳亭の前から外大門と中大門を抜け、庭の道を橘林堂・望京楼を経て延曦閣まで、途切れず歩きます。観徳亭と延曦閣では歩みを止め、案内キャラクターの解説を聞きます。（字幕：韓国語・英語・中国語・日本語）",
+ "g.s1.h2":"歩いて入り、解説を聞く、ゲーム形式のデジタルツイン",
+ "g.s1.p1":"これは済州牧官衙を3Dスキャンで丸ごと収めたデジタルツインの世界です。写真でも絵でもなく、実際の建物をそのまま記録した三次元データの上を——決められた道をたどるだけの映像ではなく——自分で歩き回って見て回れるようにすることが目標です。",
+ "g.s1.p2":"殿閣の前に立つと、案内キャラクターがそこがどんな場所だったかを語ってくれます。今はその一部をサンプル映像で先にお見せします。（案内キャラクターの姿はまだ決まっておらず、変わることがあります。）",
+ "g.why.h2":"なぜこう作るのか",
+ "g.why.p":"一度失われたり変わったりすると戻しにくいのが文化遺産です。実際の姿のまま記録しておき、誰もが気軽に歩いて学べるようにしたいのです。",
+ "g.why.1t":"あるがままに残す","g.why.1d":"文化遺産を実際の姿のまま記録しておけば、年月が過ぎても、損傷や復元があっても、「以前はこうだった」と見比べられる記録になります。",
+ "g.why.2t":"誰もが歩ける","g.why.2d":"遠くに住む人、現場に行きにくい人、教室の生徒も、画面の中で官衙を歩き、殿閣の物語を聞くことができます。",
+ "g.why.3t":"解説が楽しい","g.why.3d":"長い説明を読む代わりに、一緒に歩く案内に従って自然に聞きます。学ぶことが遊びに近づきます。",
+ "g.why.4t":"済州の物語を分かち合う","g.why.4d":"済州を治めた官衙の場所と、その中の殿閣を、韓国語・英語・中国語・日本語で一緒に紹介します。",
+ "g.now.h2":"今見られること、そして準備中のこと",
+ "g.now.h3a":"今、このサンプル映像で",
+ "g.now.a1":"観徳亭から延曦閣まで、途切れず続く歩きの視点","g.now.a2":"観徳亭と延曦閣で歩みを止めて聞く解説","g.now.a3":"韓国語・英語・中国語・日本語の字幕",
+ "g.now.h3b":"準備中（まだ公開されていません）",
+ "g.now.b1":"見る人が自分で方向を決めて歩き回る体験","g.now.b2":"より多くの殿閣の解説と見て回り",
+ "g.now.callout":"上の「準備中」の機能はまだ完成していません。このページの映像は、これからの方向を先にお見せするサンプルです。",
+ "g.about.h2":"観徳亭と済州牧官衙",
+ "g.about.p1":"済州牧官衙は朝鮮時代に済州を治めた官衙です。その庭の前に立つ観徳亭は、済州に残る最も古い木造建築のひとつに数えられる国家指定の宝物（第322号）です。",
+ "g.about.p2":"観徳亭は1448年（世宗30年）、兵士が弓術を習う訓練の場として初めて建てられました。「観徳」という名には、弓を射ることは高い徳を見つめる営みであるという意味が込められています。壁も戸もなく四方が開けた、正面五間・側面四間の建物です。",
+ "g.about.p3":"映像の後半に現れる延曦閣は、済州牧官衙の内側の殿閣で、済州牧使が政務をみた所と伝えられます。",
+ "g.about.src":"出典 — 韓国民族文化大百科事典、国家遺産庁 国家遺産ポータル。創建時の官職など一部の記録は資料によって異なるため、確認できた内容のみを記しました。",
+ "g.cta.walk":"デジタルツイン散策の映像を見る","g.cta.survey":"観徳亭 LiDAR 測量ページ","g.cta.inquiry":"制作・測量のお問い合わせ",
+ "g.foot1":"JEJUGRAPHER · 実測で築いたデジタルツイン — 済州牧官衙","g.foot2":"映像・点群・図および文章の著作権はJEJUGRAPHERに帰属します。"}
+};</script>
+<script src="/i18n.js" defer></script>
+<!-- jg-copyright-notice -->
+<div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
+<div style="max-width:880px;margin:0 auto">
+<strong style="display:block;color:#F3D9A4;font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:.02em">⚠ 무단 복제 · 도용 금지 — 저작권 경고</strong>
+이 사이트의 모든 사진 · 영상 · 글 · 음악 · 디자인 · 프로그램은 <b style="color:#fff">제주그래퍼(JEJUGRAPHER)</b>와 원저작자에게 저작권이 있으며 「저작권법」의 보호를 받습니다.
+저작권자의 <b style="color:#fff">사전 서면 동의 없이</b> 복제 · 다운로드 후 재배포 · 전송 · 게시 · 편집 · 2차 가공 · 캡처 사용 · 상업적 이용 · AI 학습 데이터로 사용하는 행위를 <b style="color:#fff">엄격히 금지</b>합니다.
+사진과 영상 속 인물의 초상권도 함께 보호됩니다.
+무단 도용이 확인되면 사전 경고 없이 「저작권법」 제136조(5년 이하의 징역 또는 5천만 원 이하의 벌금)에 따른 <b style="color:#fff">형사 고소와 민사상 손해배상 청구</b>를 진행합니다.
+<span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
+</div></div>
+<!-- /jg-copyright-notice -->
+</body>
+</html>
