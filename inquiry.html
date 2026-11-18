@@ -169,6 +169,7 @@ textarea{min-height:170px;resize:vertical}
   <p class="lead">공간데이터 · 촬영 · 편집 · AI 영상 · 웹 제작 — 어떤 이야기든 편하게 남겨 주세요. 평일 기준 하루 안에 답을 드립니다.</p>
 
   <form id="f" onsubmit="return false">
+    <div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"><label>웹사이트(비워 두세요)<input id="hp" type="text" tabindex="-1" autocomplete="off"></label></div>
     <label for="name">성함 · 소속</label>
     <input id="name" type="text" placeholder="예) 홍길동 · ○○센터">
     <label for="contact">연락처 (이메일 또는 전화)</label>
@@ -234,6 +235,7 @@ textarea{min-height:170px;resize:vertical}
            contact: $('contact').value.trim(),
            message: $('msg').value.trim(),
            pwhash: pw ? await hash(pw) : '',
+           hp: ($('hp') ? $('hp').value : '').trim(), form_token: 'jg7q2w',
            page: 'inquiry.html', at: new Date().toISOString() };
  }
 

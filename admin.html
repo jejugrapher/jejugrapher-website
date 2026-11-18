@@ -274,6 +274,7 @@ async function loadAsks() {
         ${it.reply ? `<div class="done"><b>보낸 답변</b>
 ${esc(it.reply)}</div>` : ''}
         ${replyBox(it)}
+        <div style="margin-top:.4rem;text-align:right"><button class="btn warn" data-del="1" data-row="${it.row}" data-title="${esc((it.name || '') + ' · ' + String(it.message || '').slice(0, 24))}">스팸·삭제</button></div>
       </div>`).join('');
   } catch (e) { $('#asks').textContent = '서버에 닿지 못했습니다.'; }
 }
@@ -318,6 +319,22 @@ document.addEventListener('click', async e => {
       reply: reply, send: sendEl && sendEl.checked ? '1' : '0', to: box.dataset.to
     });
     say(d.ok ? ('저장했습니다' + (d.sent ? ' · 메일 ' + d.sent : '')) : ('실패: ' + (d.why || '알 수 없음')));
+    if (d.ok) loadAsks();
+  } catch (err) { say('서버에 닿지 못했습니다.'); }
+  b.disabled = false;
+});
+
+/* ── 문의 삭제(스팸 치우기) ── */
+document.addEventListener('click', async e => {
+  const b = e.target.closest('button[data-del]');
+  if (!b) return;
+  if (!confirm('이 문의를 삭제할까요? 되돌릴 수 없습니다.
+
+' + (b.dataset.title || ''))) return;
+  b.disabled = true; say('삭제하는 중…');
+  try {
+    const d = await call('ask_delete', { row: b.dataset.row });
+    say(d.ok ? '삭제했습니다' : ('실패: ' + (d.why || '알 수 없음')));
     if (d.ok) loadAsks();
   } catch (err) { say('서버에 닿지 못했습니다.'); }
   b.disabled = false;

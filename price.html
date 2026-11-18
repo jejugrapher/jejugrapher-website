@@ -348,6 +348,7 @@ tr:last-child td{border-bottom:0}
 
 <div id="ask">
  <form id="askForm">
+  <div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"><label>웹사이트(비워 두세요)<input name="hp" type="text" tabindex="-1" autocomplete="off"></label></div>
   <div class="row2">
    <div><label for="q-name">성함 · 업체명</label><input id="q-name" name="name" type="text" placeholder="홍길동 / ○○협동조합"></div>
    <div><label for="q-contact">연락처 <span style="color:var(--terra)">*</span></label><input id="q-contact" name="contact" type="text" placeholder="메일 또는 전화번호" required></div>
@@ -387,7 +388,8 @@ tr:last-child td{border-bottom:0}
  function collect(){
   return { type:'견적문의', session:'quote', kind:f.kind.value, name:f.name.value.trim(),
            contact:f.contact.value.trim(), when:f.when.value.trim(), budget:f.budget.value.trim(),
-           message:f.message.value.trim(), page:'price.html', at:new Date().toISOString() };
+           message:f.message.value.trim(), hp:(f.hp?f.hp.value:'').trim(), form_token:'jg7q2w',
+           page:'price.html', at:new Date().toISOString() };
  }
  f.addEventListener('submit', function(e){
   e.preventDefault();
