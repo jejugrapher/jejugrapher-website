@@ -474,8 +474,9 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
 
   // 완성본링크가 우리 사이트의 상세페이지(/shortjeju/<slug>/)면 그 URL을 돌려준다
   const detailURL = (post) => { const l = (post && post["완성본링크"]) || ""; return /^(\/shortjeju\/|https?:\/\/[^/]+\/shortjeju\/)/.test(l) ? l : ""; };
-  // 상세페이지가 있으면 그 '홈페이지형' 별도 페이지로 이동, 없으면 인라인으로 본다
-  function openResolved(post, isAdmin) { const du = detailURL(post); if (du) { location.href = du; return; } renderPost(post, isAdmin); }
+  // 글쓴이는 늘 자기 게시물 안에서 글과 완성 영상을 함께 본다. 상세페이지가 있어도 넘기지 않고
+  // 완성영상 블록의 '따로 보기' 버튼으로만 연다(글과 영상이 갈라지지 않게).
+  function openResolved(post, isAdmin) { renderPost(post, isAdmin); }
 
   /* ---- API ---- */
   async function call(action, data) {
@@ -567,14 +568,22 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
     const memoRaw = post["제주그래퍼메모"] || "";
     const mains = ytScan(finLink);       // 완성본링크의 유튜브(보통 가로 1개)
     const extra = ytScan(memoRaw);       // 메모 속 유튜브(세로 Shorts 등 보조)
-    if (mains.length) {
+    const du = detailURL(post);          // 우리 사이트 상세페이지(있으면) — 넘기지 않고 '따로 보기' 버튼으로
+    if (mains.length || extra.length) {  // 유튜브가 있으면 글과 같은 화면에서 바로 재생
       mains.forEach((v, i) => block1.append(ytEmbed(v.id, v.shorts, v.shorts ? "세로 (Shorts)" : null, i === 0)));   // 가로 메인 = 음소거 자동재생
       extra.forEach(v => block1.append(ytEmbed(v.id, v.shorts, v.shorts ? "세로 (Shorts)" : "영상", false)));         // 세로 Shorts = 클릭 재생
       const d = el("div", "deliver");
       d.append(el("span", null, "완성된 영상입니다. 위에서 바로 보실 수 있어요."));
+      if (du) { const ap = document.createElement("a"); ap.href = du; ap.target = "_blank"; ap.rel = "noopener"; ap.className = "btn small"; ap.textContent = "완성본 페이지 따로 보기"; d.append(ap); }
       const a = document.createElement("a"); a.target = "_blank"; a.rel = "noopener"; a.className = "btn small";
-      if (dlink) { a.href = dlink; a.textContent = "영상 다운로드"; } else { a.href = finLink; a.textContent = "유튜브에서 열기"; }
-      d.append(a); block1.append(d);
+      if (dlink) { a.href = dlink; a.textContent = "영상 다운로드"; d.append(a); }
+      else if (!du) { a.href = finLink; a.textContent = "유튜브에서 열기"; d.append(a); }
+      block1.append(d);
+    } else if (du) {                      // 완성본이 별도 상세페이지뿐 — 넘기지 말고 글과 함께 두고 버튼으로 연다
+      const d = el("div", "deliver");
+      d.append(el("span", null, "완성된 영상이 올라왔습니다."));
+      const ap = document.createElement("a"); ap.href = du; ap.target = "_blank"; ap.rel = "noopener"; ap.className = "btn small"; ap.textContent = "완성본 페이지 열기"; d.append(ap);
+      block1.append(d);
     } else if (finLink) {
       const d = el("div", "deliver");
       d.append(el("span", null, "완성된 영상이 올라왔습니다."));
