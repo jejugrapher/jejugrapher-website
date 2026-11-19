@@ -271,8 +271,7 @@ async function loadAsks() {
         <div style="font-weight:500">${esc(it.name) || '(이름 없음)'}
           ${it.contact ? `<span style="color:var(--mute);font-weight:400"> · ${esc(it.contact)}</span>` : ''}</div>
         <div class="msg" style="margin-top:.5rem">${esc(it.message)}</div>
-        ${it.reply ? `<div class="done"><b>보낸 답변</b>
-${esc(it.reply)}</div>` : ''}
+        ${it.reply ? `<div class="done"><b>보낸 답변</b>\n${esc(it.reply)}</div>` : ''}
         ${replyBox(it)}
         <div style="margin-top:.4rem;text-align:right"><button class="btn warn" data-del="1" data-row="${it.row}" data-title="${esc((it.name || '') + ' · ' + String(it.message || '').slice(0, 24))}">스팸·삭제</button></div>
       </div>`).join('');
@@ -328,9 +327,7 @@ document.addEventListener('click', async e => {
 document.addEventListener('click', async e => {
   const b = e.target.closest('button[data-del]');
   if (!b) return;
-  if (!confirm('이 문의를 삭제할까요? 되돌릴 수 없습니다.
-
-' + (b.dataset.title || ''))) return;
+  if (!confirm('이 문의를 삭제할까요? 되돌릴 수 없습니다.\n\n' + (b.dataset.title || ''))) return;
   b.disabled = true; say('삭제하는 중…');
   try {
     const d = await call('ask_delete', { row: b.dataset.row });
