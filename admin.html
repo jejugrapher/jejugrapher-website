@@ -394,7 +394,7 @@ async function fetchPages(force) {
           }
           // ② 페이지에 실제로 나오는 6자리·8자리 숫자 (gate 스크립트 자체의 값은 뺀다)
           const body = h.replace(/<script[\s\S]*?<\/script>/g, ' ');
-          for (const m of body.matchAll(/(\d{8}|\d{6})/g)) {
+          for (const m of body.matchAll(/\b(\d{8}|\d{6})\b/g)) {
             const d = m[1]; cands.add(d.length === 8 ? d.slice(2) : d);
           }
           for (const c of cands) {
