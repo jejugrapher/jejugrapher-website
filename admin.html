@@ -112,7 +112,6 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
     <div class="tabs">
       <button id="t1" class="on">문의</button>
       <button id="tG">게시물 관리</button>
-      <button id="t4">방문자</button>
       <button id="t2">페이지 공개 관리</button>
       <button id="t3">잠금 점검</button>
     </div>
@@ -139,15 +138,6 @@ input[type=password],input[type=text]{width:100%;padding:.7rem .9rem;border:1px 
       <div style="display:flex;justify-content:flex-end;margin:.3rem 0 .5rem">
         <button class="btn ghost" id="sjRefresh">목록 새로고침</button></div>
       <div id="sjList">관리자 코드를 넣거나 「목록 새로고침」을 누르세요.</div>
-    </section>
-
-    <section id="p4" hidden>
-      <p class="hint">
-        우리 시트에만 쌓는 <b>자체 집계</b>입니다 — 구글 애널리틱스가 아니고, 방문자 IP·이름 같은 개인정보는 담지 않습니다.
-        날짜·페이지·유입 갈래만 셉니다. <b>순방문</b>은 브라우저 기준 하루 한 번만 세는 대략치라 실제와 조금 차이날 수 있습니다.
-        비공개 인사이트트립 페이지는 집계에서 빠져 있습니다.
-      </p>
-      <div id="visBox">불러오는 중…</div>
     </section>
 
     <section id="p3" hidden>
@@ -197,7 +187,6 @@ const REPO = 'jejugrapher/jejugrapher-website';
 let PAGES = [];
 let KEY = null;
 let PWSHEET = {};   // 「비밀번호」 시트에서 읽어 온 값 (문의와 같은 시트, 관리자 열쇠로만)
-let VIS_LOADED = false;
 
 const $ = s => document.querySelector(s);
 const say = t => { $('#say').textContent = t || ''; };
@@ -214,7 +203,7 @@ async function call(mode, extra) {
 
 /* ── 탭 ── */
 function setTab(n) {
-  for (const i of [1, 'G', 2, 3, 4]) {
+  for (const i of [1, 'G', 2, 3]) {
     $('#t' + i).classList.toggle('on', n === i);
     $('#p' + i).hidden = n !== i;
   }
@@ -223,7 +212,6 @@ $('#t1').addEventListener('click', () => setTab(1));
 $('#tG').addEventListener('click', () => { setTab('G'); loadBoardAdmin(); });
 $('#t2').addEventListener('click', () => setTab(2));
 $('#t3').addEventListener('click', () => { setTab(3); });
-$('#t4').addEventListener('click', () => { setTab(4); if (!VIS_LOADED) { VIS_LOADED = true; loadVisits(); } });
 $('#refresh').addEventListener('click', async () => {
   PAGES = []; try { sessionStorage.removeItem('jg-pages'); } catch (e) {}
   $('#pages').textContent = '다시 읽는 중…'; await loadPages(); say('목록을 다시 읽었습니다.');
@@ -331,8 +319,9 @@ document.addEventListener('click', async e => {
   b.disabled = true; say('삭제하는 중…');
   try {
     const d = await call('ask_delete', { row: b.dataset.row });
-    say(d.ok ? '삭제했습니다' : ('실패: ' + (d.why || '알 수 없음')));
-    if (d.ok) loadAsks();
+    const realOk = d.ok && !d.service;   // 기본 응답({ok:true,service})은 '모르는 요청' — 실제 삭제가 아니다
+    say(realOk ? '삭제했습니다' : ('실패: ' + (d.why || (d.service ? '백엔드가 이 기능을 모릅니다(배포 확인 필요)' : '알 수 없음'))));
+    if (realOk) loadAsks();
   } catch (err) { say('서버에 닿지 못했습니다.'); }
   b.disabled = false;
 });
@@ -535,67 +524,6 @@ document.addEventListener('click', async e => {
   b.disabled = false;
   loadPages();
 });
-
-/* ── 방문자 ──────────────────────────────────────────────
-   우리 시트(mode=visits)에서 날짜별 집계를 받아 그린다. 날짜는 yyyy-mm-dd(한국시간). */
-function vday(n) {
-  const d = new Date(); d.setDate(d.getDate() - n);
-  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-}
-function vnorm(s) { return String(s).split('-').map((x, i) => i ? x.padStart(2, '0') : x).join('-'); }
-function vsum(days, from) {
-  let pv = 0, uv = 0; const pages = {}, refs = {};
-  days.forEach(r => { if (r.d >= from) { pv += r.pv; uv += r.uv;
-    for (const k in r.pages) pages[k] = (pages[k] || 0) + r.pages[k];
-    for (const k in r.refs) refs[k] = (refs[k] || 0) + r.refs[k]; } });
-  return { pv, uv, pages, refs };
-}
-function vtop(obj, n, fmt) {
-  const a = Object.entries(obj).sort((x, y) => y[1] - x[1]).slice(0, n);
-  if (!a.length) return '<div class="hint">아직 없습니다.</div>';
-  const mx = a[0][1] || 1;
-  return a.map(([k, v]) => `<div class="vrow"><span class="vk">${fmt ? fmt(k) : esc(k)}</span>` +
-    `<span class="vbarh"><i style="width:${Math.round(v / mx * 100)}%"></i></span>` +
-    `<span class="vv">${v.toLocaleString()}</span></div>`).join('');
-}
-async function loadVisits() {
-  const box = $('#visBox'); box.textContent = '불러오는 중…';
-  let d;
-  try { d = await call('visits'); }
-  catch (e) { box.textContent = '서버에 닿지 못했습니다.'; return; }
-  if (!d || !d.ok) {
-    box.innerHTML = '<p class="hint">' + esc((d && d.why) ||
-      '불러오지 못했습니다. Apps Script 에 「방문집계」 코드가 설치·배포됐는지 확인해 주세요.') + '</p>';
-    return;
-  }
-  const days = (d.days || []).map(r => (r.d = vnorm(r.d), r)).sort((a, b) => a.d.localeCompare(b.d));
-  if (!days.length) {
-    box.innerHTML = '<p class="hint">아직 방문 기록이 없습니다. 페이지가 열리기 시작하면 여기에 쌓입니다.</p>';
-    return;
-  }
-  const byd = {}; days.forEach(r => byd[r.d] = r);
-  const g = dd => byd[dd] || { pv: 0, uv: 0 };
-  const tdy = g(vday(0)), ysd = g(vday(1));
-  const w = vsum(days, vday(6)), m = vsum(days, vday(29)), tot = vsum(days, '0000-00-00');
-  const tile = (lab, o) => `<div class="vtile"><div class="vlab">${lab}</div>` +
-    `<div class="vnum">${(o.pv || 0).toLocaleString()}</div>` +
-    `<div class="vsub">순방문 ${(o.uv || 0).toLocaleString()}</div></div>`;
-  const last30 = []; for (let i = 29; i >= 0; i--) { const dd = vday(i); last30.push(byd[dd] || { d: dd, pv: 0, uv: 0 }); }
-  const mx = Math.max(1, ...last30.map(x => x.pv));
-  const bars = last30.map((x, i) => {
-    const h = Math.round(x.pv / mx * 100);
-    const lab = (i % 5 === 0 || i === 29) ? x.d.slice(5).replace('-', '/') : '';
-    return `<div class="vbar" title="${x.d} · 조회수 ${x.pv} · 순방문 ${x.uv}"><i style="height:${h}%"></i><u>${lab}</u></div>`;
-  }).join('');
-  box.innerHTML =
-    `<div class="vtiles">${tile('오늘', tdy)}${tile('어제', ysd)}${tile('최근 7일', w)}${tile('최근 30일', m)}${tile('전체', tot)}</div>` +
-    `<div class="vsec">최근 30일 조회수</div><div class="vchart">${bars}</div>` +
-    `<div class="vgrid">` +
-      `<div><div class="vsec">많이 본 페이지 <span class="hint">· 최근 30일</span></div>` +
-        vtop(m.pages, 12, k => `<a href="${esc(k)}" target="_blank" rel="noopener">${esc(k)}</a>`) + `</div>` +
-      `<div><div class="vsec">유입 경로 <span class="hint">· 최근 30일</span></div>` + vtop(m.refs, 10) + `</div>` +
-    `</div>`;
-}
 
 /* 새로고침해도 다시 묻지 않게 */
 try { const k = sessionStorage.getItem('jg-admin'); if (k) { KEY = k; enter(); } } catch (e) {}
