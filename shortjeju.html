@@ -389,6 +389,39 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
               </div>
             </div>
             <div class="field"><label class="label" for="f-phrases">넣고 싶은 문구</label><textarea id="f-phrases" placeholder="예) 종달리 바다까지 걸어서 5분 / 예약은 프로필 링크에서"></textarea></div>
+            <div class="field"><span class="label">나레이션(설명 음성)</span>
+              <div class="chips" id="narration">
+                <label class="chip"><input type="radio" name="narration" value="넣음"><span>넣어 주세요</span></label>
+                <label class="chip"><input type="radio" name="narration" value="안 넣음"><span>안 넣음 (자막·현장음만)</span></label>
+                <label class="chip"><input type="radio" name="narration" value="추천에 맡김" checked><span>추천에 맡길게요</span></label>
+              </div>
+            </div>
+            <div class="field" id="voiceBox" hidden>
+              <span class="label">원하는 목소리 <span class="hint">(나레이션 넣을 때만)</span></span>
+              <div class="chips" id="voiceTone">
+                <label class="chip"><input type="checkbox" value="차분한"><span>차분한</span></label>
+                <label class="chip"><input type="checkbox" value="밝고 경쾌한"><span>밝고 경쾌한</span></label>
+                <label class="chip"><input type="checkbox" value="따뜻한 안내"><span>따뜻한 안내</span></label>
+                <label class="chip"><input type="checkbox" value="신뢰감 있는"><span>신뢰감 있는</span></label>
+              </div>
+              <div class="row2" style="margin-top:10px">
+                <div class="field"><span class="label">목소리 느낌</span>
+                  <div class="chips" id="voiceGender">
+                    <label class="chip"><input type="radio" name="voiceGender" value="여성"><span>여성</span></label>
+                    <label class="chip"><input type="radio" name="voiceGender" value="남성"><span>남성</span></label>
+                    <label class="chip"><input type="radio" name="voiceGender" value="상관없음" checked><span>상관없음</span></label>
+                  </div>
+                </div>
+                <div class="field"><span class="label">나이대 느낌</span>
+                  <div class="chips" id="voiceAge">
+                    <label class="chip"><input type="radio" name="voiceAge" value="젊은 느낌"><span>젊은 느낌</span></label>
+                    <label class="chip"><input type="radio" name="voiceAge" value="중년 느낌"><span>중년 느낌</span></label>
+                    <label class="chip"><input type="radio" name="voiceAge" value="상관없음" checked><span>상관없음</span></label>
+                  </div>
+                </div>
+              </div>
+              <div class="field"><label class="label" for="f-voiceNote">목소리·말투 자유롭게</label><textarea id="f-voiceNote" placeholder="예) 라디오 디제이처럼 나긋하게 / 또박또박 안내하듯 / 밝게 웃는 느낌으로"></textarea></div>
+            </div>
             <div class="field"><label class="label" for="f-extra">더 하고 싶은 말씀</label><textarea id="f-extra" placeholder="꼭 담고 싶은 것, 참고 사항 무엇이든"></textarea></div>
             <div class="row2">
               <div class="field"><label class="label" for="f-wanted">희망 게시일</label><input type="date" id="f-wanted"></div>
@@ -724,6 +757,9 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
   /* ---- 접수 ---- */
   const checked = (sel) => [...document.querySelectorAll(sel)].filter(i => i.checked).map(i => i.value);
   const radio = (name) => (document.querySelector('input[name="' + name + '"]:checked') || {}).value || "";
+  document.querySelectorAll('input[name="narration"]').forEach(r => r.addEventListener("change", () => {
+    const vb = $("voiceBox"); if (vb) vb.hidden = radio("narration") !== "넣음";
+  }));
   $("form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const st = $("formStatus"); st.classList.remove("err");
@@ -731,12 +767,25 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
     if (!title) return fail(st, "의뢰 제목을 입력해 주세요.", "f-title");
     if (pw && pw.length < 4) return fail(st, "비밀번호는 4자 이상으로 정해 주세요. (비우면 공개 게시물)", "f-pw");
     if (!place) return fail(st, "장소 이름을 입력해 주세요.", "f-place");
+    const narr = radio("narration") || "추천에 맡김";
+    let narrLine = "[나레이션] " + narr;
+    let voiceObj = null;
+    if (narr === "넣음") {
+      const vtone = checked("#voiceTone input");
+      const vg = radio("voiceGender"), va = radio("voiceAge"), vnote = $("f-voiceNote").value.trim();
+      voiceObj = { tone: vtone, gender: vg, age: va, note: vnote };
+      const bits = [vg, va, ...vtone].filter(x => x && x !== "상관없음");
+      narrLine += " · 원하는 목소리: " + (bits.join(", ") || "추천에 맡김") + (vnote ? (" / " + vnote) : "");
+    }
+    const extraUser = $("f-extra").value.trim();
+    const extraFinal = (extraUser ? extraUser + "\n\n" : "") + narrLine;
     const payload = {
       title, pw, requester: $("f-requester").value.trim(), phone: $("f-phone").value.trim(),
       placeName: place, region: $("f-region").value.trim(), placeType: radio("placeType"),
       links: lines($("f-links").value), styles: checked("#styles input"), styleNote: $("f-styleNote").value.trim(),
       platforms: checked("#platforms input"), phrases: $("f-phrases").value.trim(),
-      references: [], extra: $("f-extra").value.trim(),
+      references: [], extra: extraFinal,
+      narration: narr, voice: voiceObj,
       wantedDate: $("f-wanted").value, snsUpload: $("f-sns").checked
     };
     $("btnSubmit").disabled = true; st.textContent = "접수 중…";
