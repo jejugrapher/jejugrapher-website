@@ -179,6 +179,22 @@ textarea{min-height:84px;resize:vertical;line-height:1.7}
 .status-line.err{color:var(--err)}
 .rowf{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
 
+/* 자료 올리기 (드래그&드롭) */
+.drop{border:1.5px dashed var(--line);border-radius:14px;padding:26px 18px;text-align:center;background:var(--surface);cursor:pointer;transition:border-color .2s,background .2s}
+.drop:hover,.drop.drag{border-color:var(--navy);background:#fff}
+.drop:focus-visible{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(31,58,95,.1)}
+.drop-main{font-size:14.5px;color:var(--ink)}
+.drop-pick{color:var(--navy);text-decoration:underline;text-underline-offset:3px}
+.drop-sub{margin-top:5px}
+.filelist{display:grid;grid-template-columns:minmax(0,1fr);gap:7px;margin-top:12px}
+.fileitem{display:flex;align-items:center;gap:10px;min-width:0;font-size:13.5px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.fileitem .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fileitem .sz{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.fileitem .rm{appearance:none;border:0;background:none;color:var(--muted);cursor:pointer;font-size:15px;line-height:1;padding:2px 5px;border-radius:6px}
+.fileitem .rm:hover{color:var(--err);background:#f3ecde}
+.filesum{font-variant-numeric:tabular-nums}
+.filesum.over{color:var(--err)}
+
 /* post view */
 .pv-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:8px}
 .pv-head h3{font-size:24px}
@@ -428,8 +444,23 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
             </div>
             <label class="check"><input type="checkbox" id="f-sns"> <span>완성 영상을 제주맵(jajumap.com)에도 함께 올리면 좋겠습니다. (원하시면 체크)</span></label>
           </fieldset>
+          <fieldset>
+            <legend>사진·영상 올리기</legend>
+            <div class="field">
+              <span class="label">보내 주실 사진·영상 <span class="hint">(최대 5GB · 여러 개 · 지금 고르시면 접수와 함께 올라갑니다)</span></span>
+              <div class="drop" id="dropZone" tabindex="0" role="button" aria-label="사진·영상 고르기 또는 끌어다 놓기">
+                <input type="file" id="f-files" multiple accept="image/*,video/*" hidden>
+                <div class="drop-main">여기로 사진·영상을 끌어다 놓거나 <span class="drop-pick">눌러서 고르기</span></div>
+                <div class="drop-sub hint">사진·영상 · 한 의뢰에 5GB까지</div>
+              </div>
+              <div class="filelist" id="fileList" hidden></div>
+              <div class="hint filesum" id="fileSum" hidden></div>
+              <div class="hint" id="filePwNote" hidden style="color:var(--err)">자료를 올리려면 위에서 <b>비밀번호</b>를 정해 주세요. 비밀번호 없는 공개 의뢰는 접수 뒤 자료를 올릴 수 없습니다.</div>
+              <div class="up-list" id="formUpProg" style="margin-top:10px"></div>
+            </div>
+          </fieldset>
           <div class="rowf"><button class="btn terra" type="submit" id="btnSubmit">의뢰 접수</button><span class="status-line" id="formStatus" role="status"></span></div>
-          <p class="hint" style="margin:0">접수하면 바로 내 게시물이 열리고, 거기서 사진·영상을 올리실 수 있습니다.</p>
+          <p class="hint" style="margin:0">지금 자료를 올리지 않으셔도 됩니다 — 접수하면 바로 내 게시물이 열리고, 거기서 더 올리거나 나중에 올리실 수 있습니다. 자료 없이 설명만으로도 제작을 요청하실 수 있어요.</p>
         </form>
       </div>
 
@@ -719,31 +750,46 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
   }
 
   /* ---- 업로드 ---- */
+  // 고른 파일들을 현재 글(cur.id/cur.pw)에 차례로 올리며 진행률을 progWrap에 보여 준다.
+  // 접수 양식의 '올리기'와 게시물 안의 '더 올리기'가 함께 쓴다.
+  async function uploadList(files, progWrap) {
+    progWrap.innerHTML = "";
+    let okCount = 0;
+    for (const f of files) {
+      const line = el("div"); const bar = el("div", "bar"); const i = el("i"); bar.append(i); progWrap.append(line, bar);
+      line.textContent = f.name + " · 준비 중…";
+      try {
+        const init = await call("uploadInit", { id: cur.id, pw: cur.pw, name: f.name, size: f.size, mimeType: f.type || "application/octet-stream", origin: location.origin });
+        await put(init.uploadUrl, f, (p) => { i.style.width = Math.round(p * 100) + "%"; line.textContent = f.name + " · " + Math.round(p * 100) + "%"; });
+        i.style.width = "100%"; line.textContent = f.name + " · 올림 완료"; okCount++;
+      } catch (e) { line.textContent = f.name + " · 실패: " + errText(e); }
+    }
+    return okCount;
+  }
   function uploadBox(post) {
     const wrap = el("div", "sub"); wrap.style.marginTop = "14px";
     const input = document.createElement("input"); input.type = "file"; input.multiple = true; input.accept = "image/*,video/*";
-    const prog = el("div", "status-line");
+    const prog = el("div", "up-list"); prog.style.marginTop = "8px";
+    const label = el("label", "btn small"); label.textContent = "사진·영상 더 올리기"; label.append(input); input.style.display = "none";
     input.addEventListener("change", async () => {
       const files = [...input.files]; if (!files.length) return;
-      let used = post.usedBytes || 0;
+      const used = post.usedBytes || 0;
       const total = files.reduce((s, f) => s + f.size, 0);
-      if (used + total > LIMIT) { prog.textContent = "5GB를 넘습니다 (남은 용량 " + mb(LIMIT - used) + ")."; return; }
-      for (const f of files) {
-        const line = el("div"); const bar = el("div", "bar"); const i = el("i"); bar.append(i); prog.append(line, bar);
-        try {
-          const init = await call("uploadInit", { id: cur.id, pw: cur.pw, name: f.name, size: f.size, mimeType: f.type || "application/octet-stream", origin: location.origin });
-          await put(init.uploadUrl, f, (p) => { i.style.width = Math.round(p * 100) + "%"; line.textContent = f.name + " · " + Math.round(p * 100) + "%"; });
-          line.textContent = f.name + " · 올림 완료";
-        } catch (e) { line.textContent = f.name + " · 실패: " + errText(e); }
-      }
+      if (used + total > LIMIT) { prog.innerHTML = ""; prog.append(el("div", "hint", "5GB를 넘습니다 (남은 용량 " + mb(LIMIT - used) + ").")); input.value = ""; return; }
+      label.style.pointerEvents = "none"; label.style.opacity = ".5";
+      await uploadList(files, prog);
+      input.value = ""; label.style.pointerEvents = ""; label.style.opacity = "";
       // 새로고침
       try { const j = await call("open", { id: cur.id, pw: cur.pw }); renderPost(j.post, false); } catch (e) {}
     });
-    const label = el("label", "btn small"); label.textContent = "사진·영상 올리기"; label.append(input); input.style.display = "none";
     wrap.append(label, prog);
     return wrap;
   }
   function put(url, file, onProgress) {
+    // 데모(로컬 확인용): 실제 네트워크 없이 진행률만 흉내 낸다
+    if (url === "DEMO") {
+      return new Promise((resolve) => { let p = 0; const t = setInterval(() => { p += 0.2; onProgress(Math.min(p, 1)); if (p >= 1) { clearInterval(t); resolve(true); } }, 90); });
+    }
     return new Promise((resolve, reject) => {
       const x = new XMLHttpRequest(); x.open("PUT", url, true);
       x.upload.onprogress = (e) => { if (e.lengthComputable) onProgress(e.loaded / e.total); };
@@ -760,6 +806,53 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
   document.querySelectorAll('input[name="narration"]').forEach(r => r.addEventListener("change", () => {
     const vb = $("voiceBox"); if (vb) vb.hidden = radio("narration") !== "넣음";
   }));
+
+  /* ---- 접수 양식: 사진·영상 고르기(끌어다 놓기 + 눌러서 고르기) ---- */
+  let pendingFiles = [];
+  const fileKey = (f) => f.name + "|" + f.size + "|" + (f.lastModified || 0);
+  function updatePwNote() {
+    const note = $("filePwNote"); if (!note) return;
+    note.hidden = !(pendingFiles.length && !$("f-pw").value);
+  }
+  function renderFileList() {
+    const list = $("fileList"), sum = $("fileSum");
+    if (!list || !sum) return;
+    list.innerHTML = "";
+    if (!pendingFiles.length) { list.hidden = true; sum.hidden = true; updatePwNote(); return; }
+    list.hidden = false;
+    pendingFiles.forEach((f, idx) => {
+      const it = el("div", "fileitem");
+      it.append(el("span", "nm", f.name), el("span", "sz", mb(f.size)));
+      const rm = el("button", "rm", "✕"); rm.type = "button"; rm.setAttribute("aria-label", f.name + " 빼기");
+      rm.addEventListener("click", () => { pendingFiles.splice(idx, 1); renderFileList(); });
+      it.append(rm); list.append(it);
+    });
+    const total = pendingFiles.reduce((s, f) => s + f.size, 0);
+    sum.hidden = false; sum.classList.toggle("over", total > LIMIT);
+    sum.textContent = "고른 자료 " + pendingFiles.length + "개 · " + mb(total) + " / 5GB" + (total > LIMIT ? " — 5GB를 넘습니다. 일부를 빼 주세요." : "");
+    updatePwNote();
+  }
+  function addFiles(fileArr) {
+    const have = new Set(pendingFiles.map(fileKey));
+    for (const f of fileArr) { const k = fileKey(f); if (!have.has(k)) { pendingFiles.push(f); have.add(k); } }
+    renderFileList();
+  }
+  (function initDrop() {
+    const dz = $("dropZone"), inp = $("f-files"), pw = $("f-pw"); if (!dz || !inp) return;
+    dz.addEventListener("click", () => inp.click());
+    dz.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); inp.click(); } });
+    inp.addEventListener("change", () => { addFiles([...inp.files]); inp.value = ""; });
+    ["dragenter", "dragover"].forEach(ev => dz.addEventListener(ev, (e) => { e.preventDefault(); dz.classList.add("drag"); }));
+    dz.addEventListener("dragleave", (e) => { if (dz.contains(e.relatedTarget)) return; dz.classList.remove("drag"); });
+    dz.addEventListener("drop", (e) => {
+      e.preventDefault(); dz.classList.remove("drag");
+      const dt = e.dataTransfer; if (!dt || !dt.files) return;
+      const fs = [...dt.files].filter(f => /^(image|video)\//.test(f.type) || !f.type);
+      addFiles(fs);
+    });
+    if (pw) pw.addEventListener("input", updatePwNote);
+  })();
+
   $("form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const st = $("formStatus"); st.classList.remove("err");
@@ -767,6 +860,9 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
     if (!title) return fail(st, "의뢰 제목을 입력해 주세요.", "f-title");
     if (pw && pw.length < 4) return fail(st, "비밀번호는 4자 이상으로 정해 주세요. (비우면 공개 게시물)", "f-pw");
     if (!place) return fail(st, "장소 이름을 입력해 주세요.", "f-place");
+    const pendTotal = pendingFiles.reduce((s, f) => s + f.size, 0);
+    if (pendingFiles.length && !pw) return fail(st, "자료를 올리려면 비밀번호를 정해 주세요. 비밀번호 없는 공개 의뢰는 접수 뒤 자료를 올릴 수 없습니다.", "f-pw");
+    if (pendTotal > LIMIT) return fail(st, "고른 자료가 5GB를 넘습니다. 일부를 빼고 다시 시도해 주세요.", "f-files");
     const narr = radio("narration") || "추천에 맡김";
     let narrLine = "[나레이션] " + narr;
     let voiceObj = null;
@@ -792,9 +888,18 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
     try {
       const j = await call("submit", payload);
       cur = { id: j.id, pw };
-      st.textContent = pw ? "접수되었습니다. 이제 사진·영상을 올려 주세요." : "공개 게시물로 접수되었습니다.";
+      // 접수 직후, 고른 사진·영상을 이어서 올린다(비밀번호 있는 의뢰만). 진행률은 양식 안에서 보여 준다.
+      const toUpload = (pw ? pendingFiles.slice() : []);
+      if (toUpload.length) {
+        st.textContent = "접수됐습니다. 사진·영상을 올리는 중…";
+        const okCount = await uploadList(toUpload, $("formUpProg"));
+        st.textContent = "접수와 올리기가 끝났습니다. (" + okCount + "/" + toUpload.length + ") 내 게시물을 엽니다…";
+      } else {
+        st.textContent = pw ? "접수되었습니다." : "공개 게시물로 접수되었습니다.";
+      }
       const o = await call("open", { id: j.id, pw });
-      $("form").reset(); renderPost(o.post, false);
+      $("form").reset(); pendingFiles = []; renderFileList(); $("formUpProg").innerHTML = ""; $("voiceBox").hidden = true;
+      renderPost(o.post, false);
     } catch (e) { st.classList.add("err"); st.textContent = errText(e); } finally { $("btnSubmit").disabled = false; }
   });
   const lines = (s) => s.split("\n").map(x => x.trim()).filter(Boolean);
@@ -854,7 +959,15 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
     return new Promise((res) => setTimeout(() => {
       if (action === "board") res({ ok: true, posts: window.__demo.posts });
       else if (action === "open") res({ ok: true, post: window.__demo.full[d.id] || { id: d.id, "제목": "(데모) 새 의뢰", "접수일시": "방금", "상태": "접수", "완성본링크": "", "제주그래퍼메모": "", "장소이름": "", "SNS업로드": "동의", "수정요청": 0, usedBytes: 0, uploads: [], logs: [] } });
-      else if (action === "submit") res({ ok: true, id: "SJ-DEMO" });
+      else if (action === "submit") {
+        const id = "SJ-DEMO-" + String(Date.now()).slice(-6);
+        window.__demo.full[id] = { id, "제목": d.title || "(데모) 새 의뢰", "접수일시": "방금", "상태": "접수", "완성본링크": "", "제주그래퍼메모": "", "장소이름": d.placeName || "", "지역": d.region || "", "SNS업로드": d.snsUpload ? "동의" : "", "수정요청": 0, usedBytes: 0, uploads: [], logs: [{ "일시": "방금", "작성": "의뢰자", "내용": "의뢰 접수" }] };
+        res({ ok: true, id });
+      }
+      else if (action === "uploadInit") {
+        const p = window.__demo.full[d.id]; if (p) { p.uploads = p.uploads || []; p.uploads.push({ "파일명": d.name, "크기": d.size }); p.usedBytes = (p.usedBytes || 0) + (d.size || 0); }
+        res({ ok: true, uploadUrl: "DEMO" });
+      }
       else if (action === "adminAll") res({ ok: true, posts: Object.values(window.__demo.full), states: ["접수", "제작중", "검수중", "수정중", "완료", "보류"], pays: ["미결제", "결제완료", "부분결제", "환불"] });
       else if (action === "adminSet") res({ ok: true });
       else if (action === "revise") res({ ok: true, count: 1 });
