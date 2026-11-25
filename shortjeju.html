@@ -772,8 +772,11 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
       line.textContent = f.name + " · 준비 중…";
       try {
         const init = await call("uploadInit", { id: cur.id, pw: cur.pw, name: f.name, size: f.size, mimeType: f.type || "application/octet-stream", origin: location.origin });
-        await put(init.uploadUrl, f, (p) => { i.style.width = Math.round(p * 100) + "%"; line.textContent = f.name + " · " + Math.round(p * 100) + "%"; });
-        i.style.width = "100%"; line.textContent = f.name + " · 올림 완료"; okCount++;
+        const putRes = await put(init.uploadUrl, f, (p) => { i.style.width = Math.round(p * 100) + "%"; line.textContent = f.name + " · " + Math.round(p * 100) + "%"; });
+        // 올린 파일을 게시물에 등록(백엔드 uploadDone) — 이게 있어야 '올린 자료'·사용 용량에 반영된다
+        const fileId = putRes && putRes.id;
+        if (fileId) await call("uploadDone", { id: cur.id, pw: cur.pw, fileId: fileId });
+        i.style.width = "100%"; line.textContent = f.name + (fileId ? " · 올림 완료" : " · 올렸으나 등록 실패"); if (fileId) okCount++;
       } catch (e) { line.textContent = f.name + " · 실패: " + errText(e); }
     }
     return okCount;
@@ -797,15 +800,19 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
     wrap.append(label, prog);
     return wrap;
   }
+  // Drive 리줌어블 PUT. 성공 시 응답 JSON({id,name,size})을 돌려준다 — id는 업로드 등록(uploadDone)에 쓰인다.
   function put(url, file, onProgress) {
     // 데모(로컬 확인용): 실제 네트워크 없이 진행률만 흉내 낸다
     if (url === "DEMO") {
-      return new Promise((resolve) => { let p = 0; const t = setInterval(() => { p += 0.2; onProgress(Math.min(p, 1)); if (p >= 1) { clearInterval(t); resolve(true); } }, 90); });
+      return new Promise((resolve) => { let p = 0; const t = setInterval(() => { p += 0.2; onProgress(Math.min(p, 1)); if (p >= 1) { clearInterval(t); resolve({ id: "DEMO" }); } }, 90); });
     }
     return new Promise((resolve, reject) => {
       const x = new XMLHttpRequest(); x.open("PUT", url, true);
       x.upload.onprogress = (e) => { if (e.lengthComputable) onProgress(e.loaded / e.total); };
-      x.onload = () => { (x.status === 200 || x.status === 201) ? resolve(true) : reject(new Error("upload " + x.status)); };
+      x.onload = () => {
+        if (x.status === 200 || x.status === 201) { let r = null; try { r = JSON.parse(x.responseText); } catch (e) {} resolve(r || {}); }
+        else reject(new Error("upload " + x.status));
+      };
       x.onerror = () => reject(new Error("network"));
       x.setRequestHeader("Content-Type", file.type || "application/octet-stream");
       x.send(file);
@@ -998,6 +1005,7 @@ footer .in{display:grid;gap:10px}footer p{margin:0;max-width:62em}
         const p = window.__demo.full[d.id]; if (p) { p.uploads = p.uploads || []; p.uploads.push({ "파일명": d.name, "크기": d.size }); p.usedBytes = (p.usedBytes || 0) + (d.size || 0); }
         res({ ok: true, uploadUrl: "DEMO" });
       }
+      else if (action === "uploadDone") { const p = window.__demo.full[d.id]; res({ ok: true, usedBytes: p ? (p.usedBytes || 0) : 0 }); } // 데모는 uploadInit에서 이미 기록(이중 집계 방지)
       else if (action === "adminAll") res({ ok: true, posts: Object.values(window.__demo.full), states: ["접수", "제작중", "검수중", "수정중", "완료", "보류"], pays: ["미결제", "결제완료", "부분결제", "환불"] });
       else if (action === "adminSet") res({ ok: true });
       else if (action === "revise") res({ ok: true, count: 1 });
