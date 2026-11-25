@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title data-i18n="t.__title">디지털 트윈을 걷다 — 관덕정·제주목 관아와 안덕계곡 | JEJUGRAPHER 제주그래퍼</title>
+<meta name="description" data-i18n-attr="content:t.desc" content="3D로 통째로 담은 제주의 두 곳 — 관덕정·제주목 관아와 안덕계곡 — 을 캐릭터가 직접 걸어 다니는 영상 두 편과 그 장소 이야기.">
+<meta property="og:type" content="video.other">
+<meta property="og:site_name" content="JEJUGRAPHER 제주그래퍼">
+<meta property="og:title" content="디지털 트윈을 걷다 — 관덕정·제주목 관아, 그리고 안덕계곡">
+<meta property="og:description" content="3D로 통째로 담은 제주의 두 곳 — 관덕정·제주목 관아와 안덕계곡 — 을 캐릭터가 직접 걸어 다니는 영상 두 편과 그 장소 이야기.">
+<meta property="og:image" content="https://i.ytimg.com/vi/HcttrVzI0N4/maxresdefault.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://jejugrapher.com/spatial/raven-lidar/twin-walks.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/spatial/style.css">
+<style>
+  body{background:var(--bg-main);color:var(--text-main);font-family:'Noto Sans KR',sans-serif;margin:0;line-height:1.75}
+  .rlnav{position:sticky;top:0;z-index:60;background:rgba(254,252,247,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border-line)}
+  .rlnav .in{max-width:1080px;margin:0 auto;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .rlnav a{color:var(--text-soft);text-decoration:none}
+  .rlnav .logo{font-family:'Noto Serif KR',serif;font-weight:700;letter-spacing:2px;font-size:16px;color:var(--text-main)}
+  .rlnav .lk{display:flex;gap:16px;font-size:14px;flex-wrap:wrap;align-items:center}
+  .rlnav .lk a:hover{color:var(--accent-sage)} .rlnav .lk a.on{color:var(--accent-terracotta);font-weight:500}
+  .rlnav #jglang{flex:0 0 auto}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+  .hero{min-height:auto;display:block;padding:4rem 0 2.4rem;background:linear-gradient(135deg,var(--bg-soft) 0%,var(--bg-accent) 100%)}
+  .crumb{font-size:13px;color:var(--text-mute);margin-bottom:1rem}
+  .crumb a{color:var(--text-mute);text-decoration:none;border-bottom:1px solid transparent}
+  .crumb a:hover{border-color:var(--text-mute)}
+  .eyebrow{font-family:'Noto Serif KR',serif;font-size:13px;letter-spacing:.2em;color:var(--accent-terracotta);font-weight:600;margin-bottom:12px}
+  .hero h1{font-family:'Noto Serif KR',serif;font-size:clamp(1.8rem,4.6vw,2.9rem);line-height:1.3;margin:0 0 1rem}
+  .hero .lede{font-size:1.05rem;color:var(--text-soft);max-width:42em}
+  .badge-prep{display:inline-block;margin-left:.5rem;padding:.12em .7em;border-radius:999px;background:var(--accent-sage);color:var(--bg-main);font-family:'Noto Sans KR',sans-serif;font-size:.62em;font-weight:600;letter-spacing:.02em;vertical-align:middle}
+  .player{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;box-shadow:var(--shadow-deep);margin:0}
+  .player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  figure{margin:2.4rem 0 0}
+  figcaption{margin-top:12px;font-size:14px;color:var(--text-mute)}
+  section{padding:3.2rem 0;border-top:1px solid var(--border-line)}
+  section:first-of-type{border-top:0}
+  h2{font-family:'Noto Serif KR',serif;font-size:clamp(1.4rem,3vw,2rem);margin:0 0 1.2rem;color:var(--text-main)}
+  h3{font-family:'Noto Serif KR',serif;font-size:1.15rem;margin:1.6rem 0 .5rem;color:var(--text-main)}
+  p{color:var(--text-soft);margin:0 0 1rem}
+  .cap{list-style:none;padding:0;margin:1.4rem 0 0;display:grid;gap:12px}
+  .cap li{background:var(--bg-soft);border:1px solid var(--border-line);border-radius:8px;padding:16px 18px}
+  .cap .ct{font-family:'Noto Serif KR',serif;font-weight:600;color:var(--text-main);display:block}
+  .cap .cd{display:block;font-size:14.5px;color:var(--text-soft);margin:6px 0 9px;line-height:1.75}
+  .cap .cl a{color:var(--accent-terracotta);font-size:.9rem;font-weight:500;text-decoration:none;margin-right:1.1rem;display:inline-block}
+  .cap .cl a:hover{text-decoration:underline}
+  .tag{display:inline-block;font-family:'Noto Sans KR',sans-serif;font-size:11px;font-weight:600;padding:.12em .6em;border-radius:999px;vertical-align:middle;margin-left:.35rem}
+  .tag.now{background:var(--accent-sage);color:var(--bg-main)}
+  .tag.prep{background:var(--bg-accent);color:var(--text-soft);border:1px solid var(--border-soft)}
+  .callout{background:var(--bg-accent);border-left:3px solid var(--accent-sage);border-radius:0 8px 8px 0;padding:1.2rem 1.4rem;margin:1.4rem 0}
+  .callout p:last-child{margin-bottom:0}
+  .src{font-size:12.5px;color:var(--text-mute);margin-top:1.2rem;line-height:1.7}
+  .cta{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.3rem;background:var(--accent-terracotta);color:var(--bg-main);border-radius:999px;font-weight:500;font-size:.95rem;margin:.4rem .6rem .4rem 0}
+  .cta:hover{background:#B86A4D;color:var(--bg-main)}
+  .cta.ghost{background:transparent;color:var(--text-soft);border:1px solid var(--border-soft)}
+  .cta.ghost:hover{border-color:var(--accent-sage);color:var(--text-main)}
+  .rlfoot{border-top:1px solid var(--border-line);background:var(--bg-soft);padding:2.4rem 0;margin-top:1rem}
+  .rlfoot p{font-size:13px;color:var(--text-mute);margin:.2rem 0}
+  html[dir="rtl"] .hero .lede,html[dir="rtl"] p,html[dir="rtl"] .cap li{text-align:right}
+</style>
+<script src="/yt-nocaptions.js" defer></script><!-- jg-visit -->
+<script>(function(){try{var EP='https://script.google.com/macros/s/AKfycbwYW8zN_7UyGnbeYpf3A5hSeSp4GVTc3N3Rj3c28WgnOiAZHVDuovvn4WvN5zHE6_WV/exec';var t=new Date(),day=t.getFullYear()+'-'+(t.getMonth()+1)+'-'+t.getDate(),f='0';try{if(localStorage.getItem('jg-vday')!==day){f='1';localStorage.setItem('jg-vday',day);}}catch(e){}var h='';try{h=document.referrer?(new URL(document.referrer).hostname):'';}catch(e){}var u=EP+(EP.indexOf('?')<0?'?':'&')+'mode=hit&u='+f+'&p='+encodeURIComponent(location.pathname)+'&r='+encodeURIComponent(h);try{new Image().src=u;}catch(e){}}catch(e){}})();</script>
+<!-- /jg-visit -->
+</head>
+<body>
+<nav class="rlnav"><div class="in"><a class="logo" href="/">JEJUGRAPHER</a><span class="lk"><a href="/spatial/index.html" data-i18n="nav.spatial">공간데이터</a><a href="/media.html" data-i18n="nav.portfolio">포트폴리오</a><a href="/inquiry.html" data-i18n="nav.inquiry">문의</a><span id="jglang" class="rllang"></span></span></div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="crumb"><a href="/spatial/index.html" data-i18n="nav.spatial">공간데이터</a> · <a href="./" data-i18n="crumb.hub">제주 동굴·유적 LiDAR 측량</a> · <span data-i18n="t.crumb">디지털 트윈을 걷다</span></div>
+  <div class="eyebrow">DIGITAL TWIN · WALKS</div>
+  <h1><span data-i18n="t.h1">디지털 트윈을 걷다 — 관덕정·제주목 관아, 그리고 안덕계곡</span></h1>
+  <p class="lede" data-i18n="t.lede">실제 공간을 그대로 기록한 삼차원 데이터 위를, 한 사람이 걸어 다닙니다. 조선 후기 제주의 거상 김만덕이 관덕정에서 제주목 관아 안까지 걸으며 자신의 삶을 들려주고, 안덕계곡에서는 절벽 아래 바위 길을 따라 계곡 안쪽으로 걸어 들어갑니다.</p>
+</div></header>
+
+<main class="wrap">
+  <section>
+    <h2 data-i18n="t.v1.h2">관덕정에서 제주목 관아까지 — 거상 김만덕과 걷다</h2>
+    <figure style="margin-top:1.2rem"><div class="player"><iframe src="https://www.youtube.com/embed/HcttrVzI0N4?rel=0&cc_load_policy=0&enablejsapi=1" title="관덕정에서 제주목 관아까지 — 거상 김만덕과 걷다" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+    <figcaption data-i18n="t.v1.cap">약 1분 45초 — 관덕정 앞에서 인사하고, 외대문과 중대문을 지나 관아 안마당·연희각·망경루·귤림당을 둘러본 뒤 다시 관덕정 앞으로 돌아옵니다.</figcaption></figure>
+    <p style="margin-top:1.4rem" data-i18n="t.v1.p">김만덕(1739~1812)은 객주를 차려 제주의 특산물을 뭍에 팔고 뭍의 곡식을 들여와 큰 재산을 일군 상인입니다. 스무 살 무렵 사정을 아뢰러 찾아갔고, 흉년에 사 온 쌀을 보낸 ‘관아’가 바로 관덕정 뒤의 제주목 관아입니다. 영상은 그 자리들을 차례로 걷습니다.</p>
+    <p><a class="cta ghost" href="./gwandeokjeong/kimmandeok.html" data-i18n="t.v1.l">김만덕 이야기 자세히 보기 →</a></p>
+  </section>
+
+  <section>
+    <h2 data-i18n="t.v2.h2">안덕계곡 — 절벽 아래를 걷다</h2>
+    <figure style="margin-top:1.2rem"><div class="player"><iframe src="https://www.youtube.com/embed/cGOoYh-155g?rel=0&cc_load_policy=0&enablejsapi=1" title="안덕계곡 — 절벽 아래를 걷다" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+    <figcaption data-i18n="t.v2.cap">약 1분 14초 — 깎아지른 절벽 아래 바위 길을 따라, 물이 흐르는 계곡 안쪽으로 천천히 걸어 들어갑니다.</figcaption></figure>
+    <p style="margin-top:1.4rem" data-i18n="t.v2.p">안덕계곡은 서귀포시 안덕면에 있는 깊은 협곡입니다. 조면암질 용암이 오랜 세월 물에 깎여 양옆으로 절벽이 서고, 그 바닥으로 물이 흐르는 계곡이 되었습니다. 계곡을 덮은 난대성 상록수림은 천연기념물 제377호로 지정돼 있습니다.</p>
+    <p><a class="cta ghost" href="./anduck/walk.html" data-i18n="t.v2.l">안덕계곡 디지털 트윈 산책 →</a></p>
+  </section>
+
+  <section>
+    <div class="callout"><p data-i18n="t.note">화면 속 공간은 두 곳을 그대로 기록한 3차원 데이터이고, 걷는 인물은 조선 후기 제주 여성의 옷차림을 바탕으로 만든 캐릭터입니다.</p></div>
+    <p class="src" data-i18n="t.src">출처 — 채제공 「만덕전」(『번암집』), 『정조실록』 정조 20년(1796) 11월 25일, 한국민족문화대백과사전 「김만덕」·「제주 관덕정」, 국가유산청 국가유산포털(제주 안덕계곡 상록수림). 기록으로 확인되는 내용만 적었습니다.</p>
+    <p style="margin-top:1.6rem">
+      <a class="cta" href="/spatial/index.html" data-i18n="t.cta.sp">공간데이터 소개</a>
+      <a class="cta ghost" href="./gwandeokjeong/" data-i18n="t.cta.gw">관덕정 공간 기록 보기</a>
+      <a class="cta ghost" href="./anduck/" data-i18n="t.cta.ad">안덕계곡 공간 기록 보기</a>
+      <a class="cta ghost" href="/inquiry.html" data-i18n="g.cta.inquiry">제작·측량 문의</a>
+    </p>
+  </section>
+</main>
+
+<footer class="rlfoot"><div class="wrap">
+  <p data-i18n="t.foot1">제주그래퍼 JEJUGRAPHER · 실측으로 지어 올린 디지털 트윈 — 관덕정·제주목 관아 · 안덕계곡</p>
+  <p data-i18n="g.foot2">영상·점군·그림과 글의 저작권은 제주그래퍼에 있습니다.</p>
+</div></footer>
+
+<script>window.JG_I18N={
+"ko": {
+"nav.spatial": "공간데이터",
+"nav.portfolio": "포트폴리오",
+"nav.inquiry": "문의",
+"crumb.hub": "제주 동굴·유적 LiDAR 측량",
+"g.cta.inquiry": "제작·측량 문의",
+"g.foot2": "영상·점군·그림과 글의 저작권은 제주그래퍼에 있습니다.",
+"t.__title": "디지털 트윈을 걷다 — 관덕정·제주목 관아와 안덕계곡 | JEJUGRAPHER 제주그래퍼",
+"t.desc": "3D로 통째로 담은 제주의 두 곳 — 관덕정·제주목 관아와 안덕계곡 — 을 캐릭터가 직접 걸어 다니는 영상 두 편과 그 장소 이야기.",
+"t.crumb": "디지털 트윈을 걷다",
+"t.h1": "디지털 트윈을 걷다 — 관덕정·제주목 관아, 그리고 안덕계곡",
+"t.lede": "실제 공간을 그대로 기록한 삼차원 데이터 위를, 한 사람이 걸어 다닙니다. 조선 후기 제주의 거상 김만덕이 관덕정에서 제주목 관아 안까지 걸으며 자신의 삶을 들려주고, 안덕계곡에서는 절벽 아래 바위 길을 따라 계곡 안쪽으로 걸어 들어갑니다.",
+"t.v1.h2": "관덕정에서 제주목 관아까지 — 거상 김만덕과 걷다",
+"t.v1.cap": "약 1분 45초 — 관덕정 앞에서 인사하고, 외대문과 중대문을 지나 관아 안마당·연희각·망경루·귤림당을 둘러본 뒤 다시 관덕정 앞으로 돌아옵니다.",
+"t.v1.p": "김만덕(1739~1812)은 객주를 차려 제주의 특산물을 뭍에 팔고 뭍의 곡식을 들여와 큰 재산을 일군 상인입니다. 스무 살 무렵 사정을 아뢰러 찾아갔고, 흉년에 사 온 쌀을 보낸 ‘관아’가 바로 관덕정 뒤의 제주목 관아입니다. 영상은 그 자리들을 차례로 걷습니다.",
+"t.v1.l": "김만덕 이야기 자세히 보기 →",
+"t.v2.h2": "안덕계곡 — 절벽 아래를 걷다",
+"t.v2.cap": "약 1분 14초 — 깎아지른 절벽 아래 바위 길을 따라, 물이 흐르는 계곡 안쪽으로 천천히 걸어 들어갑니다.",
+"t.v2.p": "안덕계곡은 서귀포시 안덕면에 있는 깊은 협곡입니다. 조면암질 용암이 오랜 세월 물에 깎여 양옆으로 절벽이 서고, 그 바닥으로 물이 흐르는 계곡이 되었습니다. 계곡을 덮은 난대성 상록수림은 천연기념물 제377호로 지정돼 있습니다.",
+"t.v2.l": "안덕계곡 디지털 트윈 산책 →",
+"t.note": "화면 속 공간은 두 곳을 그대로 기록한 3차원 데이터이고, 걷는 인물은 조선 후기 제주 여성의 옷차림을 바탕으로 만든 캐릭터입니다.",
+"t.src": "출처 — 채제공 「만덕전」(『번암집』), 『정조실록』 정조 20년(1796) 11월 25일, 한국민족문화대백과사전 「김만덕」·「제주 관덕정」, 국가유산청 국가유산포털(제주 안덕계곡 상록수림). 기록으로 확인되는 내용만 적었습니다.",
+"t.cta.gw": "관덕정 공간 기록 보기",
+"t.cta.ad": "안덕계곡 공간 기록 보기",
+"t.cta.sp": "공간데이터 소개",
+"t.foot1": "제주그래퍼 JEJUGRAPHER · 실측으로 지어 올린 디지털 트윈 — 관덕정·제주목 관아 · 안덕계곡"
+},
+"en": {
+"nav.spatial": "Spatial Data",
+"nav.portfolio": "Portfolio",
+"nav.inquiry": "Contact",
+"crumb.hub": "Jeju Cave & Heritage LiDAR Survey",
+"g.cta.inquiry": "Production & survey inquiries",
+"g.foot2": "Video, point clouds, figures and text are copyright JEJUGRAPHER.",
+"t.__title": "Walking the Digital Twin — Gwandeokjeong, Jeju Mok Government Office and Andeok Valley | JEJUGRAPHER",
+"t.desc": "Two places in Jeju captured whole in 3D — Gwandeokjeong with Jeju Mok Government Office, and Andeok Valley — in two videos where a character walks through them, with the story of each place.",
+"t.crumb": "Walking the Digital Twin",
+"t.h1": "Walking the digital twin — Gwandeokjeong, Jeju Mok Government Office, and Andeok Valley",
+"t.lede": "A figure walks through three-dimensional data that records real places as they are. Kim Man-deok, the great merchant of late-Joseon Jeju, walks from Gwandeokjeong into Jeju Mok Government Office telling her life; in Andeok Valley she follows the rock path beneath the cliffs deep into the gorge.",
+"t.v1.h2": "From Gwandeokjeong into Jeju Mok Government Office — walking with the merchant Kim Man-deok",
+"t.v1.cap": "About 1 min 45 s — she greets you before Gwandeokjeong, passes the outer and middle gates, looks around the inner court, Yeonhuigak, Manggyeongnu and Gyullimdang, then returns to the pavilion.",
+"t.v1.p": "Kim Man-deok (1739–1812) was a merchant who opened a trading house, sold Jeju’s specialities to the mainland, brought grain back, and built a great fortune. The “government office” she petitioned at about twenty, and to which she sent rice in the famine, is Jeju Mok Government Office behind Gwandeokjeong. The video walks these places in turn.",
+"t.v1.l": "Read the full story of Kim Man-deok →",
+"t.v2.h2": "Andeok Valley — walking beneath the cliffs",
+"t.v2.cap": "About 1 min 14 s — following the rock path beneath sheer cliffs, slowly walking into the gorge where the stream runs.",
+"t.v2.p": "Andeok Valley is a deep gorge in Andeok-myeon, Seogwipo. Trachytic lava, worn by water over long ages, left cliffs standing on both sides with a stream running along the floor. The warm-temperate evergreen forest that covers the valley is designated Natural Monument No. 377.",
+"t.v2.l": "Andeok Valley digital-twin walk →",
+"t.note": "The spaces on screen are three-dimensional data recording the two places as they are; the walking figure is a character based on the dress of Jeju women in the late Joseon period.",
+"t.src": "Sources — Chae Je-gong, “Life of Man-deok” (Beonamjip); Veritable Records of King Jeongjo, 25th day of the 11th month, 1796; Encyclopedia of Korean Culture, “Kim Man-deok” and “Gwandeokjeong, Jeju”; Korea Heritage Service (Evergreen Forest of Andeok Valley, Jeju). Only what the records confirm is given here.",
+"t.cta.gw": "See the Gwandeokjeong record",
+"t.cta.ad": "See the Andeok Valley record",
+"t.cta.sp": "About our spatial data",
+"t.foot1": "JEJUGRAPHER · measured digital twins — Gwandeokjeong, Jeju Mok Government Office · Andeok Valley"
+},
+"zh": {
+"nav.spatial": "空间数据",
+"nav.portfolio": "作品集",
+"nav.inquiry": "咨询",
+"crumb.hub": "济州洞窟与古迹 LiDAR 测量",
+"g.cta.inquiry": "制作与测量咨询",
+"g.foot2": "影像·点云·图像及文字版权归济州Grapher所有。",
+"t.__title": "漫步数字孪生 — 观德亭·济州牧官衙与安德溪谷 | JEJUGRAPHER",
+"t.desc": "整体以3D收录的济州两处 — 观德亭·济州牧官衙与安德溪谷 — 由角色亲自漫步其中的两段影像与两地的故事。",
+"t.crumb": "漫步数字孪生",
+"t.h1": "漫步数字孪生 — 观德亭·济州牧官衙，以及安德溪谷",
+"t.lede": "一个人行走在如实记录真实空间的三维数据之上。朝鲜后期济州的巨商金万德从观德亭走进济州牧官衙，讲述自己的一生；在安德溪谷，则沿着崖壁下的岩石小路走向溪谷深处。",
+"t.v1.h2": "从观德亭到济州牧官衙 — 与巨商金万德同行",
+"t.v1.cap": "约1分45秒 — 在观德亭前问候，穿过外大门与中大门，游览官衙内庭、延曦阁、望京楼与橘林堂，再回到观德亭前。",
+"t.v1.p": "金万德（1739~1812）是一位开设客主、把济州特产销往陆地并运回粮食而积累巨富的商人。她二十岁左右前去陈情、饥荒时把买来的大米送往的“官衙”，正是观德亭后面的济州牧官衙。影像依次走过这些地方。",
+"t.v1.l": "详细阅读金万德的故事 →",
+"t.v2.h2": "安德溪谷 — 行走于崖壁之下",
+"t.v2.cap": "约1分14秒 — 沿着陡峭崖壁下的岩石小路，缓缓走向溪水流淌的溪谷深处。",
+"t.v2.p": "安德溪谷是位于西归浦市安德面的深邃峡谷。粗面岩质熔岩经水流长年侵蚀，两侧形成崖壁，谷底溪水流淌。覆盖溪谷的暖温带常绿林被指定为天然纪念物第377号。",
+"t.v2.l": "安德溪谷数字孪生漫步 →",
+"t.note": "画面中的空间是如实记录这两处的三维数据；行走的人物是依据朝鲜后期济州女性的服饰创作的角色。",
+"t.src": "出处 — 蔡济恭《万德传》（《樊岩集》）、《正祖实录》正祖20年（1796）11月25日、韩国民族文化大百科「金万德」「济州观德亭」、国家遗产厅国家遗产门户（济州安德溪谷常绿林）。仅记述有记录可证的内容。",
+"t.cta.gw": "查看观德亭空间记录",
+"t.cta.ad": "查看安德溪谷空间记录",
+"t.cta.sp": "空间数据介绍",
+"t.foot1": "济州Grapher JEJUGRAPHER · 以实测打造的数字孪生 — 观德亭·济州牧官衙 · 安德溪谷"
+},
+"ja": {
+"nav.spatial": "空間データ",
+"nav.portfolio": "ポートフォリオ",
+"nav.inquiry": "お問い合わせ",
+"crumb.hub": "済州の洞窟・史跡 LiDAR 測量",
+"g.cta.inquiry": "制作・測量のお問い合わせ",
+"g.foot2": "映像・点群・図および文章の著作権はJEJUGRAPHERに帰属します。",
+"t.__title": "デジタルツインを歩く — 観徳亭・済州牧官衙と安徳渓谷 | JEJUGRAPHER",
+"t.desc": "丸ごと3Dに収めた済州の二か所 — 観徳亭・済州牧官衙と安徳渓谷 — をキャラクターが自ら歩く二本の映像と、その場所の物語。",
+"t.crumb": "デジタルツインを歩く",
+"t.h1": "デジタルツインを歩く — 観徳亭・済州牧官衙、そして安徳渓谷",
+"t.lede": "実際の空間をそのまま記録した三次元データの上を、ひとりの人物が歩きます。朝鮮後期の済州の巨商キム・マンドクが観徳亭から済州牧官衙の中まで歩きながら生涯を語り、安徳渓谷では崖の下の岩の道をたどって渓谷の奥へ歩いていきます。",
+"t.v1.h2": "観徳亭から済州牧官衙まで — 巨商キム・マンドクと歩く",
+"t.v1.cap": "約1分45秒 — 観徳亭の前で挨拶し、外大門と中大門を抜けて官衙の内庭・延曦閣・望京楼・橘林堂を巡ったのち、ふたたび観徳亭の前に戻ります。",
+"t.v1.p": "キム・マンドク（1739~1812）は客主を開き、済州の特産物を陸地に売り、陸地の穀物を運び入れて大きな財を築いた商人です。二十歳のころ事情を申し立てに行き、凶年に買い入れた米を送った「官衙」は、観徳亭の奥にある済州牧官衙です。映像はその場所を順に歩きます。",
+"t.v1.l": "キム・マンドクの物語を詳しく見る →",
+"t.v2.h2": "安徳渓谷 — 崖の下を歩く",
+"t.v2.cap": "約1分14秒 — 切り立った崖の下の岩の道をたどり、水の流れる渓谷の奥へゆっくり歩いていきます。",
+"t.v2.p": "安徳渓谷は西帰浦市安徳面にある深い峡谷です。粗面岩質の溶岩が長い歳月をかけて水に削られ、両側に崖が立ち、その底を水が流れる渓谷になりました。渓谷を覆う暖帯性の常緑樹林は天然記念物第377号に指定されています。",
+"t.v2.l": "安徳渓谷デジタルツイン散策 →",
+"t.note": "画面の中の空間は二か所をそのまま記録した三次元データで、歩く人物は朝鮮後期の済州の女性の装いをもとに作ったキャラクターです。",
+"t.src": "出典 — 蔡済恭「万徳伝」（『樊巌集』）、『正祖実録』正祖20年（1796）11月25日、韓国民族文化大百科事典「キム・マンドク」「済州観徳亭」、国家遺産庁 国家遺産ポータル（済州安徳渓谷常緑樹林）。記録で確かめられる内容のみを記しました。",
+"t.cta.gw": "観徳亭の空間記録を見る",
+"t.cta.ad": "安徳渓谷の空間記録を見る",
+"t.cta.sp": "空間データの紹介",
+"t.foot1": "JEJUGRAPHER · 実測で築いたデジタルツイン — 観徳亭・済州牧官衙 · 安徳渓谷"
+}
+};</script>
+<script src="/i18n.js" defer></script>
+<!-- jg-copyright-notice -->
+<div id="jg-copyright" role="contentinfo" style="all:initial;display:block;box-sizing:border-box;width:100%;background:#14110F;color:#CFC6B8;border-top:3px solid #C97B5B;padding:22px 16px 26px;font:400 13px/1.75 'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;word-break:keep-all;text-align:center">
+<div style="max-width:880px;margin:0 auto">
+<strong style="display:block;color:#F3D9A4;font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:.02em">⚠ 무단 복제 · 도용 금지 — 저작권 경고</strong>
+이 사이트의 모든 사진 · 영상 · 글 · 음악 · 디자인 · 프로그램은 <b style="color:#fff">제주그래퍼(JEJUGRAPHER)</b>와 원저작자에게 저작권이 있으며 「저작권법」의 보호를 받습니다.
+저작권자의 <b style="color:#fff">사전 서면 동의 없이</b> 복제 · 다운로드 후 재배포 · 전송 · 게시 · 편집 · 2차 가공 · 캡처 사용 · 상업적 이용 · AI 학습 데이터로 사용하는 행위를 <b style="color:#fff">엄격히 금지</b>합니다.
+사진과 영상 속 인물의 초상권도 함께 보호됩니다.
+무단 도용이 확인되면 사전 경고 없이 「저작권법」 제136조(5년 이하의 징역 또는 5천만 원 이하의 벌금)에 따른 <b style="color:#fff">형사 고소와 민사상 손해배상 청구</b>를 진행합니다.
+<span style="display:block;margin-top:8px;color:#9E9488;font-size:12px">이용 문의 · 허락 요청 — <a href="https://jejugrapher.com/inquiry.html" style="color:#F3D9A4;text-decoration:underline">jejugrapher.com/inquiry.html</a> · © JEJUGRAPHER. All rights reserved.</span>
+</div></div>
+<!-- /jg-copyright-notice -->
+</body>
+</html>
